@@ -32,7 +32,8 @@ sol_eztfem = eval(cmd);
 mywritelines("  def test_distribute_elements(self):");
 mywritelines("    sol_pytfem = "+cmd);
 write1Darr_r("    ",sol_eztfem,"sol_eztfem")
-mywritelines("    self.assertTrue(np.allclose(sol_pytfem,sol_eztfem,atol=1e-15,rtol=0),'distribute_elements failed test!' )");
+mywritelines("    self.assertTrue(np.allclose(sol_pytfem,sol_eztfem," + ...
+    "atol=1e-15,rtol=0),'distribute_elements failed test!' )");
 
 
 % test for quadrilateral2d
@@ -118,28 +119,51 @@ function write2Darr_i(skip,arr,name)
 
 end
 
+function write3Darr_i(skip,arr,name)
+
+    mywritelines("    "+name+" = np.array([");
+    for i=1:size(arr,1)
+        mywritelines(skip+"["+sprintf('%12i,',arr(i,:,1))+"],");
+    end
+    for i=1:size(arr,1)
+        mywritelines(skip+"["+sprintf('%12i,',arr(i,:,2))+"],");
+    end    
+    mywritelines("    ],dtype=int)");
+
+end
+
+function write3Darr_r(skip,arr,name)
+
+    error("write3Darr_r not implemented!")
+
+end
+
 function write_attrib(skip,struct,name)
 
     fns = fieldnames(struct);
     for k=1:numel(fns)
         tmp = struct.(fns{k});
         if isnumeric(tmp)
+            if ndims(tmp) > 3
+                error("error write_attrib: dims("+fns{k}+") > 3")
+            end
             if isscalar(tmp)
                 mywritelines(skip+name+"."+fns{k}+" = "+string(tmp));
-            elseif ndims(tmp) > 2
-                error("error write_attrib: dims("+fns{k}+") > 2")
-            end
-            if all(mod(tmp,1)==0,'all') % array of integers
+            elseif all(mod(tmp,1)==0,'all') % array of integers
                 if size(tmp,2)==1
                     write1Darr_i(skip,tmp,name+"."+fns{k});
-                else
+                elseif ndims(tmp) == 2
                     write2Darr_i(skip,tmp,name+"."+fns{k});
+                else
+                    write3Darr_i(skip,tmp,name+"."+fns{k});
                 end
             else 
                 if size(tmp,2)==1
                     write1Darr_r(skip,tmp,name+"."+fns{k}); 
-                else 
+                elseif ndims(tmp) == 2
                     write2Darr_r(skip,tmp,name+"."+fns{k});
+                else
+                    write3Darr_r(skip,tmp,name+"."+fns{k});
                 end
             end
         end
