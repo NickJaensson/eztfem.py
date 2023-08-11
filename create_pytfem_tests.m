@@ -33,8 +33,8 @@ writelines("# run with: python -m unittest dotest.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("from src.distribute_elements import distribute_elements");
-% mywritelines("from quadrilateral2d import quadrilateral2d");
-% mywritelines("from mesh_defs import Mesh, Geometry");
+mywritelines("from src_test.quadrilateral2d import quadrilateral2d");
+mywritelines("from src_test.mesh_defs import Mesh, Geometry");
 % mywritelines("from problem_definition import Problem");
 % mywritelines("from gauss_legendre import gauss_legendre");
 % mywritelines("from basis_function import basis_function");
@@ -55,12 +55,12 @@ mywritelines("    self.assertTrue(np.allclose(grid_py,grid_ez," + ...
     "atol=1e-15,rtol=0),'distribute_elements failed test!' )");
 
 
-% %% run the problem in Matlab
-% 
-% % define the commands to run in Matlab and python
-% cmd_mesh_ez = "quadrilateral2d([1,2],'quad9')";
-% cmd_mesh_py = "quadrilateral2d([1,2],'quad9')";
-% 
+%% run the problem in Matlab
+
+% define the commands to run in Matlab and python
+cmd_mesh_ez = "quadrilateral2d([1,2],'quad9')";
+cmd_mesh_py = "quadrilateral2d([1,2],'quad9')";
+
 % elementdof=[1,1,1,1,1,1,1,1,1;
 %             2,2,2,2,2,2,2,2,2]' ;
 % cmd_problem_ez = "    problem_definition(mesh_ez,elementdof,'nphysq',1);";
@@ -71,42 +71,42 @@ mywritelines("    self.assertTrue(np.allclose(grid_py,grid_ez," + ...
 % 
 % cmd_basis_ez = "basis_function('quad','Q2', user_ez.xr ) ;";
 % cmd_basis_py = "basis_function('quad','Q2', user_py.xr )";
-% 
-% 
-% % run the Matlab code
-% mesh_ez = eval(cmd_mesh_ez);
+
+
+% run the Matlab code
+mesh_ez = eval(cmd_mesh_ez);
 % problem_ez = eval(cmd_problem_ez);
 % [user_ez.xr,user_ez.wg] = eval(cmd_gauss_ez);
 % [user_ez.phi,user_ez.dphi] = eval(cmd_basis_ez);
-% 
-% %% test for quadrilateral2d
-% 
-% mywritelines("  def test_quadrilaterial2d(self):");
-% 
-% % generate the mesh in pytfem
-% mywritelines("    mesh_py = "+cmd_mesh_py);
-% 
-% % copy the mesh from eztfem to pytfem
-% mywritelines("    mesh_ez = Mesh()");
-% write_attrib("    ",mesh_ez,"mesh_ez")
-% for i=1:mesh_ez.ncurves
-%     mywritelines("    mesh_ez.curves.append(Geometry())");
-%     write_attrib("    ",mesh_ez.curves(i),"mesh_ez.curves["+string(i-1)+"]")
-%     mywritelines("    mesh_ez.curves["+string(i-1)+"].topology = mesh_ez.curves["...
-%         +string(i-1)+"].topology - 1 # Python indexing");
-%     mywritelines("    mesh_ez.curves["+string(i-1)+"].nodes = mesh_ez.curves["...
-%         +string(i-1)+"].nodes - 1 # Python indexing"); 
-% end
-% 
-% % compensate the zero-based indexing
-% mywritelines("    # compensate for zero-based indexing");
-% mywritelines("    mesh_ez.topology = mesh_ez.topology - 1 # Python indexing");
-% mywritelines("    mesh_ez.points = mesh_ez.points - 1 # Python indexing");
-% 
-% % check for equivalence
-% mywritelines("    self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )");
-% 
-% 
+
+%% test for quadrilateral2d
+
+mywritelines("  def test_quadrilaterial2d(self):");
+
+% generate the mesh in pytfem
+mywritelines("    mesh_py = "+cmd_mesh_py);
+
+% copy the mesh from eztfem to pytfem
+mywritelines("    mesh_ez = Mesh()");
+write_attrib("    ",mesh_ez,"mesh_ez")
+for i=1:mesh_ez.ncurves
+    mywritelines("    mesh_ez.curves.append(Geometry())");
+    write_attrib("    ",mesh_ez.curves(i),"mesh_ez.curves["+string(i-1)+"]")
+    mywritelines("    mesh_ez.curves["+string(i-1)+"].topology = mesh_ez.curves["...
+        +string(i-1)+"].topology - 1 # Python indexing");
+    mywritelines("    mesh_ez.curves["+string(i-1)+"].nodes = mesh_ez.curves["...
+        +string(i-1)+"].nodes - 1 # Python indexing"); 
+end
+
+% compensate the zero-based indexing
+mywritelines("    # compensate for zero-based indexing");
+mywritelines("    mesh_ez.topology = mesh_ez.topology - 1 # Python indexing");
+mywritelines("    mesh_ez.points = mesh_ez.points - 1 # Python indexing");
+
+% check for equivalence
+mywritelines("    self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )");
+
+
 % %% test for problem_definition
 % 
 % mywritelines("  def test_problem_definition(self):");
