@@ -230,7 +230,7 @@ def rectangle2d_quad9(ne, ratio, factor):
 
     mesh.topology = np.zeros((numnod, mesh.nelem),dtype=int)
     mesh.coor = np.zeros((mesh.nnodes, mesh.ndim))
-    mesh.points = np.zeros((mesh.npoints, 1),dtype=int)
+    mesh.points = np.zeros((mesh.npoints),dtype=int)
 
     # topology
     for i in range(1, n + 1):

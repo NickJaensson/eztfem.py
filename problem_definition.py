@@ -49,7 +49,7 @@ class Problem:
     def __init__(self, mesh, elementdof, **kwargs):
 
         # Check if the first dimension of elementdof matches mesh.elnumnod
-        if len(elementdof[0]) != mesh.elnumnod:
+        if elementdof.shape[0] != mesh.elnumnod:
             raise ValueError("First dimension of elementdof does not match elnumnod.")
         
         self.elementdof = elementdof
@@ -66,7 +66,7 @@ class Problem:
             self.nphysq = nphysq
             
         # Number of vectors of special structure
-        self.nvec = len(self.elementdof)
+        self.nvec = self.elementdof.shape[1]
 
         # Number of degrees of freedom in each node of the element for each vector
         self.vec_elnumdegfd = self.elementdof
@@ -81,7 +81,7 @@ class Problem:
                 for node in range(mesh.elnumnod):
                     nodenr = mesh.topology[node, elem]
                     ndegfd_prev = self.vec_nodnumdegfd[nodenr + 1, vec]
-                    ndegfd = self.vec_elnumdegfd[vec,node]
+                    ndegfd = self.vec_elnumdegfd[node,vec]
 
                     if ndegfd_prev == -1:
                         self.vec_nodnumdegfd[nodenr + 1, vec] = ndegfd
@@ -96,10 +96,8 @@ class Problem:
             for nodenr in range(mesh.nnodes):
                 self.vec_nodnumdegfd[nodenr + 1, vec] += self.vec_nodnumdegfd[nodenr, vec]
 
-
         # number of degrees of freedom
         self.vec_numdegfd = self.vec_nodnumdegfd[mesh.nnodes,:]
-
 
         # Now all degrees in the nodes for the system vector        
 
@@ -110,4 +108,20 @@ class Problem:
         self.maxnoddegfd = np.max(self.elnumdegfd)
         self.maxvecnoddegfd = np.max(self.vec_elnumdegfd)
 
-
+    # equivalence check for testing against Matlab code
+    # NOTE: see the matlab file create_pytfem_tests.m for the use of np.squeeze
+    def __eq__(self, other):
+       check = [self.nphysq == other.nphysq,
+                self.nvec == other.nvec,
+                (np.squeeze(self.vec_elnumdegfd) == other.vec_elnumdegfd).all(),
+                (np.squeeze(self.vec_nodnumdegfd) == other.vec_nodnumdegfd).all(),
+                (self.vec_numdegfd == other.vec_numdegfd).all(),
+                (self.elnumdegfd == other.elnumdegfd).all(),
+                (self.nodnumdegfd == other.nodnumdegfd).all(),
+                self.numdegfd == other.numdegfd,
+                self.maxnoddegfd == other.maxnoddegfd,
+                self.maxvecnoddegfd == other.maxvecnoddegfd]
+       if not all(check):
+           print("WARNING: Problems not equivalent:")
+           print(check)
+       return all(check)
