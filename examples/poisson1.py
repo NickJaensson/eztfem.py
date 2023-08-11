@@ -5,10 +5,11 @@ from quadrilateral2d import quadrilateral2d
 from distribute_elements import distribute_elements
 from problem_definition import Problem
 from gauss_legendre import gauss_legendre
+from basis_function import basis_function
 import numpy as np
+from user import User
 
 from pprint import pprint
-
 
 # create mesh
 
@@ -29,8 +30,10 @@ problem=Problem(mesh,elementdof,nphysq=1)
 # define Gauss integration and basis functions
 
 print('gauss_legendre')
-xr, wg = gauss_legendre(shape='quad',n=3)
+user = User()
+user.xr, user.wg = gauss_legendre(shape='quad',n=3)
 
-#print(xr)
-#print(wg)
+# Usage example
+user.phi, user.dphi = basis_function('quad','Q2', user.xr )
 
+print(user.phi,user.dphi)
