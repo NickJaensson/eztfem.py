@@ -50,13 +50,21 @@ write_attrib("    ",sol_eztfem,"sol_eztfem")
 for i=1:sol_eztfem.ncurves
     mywritelines("    sol_eztfem.curves.append(Geometry())");
     write_attrib("    ",sol_eztfem.curves(i),"sol_eztfem.curves["+string(i-1)+"]")
+    mywritelines("    sol_eztfem.curves["+string(i-1)+"].topology = sol_eztfem.curves["...
+        +string(i-1)+"].topology - 1 # Python indexing");
+    mywritelines("    sol_eztfem.curves["+string(i-1)+"].nodes = sol_eztfem.curves["...
+        +string(i-1)+"].nodes - 1 # Python indexing"); 
 end
 
 mywritelines("    # compensate for zero-based indexing");
-mywritelines("    sol_eztfem.topology = sol_eztfem.topology - 1");
-mywritelines("    sol_eztfem.points = sol_eztfem.points - 1");
+mywritelines("    sol_eztfem.topology = sol_eztfem.topology - 1 # Python indexing");
+mywritelines("    sol_eztfem.points = sol_eztfem.points - 1 # Python indexing");
 
 mywritelines("    self.assertTrue(sol_pytfem==sol_eztfem,'quadrilateral2d failed test!' )");
+
+
+
+% test for problem definition
 
 
 
@@ -99,6 +107,8 @@ function write1Darr_i(skip,arr,name)
 
 end
 
+% NOTE: arrays are written "as is" (looping of the first index, than the
+% second etc.). It is assumed that in Python they are also read like this
 
 function write2Darr_r(skip,arr,name)
 
@@ -123,18 +133,27 @@ function write3Darr_i(skip,arr,name)
 
     mywritelines("    "+name+" = np.array([");
     for i=1:size(arr,1)
-        mywritelines(skip+"["+sprintf('%12i,',arr(i,:,1))+"],");
+        mywritelines("    [")
+        for j=1:size(arr,2)
+            mywritelines(skip+"["+sprintf('%12i,',arr(i,j,:))+"],");
+        end
+        mywritelines("    ],")
     end
-    for i=1:size(arr,1)
-        mywritelines(skip+"["+sprintf('%12i,',arr(i,:,2))+"],");
-    end    
     mywritelines("    ],dtype=int)");
 
 end
 
 function write3Darr_r(skip,arr,name)
 
-    error("write3Darr_r not implemented!")
+    mywritelines("    "+name+" = np.array([");
+    for i=1:size(arr,1)
+        mywritelines("    [")
+        for j=1:size(arr,2)
+            mywritelines(skip+"["+sprintf('%25.16e,',arr(i,j,:))+"],");
+        end
+        mywritelines("    ],")
+    end
+    mywritelines("    ],dtype=int)");
 
 end
 
