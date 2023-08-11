@@ -1,5 +1,21 @@
 close all; clear
 
+% NOTE: arrays are written "as is" (looping of the first index, than the
+% second etc.). It is assumed that in Python they are also read like this
+% 
+% NOTE2: Python has real 1D arrays, whereas Matlab 1D arrays are N x 1
+% (e.g., ndims([1,2]) gives as output 2)
+% This can lead to problems when comparing arrays, since these are not
+% equivalent. 
+% 
+% This is handled on the Matlab side by:
+%  - write scalars as scalars (using isscalar)
+%  - write 2D arrays (so can be 1D or "true" 2D) as 1D when second dim == 1
+%  - write 3D arrays always as a full 3D array
+%
+% And on the Python side:
+%  - in Python: use numpy.squeeze on all 2D arrays to get rid of dim == 1
+
 % add eztfem to path
 
 eztfempath = "~/Desktop/eztfem/";
@@ -37,11 +53,11 @@ mywritelines("    self.assertTrue(np.allclose(grid_py,grid_ez," + ...
 %% run the problem in Matlab
 
 % define the commands to run in Matlab and python
-cmd_mesh_ez = "quadrilateral2d([3,2],'quad9')";
-cmd_mesh_py = "quadrilateral2d([3,2],'quad9')";
+cmd_mesh_ez = "quadrilateral2d([1,2],'quad9')";
+cmd_mesh_py = "quadrilateral2d([1,2],'quad9')";
 
 
-elementdof=[1,1,1,1,1,1,1,1,1; 
+elementdof=[1,1,1,1,1,1,1,1,1;
             2,2,2,2,2,2,2,2,2]' ;
 cmd_problem_ez = "    problem_definition(mesh_ez,elementdof,'nphysq',1);";
 cmd_problem_py = "    Problem(mesh_py,elementdof_py,nphysq=1);";
@@ -131,9 +147,6 @@ function write1Darr_i(skip,arr,name)
 
 end
 
-% NOTE: arrays are written "as is" (looping of the first index, than the
-% second etc.). It is assumed that in Python they are also read like this
-
 function write2Darr_r(skip,arr,name)
 
     mywritelines("    "+name+" = np.array([");
@@ -193,18 +206,22 @@ function write_attrib(skip,struct,name)
             if isscalar(tmp)
                 mywritelines(skip+name+"."+fns{k}+" = "+string(tmp));
             elseif all(mod(tmp,1)==0,'all') % array of integers
-                if size(tmp,2)==1
-                    write1Darr_i(skip,tmp,name+"."+fns{k});
-                elseif ndims(tmp) == 2
-                    write2Darr_i(skip,tmp,name+"."+fns{k});
+                if ndims(tmp) == 2 
+                    if size(tmp,2)==1
+                        write1Darr_i(skip,tmp,name+"."+fns{k});
+                    else 
+                        write2Darr_i(skip,tmp,name+"."+fns{k});
+                    end
                 else
                     write3Darr_i(skip,tmp,name+"."+fns{k});
                 end
             else 
-                if size(tmp,2)==1
-                    write1Darr_r(skip,tmp,name+"."+fns{k}); 
-                elseif ndims(tmp) == 2
-                    write2Darr_r(skip,tmp,name+"."+fns{k});
+                if ndims(tmp) == 2 
+                    if size(tmp,2)==1
+                        write1Darr_r(skip,tmp,name+"."+fns{k}); 
+                    else
+                        write2Darr_r(skip,tmp,name+"."+fns{k});
+                    end
                 else
                     write3Darr_r(skip,tmp,name+"."+fns{k});
                 end
