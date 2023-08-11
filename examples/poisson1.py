@@ -8,15 +8,15 @@ import numpy as np
 from pprint import pprint
 from src.quadrilateral2d import quadrilateral2d
 from src.problem_definition import Problem
-from src_test.gauss_legendre import gauss_legendre
-from src_test.basis_function import basis_function
-from src_test.user import User
+from src.gauss_legendre import gauss_legendre
+from src.basis_function import basis_function
+from src.user import User
+from func import func
 
 # create mesh
 
 print('mesh')
 mesh=quadrilateral2d([1,2],'quad9')
-#pprint(vars(mesh))
 
 # define the problem
 
@@ -26,14 +26,16 @@ elementdof=np.array([[1,1,1,1,1,1,1,1,1],
 
 problem=Problem(mesh,elementdof,nphysq=1)
 
-#pprint(vars(problem))
-
 # define Gauss integration and basis functions
 
 print('gauss_legendre')
 user = User()
 user.xr, user.wg = gauss_legendre(shape='quad',n=3)
-
-# Usage example
 user.phi, user.dphi = basis_function('quad','Q2', user.xr )
-print(user.phi,user.dphi)
+
+# user object for setting problem coefficients, ...
+
+user.coorsys = 0
+user.alpha = 1
+user.funcnr = 4
+user.func = func
