@@ -1,6 +1,6 @@
 import numpy as np
-from mesh_defs import Mesh, Geometry
-from distribute_elements import distribute_elements
+from src_test.mesh_defs import Mesh, Geometry
+from src.distribute_elements import distribute_elements
 
 def quadrilateral2d(ne, eltype, **kwargs):
 

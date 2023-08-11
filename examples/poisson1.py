@@ -1,15 +1,15 @@
 # Poisson problem on a unit square with Dirichlet boundary conditions
 # Manufactured solution.
 
-from quadrilateral2d import quadrilateral2d
-from distribute_elements import distribute_elements
-from problem_definition import Problem
-from gauss_legendre import gauss_legendre
-from basis_function import basis_function
-import numpy as np
-from user import User
+import sys
+sys.path.append('../')
 
+import numpy as np
 from pprint import pprint
+from src_test.quadrilateral2d import quadrilateral2d
+from src_test.problem_definition import Problem
+from src_test.gauss_legendre import gauss_legendre
+from src_test.user import User
 
 # create mesh
 
@@ -34,6 +34,5 @@ user = User()
 user.xr, user.wg = gauss_legendre(shape='quad',n=3)
 
 # Usage example
-user.phi, user.dphi = basis_function('quad','Q2', user.xr )
-
-print(user.phi,user.dphi)
+#user.phi, user.dphi = basis_function('quad','Q2', user.xr )
+#print(user.phi,user.dphi)
