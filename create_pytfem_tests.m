@@ -5,14 +5,11 @@ close all; clear
 eztfempath = "~/Desktop/eztfem/";
 addpath_eztfem(eztfempath)
 
-
-% filename to which to write the python test file
-
 global fn 
-fn = "~/Desktop/pytfem/dotest.py";
+fn = "~/Desktop/pytfem/dotest.py"; % filename for python test file
 
 
-% write some header stuff
+%% write some header stuff
 
 writelines("# run with: python -m unittest dotest.py",fn);
 mywritelines("import numpy as np")
@@ -20,33 +17,50 @@ mywritelines("import unittest");
 mywritelines("from distribute_elements import distribute_elements");
 mywritelines("from quadrilateral2d import quadrilateral2d");
 mywritelines("from mesh_defs import Mesh, Geometry");
+mywritelines("from problem_definition import Problem");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
 
 
-% test for distribute_elements
+%% test for distribute_elements
 
-cmd = "distribute_elements(8,1,2)";
-grid_ez = eval(cmd);
+cmd_grid = "distribute_elements(8,1,2)";
+grid_ez = eval(cmd_grid);
 
 mywritelines("  def test_distribute_elements(self):");
-mywritelines("    grid_py = "+cmd);
+mywritelines("    grid_py = "+cmd_grid);
 write1Darr_r("    ",grid_ez,"grid_ez")
 mywritelines("    self.assertTrue(np.allclose(grid_py,grid_ez," + ...
     "atol=1e-15,rtol=0),'distribute_elements failed test!' )");
 
 
-% test for quadrilateral2d
+%% run the problem in Matlab
 
-cmd = "quadrilateral2d([3,2],'quad9')";
-mesh_ez = eval(cmd);
+% define the commands to run in Matlab and python
+cmd_mesh_ez = "quadrilateral2d([3,2],'quad9')";
+cmd_mesh_py = "quadrilateral2d([3,2],'quad9')";
+
+
+elementdof=[1,1,1,1,1,1,1,1,1; 
+            2,2,2,2,2,2,2,2,2]' ;
+cmd_problem_ez = "    problem_definition(mesh_ez,elementdof,'nphysq',1);";
+cmd_problem_py = "    Problem(mesh_py,elementdof_py,nphysq=1);";
+
+% run the Matlab code
+mesh_ez = eval(cmd_mesh_ez);
+problem_ez = eval(cmd_problem_ez);
+
+
+%% test for quadrilateral2d
 
 mywritelines("  def test_quadrilaterial2d(self):");
-mywritelines("    mesh_py = "+cmd);
 
+% generate the mesh in pytfem
+mywritelines("    mesh_py = "+cmd_mesh_py);
+
+% copy the mesh from eztfem to pytfem
 mywritelines("    mesh_ez = Mesh()");
 write_attrib("    ",mesh_ez,"mesh_ez")
-
 for i=1:mesh_ez.ncurves
     mywritelines("    mesh_ez.curves.append(Geometry())");
     write_attrib("    ",mesh_ez.curves(i),"mesh_ez.curves["+string(i-1)+"]")
@@ -56,18 +70,28 @@ for i=1:mesh_ez.ncurves
         +string(i-1)+"].nodes - 1 # Python indexing"); 
 end
 
+% compensate the zero-based indexing
 mywritelines("    # compensate for zero-based indexing");
 mywritelines("    mesh_ez.topology = mesh_ez.topology - 1 # Python indexing");
 mywritelines("    mesh_ez.points = mesh_ez.points - 1 # Python indexing");
 
+% check for equivalence
 mywritelines("    self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )");
 
 
+%% test for problem_definition
 
-% test for problem definition
+mywritelines("  def test_problem_definition(self):");
+mywritelines("    mesh_py = "+cmd_mesh_py);
+write2Darr_i("    ",elementdof,"elementdof_py")
+mywritelines("    problem_py = "+cmd_problem_py);
+mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
+write_attrib("    ",problem_ez,"problem_ez")
+
+mywritelines("    self.assertTrue(problem_py==problem_ez,'problem_definition failed test!' )");
 
 
-
+%% helper functions %%%%%%%%%%%%%%%%%%
 
 function addpath_eztfem(eztfempath)
 
@@ -189,4 +213,3 @@ function write_attrib(skip,struct,name)
     end
 
 end
-
