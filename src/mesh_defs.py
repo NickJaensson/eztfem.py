@@ -1,6 +1,9 @@
 import numpy as np
 
+# class definition for Mesh objects
 class Mesh:
+
+    # initialize attributes (will be filled elsewhere)
     def __init__(self):
         self.ndim = 0
         self.nnodes = 0
@@ -28,13 +31,19 @@ class Mesh:
                 (self.points == other.points).all(),
                 self.ncurves == other.ncurves]
        check2 = [self.curves[i]==other.curves[i] for i in range(self.ncurves)]
+
+       # print a warning when not equivalent (for debugging purposes)
        if not all(check) and all(check2):
            print("WARNING: Meshes not equivalent:")
            print(check)
            print(check2)
+
        return all(check) and all(check2)
 
+# class definition for Geometry objects
 class Geometry:
+
+    # initialize attributes (will be filled elsewhere)
     def __init__(self,elshape=0,ndim=0,elnumnod=0,nnodes=0,nelem=0):
         self.elshape = elshape
         self.ndim = ndim
@@ -54,7 +63,10 @@ class Geometry:
                  self.nelem == other.nelem,
                  (self.topology == other.topology).all(),
                  (self.nodes == other.nodes).all()]
+        
+       # print a warning when not equivalent (for debugging purposes)
         if not all(check):
            print("WARNING: Geometries not equivalent:")
            print(check)
+
         return all(check)
