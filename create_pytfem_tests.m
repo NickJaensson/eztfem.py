@@ -35,10 +35,10 @@ mywritelines("import unittest");
 mywritelines("from src.distribute_elements import distribute_elements");
 mywritelines("from src.quadrilateral2d import quadrilateral2d");
 mywritelines("from src.mesh_defs import Mesh, Geometry");
-% mywritelines("from problem_definition import Problem");
-% mywritelines("from gauss_legendre import gauss_legendre");
-% mywritelines("from basis_function import basis_function");
-% mywritelines("from user import User");
+mywritelines("from src.problem_definition import Problem");
+mywritelines("from src_test.user import User");
+mywritelines("from src_test.gauss_legendre import gauss_legendre");
+mywritelines("from src_test.basis_function import basis_function");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
 
@@ -63,23 +63,23 @@ cmd_mesh_py = "quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.ar
 % cmd_mesh_ez = "quadrilateral2d([8,12],'quad9','vertices',[1,1;2,2;3,3;4,4],'ratio',[2,3,2,3],'factor',[2,3,4,5])";
 % cmd_mesh_py = "quadrilateral2d([8,12],'quad9',vertices=np.array([[1,1],[2,2],[3,3],[4,4]]),ratio=np.array([2,3,2,3]),factor=np.array([2,3,4,5]))";
 
-% elementdof=[1,1,1,1,1,1,1,1,1;
-%             2,2,2,2,2,2,2,2,2]' ;
-% cmd_problem_ez = "    problem_definition(mesh_ez,elementdof,'nphysq',1);";
-% cmd_problem_py = "    Problem(mesh_py,elementdof_py,nphysq=1);";
-% 
-% cmd_gauss_ez = "gauss_legendre('quad','n', 1 ) ;";
-% cmd_gauss_py = "gauss_legendre('quad',n=1 )";
-% 
-% cmd_basis_ez = "basis_function('quad','Q2', user_ez.xr ) ;";
-% cmd_basis_py = "basis_function('quad','Q2', user_py.xr )";
+elementdof=[1,1,1,1,1,1,1,1,1;
+            2,2,2,2,2,2,2,2,2]' ;
+cmd_problem_ez = "    problem_definition(mesh_ez,elementdof,'nphysq',1);";
+cmd_problem_py = "    Problem(mesh_py,elementdof_py,nphysq=1);";
+
+cmd_gauss_ez = "gauss_legendre('quad','n', 2 ) ;";
+cmd_gauss_py = "gauss_legendre('quad',n=2 )";
+
+cmd_basis_ez = "basis_function('quad','P0', user_ez.xr ) ;";
+cmd_basis_py = "basis_function('quad','P0', user_py.xr )";
 
 
 % run the Matlab code
 mesh_ez = eval(cmd_mesh_ez);
-% problem_ez = eval(cmd_problem_ez);
-% [user_ez.xr,user_ez.wg] = eval(cmd_gauss_ez);
-% [user_ez.phi,user_ez.dphi] = eval(cmd_basis_ez);
+problem_ez = eval(cmd_problem_ez);
+[user_ez.xr,user_ez.wg] = eval(cmd_gauss_ez);
+[user_ez.phi,user_ez.dphi] = eval(cmd_basis_ez);
 
 %% test for quadrilateral2d
 
@@ -109,33 +109,33 @@ mywritelines("    mesh_ez.points = mesh_ez.points - 1 # Python indexing");
 mywritelines("    self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )");
 
 
-% %% test for problem_definition
-% 
-% mywritelines("  def test_problem_definition(self):");
-% mywritelines("    mesh_py = "+cmd_mesh_py);
-% write2Darr_i("    ",elementdof,"elementdof_py")
-% mywritelines("    problem_py = "+cmd_problem_py);
-% mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
-% write_attrib("    ",problem_ez,"problem_ez")
-% 
-% mywritelines("    self.assertTrue(problem_py==problem_ez,'problem_definition failed test!' )");
-% 
-% 
-% %% test for gauss_legendre and basis function
-% 
-% mywritelines("  def test_gauss_legendre(self):");
-% 
-% mywritelines("    user_ez = User()");
-% write_attrib("    ",user_ez,"user_ez")
-% 
-% mywritelines("    user_py = User()");
-% mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
-% mywritelines("    user_py.phi, user_py.dphi = "+cmd_basis_py);
-% 
-% mywritelines("    self.assertTrue(user_py==user_ez,'problem_definition failed test!' )");
+%% test for problem_definition
+
+mywritelines("  def test_problem_definition(self):");
+mywritelines("    mesh_py = "+cmd_mesh_py);
+write2Darr_i("    ",elementdof,"elementdof_py")
+mywritelines("    problem_py = "+cmd_problem_py);
+mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
+write_attrib("    ",problem_ez,"problem_ez")
+
+mywritelines("    self.assertTrue(problem_py==problem_ez,'problem_definition failed test!' )");
 
 
-%% helper functions %%%%%%%%%%%%%%%%%%
+%% test for gauss_legendre and basis function
+
+mywritelines("  def test_gauss_legendre(self):");
+
+mywritelines("    user_ez = User()");
+write_attrib("    ",user_ez,"user_ez")
+
+mywritelines("    user_py = User()");
+mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
+mywritelines("    user_py.phi, user_py.dphi = "+cmd_basis_py);
+
+mywritelines("    self.assertTrue(user_py==user_ez,'gauss_legendre failed test!' )");
+
+
+%% helper functions
 
 function addpath_eztfem(eztfempath)
 

@@ -1,52 +1,52 @@
 import numpy as np
 
+# class definition for Problem objects
 class Problem:
-    
-#PROBLEM_DEFINITION  Define the problem
-#  problem = PROBLEM_DEFINITION ( mesh, elementdof, 'optarg1', value1, ... )
-#  input:
-#    mesh: mesh structure
-#    elementdof: a matrix of size mesh.elnumnod x nvec, where nvec
-#                is the number of "vectors of special structure".
-#                Each column of the matrix gives the number of degrees of
-#                freedom in each node of the element for the vectors.
-#  optional arguments:
-#    string, value couples to set optional parameters:
-#    'nphysq', the number of "physical quantities". The first nphysq vectors
-#              of special structure (first nphysq columns of elementdof) define
-#              the physical quantities.
-#              default: size(elementdof,1)
-#  output:
-#    problem: the problem structure, having the components
-#       nphysq: number of physical quantities
-#       nvec: number of vectors defined on the mesh. The physical quantities
-#             are defined by the first nphysq vectors.
-#       vec_elnumdegfd: an array of size (mesh.elnumnod,nvec), where each
-#             column of the matrix gives the number of degrees of freedom in
-#             each node of the element for the vectors.
-#       vec_nodnumdegfd: an array of length mesh.nnodes+1 x nvec storing the
-#             number of degrees of freedom in each nodal point (accumulated)
-#             of vectors of special structure as follows:
-#                  vec_nodnumdegfd(1,vec) = 0  
-#             number of degrees of freedom for nodal point n is
-#                  vec_nodnumdegfd(n+1,vec) - vec_nodnumdegfd(n,vec)
-#             for vector of special structure vec
-#       vec_numdegfd: an array of length nvec storing the number of degrees
-#             of freedom for each vector of special structure
-#       elnumdegfd: an array of size mesh.elnumnod, giving the number of
-#             (system) degrees of freedom in each nodal point of an element
-#       nodnumdegfd: an array of length mesh.nnodes+1 storing the
-#             number of degrees of freedom in each nodal point (accumulated)
-#                  nodnumdegfd(1) = 0  
-#             number of degrees of freedom for nodal point n is
-#                  nodnumdegfd(n+1) - vec_nodnumdegfd(n)
-#       numdegfd: the number of (system) degrees of freedom 
-#       maxnoddegfd: the maximum number of (system) degrees of freedom in the
-#                    the nodal points 
-#       maxvecnoddegfd: the maximum number of vector degrees of freedom in the
-#                    the nodal points 
-
     def __init__(self, mesh, elementdof, **kwargs):
+        """"
+        Define the problem upon making an object using this class
+        input:
+          mesh: mesh structure
+          elementdof: a matrix of size mesh.elnumnod x nvec, where nvec
+                      is the number of "vectors of special structure".
+                      Each column of the matrix gives the number of degrees of
+                      freedom in each node of the element for the vectors.
+        optional arguments:
+          string, value couples to set optional parameters:
+          'nphysq', the number of "physical quantities". The first nphysq vectors
+                    of special structure (first nphysq columns of elementdof) define
+                    the physical quantities.
+                    default: size(elementdof,1)
+        output:
+          problem: the problem structure, having the components
+             nphysq: number of physical quantities
+             nvec: number of vectors defined on the mesh. The physical quantities
+                   are defined by the first nphysq vectors.
+             vec_elnumdegfd: an array of size (mesh.elnumnod,nvec), where each
+                   column of the matrix gives the number of degrees of freedom in
+                   each node of the element for the vectors.
+             vec_nodnumdegfd: an array of length mesh.nnodes+1 x nvec storing the
+                   number of degrees of freedom in each nodal point (accumulated)
+                   of vectors of special structure as follows:
+                        vec_nodnumdegfd(1,vec) = 0  
+                   number of degrees of freedom for nodal point n is
+                        vec_nodnumdegfd(n+1,vec) - vec_nodnumdegfd(n,vec)
+                   for vector of special structure vec
+             vec_numdegfd: an array of length nvec storing the number of degrees
+                   of freedom for each vector of special structure
+             elnumdegfd: an array of size mesh.elnumnod, giving the number of
+                   (system) degrees of freedom in each nodal point of an element
+             nodnumdegfd: an array of length mesh.nnodes+1 storing the
+                   number of degrees of freedom in each nodal point (accumulated)
+                        nodnumdegfd(1) = 0  
+                   number of degrees of freedom for nodal point n is
+                        nodnumdegfd(n+1) - vec_nodnumdegfd(n)
+             numdegfd: the number of (system) degrees of freedom 
+             maxnoddegfd: the maximum number of (system) degrees of freedom in the
+                          the nodal points 
+             maxvecnoddegfd: the maximum number of vector degrees of freedom in the
+                          the nodal points 
+        """
 
         # Check if the first dimension of elementdof matches mesh.elnumnod
         if elementdof.shape[0] != mesh.elnumnod:
@@ -58,7 +58,7 @@ class Problem:
         nphysq = kwargs.get('nphysq', None)
 
         # Number of physical quantities
-        if not nphysq:
+        if nphysq is None or nphysq == 0:
             self.nphysq = self.elementdof.shape[1]
         elif len(self.elementdof) < nphysq:
             raise ValueError("Length of elementdof must be at least nphysq.")
@@ -121,7 +121,10 @@ class Problem:
                 self.numdegfd == other.numdegfd,
                 self.maxnoddegfd == other.maxnoddegfd,
                 self.maxvecnoddegfd == other.maxvecnoddegfd]
+       
+       # print a warning when not equivalent (for debugging purposes)
        if not all(check):
            print("WARNING: Problems not equivalent:")
            print(check)
+
        return all(check)
