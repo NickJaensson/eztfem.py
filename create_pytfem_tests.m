@@ -32,7 +32,7 @@ fn = "~/Desktop/pytfem/dotest.py"; % filename for python test file
 writelines("# run with: python -m unittest dotest.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
-mywritelines("from distribute_elements import distribute_elements");
+mywritelines("from src.distribute_elements import distribute_elements");
 % mywritelines("from quadrilateral2d import quadrilateral2d");
 % mywritelines("from mesh_defs import Mesh, Geometry");
 % mywritelines("from problem_definition import Problem");
@@ -45,7 +45,7 @@ mywritelines("class TestPytfem(unittest.TestCase):");
 
 %% test for distribute_elements
 
-cmd_grid = "distribute_elements(8,1,2)";
+cmd_grid = "distribute_elements(8,1,3)";
 grid_ez = eval(cmd_grid);
 
 mywritelines("  def test_distribute_elements(self):");
