@@ -21,46 +21,46 @@ mywritelines("from distribute_elements import distribute_elements");
 mywritelines("from quadrilateral2d import quadrilateral2d");
 mywritelines("from mesh_defs import Mesh, Geometry");
 
-mywritelines("class Testsol_pytfem(unittest.TestCase):");
+mywritelines("class TestPytfem(unittest.TestCase):");
 
 
 % test for distribute_elements
 
 cmd = "distribute_elements(8,1,2)";
-sol_eztfem = eval(cmd);
+grid_ez = eval(cmd);
 
 mywritelines("  def test_distribute_elements(self):");
-mywritelines("    sol_pytfem = "+cmd);
-write1Darr_r("    ",sol_eztfem,"sol_eztfem")
-mywritelines("    self.assertTrue(np.allclose(sol_pytfem,sol_eztfem," + ...
+mywritelines("    grid_py = "+cmd);
+write1Darr_r("    ",grid_ez,"grid_ez")
+mywritelines("    self.assertTrue(np.allclose(grid_py,grid_ez," + ...
     "atol=1e-15,rtol=0),'distribute_elements failed test!' )");
 
 
 % test for quadrilateral2d
 
 cmd = "quadrilateral2d([3,2],'quad9')";
-sol_eztfem = eval(cmd);
+mesh_ez = eval(cmd);
 
 mywritelines("  def test_quadrilaterial2d(self):");
-mywritelines("    sol_pytfem = "+cmd);
+mywritelines("    mesh_py = "+cmd);
 
-mywritelines("    sol_eztfem = Mesh()");
-write_attrib("    ",sol_eztfem,"sol_eztfem")
+mywritelines("    mesh_ez = Mesh()");
+write_attrib("    ",mesh_ez,"mesh_ez")
 
-for i=1:sol_eztfem.ncurves
-    mywritelines("    sol_eztfem.curves.append(Geometry())");
-    write_attrib("    ",sol_eztfem.curves(i),"sol_eztfem.curves["+string(i-1)+"]")
-    mywritelines("    sol_eztfem.curves["+string(i-1)+"].topology = sol_eztfem.curves["...
+for i=1:mesh_ez.ncurves
+    mywritelines("    mesh_ez.curves.append(Geometry())");
+    write_attrib("    ",mesh_ez.curves(i),"mesh_ez.curves["+string(i-1)+"]")
+    mywritelines("    mesh_ez.curves["+string(i-1)+"].topology = mesh_ez.curves["...
         +string(i-1)+"].topology - 1 # Python indexing");
-    mywritelines("    sol_eztfem.curves["+string(i-1)+"].nodes = sol_eztfem.curves["...
+    mywritelines("    mesh_ez.curves["+string(i-1)+"].nodes = mesh_ez.curves["...
         +string(i-1)+"].nodes - 1 # Python indexing"); 
 end
 
 mywritelines("    # compensate for zero-based indexing");
-mywritelines("    sol_eztfem.topology = sol_eztfem.topology - 1 # Python indexing");
-mywritelines("    sol_eztfem.points = sol_eztfem.points - 1 # Python indexing");
+mywritelines("    mesh_ez.topology = mesh_ez.topology - 1 # Python indexing");
+mywritelines("    mesh_ez.points = mesh_ez.points - 1 # Python indexing");
 
-mywritelines("    self.assertTrue(sol_pytfem==sol_eztfem,'quadrilateral2d failed test!' )");
+mywritelines("    self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )");
 
 
 
