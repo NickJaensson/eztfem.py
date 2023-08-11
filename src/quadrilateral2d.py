@@ -134,32 +134,26 @@ def quadrilateral2d(ne, eltype, **kwargs):
 
 
 def rectangle2d_tria3(ne, ratio, factor):
-    # Implementation of rectangle2d_tria3
     raise NotImplementedError
 
 
 def rectangle2d_tria4(ne, ratio, factor):
-    # Implementation of rectangle2d_tria4
     raise NotImplementedError
 
 
 def rectangle2d_tria6(ne, ratio, factor):
-    # Implementation of rectangle2d_tria6
     raise NotImplementedError
 
 
 def rectangle2d_tria7(ne, ratio, factor):
-    # Implementation of rectangle2d_tria7
     raise NotImplementedError
 
 
 def rectangle2d_quad4(ne, ratio, factor):
-    # Implementation of rectangle2d_quad4
     raise NotImplementedError
 
 
 def rectangle2d_quad5(ne, ratio, factor):
-    # Implementation of rectangle2d_quad5
     raise NotImplementedError
 
 

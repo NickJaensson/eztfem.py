@@ -63,14 +63,29 @@ def basis_function(shape, intpol, xr):
 
     return phi, dphi
 
+def basis_triangle_P0(xr):
+    raise NotImplementedError
+
+def basis_triangle_P1(xr):
+    raise NotImplementedError
+
+def basis_triangle_P1plus(xr):
+    raise NotImplementedError
+
+def basis_triangle_P2(xr):
+    raise NotImplementedError
+
+def basis_triangle_P2plus(xr):
+    raise NotImplementedError
+
 def basis_line_P0(xr):
     ni = xr.shape[0]
     nn = 1
     phi = np.zeros((ni, nn))
-    dphi = np.zeros((ni, nn, 1))
+    dphi = np.zeros((ni, nn))
     
     phi[:, :] = 1
-    dphi[:, :, :] = 0
+    dphi[:, :] = 0
     
     return phi, dphi
 
@@ -78,31 +93,29 @@ def basis_line_P1(xr):
     ni = xr.shape[0]
     nn = 2
     phi = np.zeros((ni, nn))
-    dphi = np.zeros((ni, nn, 1))
+    dphi = np.zeros((ni, nn))
     
     phi[:, 0] = (1 - xr) / 2
     phi[:, 1] = (1 + xr) / 2
 
-    dphi[:, 0, 0] = -0.5
-    dphi[:, 1, 0] =  0.5
+    dphi[:, 0] = -0.5
+    dphi[:, 1] =  0.5
 
     return phi, dphi
-
-import numpy as np
 
 def basis_line_P2(xr):
     ni = xr.shape[0]
     nn = 3
     phi = np.zeros((ni, nn))
-    dphi = np.zeros((ni, nn, 1))
+    dphi = np.zeros((ni, nn))
     
-    phi[:, 0] = -(1 - xr[:, 0]) * xr[:, 0] / 2
-    phi[:, 1] = 1 - xr[:, 0] ** 2
-    phi[:, 2] = (1 + xr[:, 0]) * xr[:, 0] / 2
+    phi[:, 0] = -(1 - xr) * xr / 2
+    phi[:, 1] = 1 - xr ** 2
+    phi[:, 2] = (1 + xr) * xr / 2
 
-    dphi[:, 0, 0] = -(1 - 2 * xr[:, 0]) / 2
-    dphi[:, 1, 0] = -2 * xr[:, 0]
-    dphi[:, 2, 0] = (1 + 2 * xr[:, 0]) / 2
+    dphi[:, 0] = -(1 - 2 * xr) / 2
+    dphi[:, 1] = -2 * xr
+    dphi[:, 2] = (1 + 2 * xr) / 2
 
     return phi, dphi
 
@@ -140,16 +153,16 @@ def basis_quad_Q1(xr):
     nn = 4
     phi = np.zeros((ni, nn))
     dphi = np.zeros((ni, nn, 2))
-    p = np.array([[1, 2], [4, 3]]).T
+    p = np.array([[0, 1], [3, 2]]).T
 
     phi1, dphi1 = basis_line_P1(xr[:, 0])
     phi2, dphi2 = basis_line_P1(xr[:, 1])
 
     for i in range(2):
         for j in range(2):
-            phi[:, p[i, j]-1] = phi1[:, i] * phi2[:, j]
-            dphi[:, p[i, j]-1, 0] = dphi1[:, i] * phi2[:, j]
-            dphi[:, p[i, j]-1, 2] = phi1[:, i] * dphi2[:, j]
+            phi[:, p[i, j]]     = phi1[:, i] * phi2[:, j]
+            dphi[:, p[i, j], 0] = dphi1[:, i] * phi2[:, j]
+            dphi[:, p[i, j], 1] = phi1[:, i] * dphi2[:, j]
 
     return phi, dphi
 
@@ -158,7 +171,7 @@ def basis_quad_Q1plus(xr):
     nn = 5
     phi = np.zeros((ni, nn))
     dphi = np.zeros((ni, nn, 2))
-    dbubble = np.zeros((ni, 1, 2))
+    dbubble = np.zeros((ni, 2))
 
     phiQ1, dphiQ1 = basis_quad_Q1(xr)
 
@@ -168,10 +181,14 @@ def basis_quad_Q1plus(xr):
     phi[:, 4] = 16 * bubble
 
     for dm in range(2):
-        dbubble[:, 0, dm] = (dphiQ1[:, 0, dm] * phiQ1[:, 2] +
+        dbubble[:, dm] = (dphiQ1[:, 0, dm] * phiQ1[:, 2] +
                              phiQ1[:, 0] * dphiQ1[:, 2, dm])
 
-    dphi[:, 0:4, :] = dphiQ1[:, 0:4, :] - 4 * dbubble
+    dphi[:, 0, :] = dphiQ1[:, 0, :] - 4 * dbubble
+    dphi[:, 1, :] = dphiQ1[:, 1, :] - 4 * dbubble
+    dphi[:, 2, :] = dphiQ1[:, 2, :] - 4 * dbubble
+    dphi[:, 3, :] = dphiQ1[:, 3, :] - 4 * dbubble
+
     dphi[:, 4, :] = 16 * dbubble
 
     return phi, dphi
@@ -181,15 +198,15 @@ def basis_quad_Q2(xr):
     nn = 9
     phi = np.zeros((ni, nn))
     dphi = np.zeros((ni, nn, 2))
-    p = np.array([[1, 2, 3], [8, 9, 4], [7, 6, 5]]).T
+    p = np.array([[0, 1, 2], [7, 8, 3], [6, 5, 4]]).T
 
     phi1, dphi1 = basis_line_P2(xr[:, 0])
     phi2, dphi2 = basis_line_P2(xr[:, 1])
 
     for i in range(3):
         for j in range(3):
-            phi[:, p[i, j]-1] = phi1[:, i] * phi2[:, j]
-            dphi[:, p[i, j]-1, 0] = dphi1[:, i] * phi2[:, j]
-            dphi[:, p[i, j]-1, 1] = phi1[:, i] * dphi2[:, j]
+            phi[:, p[i, j]] = phi1[:, i] * phi2[:, j]
+            dphi[:, p[i, j], 0] = dphi1[:, i] * phi2[:, j]
+            dphi[:, p[i, j], 1] = phi1[:, i] * dphi2[:, j]
 
     return phi, dphi

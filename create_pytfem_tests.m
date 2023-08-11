@@ -36,9 +36,9 @@ mywritelines("from src.distribute_elements import distribute_elements");
 mywritelines("from src.quadrilateral2d import quadrilateral2d");
 mywritelines("from src.mesh_defs import Mesh, Geometry");
 mywritelines("from src.problem_definition import Problem");
-mywritelines("from src_test.user import User");
-mywritelines("from src_test.gauss_legendre import gauss_legendre");
-mywritelines("from src_test.basis_function import basis_function");
+mywritelines("from src.user import User");
+mywritelines("from src.gauss_legendre import gauss_legendre");
+mywritelines("from src.basis_function import basis_function");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
 
@@ -60,16 +60,16 @@ mywritelines("    self.assertTrue(np.allclose(grid_py,grid_ez," + ...
 % define the commands to run in Matlab and python
 %cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','origin',[1,1],'length',[4,3])";
 %cmd_mesh_py = "quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
-cmd_mesh_ez = "quadrilateral2d([8,12],'quad9','vertices',[1,1;2,2;3,3;4,4],'ratio',[2,3,2,3],'factor',[2,3,4,5])";
-cmd_mesh_py = "quadrilateral2d([8,12],'quad9',vertices=np.array([[1,1],[2,2],[3,3],[4,4]]),ratio=np.array([2,3,2,3]),factor=np.array([2,3,4,5]))";
+cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;3,3;4,4],'ratio',[2,3,2,3],'factor',[2,3,4,5])";
+cmd_mesh_py = "quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[3,3],[4,4]]),ratio=np.array([2,3,2,3]),factor=np.array([2,3,4,5]))";
 
 elementdof=[1,1,1,1,1,1,1,1,1;
             2,2,2,2,2,2,2,2,2]' ;
 cmd_problem_ez = "    problem_definition(mesh_ez,elementdof,'nphysq',1);";
 cmd_problem_py = "    Problem(mesh_py,elementdof_py,nphysq=1);";
 
-cmd_gauss_ez = "gauss_legendre('quad','n', 2 ) ;";
-cmd_gauss_py = "gauss_legendre('quad',n=2 )";
+cmd_gauss_ez = "gauss_legendre('quad','n', 3 ) ;";
+cmd_gauss_py = "gauss_legendre('quad',n=3 )";
 
 cmd_basis_ez = "basis_function('quad','Q2', user_ez.xr ) ;";
 cmd_basis_py = "basis_function('quad','Q2', user_py.xr )";
