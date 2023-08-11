@@ -13,10 +13,15 @@ from src.basis_function import basis_function
 from src.user import User
 from func import func
 
+from src_test.build_system import build_system
+from src_test.poisson_elem import poisson_elem
+
+import pretty_errors
+
 # create mesh
 
 print('mesh')
-mesh=quadrilateral2d([1,2],'quad9')
+mesh=quadrilateral2d([2,2],'quad9')
 
 # define the problem
 
@@ -39,3 +44,12 @@ user.coorsys = 0
 user.alpha = 1
 user.funcnr = 4
 user.func = func
+
+# assemble the system matrix and vector
+
+print('build_system')
+A, f = build_system ( mesh, problem, poisson_elem, user )
+A = A.tocsr() # for similarity with TFEM
+
+print(A)
+print(f)
