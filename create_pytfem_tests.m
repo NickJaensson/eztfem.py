@@ -33,8 +33,8 @@ writelines("# run with: python -m unittest dotest.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("from src.distribute_elements import distribute_elements");
-mywritelines("from src_test.quadrilateral2d import quadrilateral2d");
-mywritelines("from src_test.mesh_defs import Mesh, Geometry");
+mywritelines("from src.quadrilateral2d import quadrilateral2d");
+mywritelines("from src.mesh_defs import Mesh, Geometry");
 % mywritelines("from problem_definition import Problem");
 % mywritelines("from gauss_legendre import gauss_legendre");
 % mywritelines("from basis_function import basis_function");
