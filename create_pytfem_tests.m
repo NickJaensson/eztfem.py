@@ -1,5 +1,15 @@
 close all; clear
 
+eztfempath = "~/Desktop/eztfem/";
+addpath(eztfempath);
+addpath(append(eztfempath,"src"))
+addpath(append(eztfempath,"addons/plotlib"))
+addpath(append(eztfempath,"addons/meshes"))
+addpath(append(eztfempath,"addons/poisson"))
+addpath(append(eztfempath,"addons/stokes"))
+
+addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
+
 %% Matlab file to generate testing code using eztfem for pytfem 
 % NOTE: arrays are written "as is" (looping of the first index, then the
 % second etc.). It is assumed that in Python they are also read like this
@@ -18,13 +28,9 @@ close all; clear
 %  - in Python: use numpy.squeeze on all 2D arrays to get rid of dim == 1
 
 
-%% add eztfem to path
-
-eztfempath = "~/Desktop/eztfem/";
-addpath_eztfem(eztfempath)
-
+%% filename for python test file
 global fn 
-fn = "~/Desktop/pytfem/dotest.py"; % filename for python test file
+fn = "~/Desktop/pytfem/dotest.py"; 
 
 
 %% write some header stuff
@@ -47,23 +53,11 @@ mywritelines("from examples.func import func");
 mywritelines("class TestPytfem(unittest.TestCase):");
 
 
-%% test for distribute_elements
-
-cmd_grid = "distribute_elements(8,1,3)";
-grid_ez = eval(cmd_grid);
-
-mywritelines("  def test_distribute_elements(self):");
-mywritelines("    grid_py = "+cmd_grid);
-write1Darr_r("    ",grid_ez,"grid_ez")
-mywritelines("    self.assertTrue(np.allclose(grid_py,grid_ez," + ...
-    "atol=1e-15,rtol=0),'distribute_elements failed test!' )");
-
-
 %% run the problem in Matlab
 
 % define the commands to run in Matlab and python
-%cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','origin',[1,1],'length',[4,3])";
-%cmd_mesh_py = "quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
+% cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','origin',[1,1],'length',[4,3])";
+% cmd_mesh_py = "quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
 cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[2,3,2,3],'factor',[2,3,4,5])";
 cmd_mesh_py = "quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([2,3,2,3]),factor=np.array([2,3,4,5]))";
 
@@ -216,18 +210,6 @@ mywritelines("    check2=np.allclose(f_py,f_ez,atol=1e-12,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'build_system failed test!' )");
 
 %% helper functions
-
-function addpath_eztfem(eztfempath)
-
-    addpath(eztfempath);
-    addpath(append(eztfempath,"src"))
-    addpath(append(eztfempath,"addons/plotlib"))
-    addpath(append(eztfempath,"addons/meshes"))
-    addpath(append(eztfempath,"addons/poisson"))
-    addpath(append(eztfempath,"addons/stokes"))
-    addpath(append(eztfempath,"examples/poisson"))
-
-end
 
 function mywritelines(str)
 
