@@ -27,7 +27,7 @@ def build_system(mesh, problem, element, user, **kwargs):
     physqrow = np.arange(problem.nphysq,dtype=int)
     physqcol = np.arange(problem.nphysq,dtype=int)
     order = 'DN'
-    posvectors = 0
+    posvectors = False
 
     # Override optional arguments if provided
     if 'physqrow' in kwargs:
