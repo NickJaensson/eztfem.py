@@ -2,6 +2,7 @@ Cend.txt
 .vscode/*
 *.asv
 dotest.py
+*.diff
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
