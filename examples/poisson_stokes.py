@@ -60,8 +60,6 @@ elif problemtype == "stokes":
 else:
     raise ValueError(f"Invalid problemtype : {problemtype}")
 
-
-
 A = A.tocsr() # for similarity with TFEM
 print(A)
 print(f)
