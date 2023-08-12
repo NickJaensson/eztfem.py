@@ -95,11 +95,7 @@ eval(cmd_fill_user_ez);
 %% test for quadrilateral2d
 
 mywritelines("  def test_quadrilaterial2d(self):");
-
-% generate the mesh in pytfem
 mywritelines("    mesh_py = "+cmd_mesh_py);
-
-% copy the mesh from eztfem to pytfem
 mywritelines("    mesh_ez = Mesh()");
 write_attrib("    ",mesh_ez,"mesh_ez")
 for i=1:mesh_ez.ncurves
@@ -110,13 +106,9 @@ for i=1:mesh_ez.ncurves
     mywritelines("    mesh_ez.curves["+string(i-1)+"].nodes = mesh_ez.curves["...
         +string(i-1)+"].nodes - 1 # Python indexing"); 
 end
-
-% compensate the zero-based indexing
 mywritelines("    # compensate for zero-based indexing");
 mywritelines("    mesh_ez.topology = mesh_ez.topology - 1 # Python indexing");
 mywritelines("    mesh_ez.points = mesh_ez.points - 1 # Python indexing");
-
-% check for equivalence
 mywritelines("    self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )");
 
 
@@ -128,40 +120,31 @@ write2Darr_i("    ",elementdof,"elementdof_py")
 mywritelines("    problem_py = "+cmd_problem_py);
 mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
 write_attrib("    ",problem_ez,"problem_ez")
-
 mywritelines("    self.assertTrue(problem_py==problem_ez,'problem_definition failed test!' )");
 
 
 %% test for gauss_legendre
 
 mywritelines("  def test_gauss_legendre(self):");
-
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
-
 mywritelines("    user_py = User()");
 mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
-
 mywritelines("    check1=np.allclose(user_py.wg,user_ez.wg,atol=1e-15,rtol=0)")
 mywritelines("    check2=np.allclose(user_py.wg,user_ez.wg,atol=1e-15,rtol=0)")
-
 mywritelines("    self.assertTrue(check1 and check2,'gauss_legendre failed test!' )");
 
 
 %% test for basis_function
 
 mywritelines("  def test_basis_function(self):");
-
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
-
 mywritelines("    user_py = User()");
 mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
 mywritelines("    user_py.phi, user_py.dphi = "+cmd_basis_py);
-
 mywritelines("    check1=np.allclose(user_py.phi,user_ez.phi,atol=1e-15,rtol=0)")
 mywritelines("    check2=np.allclose(user_py.dphi,user_ez.dphi,atol=1e-15,rtol=0)")
-
 mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test!' )");
 
 
@@ -169,58 +152,45 @@ mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test
 % NOTE: not all attributes checked in Python code, see user.py
 
 mywritelines("  def test_user(self):");
-
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
-
 mywritelines("    user_py = User()");
 mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
 mywritelines("    user_py.phi, user_py.dphi = "+cmd_basis_py);
 mywritelines("    "+cmd_fill_user_py);
-
 mywritelines("    self.assertTrue(user_py==user_ez,'users failed test!' )");
 
 
 %% test for build_system
 
 mywritelines("  def test_build_system(self):");
-
 mywritelines("    mesh_py = "+cmd_mesh_py);
 write2Darr_i("    ",elementdof,"elementdof_py")
 mywritelines("    problem_py = "+cmd_problem_py);
 mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
 write_attrib("    ",problem_ez,"problem_ez")
-
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
-
 mywritelines("    user_py = User()");
 mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
 mywritelines("    user_py.phi, user_py.dphi = "+cmd_basis_py);
 mywritelines("    "+cmd_fill_user_py);
-
 write2Darr_r("    ",full(A_ez),"A_ez")
 write1Darr_r("    ",f_ez,"f_ez")
-
 mywritelines("    A_py,f_py = "+cmd_build_system_py);
-
 mywritelines("    check1=np.allclose(A_py.toarray(),A_ez,atol=1e-12,rtol=0)")
 mywritelines("    check2=np.allclose(f_py,f_ez,atol=1e-12,rtol=0)")
-
 mywritelines("    self.assertTrue(check1 and check2,'build_system failed test!' )");
+
 
 %% helper functions
 
 function mywritelines(str)
-
     global fn
-
     writelines(str,fn,WriteMode="append");
-
 end
 
 function write1Darr_r(skip,arr,name)
-
     mywritelines("    "+name+" = np.array([");
     for i=1:size(arr,1)
         mywritelines(skip+sprintf('%25.16e',arr(i))+",");
@@ -229,17 +199,14 @@ function write1Darr_r(skip,arr,name)
 end
 
 function write1Darr_i(skip,arr,name)
-
     mywritelines("    "+name+" = np.array([");
     for i=1:size(arr,1)
         mywritelines(skip+sprintf('%12i,',arr(i)));
     end
     mywritelines("    ],dtype=int)");
-
 end
 
 function write2Darr_r(skip,arr,name)
-
     mywritelines("    "+name+" = np.array([");
     for i=1:size(arr,1)
         mywritelines(skip+"["+sprintf('%25.16e,',arr(i,:))+"],");
@@ -248,17 +215,14 @@ function write2Darr_r(skip,arr,name)
 end
 
 function write2Darr_i(skip,arr,name)
-
     mywritelines("    "+name+" = np.array([");
     for i=1:size(arr,1)
         mywritelines(skip+"["+sprintf('%12i,',arr(i,:))+"],");
     end
     mywritelines("    ],dtype=int)");
-
 end
 
 function write3Darr_i(skip,arr,name)
-
     mywritelines("    "+name+" = np.array([");
     for i=1:size(arr,1)
         mywritelines("    [")
@@ -268,11 +232,9 @@ function write3Darr_i(skip,arr,name)
         mywritelines("    ],")
     end
     mywritelines("    ],dtype=int)");
-
 end
 
 function write3Darr_r(skip,arr,name)
-
     mywritelines("    "+name+" = np.array([");
     for i=1:size(arr,1)
         mywritelines("    [")
@@ -282,11 +244,9 @@ function write3Darr_r(skip,arr,name)
         mywritelines("    ],")
     end
     mywritelines("    ])");
-
 end
 
 function write_attrib(skip,struct,name)
-
     fns = fieldnames(struct);
     for k=1:numel(fns)
         tmp = struct.(fns{k});
@@ -319,5 +279,4 @@ function write_attrib(skip,struct,name)
             end
         end
     end
-
 end
