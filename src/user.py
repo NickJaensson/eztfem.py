@@ -9,6 +9,7 @@ class User:
         self.xr = np.array([])
         self.phi = np.array([])
         self.dphi = np.array([])
+        self.psi = np.array([])
 
     # equivalence check for testing against Matlab code
     # NOTE: see the matlab file create_pytfem_tests.m for the use of np.squeeze
