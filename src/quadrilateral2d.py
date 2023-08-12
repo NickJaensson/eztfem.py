@@ -202,7 +202,7 @@ def rectangle2d_quad9(ne, ratio, factor):
                     ----->
     """
     
-    print('rectangle_quad9')
+    #print('rectangle_quad9')
 
     n = ne[0]
     m = ne[1]
