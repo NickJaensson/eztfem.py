@@ -32,6 +32,7 @@ class User:
         check0.append(('dphi' in attributes_self) is ('dphi' in attributes_other) )
         check0.append(('coorsys' in attributes_self) is ('coorsys' in attributes_other) )
         check0.append(('alpha' in attributes_self) is ('alpha' in attributes_other) )
+        check0.append(('mu' in attributes_self) is ('mu' in attributes_other) )
         check0.append(('funcnr' in attributes_self) is ('funcnr' in attributes_other) )
   
         if not all(check0):
@@ -55,6 +56,8 @@ class User:
             check1.append(self.coorsys==other.coorsys)
         if 'alpha' in attributes_self:
             check1.append(self.alpha==other.alpha)
+        if 'mu' in attributes_self:
+            check1.append(self.mu==other.mu)            
         if 'funcnr' in attributes_self:
             check1.append(self.funcnr==other.funcnr)
 
