@@ -66,7 +66,7 @@ def build_system(mesh, problem, element, user, **kwargs):
         else:
             elemmat, elemvec = element(elem, coor, user, posrow)
 
-        # [:,None] needed for proper broadcasting
+        # [:,None] needed for proper broadcasting by adding an axis of dim 1
         A[posr[:,None], posc] += elemmat
         f[posr] += elemvec
 
