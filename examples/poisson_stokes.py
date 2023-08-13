@@ -14,12 +14,14 @@ from src.user import User
 from func import func
 
 from src.build_system import build_system
+from src_test.define_essential import define_essential
+
 from addons.poisson.poisson_elem import poisson_elem
 from addons.stokes.stokes_elem import stokes_elem
 
 import pretty_errors
 
-problemtype = "poisson"
+problemtype = "stokes"
 mesh=quadrilateral2d([2,2],'quad9')
 
 if problemtype == "poisson":
@@ -39,6 +41,8 @@ if problemtype == "poisson":
 
     A, f = build_system ( mesh, problem, poisson_elem, user )
 
+    iess = define_essential ( mesh, problem,'curves', [0,1,2,3] )
+
 elif problemtype == "stokes":
     elementdof=np.array([[2,2,2,2,2,2,2,2,2],
                          [1,0,1,0,1,0,1,0,0],
@@ -57,6 +61,11 @@ elif problemtype == "stokes":
     user.func = func # not used when funcnr == 0
 
     A, f = build_system ( mesh, problem, stokes_elem, user )
+
+    iess = define_essential ( mesh, problem, 'curves',[0,1,2,3], degfd=0 )
+    iess = define_essential ( mesh, problem, 'curves',[0,2,2,3], degfd=1, iessp=iess )
+    iess = define_essential ( mesh, problem, 'points',[0], physq=1, iessp=iess )
+
 else:
     raise ValueError(f"Invalid problemtype : {problemtype}")
 
