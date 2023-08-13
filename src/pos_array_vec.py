@@ -27,6 +27,10 @@ def pos_array_vec(problem, nodes, **kwargs):
     if 'order' in kwargs:
         order = kwargs['order']
 
+    # Convert vec to a list if an int is supplied
+    if isinstance(vec, int):
+        vec = [vec]
+
     pos = [None] * len(vec)
     ndof = np.zeros(len(vec))
     lpos = np.zeros(problem.maxvecnoddegfd * len(nodes))
@@ -37,7 +41,7 @@ def pos_array_vec(problem, nodes, **kwargs):
             for nodenr in nodes:
                 bp = problem.vec_nodnumdegfd[nodenr, vc]
                 nndof = problem.vec_nodnumdegfd[nodenr+1, vc] - bp
-                lpos[dof:dof+nndof] = np.arange(bp+1, bp+nndof+1)
+                lpos[dof:dof+nndof] = np.arange(bp, bp+nndof)
                 dof += nndof
             pos[i] = lpos[:dof]
             ndof[i] = dof
@@ -45,14 +49,14 @@ def pos_array_vec(problem, nodes, **kwargs):
         for i, vc in enumerate(vec):
             maxdeg = max(problem.vec_nodnumdegfd[nodes+1, vc] - problem.vec_nodnumdegfd[nodes, vc])
             dof = 0
-            for deg in range(1, maxdeg+1):
+            for deg in range(maxdeg):
                 for nodenr in nodes:
                     bp = problem.vec_nodnumdegfd[nodenr, vc]
                     nndof = problem.vec_nodnumdegfd[nodenr+1, vc] - problem.vec_nodnumdegfd[nodenr, vc]
                     if deg <= nndof:
                         lpos[dof] = bp + deg
                         dof += 1
-            pos[i] = lpos[:dof] - 1 # Python 0-based indexing
+            pos[i] = lpos[:dof]
             ndof[i] = dof
 
     return pos, ndof 
