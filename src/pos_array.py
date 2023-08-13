@@ -26,6 +26,14 @@ def pos_array(problem, nodes, **kwargs):
     if 'order' in kwargs:
         order = kwargs['order']
 
+    # Convert physq to a list if an int is supplied
+    if isinstance(physq, int):
+        physq = [physq]
+
+    # Convert nodes to a list if an int is supplied
+    if isinstance(nodes, int):
+        nodes = [nodes]
+
     pos = [None] * len(physq)
     ndof = np.zeros(len(physq))
     lpos = np.zeros(problem.maxnoddegfd * len(nodes),dtype=int)
@@ -45,7 +53,7 @@ def pos_array(problem, nodes, **kwargs):
         for i, phq in enumerate(physq):
             maxdeg = max(problem.vec_nodnumdegfd[nodes+1, phq] - problem.vec_nodnumdegfd[nodes, phq])
             dof = 0
-            for deg in range(1, maxdeg+1):
+            for deg in range(maxdeg):
                 for nodenr in nodes:
                     bp = problem.nodnumdegfd[nodenr] + \
                          sum(problem.vec_nodnumdegfd[nodenr+1, :phq] - problem.vec_nodnumdegfd[nodenr, :phq])
@@ -53,7 +61,7 @@ def pos_array(problem, nodes, **kwargs):
                     if deg <= nndof:
                         lpos[dof] = bp + deg
                         dof += 1
-            pos[i] = lpos[:dof]-1 # Python 0-based indexing
+            pos[i] = lpos[:dof]
             ndof[i] = dof
 
     return pos, ndof
