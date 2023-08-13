@@ -58,8 +58,8 @@ mywritelines("class TestPytfem(unittest.TestCase):");
 % define the commands to run in Matlab and python
 % cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','origin',[1,1],'length',[4,3])";
 % cmd_mesh_py = "quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
-cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[2,3,2,3],'factor',[2,3,4,5])";
-cmd_mesh_py = "quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([2,3,2,3]),factor=np.array([2,3,4,5]))";
+cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[2,3,4,5])";
+cmd_mesh_py = "quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([2,3,4,5]))";
 
 elementdof=[1,1,1,1,1,1,1,1,1;
             2,2,2,2,2,2,2,2,2]' ;
