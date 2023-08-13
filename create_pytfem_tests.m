@@ -81,8 +81,8 @@ cmd_fill_user_py = "user_py.coorsys = 0;"+...
                    "user_py.funcnr = 4; "+...
                    "user_py.func = func";
 
-cmd_build_system_ez = "build_system ( mesh_ez, problem_ez, @poisson_elem, user_ez );";
-cmd_build_system_py = "build_system ( mesh_py, problem_py, poisson_elem, user_py )";
+cmd_build_system_ez = "build_system ( mesh_ez, problem_ez, @poisson_elem, user_ez, 'order', 'ND'  );";
+cmd_build_system_py = "build_system ( mesh_py, problem_py, poisson_elem, user_py, order='ND' )";
 
 % run the Matlab code
 mesh_ez = eval(cmd_mesh_ez);

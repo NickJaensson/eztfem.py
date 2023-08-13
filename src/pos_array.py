@@ -37,7 +37,7 @@ def pos_array(problem, nodes, **kwargs):
                 bp = problem.nodnumdegfd[nodenr] + \
                      sum(problem.vec_nodnumdegfd[nodenr+1, :phq] - problem.vec_nodnumdegfd[nodenr, :phq])
                 nndof = problem.vec_nodnumdegfd[nodenr+1, phq] - problem.vec_nodnumdegfd[nodenr, phq]
-                lpos[dof:dof+nndof] = np.arange(bp+1, bp+nndof+1)
+                lpos[dof:dof+nndof] = np.arange(bp, bp+nndof)
                 dof += nndof
             pos[i] = lpos[:dof]
             ndof[i] = dof
