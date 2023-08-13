@@ -29,11 +29,11 @@ def pos_array_vec(problem, nodes, **kwargs):
 
     # Convert vec to a list if an int is supplied
     if isinstance(vec, int):
-        vec = [vec]
+        vec = np.array([vec])
 
     pos = [None] * len(vec)
     ndof = np.zeros(len(vec))
-    lpos = np.zeros(problem.maxvecnoddegfd * len(nodes))
+    lpos = np.zeros(problem.maxvecnoddegfd * nodes.shape[0])
 
     if order == 'ND':
         for i, vc in enumerate(vec):
@@ -53,7 +53,7 @@ def pos_array_vec(problem, nodes, **kwargs):
                 for nodenr in nodes:
                     bp = problem.vec_nodnumdegfd[nodenr, vc]
                     nndof = problem.vec_nodnumdegfd[nodenr+1, vc] - problem.vec_nodnumdegfd[nodenr, vc]
-                    if deg <= nndof:
+                    if deg < nndof:
                         lpos[dof] = bp + deg
                         dof += 1
             pos[i] = lpos[:dof]
