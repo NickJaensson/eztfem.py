@@ -28,7 +28,7 @@ def pos_array_vec(problem, nodes, **kwargs):
         order = kwargs['order']
 
     # Convert vec to a list if an int is supplied
-    if isinstance(vec, int):
+    if isinstance(vec, (int, np.integer)):
         vec = np.array([vec])
 
     pos = [None] * len(vec)

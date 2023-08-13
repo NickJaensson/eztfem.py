@@ -27,11 +27,11 @@ def pos_array(problem, nodes, **kwargs):
         order = kwargs['order']
 
     # Convert physq to a list if an int is supplied
-    if isinstance(physq, int):
+    if isinstance(physq, (int, np.integer)):
         physq = [physq]
 
     # Convert nodes to a list if an int is supplied
-    if isinstance(nodes, int):
+    if isinstance(nodes, (int, np.integer)):
         nodes = np.array([nodes])
 
     pos = [None] * len(physq)
