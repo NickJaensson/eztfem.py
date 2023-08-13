@@ -64,7 +64,7 @@ cmd_mesh_py = "quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4
 elementdof=[1,1,1,1,1,1,1,1,1;
             2,2,2,2,2,2,2,2,2]' ;
 cmd_problem_ez = "    problem_definition(mesh_ez,elementdof,'nphysq',1);";
-cmd_problem_py = "    Problem(mesh_py,elementdof_py,nphysq=1);";
+cmd_problem_py = "    Problem(mesh_py,elementdof_py,nphysq=1)";
 
 cmd_gauss_ez = "gauss_legendre('quad','n', 3 ) ;";
 cmd_gauss_py = "gauss_legendre('quad',n=3 )";
