@@ -27,12 +27,16 @@ def pos_array_vec(problem, nodes, **kwargs):
     if 'order' in kwargs:
         order = kwargs['order']
 
-    # Convert vec to a list if an int is supplied
+    # Convert vec to a numpy array if an int is supplied
     if isinstance(vec, (int, np.integer)):
         vec = np.array([vec])
 
-    pos = [None] * len(vec)
-    ndof = np.zeros(len(vec))
+    # Convert nodes to a numpy array if an int is supplied
+    if isinstance(nodes, (int, np.integer)):
+        nodes = np.array([nodes])
+
+    pos = [None] * vec.shape[0]
+    ndof = np.zeros(vec.shape[0])
     lpos = np.zeros(problem.maxvecnoddegfd * nodes.shape[0])
 
     if order == 'ND':

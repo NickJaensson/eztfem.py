@@ -30,7 +30,7 @@ def pos_array(problem, nodes, **kwargs):
     if isinstance(physq, (int, np.integer)):
         physq = [physq]
 
-    # Convert nodes to a list if an int is supplied
+    # Convert nodes to a numpy array if an int is supplied
     if isinstance(nodes, (int, np.integer)):
         nodes = np.array([nodes])
 
