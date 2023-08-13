@@ -45,8 +45,8 @@ mywritelines("from src.problem_definition import Problem");
 mywritelines("from src.user import User");
 mywritelines("from src.gauss_legendre import gauss_legendre");
 mywritelines("from src.basis_function import basis_function");
-mywritelines("from src_test.build_system import build_system");
-mywritelines("from src_test.poisson_elem import poisson_elem");
+mywritelines("from src.build_system import build_system");
+mywritelines("from addons.poisson.poisson_elem import poisson_elem");
 
 mywritelines("from examples.func import func");
 

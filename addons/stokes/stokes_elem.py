@@ -1,5 +1,5 @@
 import numpy as np
-from src_test.isoparametric_deformation import isoparametric_deformation
+from src.isoparametric_deformation import isoparametric_deformation
 
 def stokes_elem(elem, coor, user, pos):
     # STOKES_ELEM  Element routines for the Stokes equation

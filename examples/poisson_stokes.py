@@ -13,13 +13,13 @@ from src.basis_function import basis_function
 from src.user import User
 from func import func
 
-from src_test.build_system import build_system
-from src_test.poisson_elem import poisson_elem
-from src_test.stokes_elem import stokes_elem
+from src.build_system import build_system
+from addons.poisson.poisson_elem import poisson_elem
+from addons.stokes.stokes_elem import stokes_elem
 
 import pretty_errors
 
-problemtype = "stokes"
+problemtype = "poisson"
 mesh=quadrilateral2d([2,2],'quad9')
 
 if problemtype == "poisson":
