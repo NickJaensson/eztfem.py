@@ -62,8 +62,9 @@ user_ez.mu = 1 ;
 user_ez.funcnr = 0 ;
 user_ez.func = @func ;
 [A_ez,f_ez] = build_system ( mesh_ez, problem_ez, @stokes_elem, user_ez);
-%iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4] ) ;
-
+iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 1 ) ;
+iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 2, 'iessp', iess_ez ) ;
+iess_ez = define_essential ( mesh_ez, problem_ez, 'points', 1, 'physq', 2, 'iessp', iess_ez ) ;
 
 %% define the same commands for pytfem
 
@@ -92,8 +93,9 @@ cmd_fill_user_py =  "    user_py.coorsys = 0;"+...
                     "    user_py.funcnr = 0; "+...
                     "    user_py.func = func";
 cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)";
-% cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3] )";
-
+cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );"+...
+                    "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );"+...
+                    "    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )";
 
 %% write some header stuff
 
@@ -208,15 +210,15 @@ mywritelines("    check2=np.allclose(f_py,f_ez,atol=1e-12,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'build_system failed test!' )");
 
 
-% %% test for define_essential
-% 
-% mywritelines("  def test_define_essential(self):");
-% mywritelines(cmd_mesh_py);
-% mywritelines(cmd_elementdof_py);
-% mywritelines(cmd_problem_py);
-% write1Darr_i("    ",iess_ez,"iess_ez")
-% mywritelines(cmd_define_ess_py);
-% mywritelines("    self.assertTrue(iess_ez==iess_py,'define_essential failed test!' )");
+%% test for define_essential
+
+mywritelines("  def test_define_essential(self):");
+mywritelines(cmd_mesh_py);
+mywritelines(cmd_elementdof_py);
+mywritelines(cmd_problem_py);
+write1Darr_i("    ",iess_ez,"iess_ez")
+mywritelines(cmd_define_ess_py);
+mywritelines("    self.assertTrue((iess_ez-1==iess_py).all(),'define_essential failed test!' )");
 
 
 %% helper functions

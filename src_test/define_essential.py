@@ -24,10 +24,14 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
     """
     
     # Optional arguments
-    physq = kwargs.get('physq', 1)
-    degfd = kwargs.get('degfd', 1)
+    physq = kwargs.get('physq', 0)
+    degfd = kwargs.get('degfd', 0)
     iessp = kwargs.get('iessp', 0)
-    add = iessp != 0
+    add = 'iessp' in kwargs
+
+    # Convert numbers to a list if an int is supplied
+    if isinstance(numbers, (int, np.integer)):
+        numbers = [numbers]
 
     # Define geometry
     if geometry == 'nodes':
@@ -38,9 +42,9 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         nnodes = len(numbers)
     elif geometry == 'curves':
         nnodes = sum([mesh.curves[curve].nnodes for curve in numbers])
-        nodes = np.array([])
+        nodes = np.array([],dtype=int)
         for curve in numbers:
-            np.append(nodes,mesh.curves[curve].nodes)
+            nodes = np.append(nodes,mesh.curves[curve].nodes)
     else:
         raise ValueError(f"Invalid geometry: {geometry}")
 
@@ -54,12 +58,15 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         if degfd > ndof[0]:
             continue
 
+        pos[ipos] = posn[0][degfd]  # Python 0-based indexing
         ipos += 1
-        pos[ipos - 1] = posn[0][degfd - 1]  # Python 0-based indexing
 
     # Output iess
     if add:
-        iess = np.unique(np.concatenate((pos[:ipos], [iessp])))
+        # Convert iessp to a numpy array if an int is supplied
+        if isinstance(iessp, (int, np.integer)):
+            iessp = np.array([iessp])
+        iess = np.unique(np.concatenate((pos[:ipos], iessp)))
     else:
         iess = np.unique(pos[:ipos])
 
