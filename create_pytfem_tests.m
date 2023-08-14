@@ -33,6 +33,38 @@ global fn
 fn = "~/Desktop/pytfem/dotest.py"; 
 
 
+%% run the problem in eztfem
+
+% mesh_ez = quadrilateral2d([3,2],'quad9','origin',[1,1],'length',[4,3]);
+mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[2,3,4,5]);
+elementdof_ez = [1,1,1,1,1,1,1,1,1;
+                 2,2,2,2,2,2,2,2,2]' ;
+problem_ez = problem_definition(mesh_ez,elementdof_ez,'nphysq',1);
+[user_ez.xr,user_ez.wg] = gauss_legendre('quad','n', 3 );
+[user_ez.phi,user_ez.dphi] = basis_function('quad','Q2', user_ez.xr );
+user_ez.coorsys = 0 ;
+user_ez.alpha = 1 ;
+user_ez.funcnr = 4 ;
+user_ez.func = @func ;
+[A_ez,f_ez] = build_system ( mesh_ez, problem_ez, @poisson_elem, user_ez, 'order', 'DN'  );
+iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4] ) ;
+
+
+%% define the same commands for pytfem
+% cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
+cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([2,3,4,5]))";
+cmd_elementdof_py = "    elementdof_py = np.array([[1,1,1,1,1,1,1,1,1],[2,2,2,2,2,2,2,2,2]]).T";
+cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=1)";
+cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
+cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr )";
+cmd_fill_user_py =  "    user_py.coorsys = 0;"+...
+                    "    user_py.alpha = 1;"+...
+                    "    user_py.funcnr = 4; "+...
+                    "    user_py.func = func";
+cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, poisson_elem, user_py, order='ND' )";
+cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3] )";
+
+
 %% write some header stuff
 
 writelines("# run with: python -m unittest dotest.py",fn);
@@ -47,55 +79,17 @@ mywritelines("from src.gauss_legendre import gauss_legendre");
 mywritelines("from src.basis_function import basis_function");
 mywritelines("from src.build_system import build_system");
 mywritelines("from addons.poisson.poisson_elem import poisson_elem");
+mywritelines("from src_test.define_essential import define_essential");
 
 mywritelines("from examples.func import func");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
 
 
-%% run the problem in Matlab
-
-% define the commands to run in Matlab and python
-% cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','origin',[1,1],'length',[4,3])";
-% cmd_mesh_py = "quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
-cmd_mesh_ez = "quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[2,3,4,5])";
-cmd_mesh_py = "quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([2,3,4,5]))";
-
-elementdof=[1,1,1,1,1,1,1,1,1;
-            2,2,2,2,2,2,2,2,2]' ;
-cmd_problem_ez = "    problem_definition(mesh_ez,elementdof,'nphysq',1);";
-cmd_problem_py = "    Problem(mesh_py,elementdof_py,nphysq=1)";
-
-cmd_gauss_ez = "gauss_legendre('quad','n', 3 ) ;";
-cmd_gauss_py = "gauss_legendre('quad',n=3 )";
-
-cmd_basis_ez = "basis_function('quad','Q2', user_ez.xr ) ;";
-cmd_basis_py = "basis_function('quad','Q2', user_py.xr )";
-
-cmd_fill_user_ez = "user_ez.coorsys = 0 ;"+...
-                   "user_ez.alpha = 1 ;"+...
-                   "user_ez.funcnr = 4 ; "+...
-                   "user_ez.func = @func ;";
-cmd_fill_user_py = "user_py.coorsys = 0;"+...
-                   "user_py.alpha = 1;"+...
-                   "user_py.funcnr = 4; "+...
-                   "user_py.func = func";
-
-cmd_build_system_ez = "build_system ( mesh_ez, problem_ez, @poisson_elem, user_ez, 'order', 'ND'  );";
-cmd_build_system_py = "build_system ( mesh_py, problem_py, poisson_elem, user_py, order='ND' )";
-
-% run the Matlab code
-mesh_ez = eval(cmd_mesh_ez);
-problem_ez = eval(cmd_problem_ez);
-[user_ez.xr,user_ez.wg] = eval(cmd_gauss_ez);
-[user_ez.phi,user_ez.dphi] = eval(cmd_basis_ez);
-eval(cmd_fill_user_ez);
-[A_ez,f_ez] = eval(cmd_build_system_ez);
-
 %% test for quadrilateral2d
 
 mywritelines("  def test_quadrilaterial2d(self):");
-mywritelines("    mesh_py = "+cmd_mesh_py);
+mywritelines(cmd_mesh_py);
 mywritelines("    mesh_ez = Mesh()");
 write_attrib("    ",mesh_ez,"mesh_ez")
 for i=1:mesh_ez.ncurves
@@ -115,9 +109,9 @@ mywritelines("    self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!
 %% test for problem_definition
 
 mywritelines("  def test_problem_definition(self):");
-mywritelines("    mesh_py = "+cmd_mesh_py);
-write2Darr_i("    ",elementdof,"elementdof_py")
-mywritelines("    problem_py = "+cmd_problem_py);
+mywritelines(cmd_mesh_py);
+mywritelines(cmd_elementdof_py);
+mywritelines(cmd_problem_py);
 mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
 write_attrib("    ",problem_ez,"problem_ez")
 mywritelines("    self.assertTrue(problem_py==problem_ez,'problem_definition failed test!' )");
@@ -129,7 +123,7 @@ mywritelines("  def test_gauss_legendre(self):");
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
 mywritelines("    user_py = User()");
-mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
+mywritelines(cmd_gauss_py);
 mywritelines("    check1=np.allclose(user_py.wg,user_ez.wg,atol=1e-15,rtol=0)")
 mywritelines("    check2=np.allclose(user_py.wg,user_ez.wg,atol=1e-15,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'gauss_legendre failed test!' )");
@@ -141,8 +135,8 @@ mywritelines("  def test_basis_function(self):");
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
 mywritelines("    user_py = User()");
-mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
-mywritelines("    user_py.phi, user_py.dphi = "+cmd_basis_py);
+mywritelines(cmd_gauss_py);
+mywritelines(cmd_basis_py);
 mywritelines("    check1=np.allclose(user_py.phi,user_ez.phi,atol=1e-15,rtol=0)")
 mywritelines("    check2=np.allclose(user_py.dphi,user_ez.dphi,atol=1e-15,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test!' )");
@@ -155,32 +149,43 @@ mywritelines("  def test_user(self):");
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
 mywritelines("    user_py = User()");
-mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
-mywritelines("    user_py.phi, user_py.dphi = "+cmd_basis_py);
-mywritelines("    "+cmd_fill_user_py);
+mywritelines(cmd_gauss_py);
+mywritelines(cmd_basis_py);
+mywritelines(cmd_fill_user_py);
 mywritelines("    self.assertTrue(user_py==user_ez,'users failed test!' )");
 
 
 %% test for build_system
 
 mywritelines("  def test_build_system(self):");
-mywritelines("    mesh_py = "+cmd_mesh_py);
-write2Darr_i("    ",elementdof,"elementdof_py")
-mywritelines("    problem_py = "+cmd_problem_py);
+mywritelines(cmd_mesh_py);
+mywritelines(cmd_elementdof_py);
+mywritelines(cmd_problem_py);
 mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
 write_attrib("    ",problem_ez,"problem_ez")
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
 mywritelines("    user_py = User()");
-mywritelines("    user_py.xr, user_py.wg = "+cmd_gauss_py);
-mywritelines("    user_py.phi, user_py.dphi = "+cmd_basis_py);
-mywritelines("    "+cmd_fill_user_py);
+mywritelines(cmd_gauss_py);
+mywritelines(cmd_basis_py);
+mywritelines(cmd_fill_user_py);
 write2Darr_r("    ",full(A_ez),"A_ez")
 write1Darr_r("    ",f_ez,"f_ez")
-mywritelines("    A_py,f_py = "+cmd_build_system_py);
+mywritelines(cmd_build_sys_py);
 mywritelines("    check1=np.allclose(A_py.toarray(),A_ez,atol=1e-12,rtol=0)")
 mywritelines("    check2=np.allclose(f_py,f_ez,atol=1e-12,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'build_system failed test!' )");
+
+
+% %% test for define_essential
+% 
+% mywritelines("  def test_define_essential(self):");
+% mywritelines(cmd_mesh_py);
+% mywritelines(cmd_elementdof_py);
+% mywritelines(cmd_problem_py);
+% write1Darr_i("    ",iess_ez,"iess_ez")
+% mywritelines(cmd_define_ess_py);
+% mywritelines("    self.assertTrue(iess_ez==iess_py,'define_essential failed test!' )");
 
 
 %% helper functions
@@ -192,7 +197,7 @@ end
 
 function write1Darr_r(skip,arr,name)
     mywritelines("    "+name+" = np.array([");
-    for i=1:size(arr,1)
+    for i=1:length(arr)
         mywritelines(skip+sprintf('%25.16e',arr(i))+",");
     end
     mywritelines("    ])");
@@ -200,7 +205,7 @@ end
 
 function write1Darr_i(skip,arr,name)
     mywritelines("    "+name+" = np.array([");
-    for i=1:size(arr,1)
+    for i=1:length(arr)
         mywritelines(skip+sprintf('%12i,',arr(i)));
     end
     mywritelines("    ],dtype=int)");
@@ -258,7 +263,7 @@ function write_attrib(skip,struct,name)
                 mywritelines(skip+name+"."+fns{k}+" = "+string(tmp));
             elseif all(mod(tmp,1)<1e-15,'all') % array of integers
                 if ndims(tmp) == 2 
-                    if size(tmp,2)==1
+                    if size(tmp,1)==1 || size(tmp,2)==1
                         write1Darr_i(skip,tmp,name+"."+fns{k});
                     else 
                         write2Darr_i(skip,tmp,name+"."+fns{k});
@@ -268,7 +273,7 @@ function write_attrib(skip,struct,name)
                 end
             else 
                 if ndims(tmp) == 2 
-                    if size(tmp,2)==1
+                    if size(tmp,1)==1 || size(tmp,2)==1
                         write1Darr_r(skip,tmp,name+"."+fns{k}); 
                     else
                         write2Darr_r(skip,tmp,name+"."+fns{k});
