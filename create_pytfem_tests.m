@@ -35,67 +35,85 @@ fn = "~/Desktop/pytfem/dotest.py";
 
 %% run the problem in eztfem
 
+problemtype = "poisson";
+
 % mesh_ez = quadrilateral2d([1,2],'quad9','origin',[1,1],'length',[4,3]);
 mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[2,3,4,5]);
 
-% % Poisson problem
-% elementdof_ez = [1,1,1,1,1,1,1,1,1; 2,2,2,2,2,2,2,2,2]' ;
-% problem_ez = problem_definition(mesh_ez,elementdof_ez,'nphysq',1);
-% [user_ez.xr,user_ez.wg] = gauss_legendre('quad','n', 3 );
-% [user_ez.phi,user_ez.dphi] = basis_function('quad','Q2', user_ez.xr );
-% user_ez.coorsys = 0 ;
-% user_ez.alpha = 1 ;
-% user_ez.funcnr = 4 ;
-% user_ez.func = @func ;
-% [A_ez,f_ez] = build_system ( mesh_ez, problem_ez, @poisson_elem, user_ez);
+if problemtype == "poisson"
 
-% Stokes problem
-elementdof_ez = [2,2,2,2,2,2,2,2,2;
-                 1,0,1,0,1,0,1,0,0;
-                 1,1,1,1,1,1,1,1,1]' ;
-problem_ez = problem_definition(mesh_ez,elementdof_ez,'nphysq',2);
-[user_ez.xr,user_ez.wg] = gauss_legendre('quad','n', 3 );
-[user_ez.phi,user_ez.dphi] = basis_function('quad','Q2', user_ez.xr );
-[user_ez.psi,~] = basis_function('quad','Q1', user_ez.xr );
-user_ez.coorsys = 0 ;
-user_ez.mu = 1 ;
-user_ez.funcnr = 0 ;
-user_ez.func = @func ;
-[A_ez,f_ez] = build_system ( mesh_ez, problem_ez, @stokes_elem, user_ez);
-iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 1 ) ;
-iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 2, 'iessp', iess_ez ) ;
-iess_ez = define_essential ( mesh_ez, problem_ez, 'points', 1, 'physq', 2, 'iessp', iess_ez ) ;
+    elementdof_ez = [1,1,1,1,1,1,1,1,1; 2,2,2,2,2,2,2,2,2]' ;
+    problem_ez = problem_definition(mesh_ez,elementdof_ez,'nphysq',1);
+    [user_ez.xr,user_ez.wg] = gauss_legendre('quad','n', 3 );
+    [user_ez.phi,user_ez.dphi] = basis_function('quad','Q2', user_ez.xr );
+    user_ez.coorsys = 0 ;
+    user_ez.alpha = 1 ;
+    user_ez.funcnr = 4 ;
+    user_ez.func = @func ;
+    [A_ez,f_ez] = build_system ( mesh_ez, problem_ez, @poisson_elem, user_ez);
+    iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 1 ) ;
+
+elseif problemtype == "stokes"
+
+    elementdof_ez = [2,2,2,2,2,2,2,2,2;
+                     1,0,1,0,1,0,1,0,0;
+                     1,1,1,1,1,1,1,1,1]' ;
+    problem_ez = problem_definition(mesh_ez,elementdof_ez,'nphysq',2);
+    [user_ez.xr,user_ez.wg] = gauss_legendre('quad','n', 3 );
+    [user_ez.phi,user_ez.dphi] = basis_function('quad','Q2', user_ez.xr );
+    [user_ez.psi,~] = basis_function('quad','Q1', user_ez.xr );
+    user_ez.coorsys = 0 ;
+    user_ez.mu = 1 ;
+    user_ez.funcnr = 0 ;
+    user_ez.func = @func ;
+    [A_ez,f_ez] = build_system ( mesh_ez, problem_ez, @stokes_elem, user_ez);
+    iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 1 ) ;
+    iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 2, 'iessp', iess_ez ) ;
+    iess_ez = define_essential ( mesh_ez, problem_ez, 'points', 1, 'physq', 2, 'iessp', iess_ez ) ;
+
+else
+
+    error('Wrong problemtype: '+problemtype);
+
+end
+
 
 %% define the same commands for pytfem
 
 % cmd_mesh_py =       "    mesh_py = quadrilateral2d([1,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
 cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([2,3,4,5]))";
 
-% % Poisson problem
-% cmd_elementdof_py = "    elementdof_py = np.array([[1,1,1,1,1,1,1,1,1],[2,2,2,2,2,2,2,2,2]]).T"; 
-% cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=1)";
-% cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
-% cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );";
-% cmd_fill_user_py =  "    user_py.coorsys = 0;"+...
-%                     "    user_py.alpha = 1;"+...
-%                     "    user_py.funcnr = 4; "+...
-%                     "    user_py.func = func";
-% cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, poisson_elem, user_py)";
+if problemtype == "poisson"
 
-% Stokes problem
-cmd_elementdof_py = "    elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T";
-cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)";
-cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
-cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );"+...
-                    "    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )";
-cmd_fill_user_py =  "    user_py.coorsys = 0;"+...
-                    "    user_py.mu = 1;"+...
-                    "    user_py.funcnr = 0; "+...
-                    "    user_py.func = func";
-cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)";
-cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );"+...
-                    "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );"+...
-                    "    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )";
+    cmd_elementdof_py = "    elementdof_py = np.array([[1,1,1,1,1,1,1,1,1],[2,2,2,2,2,2,2,2,2]]).T"; 
+    cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=1)";
+    cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
+    cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );";
+    cmd_fill_user_py =  "    user_py.coorsys = 0;"+...
+                        "    user_py.alpha = 1;"+...
+                        "    user_py.funcnr = 4; "+...
+                        "    user_py.func = func";
+    cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, poisson_elem, user_py)";
+    cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );";
+
+elseif problemtype == "stokes"
+
+    cmd_elementdof_py = "    elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T";
+    cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)";
+    cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
+    cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );"+...
+                        "    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )";
+    cmd_fill_user_py =  "    user_py.coorsys = 0;"+...
+                        "    user_py.mu = 1;"+...
+                        "    user_py.funcnr = 0; "+...
+                        "    user_py.func = func";
+    cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)";
+    cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );"+...
+                        "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );"+...
+                        "    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )";
+
+end
+
 
 %% write some header stuff
 
