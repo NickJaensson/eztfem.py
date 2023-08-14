@@ -47,7 +47,7 @@ def pos_array_vec(problem, nodes, **kwargs):
                 nndof = problem.vec_nodnumdegfd[nodenr+1, vc] - bp
                 lpos[dof:dof+nndof] = np.arange(bp, bp+nndof)
                 dof += nndof
-            pos[i] = lpos[:dof]
+            pos[i] = lpos[:dof].tolist() # convert to list: apparently mixing np arrays and lists goes wrong!
             ndof[i] = dof
     elif order == 'DN':
         for i, vc in enumerate(vec):
@@ -60,7 +60,7 @@ def pos_array_vec(problem, nodes, **kwargs):
                     if deg < nndof:
                         lpos[dof] = bp + deg
                         dof += 1
-            pos[i] = lpos[:dof]
+            pos[i] = lpos[:dof].tolist() # convert to list: apparently mixing np arrays and lists goes wrong!
             ndof[i] = dof
 
     return pos, ndof 
