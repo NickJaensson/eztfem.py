@@ -35,7 +35,7 @@ fn = "~/Desktop/pytfem/dotest.py";
 
 %% run the problem in eztfem
 
-problemtype = "stokes";
+problemtype = "poisson";
 
 % mesh_ez = quadrilateral2d([1,2],'quad9','origin',[1,1],'length',[4,3]);
 mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[2,3,4,5]);
@@ -97,13 +97,14 @@ if problemtype == "poisson"
 
     cmd_elementdof_py = "    elementdof_py = np.array([[1,1,1,1,1,1,1,1,1],[2,2,2,2,2,2,2,2,2]]).T"; 
     cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=1)";
-    cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
-    cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );";
     cmd_fill_user_py =  "    user_py = User();" + ...
                         "    user_py.coorsys = 0;"+...
                         "    user_py.alpha = 1;"+...
                         "    user_py.funcnr = 4; "+...
                         "    user_py.func = func";
+    cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
+    cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );";
+
     cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, poisson_elem, user_py)";
     cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );";
 
@@ -116,14 +117,15 @@ elseif problemtype == "stokes"
 
     cmd_elementdof_py = "    elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T";
     cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)";
-    cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
-    cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );"+...
-                        "    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )";
     cmd_fill_user_py =  "    user_py = User();" + ...
                         "    user_py.coorsys = 0;"+...
                         "    user_py.mu = 1;"+...
                         "    user_py.funcnr = 0; "+...
                         "    user_py.func = func";
+    cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
+    cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );"+...
+                        "    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )";
+
     cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)";
     cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );"+...
                         "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );"+...
@@ -193,6 +195,18 @@ write_attrib("    ",problem_ez,"problem_ez")
 mywritelines("    self.assertTrue(problem_py==problem_ez,'problem_definition failed test!' )");
 
 
+%% test for user equivalence 
+% NOTE: not all attributes checked in Python code, see user.py
+
+mywritelines("  def test_user(self):");
+mywritelines("    user_ez = User()");
+write_attrib("    ",user_ez,"user_ez")
+mywritelines(cmd_fill_user_py);
+mywritelines(cmd_gauss_py);
+mywritelines(cmd_basis_py);
+mywritelines("    self.assertTrue(user_py==user_ez,'users failed test!' )");
+
+
 %% test for gauss_legendre
 
 mywritelines("  def test_gauss_legendre(self):");
@@ -216,18 +230,6 @@ mywritelines(cmd_basis_py);
 mywritelines("    check1=np.allclose(user_py.phi,user_ez.phi,atol=1e-15,rtol=0)")
 mywritelines("    check2=np.allclose(user_py.dphi,user_ez.dphi,atol=1e-15,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test!' )");
-
-
-%% test for user equivalence 
-% NOTE: not all attributes checked in Python code, see user.py
-
-mywritelines("  def test_user(self):");
-mywritelines("    user_ez = User()");
-write_attrib("    ",user_ez,"user_ez")
-mywritelines(cmd_fill_user_py);
-mywritelines(cmd_gauss_py);
-mywritelines(cmd_basis_py);
-mywritelines("    self.assertTrue(user_py==user_ez,'users failed test!' )");
 
 
 %% test for build_system
