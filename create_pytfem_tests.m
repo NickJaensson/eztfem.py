@@ -35,7 +35,7 @@ fn = "~/Desktop/pytfem/dotest.py";
 
 %% run the problem in eztfem
 
-problemtype = "poisson";
+problemtype = "stokes";
 
 % mesh_ez = quadrilateral2d([1,2],'quad9','origin',[1,1],'length',[4,3]);
 mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[2,3,4,5]);
@@ -154,10 +154,10 @@ mywritelines("from src.basis_function import basis_function");
 mywritelines("from src.build_system import build_system");
 mywritelines("from addons.poisson.poisson_elem import poisson_elem");
 mywritelines("from addons.stokes.stokes_elem import stokes_elem");
-mywritelines("from src_test.define_essential import define_essential");
+mywritelines("from src.define_essential import define_essential");
 
-mywritelines("from src_test.fill_system_vector import fill_system_vector");
-mywritelines("from src_test.apply_essential import apply_essential");
+mywritelines("from src.fill_system_vector import fill_system_vector");
+mywritelines("from src.apply_essential import apply_essential");
 
 mywritelines("from examples.func import func");
 

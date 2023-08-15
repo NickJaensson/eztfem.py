@@ -14,16 +14,16 @@ from src.user import User
 from func import func
 
 from src.build_system import build_system
-from src_test.define_essential import define_essential
-from src_test.fill_system_vector import fill_system_vector
-from src_test.apply_essential import apply_essential
+from src.define_essential import define_essential
+from src.fill_system_vector import fill_system_vector
+from src.apply_essential import apply_essential
 
 from addons.poisson.poisson_elem import poisson_elem
 from addons.stokes.stokes_elem import stokes_elem
 
 import pretty_errors
 
-problemtype = "stokes"
+problemtype = "poisson"
 mesh=quadrilateral2d([3,2],'quad9')
 
 if problemtype == "poisson":
