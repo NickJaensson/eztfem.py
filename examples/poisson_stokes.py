@@ -16,7 +16,7 @@ from func import func
 from src.build_system import build_system
 from src_test.define_essential import define_essential
 from src_test.fill_system_vector import fill_system_vector
-#from src_test.apply_essential import apply_essential
+from src_test.apply_essential import apply_essential
 
 from addons.poisson.poisson_elem import poisson_elem
 from addons.stokes.stokes_elem import stokes_elem
@@ -48,7 +48,7 @@ if problemtype == "poisson":
     uess = fill_system_vector ( mesh, problem, 'curves', [0,1], func, funcnr=3 )
     uess = fill_system_vector ( mesh, problem, 'curves', [2,3], func, funcnr=3, fin=uess )
 
-    #A, f, _ = apply_essential ( A, f, uess, iess )
+    A, f, _ = apply_essential ( A, f, uess, iess )
 
 elif problemtype == "stokes":
     elementdof=np.array([[2,2,2,2,2,2,2,2,2],
@@ -76,14 +76,14 @@ elif problemtype == "stokes":
     uess = fill_system_vector ( mesh, problem, 'curves', [0,1], func, funcnr=3 )
     uess = fill_system_vector ( mesh, problem, 'curves', [2,3], func, funcnr=3, fin=uess )
 
-    #A, f, _ = apply_essential ( A, f, uess, iess )
+    A, f, _ = apply_essential ( A, f, uess, iess )
 
 else:
     raise ValueError(f"Invalid problemtype : {problemtype}")
 
 A = A.tocsr() # for similarity with TFEM
-#print(A)
-#print(f)
+print(A)
+print(f)
 
 print(uess)
-#print(iess)
+print(iess)
