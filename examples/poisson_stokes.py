@@ -21,6 +21,9 @@ from src.apply_essential import apply_essential
 from addons.poisson.poisson_elem import poisson_elem
 from addons.stokes.stokes_elem import stokes_elem
 
+from scipy.sparse.linalg import spsolve
+
+
 import pretty_errors
 
 problemtype = "poisson"
@@ -81,9 +84,8 @@ elif problemtype == "stokes":
 else:
     raise ValueError(f"Invalid problemtype : {problemtype}")
 
-A = A.tocsr() # for similarity with TFEM
-print(A)
-print(f)
+#A = A.tocsr() # for similarity with TFEM
 
-print(uess)
-print(iess)
+sol = spsolve(A, f)
+
+print(sol)

@@ -38,7 +38,7 @@ fn = "~/Desktop/pytfem/dotest.py";
 problemtype = "stokes";
 
 % mesh_ez = quadrilateral2d([1,2],'quad9','origin',[1,1],'length',[4,3]);
-mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[2,3,4,5]);
+mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
 
 if problemtype == "poisson"
 
@@ -57,6 +57,8 @@ if problemtype == "poisson"
     uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [3,4], @func, 'funcnr', 3, 'fin', uess_ez );
 
     [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
+    
+    u_ez = A_ez2\f_ez2 ;
 
 elseif problemtype == "stokes"
 
@@ -81,6 +83,8 @@ elseif problemtype == "stokes"
 
     [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
 
+     u_ez = A_ez2\f_ez2 ;
+
 else
 
     error('Wrong problemtype: '+problemtype);
@@ -91,7 +95,7 @@ end
 %% define the same commands for pytfem
 
 % cmd_mesh_py =       "    mesh_py = quadrilateral2d([1,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
-cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([2,3,4,5]))";
+cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
 
 if problemtype == "poisson"
 
@@ -112,6 +116,8 @@ if problemtype == "poisson"
                         "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )";
 
     cmd_apply_ess_py =  "    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
+
+    cmd_solve_py     =  "    u_py = spsolve(A_py2.tocsr(), f_py2)";
 
 elseif problemtype == "stokes"
 
@@ -136,6 +142,8 @@ elseif problemtype == "stokes"
 
     cmd_apply_ess_py =  "    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
 
+    cmd_solve_py     =  "    u_py = spsolve(A_py2.tocsr(), f_py2)";
+
 end
 
 
@@ -158,7 +166,7 @@ mywritelines("from src.define_essential import define_essential");
 
 mywritelines("from src.fill_system_vector import fill_system_vector");
 mywritelines("from src.apply_essential import apply_essential");
-
+mywritelines("from scipy.sparse.linalg import spsolve")
 mywritelines("from examples.func import func");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
@@ -294,6 +302,28 @@ write1Darr_r("    ",f_ez2,"f_ez2")
 mywritelines("    check1=np.allclose(A_py2.toarray(),A_ez2,atol=1e-12,rtol=0)")
 mywritelines("    check2=np.allclose(f_py2,f_ez2,atol=1e-12,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'apply_essential failed test!' )");
+
+
+%% test for solve
+
+mywritelines("  def test_solve(self):");
+write1Darr_r("    ",u_ez,"u_ez")
+
+mywritelines(cmd_mesh_py);
+mywritelines(cmd_elementdof_py);
+mywritelines(cmd_problem_py);
+mywritelines(cmd_fill_user_py);
+mywritelines(cmd_gauss_py);
+mywritelines(cmd_basis_py);
+mywritelines(cmd_build_sys_py);
+mywritelines(cmd_define_ess_py);
+mywritelines(cmd_fill_sys_py);
+mywritelines(cmd_apply_ess_py);
+mywritelines(cmd_solve_py);
+mywritelines("    print('max diff = ',(abs(u_ez-u_py)).max())");
+
+mywritelines("    self.assertTrue(np.allclose(u_py,u_ez,atol=1e-12,rtol=0)," + ...
+    "'solve failed test, max diff = '+str((abs(u_ez-u_py)).max()) )");
 
 
 %% helper functions
