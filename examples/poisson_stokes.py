@@ -15,6 +15,8 @@ from func import func
 
 from src.build_system import build_system
 from src_test.define_essential import define_essential
+from src_test.fill_system_vector import fill_system_vector
+#from src_test.apply_essential import apply_essential
 
 from addons.poisson.poisson_elem import poisson_elem
 from addons.stokes.stokes_elem import stokes_elem
@@ -22,7 +24,7 @@ from addons.stokes.stokes_elem import stokes_elem
 import pretty_errors
 
 problemtype = "stokes"
-mesh=quadrilateral2d([2,2],'quad9')
+mesh=quadrilateral2d([3,2],'quad9')
 
 if problemtype == "poisson":
     elementdof=np.array([[1,1,1,1,1,1,1,1,1],
@@ -42,6 +44,11 @@ if problemtype == "poisson":
     A, f = build_system ( mesh, problem, poisson_elem, user )
 
     iess = define_essential ( mesh, problem,'curves', [0,1,2,3] )
+
+    uess = fill_system_vector ( mesh, problem, 'curves', [0,1], func, funcnr=3 )
+    uess = fill_system_vector ( mesh, problem, 'curves', [2,3], func, funcnr=3, fin=uess )
+
+    #A, f, _ = apply_essential ( A, f, uess, iess )
 
 elif problemtype == "stokes":
     elementdof=np.array([[2,2,2,2,2,2,2,2,2],
@@ -66,9 +73,17 @@ elif problemtype == "stokes":
     iess = define_essential ( mesh, problem, 'curves',[0,2,2,3], degfd=1, iessp=iess )
     iess = define_essential ( mesh, problem, 'points',[0], physq=1, iessp=iess )
 
+    uess = fill_system_vector ( mesh, problem, 'curves', [0,1], func, funcnr=3 )
+    uess = fill_system_vector ( mesh, problem, 'curves', [2,3], func, funcnr=3, fin=uess )
+
+    #A, f, _ = apply_essential ( A, f, uess, iess )
+
 else:
     raise ValueError(f"Invalid problemtype : {problemtype}")
 
 A = A.tocsr() # for similarity with TFEM
-print(A)
-print(f)
+#print(A)
+#print(f)
+
+print(uess)
+#print(iess)

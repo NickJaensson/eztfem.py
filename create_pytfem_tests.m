@@ -35,7 +35,7 @@ fn = "~/Desktop/pytfem/dotest.py";
 
 %% run the problem in eztfem
 
-problemtype = "poisson";
+problemtype = "stokes";
 
 % mesh_ez = quadrilateral2d([1,2],'quad9','origin',[1,1],'length',[4,3]);
 mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[2,3,4,5]);
@@ -52,6 +52,11 @@ if problemtype == "poisson"
     user_ez.func = @func ;
     [A_ez,f_ez] = build_system ( mesh_ez, problem_ez, @poisson_elem, user_ez);
     iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 1 ) ;
+
+    uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [1,2], @func, 'funcnr', 3 );
+    uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [3,4], @func, 'funcnr', 3, 'fin', uess_ez );
+
+%     [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
 
 elseif problemtype == "stokes"
 
@@ -70,6 +75,11 @@ elseif problemtype == "stokes"
     iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 1 ) ;
     iess_ez = define_essential ( mesh_ez, problem_ez, 'curves', [1 2 3 4], 'degfd', 2, 'iessp', iess_ez ) ;
     iess_ez = define_essential ( mesh_ez, problem_ez, 'points', 1, 'physq', 2, 'iessp', iess_ez ) ;
+
+    uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [1,2], @func, 'funcnr', 3 );
+    uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [3,4], @func, 'funcnr', 3, 'fin', uess_ez );
+
+%     [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
 
 else
 
@@ -96,6 +106,11 @@ if problemtype == "poisson"
     cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, poisson_elem, user_py)";
     cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );";
 
+    cmd_fill_sys_py =   "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );"+...
+                        "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )";
+
+%     cmd_apply_ess_py =  "    A_py, f_py, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
+
 elseif problemtype == "stokes"
 
     cmd_elementdof_py = "    elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T";
@@ -111,6 +126,11 @@ elseif problemtype == "stokes"
     cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );"+...
                         "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );"+...
                         "    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )";
+
+    cmd_fill_sys_py =   "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );"+...
+                        "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )";
+
+%     cmd_apply_ess_py =  "    A_py, f_py, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
 
 end
 
@@ -131,6 +151,9 @@ mywritelines("from src.build_system import build_system");
 mywritelines("from addons.poisson.poisson_elem import poisson_elem");
 mywritelines("from addons.stokes.stokes_elem import stokes_elem");
 mywritelines("from src_test.define_essential import define_essential");
+
+mywritelines("from src_test.fill_system_vector import fill_system_vector");
+mywritelines("from src_test.apply_essential import apply_essential");
 
 mywritelines("from examples.func import func");
 
@@ -237,6 +260,18 @@ mywritelines(cmd_problem_py);
 write1Darr_i("    ",iess_ez,"iess_ez")
 mywritelines(cmd_define_ess_py);
 mywritelines("    self.assertTrue((iess_ez-1==iess_py).all(),'define_essential failed test!' )");
+
+
+%% test for fill_sysvector
+
+mywritelines("  def test_fill_system_vector(self):");
+mywritelines(cmd_mesh_py);
+mywritelines(cmd_elementdof_py);
+mywritelines(cmd_problem_py);
+write1Darr_r("    ",uess_ez,"uess_ez")
+mywritelines(cmd_define_ess_py);
+mywritelines(cmd_fill_sys_py);
+mywritelines("    self.assertTrue(np.allclose(uess_py,uess_ez,atol=1e-15,rtol=0),'fill_system_vector failed test!' )");
 
 
 %% helper functions
