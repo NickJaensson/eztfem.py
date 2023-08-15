@@ -56,7 +56,7 @@ if problemtype == "poisson"
     uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [1,2], @func, 'funcnr', 3 );
     uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [3,4], @func, 'funcnr', 3, 'fin', uess_ez );
 
-%     [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
+    [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
 
 elseif problemtype == "stokes"
 
@@ -79,7 +79,7 @@ elseif problemtype == "stokes"
     uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [1,2], @func, 'funcnr', 3 );
     uess_ez = fill_system_vector ( mesh_ez, problem_ez, 'curves', [3,4], @func, 'funcnr', 3, 'fin', uess_ez );
 
-%     [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
+    [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
 
 else
 
@@ -99,7 +99,8 @@ if problemtype == "poisson"
     cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=1)";
     cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
     cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );";
-    cmd_fill_user_py =  "    user_py.coorsys = 0;"+...
+    cmd_fill_user_py =  "    user_py = User();" + ...
+                        "    user_py.coorsys = 0;"+...
                         "    user_py.alpha = 1;"+...
                         "    user_py.funcnr = 4; "+...
                         "    user_py.func = func";
@@ -109,7 +110,7 @@ if problemtype == "poisson"
     cmd_fill_sys_py =   "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );"+...
                         "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )";
 
-%     cmd_apply_ess_py =  "    A_py, f_py, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
+    cmd_apply_ess_py =  "    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
 
 elseif problemtype == "stokes"
 
@@ -118,7 +119,8 @@ elseif problemtype == "stokes"
     cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
     cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );"+...
                         "    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )";
-    cmd_fill_user_py =  "    user_py.coorsys = 0;"+...
+    cmd_fill_user_py =  "    user_py = User();" + ...
+                        "    user_py.coorsys = 0;"+...
                         "    user_py.mu = 1;"+...
                         "    user_py.funcnr = 0; "+...
                         "    user_py.func = func";
@@ -130,7 +132,7 @@ elseif problemtype == "stokes"
     cmd_fill_sys_py =   "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );"+...
                         "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )";
 
-%     cmd_apply_ess_py =  "    A_py, f_py, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
+    cmd_apply_ess_py =  "    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
 
 end
 
@@ -222,10 +224,9 @@ mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test
 mywritelines("  def test_user(self):");
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
-mywritelines("    user_py = User()");
+mywritelines(cmd_fill_user_py);
 mywritelines(cmd_gauss_py);
 mywritelines(cmd_basis_py);
-mywritelines(cmd_fill_user_py);
 mywritelines("    self.assertTrue(user_py==user_ez,'users failed test!' )");
 
 
@@ -239,10 +240,9 @@ mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
 write_attrib("    ",problem_ez,"problem_ez")
 mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
-mywritelines("    user_py = User()");
+mywritelines(cmd_fill_user_py);
 mywritelines(cmd_gauss_py);
 mywritelines(cmd_basis_py);
-mywritelines(cmd_fill_user_py);
 write2Darr_r("    ",full(A_ez),"A_ez")
 write1Darr_r("    ",f_ez,"f_ez")
 mywritelines(cmd_build_sys_py);
@@ -272,6 +272,26 @@ write1Darr_r("    ",uess_ez,"uess_ez")
 mywritelines(cmd_define_ess_py);
 mywritelines(cmd_fill_sys_py);
 mywritelines("    self.assertTrue(np.allclose(uess_py,uess_ez,atol=1e-15,rtol=0),'fill_system_vector failed test!' )");
+
+
+%% test for apply_essential
+
+mywritelines("  def test_apply_essential(self):");
+mywritelines(cmd_mesh_py);
+mywritelines(cmd_elementdof_py);
+mywritelines(cmd_problem_py);
+mywritelines(cmd_fill_user_py);
+mywritelines(cmd_gauss_py);
+mywritelines(cmd_basis_py);
+mywritelines(cmd_build_sys_py);
+mywritelines(cmd_define_ess_py);
+mywritelines(cmd_fill_sys_py);
+mywritelines(cmd_apply_ess_py);
+write2Darr_r("    ",full(A_ez2),"A_ez2")
+write1Darr_r("    ",f_ez2,"f_ez2")
+mywritelines("    check1=np.allclose(A_py2.toarray(),A_ez2,atol=1e-12,rtol=0)")
+mywritelines("    check2=np.allclose(f_py2,f_ez2,atol=1e-12,rtol=0)")
+mywritelines("    self.assertTrue(check1 and check2,'apply_essential failed test!' )");
 
 
 %% helper functions
