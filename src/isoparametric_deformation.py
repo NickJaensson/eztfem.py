@@ -22,7 +22,7 @@ def isoparametric_deformation(x, dphi):
 
     # Compute F
     for j in range(ndim):
-        F[:, :, j] = np.dot(dphi[:, :, j], x)
+        F[:, :, j] = dphi[:, :, j] @ x
 
     # Compute detF and Finv
     if ndim == 1:
