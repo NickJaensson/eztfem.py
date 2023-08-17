@@ -2,7 +2,7 @@ import numpy as np
 from src.pos_array import pos_array
 from src.pos_array_vec import pos_array_vec
 
-# class definition for Mesh objects
+# class definition for Vector objects
 class Vector:
 
     # initialize attributes (will be filled elsewhere)
