@@ -36,8 +36,8 @@ def pos_array_vec(problem, nodes, **kwargs):
         nodes = np.array([nodes])
 
     pos = [None] * vec.shape[0]
-    ndof = np.zeros(vec.shape[0])
-    lpos = np.zeros(problem.maxvecnoddegfd * nodes.shape[0])
+    ndof = np.zeros(vec.shape[0],dtype=int)
+    lpos = np.zeros(problem.maxvecnoddegfd * nodes.shape[0],dtype=int)
 
     if order == 'ND':
         for i, vc in enumerate(vec):

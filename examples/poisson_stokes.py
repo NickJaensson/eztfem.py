@@ -17,16 +17,18 @@ from src.build_system import build_system
 from src.define_essential import define_essential
 from src.fill_system_vector import fill_system_vector
 from src.apply_essential import apply_essential
+from src.refcoor_nodal_points import refcoor_nodal_points
+from src.deriv_vector import deriv_vector
 
 from addons.poisson.poisson_elem import poisson_elem
 from addons.stokes.stokes_elem import stokes_elem
+from addons.stokes.stokes_pressure import stokes_pressure
 
 from scipy.sparse.linalg import spsolve
 
-
 import pretty_errors
 
-problemtype = "poisson"
+problemtype = "stokes"
 mesh=quadrilateral2d([3,2],'quad9')
 
 if problemtype == "poisson":
@@ -52,6 +54,9 @@ if problemtype == "poisson":
     uess = fill_system_vector ( mesh, problem, 'curves', [2,3], func, funcnr=3, fin=uess )
 
     A, f, _ = apply_essential ( A, f, uess, iess )
+
+    u = spsolve(A.tocsr(), f)
+
 
 elif problemtype == "stokes":
     elementdof=np.array([[2,2,2,2,2,2,2,2,2],
@@ -81,11 +86,12 @@ elif problemtype == "stokes":
 
     A, f, _ = apply_essential ( A, f, uess, iess )
 
+    u = spsolve(A.tocsr(), f)
+
+    xr = refcoor_nodal_points ( mesh )
+    user.psi, _ = basis_function('quad','Q1', xr )
+    user.u = u
+    pressure = deriv_vector ( mesh, problem, stokes_pressure, user )
+
 else:
     raise ValueError(f"Invalid problemtype : {problemtype}")
-
-#A = A.tocsr() # for similarity with TFEM
-
-sol = spsolve(A, f)
-
-print(sol)
