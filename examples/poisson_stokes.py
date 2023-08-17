@@ -23,6 +23,7 @@ from src.deriv_vector import deriv_vector
 from addons.poisson.poisson_elem import poisson_elem
 from addons.stokes.stokes_elem import stokes_elem
 from addons.stokes.stokes_pressure import stokes_pressure
+from addons.stokes.stokes_deriv import stokes_deriv
 
 from scipy.sparse.linalg import spsolve
 
@@ -92,6 +93,12 @@ elif problemtype == "stokes":
     user.psi, _ = basis_function('quad','Q1', xr )
     user.u = u
     pressure = deriv_vector ( mesh, problem, stokes_pressure, user )
+
+    user.phi, user.dphi = basis_function('quad','Q2', xr )
+    user.comp = 6 # divu, divergence of the velocity field
+    divu = deriv_vector ( mesh, problem, stokes_deriv, user ) 
+    user.comp = 7 # gammadot, effective strain rate = sqrt(2II_D) 
+    gammadot = deriv_vector ( mesh, problem, stokes_deriv, user )
 
 else:
     raise ValueError(f"Invalid problemtype : {problemtype}")

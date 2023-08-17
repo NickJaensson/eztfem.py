@@ -90,6 +90,12 @@ elseif problemtype == "stokes"
     [user_ez2.psi] = basis_function('quad','Q1', xr_ez ) ;
     user_ez2.u = u_ez ;
     pressure_ez = deriv_vector ( mesh_ez, problem_ez, @stokes_pressure, user_ez2 ) ;
+    
+    [user_ez2.phi,user_ez2.dphi]=basis_function('quad','Q2', xr_ez ) ;
+    user_ez2.comp = 7 ; % divu, divergence of the velocity field
+    divu_ez = deriv_vector ( mesh_ez, problem_ez, @stokes_deriv, user_ez2 ) ;
+    user_ez2.comp = 8 ; % gammadot, effective strain rate = sqrt(2II_D) 
+    gammadot_ez = deriv_vector ( mesh_ez, problem_ez, @stokes_deriv, user_ez2 ) ;
 
 else
 
@@ -156,6 +162,15 @@ elseif problemtype == "stokes"
                         "    user_py2.u = u_py;"+...
                         "    pressure_py = deriv_vector ( mesh_py, problem_py, stokes_pressure, user_py2 )";
 
+    cmd_deriv_vector2 =  "    user_py2 = user_py;" + ...
+                        "    xr_py = refcoor_nodal_points ( mesh_py );"+... 
+                        "    user_py2.phi, user_py2.dphi = basis_function('quad','Q2', xr_py );"+...
+                        "    user_py2.u = u_py;"+...
+                        "    user_py2.comp = 6;"+...
+                        "    divu_py = deriv_vector ( mesh_py, problem_py, stokes_deriv, user_py2 );"+...
+                        "    user_py2.comp = 7;"+...
+                        "    gammadot_py = deriv_vector ( mesh_py, problem_py, stokes_deriv, user_py2 )";
+
 end
 
 
@@ -175,6 +190,7 @@ mywritelines("from src.build_system import build_system");
 mywritelines("from addons.poisson.poisson_elem import poisson_elem");
 mywritelines("from addons.stokes.stokes_elem import stokes_elem");
 mywritelines("from addons.stokes.stokes_pressure import stokes_pressure");
+mywritelines("from addons.stokes.stokes_deriv import stokes_deriv");
 
 mywritelines("from src.define_essential import define_essential");
 
@@ -344,7 +360,7 @@ mywritelines("    self.assertTrue(np.allclose(u_py,u_ez,atol=1e-12,rtol=0)," + .
     "'solve failed test, max diff = '+str((abs(u_ez-u_py)).max()) )");
 
 
-%% test for deriv_vector
+%% tests for deriv_vector
 
 if problemtype == 'stokes'
 
@@ -367,6 +383,30 @@ if problemtype == 'stokes'
     mywritelines(cmd_deriv_vector);
     mywritelines("    self.assertTrue(pressure_ez==pressure_py," + ...
         "'deriv_vector failed test, max diff = '+str((abs(pressure_ez.u-pressure_py.u)).max()) )");
+
+    mywritelines("  def test_deriv_vector2(self):");
+    mywritelines("    divu_ez = Vector()");
+    write_attrib("    ",divu_ez,"divu_ez")
+    mywritelines("    divu_ez.vec += -1 # compensate for Python indexing");
+    mywritelines("    gammadot_ez = Vector()");
+    write_attrib("    ",gammadot_ez,"gammadot_ez")
+    mywritelines("    gammadot_ez.vec += -1 # compensate for Python indexing"); 
+    
+    mywritelines(cmd_mesh_py);
+    mywritelines(cmd_elementdof_py);
+    mywritelines(cmd_problem_py);
+    mywritelines(cmd_fill_user_py);
+    mywritelines(cmd_gauss_py);
+    mywritelines(cmd_basis_py);
+    mywritelines(cmd_build_sys_py);
+    mywritelines(cmd_define_ess_py);
+    mywritelines(cmd_fill_sys_py);
+    mywritelines(cmd_apply_ess_py);
+    mywritelines(cmd_solve_py);
+    mywritelines(cmd_deriv_vector2);
+    mywritelines("    self.assertTrue(divu_ez==divu_py and gammadot_ez==gammadot_py,"+...
+        "'deriv_vector2 failed test, max diff = '+str((abs(divu_ez.u-divu_py.u)).max())"+...
+        "+' and '+str((abs(gammadot_ez.u-gammadot_py.u)).max()))");
 end
 
 
