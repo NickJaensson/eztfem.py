@@ -35,7 +35,7 @@ fn = "~/Desktop/pytfem/dotest.py";
 
 %% run the problem in eztfem
 
-problemtype = "poisson";
+problemtype = "stokes";
 
 % mesh_ez = quadrilateral2d([1,2],'quad9','origin',[1,1],'length',[4,3]);
 mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
@@ -180,7 +180,8 @@ mywritelines("from src.define_essential import define_essential");
 
 mywritelines("from src.fill_system_vector import fill_system_vector");
 mywritelines("from src.apply_essential import apply_essential");
-mywritelines("from src.deriv_vector import deriv_vector, Vector");
+mywritelines("from src.vector_defs import Vector");
+mywritelines("from src.deriv_vector import deriv_vector");
 mywritelines("from src.refcoor_nodal_points import refcoor_nodal_points");
 
 mywritelines("from scipy.sparse.linalg import spsolve")
