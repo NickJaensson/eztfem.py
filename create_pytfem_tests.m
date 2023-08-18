@@ -35,7 +35,7 @@ fn = "~/Desktop/pytfem/dotest.py";
 
 %% run the problem in eztfem
 
-problemtype = "stokes";
+problemtype = "poisson";
 
 % mesh_ez = quadrilateral2d([1,2],'quad9','origin',[1,1],'length',[4,3]);
 mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
@@ -59,6 +59,12 @@ if problemtype == "poisson"
     [A_ez2, f_ez2] = apply_essential ( A_ez, f_ez, uess_ez, iess_ez );
     
     u_ez = A_ez2\f_ez2 ;
+
+    user_ez2 = user_ez;
+    xr_ez = refcoor_nodal_points ( mesh_ez ) ;
+    [user_ez2.psi] = basis_function('quad','Q2', xr_ez ) ;
+    user_ez2.u = u_ez ;
+    gradu_ez = deriv_vector ( mesh_ez, problem_ez, @poisson_deriv, user_ez2 ) ;
 
 elseif problemtype == "stokes"
 
@@ -131,6 +137,12 @@ if problemtype == "poisson"
 
     cmd_solve_py     =  "    u_py = spsolve(A_py2.tocsr(), f_py2)";
 
+    cmd_deriv_vector =  "    user_py2 = user_py;" + ...
+                        "    xr_py = refcoor_nodal_points ( mesh_py );"+...
+                        "    user_py2.psi, _ = basis_function('quad','Q2', xr_py );"+...
+                        "    user_py2.u = u_py;"+...
+                        "    gradu_py = deriv_vector ( mesh_py, problem_py, poisson_deriv, user_py2 )";
+
 elseif problemtype == "stokes"
 
     cmd_elementdof_py = "    elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T";
@@ -191,6 +203,7 @@ mywritelines("from addons.poisson.poisson_elem import poisson_elem");
 mywritelines("from addons.stokes.stokes_elem import stokes_elem");
 mywritelines("from addons.stokes.stokes_pressure import stokes_pressure");
 mywritelines("from addons.stokes.stokes_deriv import stokes_deriv");
+mywritelines("from addons.poisson.poisson_deriv import poisson_deriv");
 
 mywritelines("from src.define_essential import define_essential");
 
@@ -201,7 +214,7 @@ mywritelines("from src.deriv_vector import deriv_vector");
 mywritelines("from src.refcoor_nodal_points import refcoor_nodal_points");
 
 mywritelines("from scipy.sparse.linalg import spsolve")
-mywritelines("from examples.func import func");
+mywritelines("from examples.poisson.func import func");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
 
@@ -362,7 +375,29 @@ mywritelines("    self.assertTrue(np.allclose(u_py,u_ez,atol=1e-12,rtol=0)," + .
 
 %% tests for deriv_vector
 
-if problemtype == 'stokes'
+if problemtype == 'poisson'
+
+    mywritelines("  def test_deriv_vector(self):");
+    mywritelines("    gradu_ez = Vector()");
+    write_attrib("    ",gradu_ez,"gradu_ez")
+    mywritelines("    gradu_ez.vec += -1 # compensate for Python indexing"); 
+    
+    mywritelines(cmd_mesh_py);
+    mywritelines(cmd_elementdof_py);
+    mywritelines(cmd_problem_py);
+    mywritelines(cmd_fill_user_py);
+    mywritelines(cmd_gauss_py);
+    mywritelines(cmd_basis_py);
+    mywritelines(cmd_build_sys_py);
+    mywritelines(cmd_define_ess_py);
+    mywritelines(cmd_fill_sys_py);
+    mywritelines(cmd_apply_ess_py);
+    mywritelines(cmd_solve_py);
+    mywritelines(cmd_deriv_vector);
+    mywritelines("    self.assertTrue(gradu_ez==gradu_py," + ...
+        "'deriv_vector failed test, max diff = '+str((abs(gradu_ez.u-gradu_py.u)).max()) )");
+
+elseif problemtype == 'stokes'
 
     mywritelines("  def test_deriv_vector(self):");
     mywritelines("    pressure_ez = Vector()");
