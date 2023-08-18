@@ -148,14 +148,158 @@ def rectangle2d_tria6(ne, ratio, factor):
 def rectangle2d_tria7(ne, ratio, factor):
     raise NotImplementedError
 
-
-def rectangle2d_quad4(ne, ratio, factor):
-    raise NotImplementedError
-
-
 def rectangle2d_quad5(ne, ratio, factor):
     raise NotImplementedError
 
+def rectangle2d_quad4(ne, ratio, factor):
+    """
+    Generate a mesh on region [0,1]x[0,1] using quad elements with 4 nodes.
+    The numbering for both nodal points and elements is row by row.
+    For example a 2x2 mesh is numbered as follows
+
+    Nodes:
+
+        7 ------- 8 ------- 9
+        |         |         |
+        |         |         |
+        |         |         |
+        4 ------- 5 ------- 6
+        |         |         |
+        |         |         |
+        |         |         |
+        1 ------- 2 ------- 3
+
+    Elements:
+
+        x ------- x ------- x
+        |         |         |
+        |    3    |    4    |
+        |         |         |
+        x ------- x ------- x
+        |         |         |
+        |    1    |    2    |
+        |         |         |
+        x ------- x ------- x
+
+    Also generated are four points and four curves:
+
+                <----- 
+                    C3
+        P4 --------------------- P3
+        |                       |           Note:   C1=P1-P2
+        |                       |                   C2=P2-P3
+    |    |                       |    ^              C3=P3-P4
+    | C4 |                       | C2 |              C4=P4-P1
+    \|/   |                       |    |
+        |                       |
+        |                       |
+        P1 --------------------- P2
+                    C1
+                ----->
+    """
+    n = ne[0]
+    m = ne[1]
+
+    numnod = 4
+    nn1row = n + 1
+    nn1col = m + 1
+
+    # fill mesh structure
+    mesh = Mesh()
+    mesh.ndim = 2
+    mesh.nnodes = nn1row * nn1col
+    mesh.elshape = 5
+    mesh.nelem = n * m
+    mesh.elnumnod = numnod
+    mesh.npoints = 4
+    mesh.ncurves = 4
+
+    mesh.topology = np.zeros((numnod, mesh.nelem), dtype=int)
+    mesh.coor = np.zeros((mesh.nnodes, mesh.ndim))
+    mesh.points = np.zeros(mesh.npoints, dtype=int)
+
+    # topology
+    for i in range(n):
+        for j in range(m):
+            nn1 = j * nn1row + i
+            nn2 = nn1 + nn1row
+
+            e = i + j * n
+
+            mesh.topology[:, e] = [nn1, nn1 + 1, nn2 + 1, nn2]
+
+    # coordinates
+    if ratio is None:
+        # equidistant
+        deltax = 1.0 / n
+        deltay = 1.0 / m
+        for i in range(nn1row):
+            for j in range(nn1col):
+                node = i + j * nn1row
+                mesh.coor[node, :] = [(i * deltax), (j * deltay)]
+    else:
+        # non-equidistant
+        x1 = np.zeros(nn1row)
+        x2 = np.zeros(nn1col)
+        x3 = np.zeros(nn1row)
+        x4 = np.zeros(nn1col)
+        x1 = distribute_elements(n, ratio[0], factor[0])
+        x2 = distribute_elements(m, ratio[1], factor[1])
+        x3 = distribute_elements(n, ratio[2], factor[2])
+        x4 = distribute_elements(m, ratio[3], factor[3])
+
+        x3 = 1 - x3[::-1]
+        x4 = 1 - x4[::-1]
+
+        # create straight lines in reference square [0,1]x[0,1]
+        for i in range(1, nn1row + 1):
+            for j in range(1, nn1col + 1):
+                node = i + (j - 1) * nn1row - 1
+                D = (x1[i - 1] - x3[i - 1]) * (x4[j - 1] - x2[j - 1]) - 1
+                mesh.coor[node, 0] = (x4[j - 1] * (x1[i - 1] - x3[i - 1]) - x1[i - 1]) / D
+                mesh.coor[node, 1] = (x1[i - 1] * (x4[j - 1] - x2[j - 1]) - x4[j - 1]) / D
+
+    # points
+    mesh.points = [1, nn1row, nn1row * nn1col, nn1row * (nn1col - 1)]
+
+    mesh.points[0] = 0
+    mesh.points[1] = nn1row - 1
+    mesh.points[2] = nn1row * nn1col - 1
+    mesh.points[3] = nn1row * (nn1col - 1)
+
+    # curves
+    a = [nn1row, nn1col, nn1row, nn1col]
+    b = [n, m, n, m]
+
+    mesh.curves = [Geometry(elshape=2,ndim=2,elnumnod=3,nnodes=a[curve],nelem=b[curve]) for curve in range(4)]
+
+    for curve in range(mesh.ncurves):
+        mesh.curves[curve].elshape = 1
+        mesh.curves[curve].ndim = 2
+        mesh.curves[curve].elnumnod = 2
+        mesh.curves[curve].nnodes = a[curve]
+        mesh.curves[curve].nelem = b[curve]
+
+    # nodes of curves
+    mesh.curves[0].nodes = np.arange(1, nn1row + 1) - 1
+    mesh.curves[1].nodes = nn1row * np.arange(1, nn1col + 1, 1) - 1
+    mesh.curves[2].nodes = (nn1col - 1) * nn1row + np.arange(nn1row, 0, -1) - 1
+    mesh.curves[3].nodes = 1 - nn1row + nn1row * np.arange(nn1col, 0, -1) - 1
+
+    # topology of elements on curves
+    for curve in mesh.curves:
+        nelem = curve.nelem
+        elnumnod = curve.elnumnod
+        curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
+
+        # local numbering
+        for elem in range(nelem):
+            curve.topology[:, elem, 0] = [elem, elem + 1]
+
+        # global numbering
+        curve.topology[:, :, 1] = curve.nodes[curve.topology[:, :, 0]]
+    
+    return mesh
 
 def rectangle2d_quad9(ne, ratio, factor):
     """
@@ -306,17 +450,17 @@ def rectangle2d_quad9(ne, ratio, factor):
     mesh.curves[2].nodes = (nn1col - 1) * nn1row + np.arange(nn1row, 0, -1) - 1
     mesh.curves[3].nodes = 1 - nn1row + nn1row * np.arange(nn1col, 0, -1) - 1
 
-    for curve in range(mesh.ncurves):
+    for curve in mesh.curves:
 
-        nelem = mesh.curves[curve].nelem
-        elnumnod = mesh.curves[curve].elnumnod
-        mesh.curves[curve].topology = np.zeros((elnumnod, nelem, 2), dtype=int)
+        nelem = curve.nelem
+        elnumnod = curve.elnumnod
+        curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
 
         # local numbering
         for elem in range(nelem):
-            mesh.curves[curve].topology[:, elem, 0] = np.arange(2 * elem, 2 * elem + 3)
+            curve.topology[:, elem, 0] = np.arange(2 * elem, 2 * elem + 3)
 
         # global numbering
-        mesh.curves[curve].topology[:, :, 1] = mesh.curves[curve].nodes[ mesh.curves[curve].topology[:, :, 0] ]
+        curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
 
     return mesh
