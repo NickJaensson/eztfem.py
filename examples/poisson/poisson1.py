@@ -30,7 +30,7 @@ import pretty_errors
 # create mesh
 
 print('mesh')
-mesh = quadrilateral2d([2,2],'quad9')
+mesh = quadrilateral2d([20,20],'quad9')
 
 # define the problem
 
@@ -70,8 +70,7 @@ iess = define_essential ( mesh, problem,'curves', [0,1,2,3] )
 # fill values for the essential boundary conditions
 
 print('fill_system_vector')
-uess = fill_system_vector ( mesh, problem, 'curves', [0,1], func, funcnr=3 )
-uess = fill_system_vector ( mesh, problem, 'curves', [2,3], func, funcnr=3, fin=uess )
+uess = fill_system_vector ( mesh, problem, 'curves', [0,1,2,3], func, funcnr=3 )
 
 # apply essential boundary conditions to the system
 
@@ -98,4 +97,3 @@ xr = refcoor_nodal_points ( mesh )
 user.u = u
 
 gradu = deriv_vector ( mesh, problem, poisson_deriv, user )
-print(gradu.u)
