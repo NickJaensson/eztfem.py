@@ -21,6 +21,7 @@ from src.refcoor_nodal_points import refcoor_nodal_points
 from src.deriv_vector import deriv_vector
 
 from addons.poisson.poisson_elem import poisson_elem
+from addons.poisson.poisson_deriv import poisson_deriv
 
 from scipy.sparse.linalg import spsolve
 
@@ -29,7 +30,7 @@ import pretty_errors
 # create mesh
 
 print('mesh')
-mesh = quadrilateral2d([20,20],'quad9')
+mesh = quadrilateral2d([2,2],'quad9')
 
 # define the problem
 
@@ -96,4 +97,5 @@ xr = refcoor_nodal_points ( mesh )
 [user.phi,user.dphi]=basis_function('quad','Q2', xr )
 user.u = u
 
-#gradu = deriv_vector ( mesh, problem, poisson_deriv, user )
+gradu = deriv_vector ( mesh, problem, poisson_deriv, user )
+print(gradu.u)
