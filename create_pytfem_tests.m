@@ -62,7 +62,7 @@ if problemtype == "poisson"
 
     user_ez2 = user_ez;
     xr_ez = refcoor_nodal_points ( mesh_ez ) ;
-    [user_ez2.psi] = basis_function('quad','Q2', xr_ez ) ;
+    [user_ez2.phi,user_ez2.dphi] = basis_function('quad','Q2', xr_ez ) ;
     user_ez2.u = u_ez ;
     gradu_ez = deriv_vector ( mesh_ez, problem_ez, @poisson_deriv, user_ez2 ) ;
 
@@ -139,7 +139,7 @@ if problemtype == "poisson"
 
     cmd_deriv_vector =  "    user_py2 = user_py;" + ...
                         "    xr_py = refcoor_nodal_points ( mesh_py );"+...
-                        "    user_py2.psi, _ = basis_function('quad','Q2', xr_py );"+...
+                        "    user_py2.phi, user_py2.dphi = basis_function('quad','Q2', xr_py );"+...
                         "    user_py2.u = u_py;"+...
                         "    gradu_py = deriv_vector ( mesh_py, problem_py, poisson_deriv, user_py2 )";
 
