@@ -30,12 +30,12 @@ addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
 
 %% filename for python test file
 global fn 
-fn = "~/Desktop/pytfem/dotest.py"; 
+fn = "~/Desktop/eztfem.py/dotest.py"; 
 
 
 %% run the problem in eztfem
 
-problemtype = "poisson";
+problemtype = "stokes";
 
 % mesh_ez = quadrilateral2d([1,2],'quad9','origin',[1,1],'length',[4,3]);
 mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
