@@ -7,10 +7,10 @@ sys.path.append('../')
 import numpy as np
 from pprint import pprint
 from src.quadrilateral2d import quadrilateral2d
-from src.problem_definition import Problem
+from src.problem_class import Problem
 from src.gauss_legendre import gauss_legendre
 from src.basis_function import basis_function
-from src.user import User
+from src.user_class import User
 from func import func
 
 from src.build_system import build_system
