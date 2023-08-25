@@ -2,7 +2,7 @@
 # Manufactured solution.
 
 import sys
-sys.path.append('../')
+sys.path.append('/Users/njaensson/Desktop/eztfem.py/')
 
 import numpy as np
 from pprint import pprint
