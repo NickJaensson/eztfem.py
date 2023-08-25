@@ -4,18 +4,32 @@ import numpy as np
 class Mesh:
 
     # initialize attributes (will be filled elsewhere)
-    def __init__(self):
-        self.ndim = 0
-        self.nnodes = 0
-        self.coor = np.array([])
-        self.nelem = 0
-        self.elshape = 0
-        self.elnumnod = 0
-        self.topology = np.array([])
-        self.npoints = 0
-        self.points = np.array([])
-        self.ncurves = 0
-        self.curves = []
+    def __init__(self, ndim=0, nnodes=0, nelem=0, elshape=0, elnumnod=0, npoints=0, 
+                 ncurves=0, topology=None, coor=None, points=None, curves=None):
+        
+        # it is not recommended to use mutable objects as default values in function def
+        # see: https://docs.python.org/3/tutorial/controlflow.html#default-argument-values
+        if topology is None:
+            topology = np.array([])
+        if coor is None:
+            coor = np.array([])
+        if points is None:
+            points = np.array([])
+        if curves is None:
+            curves = []
+        
+        self.ndim = ndim
+        self.nnodes = nnodes
+        self.nelem = nelem
+        self.elshape = elshape
+        self.elnumnod = elnumnod
+        self.npoints = npoints
+        self.ncurves = ncurves
+
+        self.topology = topology
+        self.coor = coor
+        self.points = points
+        self.curves = curves
 
     # equivalence check for testing against Matlab code
     # NOTE: see the matlab file create_pytfem_tests.m for the use of np.squeeze
@@ -44,14 +58,21 @@ class Mesh:
 class Geometry:
 
     # initialize attributes (will be filled elsewhere)
-    def __init__(self,elshape=0,ndim=0,elnumnod=0,nnodes=0,nelem=0):
+    def __init__(self, elshape=0, ndim=0, elnumnod=0, nnodes=0, nelem=0, 
+                 topology=None, nodes=None):
+        
+        if topology is None:
+            topology = np.array([])
+        if nodes is None:
+            nodes = np.array([])
+
         self.elshape = elshape
         self.ndim = ndim
         self.elnumnod = elnumnod
         self.nnodes = nnodes
         self.nelem = nelem
-        self.topology = np.array([])
-        self.nodes = np.array([])
+        self.topology = topology
+        self.nodes = nodes
 
     # equivalence check for testing against Matlab code
     # NOTE: see the matlab file create_pytfem_tests.m for the use of np.squeeze
