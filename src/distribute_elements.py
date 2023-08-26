@@ -54,11 +54,8 @@ def distribute_elements(nelem, ratio, factor):
 #   size of first element
     dx_1 = 1.0 / fac
 
-#   generate all elements 
-    dx_values = [dx_1 * g ** i for i in range(nelem)]
-    
-    x = np.zeros(nelem + 1)
-    x[1:] = np.cumsum(np.array(dx_values))
+#   generate all elements
+    x = np.insert(np.cumsum(dx_1 * np.power(g, np.arange(nelem))), 0, 0)
 
 #   test whether x(n+1) = 1
     if abs(x[-1] - 1) > 1e-10:
