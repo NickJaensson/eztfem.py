@@ -26,8 +26,8 @@ def quadrilateral2d(num_el, eltype, **kwargs):
                    [ x1 y1; x2 y2; x3 y3; x4 y4 ]
                   note, that origin/length arguments are ignored if vertices are
                   given.
-        'ratio', a vector [ratio1 ratio2 ratio3 ratio4] where for each of the four
-            curves the ratio is given, where
+        'ratio', a vector [ratio1 ratio2 ratio3 ratio4] where for each of the 
+            four curves the ratio is given, where
             ratio = 0: equidistant mesh
             ratio = 1: the size of the last element is factor times the first
             ratio = 2: the size of an element is factor times the previous one
@@ -65,12 +65,14 @@ def quadrilateral2d(num_el, eltype, **kwargs):
                  elshape=10: 4 node triangle
            elnumnod: number of nodes in a single element
            topology: array of size (elnumnod,nelem), where topology(:,elem) is
-                     an array of global node numbers element elem is connected to
+                     an array of global node numbers element elem is connected 
+                     to
            npoints: number of points
            points: an array containing the node numbers of the points, hence
                    points(i) is the node of point i, with 1<=i<=npoints.
            ncurves: number of curves
-           curves: an array of structures, where each structure has the components
+           curves: an array of structures, where each structure has the 
+               components
                ndim: dimension of space (ndim=2)
                nnodes: number of nodes
                nelem: number of elements
@@ -96,19 +98,19 @@ def quadrilateral2d(num_el, eltype, **kwargs):
     factor = kwargs.get('factor', None)
 
     # mesh
-    if eltype == 'tria3':
+    if eltype == 'tria3': # 3 node triangle
         mesh = rectangle2d_tria3(num_el, ratio, factor)
-    elif eltype == 'tria4':
+    elif eltype == 'tria4': # 4 node triangle
         mesh = rectangle2d_tria4(num_el, ratio, factor)
-    elif eltype == 'tria6':
+    elif eltype == 'tria6': # 6 node triangle
         mesh = rectangle2d_tria6(num_el, ratio, factor)
-    elif eltype == 'tria7':
+    elif eltype == 'tria7': # 7 node triangle
         mesh = rectangle2d_tria7(num_el, ratio, factor)
-    elif eltype == 'quad4':
+    elif eltype == 'quad4': # 4 node quadrilateral
         mesh = rectangle2d_quad4(num_el, ratio, factor)
-    elif eltype == 'quad5':
+    elif eltype == 'quad5': # 5 node quadrilateral
         mesh = rectangle2d_quad5(num_el, ratio, factor)
-    elif eltype == 'quad9':
+    elif eltype == 'quad9': # 9 node quadrilateral
         mesh = rectangle2d_quad9(num_el, ratio, factor)
     else:
         raise ValueError(f"Invalid eltype = {eltype}")
@@ -203,10 +205,11 @@ def rectangle2d_quad9(num_el, ratio, factor):
     nn1col = 2 * n_y + 1 # number of nodes in one column
 
     # create mesh and fill structure
-    nelem = n_x*n_y
+    nelem = n_x * n_y
     nnodes = nn1row*nn1col
-    mesh = Mesh(ndim=2, nnodes=nnodes, elshape=6, nelem=nelem, elnumnod=numnod,
-                npoints=4, ncurves=4, topology=np.zeros((numnod, nelem),dtype=int),
+    mesh = Mesh(ndim=2, nnodes=nnodes, elshape=6, nelem=nelem, 
+                elnumnod=numnod, npoints=4, ncurves=4, 
+                topology=np.zeros((numnod, nelem),dtype=int),
                 coor=np.zeros((nnodes, 2)), points=np.zeros((4),dtype=int))
 
     # topology
@@ -216,11 +219,10 @@ def rectangle2d_quad9(num_el, ratio, factor):
             nn2 = nn1 + nn1row # number of nodes before element (i,j) + 1 row
             nn3 = nn2 + nn1row # number of nodes before element (i,j) + 2 rows
 
-            elem = i + j * n_x
+            elem = i + j * n_x # element number
 
-            mesh.topology[:, elem] = [nn1+1, nn1+2, nn1+3, nn2+3, nn3+3, nn3+2, nn3+1, nn2+1, nn2+2]
-
-    mesh.topology -= 1
+            mesh.topology[:, elem] = [nn1, nn1+1, nn1+2, nn2+2, 
+                                      nn3+2, nn3+1, nn3, nn2, nn2+1]
 
     # coordinates
     if ratio is None:
@@ -233,54 +235,57 @@ def rectangle2d_quad9(num_el, ratio, factor):
                 mesh.coor[node] = [i * deltax, j * deltay]
     else:
         # non-equidistant
-        x1 = np.zeros(nn1row)
-        x2 = np.zeros(nn1col)
-        x3 = np.zeros(nn1row)
-        x4 = np.zeros(nn1col)
-        x1[0::2] = distribute_elements(n_x, ratio[0], factor[0])
-        x2[0::2] = distribute_elements(n_y, ratio[1], factor[1])
-        x3[0::2] = distribute_elements(n_x, ratio[2], factor[2])
-        x4[0::2] = distribute_elements(n_y, ratio[3], factor[3])
-
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
+        arrays = [x1, x2, x3, x4]
+        for idx, array in enumerate(arrays):
+            array[::2] = distribute_elements(n_x if idx % 2 == 0 
+                                             else n_y, ratio[idx], factor[idx])
+        
         # mid-side nodes
-        for elem in range(1, n_x + 1):
-            k = 2 * elem - 2
-            x1[k + 1] = (x1[k] + x1[k + 2]) / 2
-            x3[k + 1] = (x3[k] + x3[k + 2]) / 2
-
-        for elem in range(1, n_y + 1):
-            k = 2 * elem - 2
-            x2[k + 1] = (x2[k] + x2[k + 2]) / 2
-            x4[k + 1] = (x4[k] + x4[k + 2]) / 2
+        for elem in range(n_x):
+            k = 2 * elem # nodes before element elem
+            x1[k + 1] = 0.5 * (x1[k] + x1[k + 2])
+            x3[k + 1] = 0.5 * (x3[k] + x3[k + 2])
+        
+        for elem in range(n_y):
+            k = 2 * elem # nodes before element elem
+            x2[k + 1] = 0.5 * (x2[k] + x2[k + 2])
+            x4[k + 1] = 0.5 * (x4[k] + x4[k + 2])
 
         x3 = 1 - x3[::-1]
         x4 = 1 - x4[::-1]
 
         # create straight lines in reference square [0,1]x[0,1]
-        for i in range(1, nn1row + 1):
-            for j in range(1, nn1col + 1):
-                node = i + (j - 1) * nn1row - 1
-                D = (x1[i - 1] - x3[i - 1]) * (x4[j - 1] - x2[j - 1]) - 1
-                mesh.coor[node, 0] = (x4[j - 1] * (x1[i - 1] - x3[i - 1]) - x1[i - 1]) / D
-                mesh.coor[node, 1] = (x1[i - 1] * (x4[j - 1] - x2[j - 1]) - x4[j - 1]) / D
+        i_vals = np.arange(1, nn1row + 1)
+        j_vals = np.arange(1, nn1col + 1)
+
+        I, J = np.meshgrid(i_vals, j_vals)
+
+        nodes = I + (J - 1) * nn1row - 1
+        D = (x1[I-1] - x3[I-1]) * (x4[J-1] - x2[J-1]) - 1
+
+        mesh.coor[nodes, 0] = (x4[J-1] * (x1[I-1] - x3[I-1]) - x1[I-1]) / D
+        mesh.coor[nodes, 1] = (x1[I-1] * (x4[J-1] - x2[J-1]) - x4[J-1]) / D
 
     # points
-    mesh.points[0] = 0
-    mesh.points[1] = nn1row - 1
-    mesh.points[2] = nn1row * nn1col - 1
-    mesh.points[3] = nn1row * (nn1col - 1)
+    mesh.points = np.array([0, nn1row-1, 
+                            nn1row*nn1col-1, nn1row*(nn1col-1)],dtype=int)
 
     # curves
-    a = [nn1row, nn1col, nn1row, nn1col]
-    b = [n_x, n_y, n_x, n_y]
+    temp_a = [nn1row, nn1col, nn1row, nn1col]
+    temp_b = [n_x, n_y, n_x, n_y]
 
-    mesh.curves = [Geometry(elshape=2,ndim=2,elnumnod=3,nnodes=a[curve],nelem=b[curve]) for curve in range(4)]
+    mesh.curves = [Geometry(elshape=2,ndim=2,elnumnod=3,nnodes=temp_a[curve],
+                            nelem=temp_b[curve]) for curve in range(4)]
 
+    # nodes of curves
     mesh.curves[0].nodes = np.arange(1, nn1row + 1) - 1
     mesh.curves[1].nodes = nn1row * np.arange(1, nn1col + 1, 1) - 1
     mesh.curves[2].nodes = (nn1col - 1) * nn1row + np.arange(nn1row, 0, -1) - 1
     mesh.curves[3].nodes = 1 - nn1row + nn1row * np.arange(nn1col, 0, -1) - 1
 
+    # topology of elements on curves
     for curve in mesh.curves:
 
         nelem = curve.nelem
@@ -288,8 +293,9 @@ def rectangle2d_quad9(num_el, ratio, factor):
         curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
 
         # local numbering
-        for elem in range(nelem):
-            curve.topology[:, elem, 0] = np.arange(2 * elem, 2 * elem + 3)
+        start_points = np.arange(0, 2*nelem, 2).reshape(nelem, 1)
+        local_numbering = start_points + np.arange(3)
+        curve.topology[:, :, 0] = local_numbering.T
 
         # global numbering
         curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
