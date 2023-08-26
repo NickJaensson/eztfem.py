@@ -361,8 +361,12 @@ def rectangle2d_quad5(num_el, ratio, factor):
         deltay = 1.0 / n_y
         for i in range(nn1row):
             for j in range(nn1col):
-                node = i + j * nn1row
+                node = i + j * ( nn1row + n_x )
                 mesh.coor[node] = [i * deltax, j * deltay]
+        for i in range(n_x):
+            for j in range(n_y):
+                node = i + j * ( nn1row + n_x ) + nn1row
+                mesh.coor[node] = [i * deltax + deltax/2, j * deltay + deltay/2]
     else:
         # non-equidistant
         x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
@@ -376,26 +380,16 @@ def rectangle2d_quad5(num_el, ratio, factor):
         x4 = 1 - x4[::-1]
 
         # create straight lines in reference square [0,1]x[0,1]
-        i_vals = np.arange(1, nn1row + 1)
-        j_vals = np.arange(1, nn1col + 1)
+        i_vals = np.arange(nn1row)
+        j_vals = np.arange(nn1col)
 
         I, J = np.meshgrid(i_vals, j_vals)
 
-        nodes = I + (J - 1) * nn1row - 1
-        D = (x1[I-1] - x3[I-1]) * (x4[J-1] - x2[J-1]) - 1
+        nodes = I + J * nn1row
+        D = (x1[I] - x3[I]) * (x4[J] - x2[J]) - 1
 
-        mesh.coor[nodes, 0] = (x4[J-1] * (x1[I-1] - x3[I-1]) - x1[I-1]) / D
-        mesh.coor[nodes, 1] = (x1[I-1] * (x4[J-1] - x2[J-1]) - x4[J-1]) / D
-
-        for i in range(n_x):
-            for j in range(n_y):
-                node = i + (j-1) * (nn1row + n_x) + nn1row
-                node1 = i + (j-1) * (nn1row + n_x)
-                node4 = i + j * (nn1row + n_x)
-                
-                # MATLAB indexing starts at 1, so when translating to Python we subtract 1 from the indices
-                mesh.coor[node-1,:] = (mesh.coor[node1,:] + mesh.coor[node1+1,:] + 
-                                       mesh.coor[node4,:] + mesh.coor[node4+1,:]) / 4
+        mesh.coor[nodes, 0] = (x4[J] * (x1[I] - x3[I]) - x1[I]) / D
+        mesh.coor[nodes, 1] = (x1[I] * (x4[J] - x2[J]) - x4[J]) / D
 
     # points
     mesh.points = np.array([0, nn1row-1, 
