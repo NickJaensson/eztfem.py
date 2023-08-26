@@ -34,8 +34,8 @@ mesh_ez1 = quadrilateral2d([2,3],'quad4','origin',[1,1],'length',[4,3]);
 mesh_ez2 = quadrilateral2d([4,3],'quad4','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
 mesh_ez3 = quadrilateral2d([2,3],'quad9','origin',[1,1],'length',[4,3]);
 mesh_ez4 = quadrilateral2d([4,3],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
-mesh_ez5 = quadrilateral2d([2,3],'quad4','origin',[1,1],'length',[4,3]);
-mesh_ez6 = quadrilateral2d([4,3],'quad4','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
+mesh_ez5 = quadrilateral2d([2,3],'quad5','origin',[1,1],'length',[4,3]);
+mesh_ez6 = quadrilateral2d([4,3],'quad5','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
 
 %% define the same commands for pytfem
 
