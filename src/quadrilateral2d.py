@@ -137,6 +137,47 @@ def quadrilateral2d(num_el, eltype, **kwargs):
 
     return mesh
 
+def fill_points_curves(mesh, n_x, n_y, elshape, elnumnod, nn1row, nn1col, 
+                       order):
+
+    # generate the points
+    mesh.points = np.array([0, nn1row-1, 
+                            nn1row*nn1col-1, nn1row*(nn1col-1)],dtype=int)
+    
+    # generate the curves
+    temp_a = [nn1row, nn1col, nn1row, nn1col]
+    temp_b = [n_x, n_y, n_x, n_y]
+
+    mesh.curves = [Geometry(elshape=elshape,ndim=2,elnumnod=elnumnod,
+                            nnodes=temp_a[curve],nelem=temp_b[curve]) 
+                            for curve in range(4)]
+    
+    # nodes of curves
+    mesh.curves[0].nodes = np.arange(1, nn1row + 1) - 1
+    mesh.curves[1].nodes = nn1row * np.arange(1, nn1col + 1, 1) - 1
+    mesh.curves[2].nodes = (nn1col - 1) * nn1row + np.arange(nn1row, 0, -1) - 1
+    mesh.curves[3].nodes = 1 - nn1row + nn1row * np.arange(nn1col, 0, -1) - 1
+
+    # topology of elements on curves
+    for curve in mesh.curves:
+
+        nelem = curve.nelem
+        elnumnod = curve.elnumnod
+        curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
+
+        # local numbering
+        if order == 1:
+            start_points = np.arange(0, nelem).reshape(nelem, 1)
+            local_numbering = start_points + np.arange(2)
+        elif order == 2:
+            start_points = np.arange(0, 2*nelem, 2).reshape(nelem, 1)
+            local_numbering = start_points + np.arange(3)
+
+        curve.topology[:, :, 0] = local_numbering.T
+
+        # global numbering
+        curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
+
 def rectangle2d_tria3(ne, ratio, factor):
     raise NotImplementedError
 
@@ -253,37 +294,9 @@ def rectangle2d_quad4(num_el, ratio, factor):
         mesh.coor[nodes, 0] = (x4[J-1] * (x1[I-1] - x3[I-1]) - x1[I-1]) / D
         mesh.coor[nodes, 1] = (x1[I-1] * (x4[J-1] - x2[J-1]) - x4[J-1]) / D
 
-    # points
-    mesh.points = np.array([0, nn1row-1, 
-                            nn1row*nn1col-1, nn1row*(nn1col-1)],dtype=int)
-
-    # curves
-    temp_a = [nn1row, nn1col, nn1row, nn1col]
-    temp_b = [n_x, n_y, n_x, n_y]
-
-    mesh.curves = [Geometry(elshape=1,ndim=2,elnumnod=2,nnodes=temp_a[curve],
-                            nelem=temp_b[curve]) for curve in range(4)]
-
-    # nodes of curves
-    mesh.curves[0].nodes = np.arange(1, nn1row + 1) - 1
-    mesh.curves[1].nodes = nn1row * np.arange(1, nn1col + 1, 1) - 1
-    mesh.curves[2].nodes = (nn1col - 1) * nn1row + np.arange(nn1row, 0, -1) - 1
-    mesh.curves[3].nodes = 1 - nn1row + nn1row * np.arange(nn1col, 0, -1) - 1
-
-    # topology of elements on curves
-    for curve in mesh.curves:
-
-        nelem = curve.nelem
-        elnumnod = curve.elnumnod
-        curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
-
-        # local numbering
-        start_points = np.arange(0, nelem).reshape(nelem, 1)
-        local_numbering = start_points + np.arange(2)
-        curve.topology[:, :, 0] = local_numbering.T
-
-        # global numbering
-        curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
+    # points and curves
+    fill_points_curves(mesh, n_x, n_y, elshape=1, elnumnod=2, nn1row=nn1row, 
+                       nn1col=nn1col, order=1)
 
     return mesh
 
@@ -400,36 +413,8 @@ def rectangle2d_quad9(num_el, ratio, factor):
         mesh.coor[nodes, 0] = (x4[J-1] * (x1[I-1] - x3[I-1]) - x1[I-1]) / D
         mesh.coor[nodes, 1] = (x1[I-1] * (x4[J-1] - x2[J-1]) - x4[J-1]) / D
 
-    # points
-    mesh.points = np.array([0, nn1row-1, 
-                            nn1row*nn1col-1, nn1row*(nn1col-1)],dtype=int)
-
-    # curves
-    temp_a = [nn1row, nn1col, nn1row, nn1col]
-    temp_b = [n_x, n_y, n_x, n_y]
-
-    mesh.curves = [Geometry(elshape=2,ndim=2,elnumnod=3,nnodes=temp_a[curve],
-                            nelem=temp_b[curve]) for curve in range(4)]
-
-    # nodes of curves
-    mesh.curves[0].nodes = np.arange(1, nn1row + 1) - 1
-    mesh.curves[1].nodes = nn1row * np.arange(1, nn1col + 1, 1) - 1
-    mesh.curves[2].nodes = (nn1col - 1) * nn1row + np.arange(nn1row, 0, -1) - 1
-    mesh.curves[3].nodes = 1 - nn1row + nn1row * np.arange(nn1col, 0, -1) - 1
-
-    # topology of elements on curves
-    for curve in mesh.curves:
-
-        nelem = curve.nelem
-        elnumnod = curve.elnumnod
-        curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
-
-        # local numbering
-        start_points = np.arange(0, 2*nelem, 2).reshape(nelem, 1)
-        local_numbering = start_points + np.arange(3)
-        curve.topology[:, :, 0] = local_numbering.T
-
-        # global numbering
-        curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
+    # points and curves
+    fill_points_curves(mesh, n_x, n_y, elshape=2, elnumnod=3, nn1row=nn1row, 
+                       nn1col=nn1col, order=2)
 
     return mesh
