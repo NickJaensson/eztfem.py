@@ -269,8 +269,9 @@ def rectangle2d_tria3(num_el, ratio, factor):
         curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
 
         # local numbering
-        for elem in range(nelem):
-            curve.topology[:, elem, 0] = np.arange(elem, elem + 2)
+        start_points = np.arange(0, nelem).reshape(nelem, 1)
+        local_numbering = start_points + np.arange(2)
+        curve.topology[:, :, 0] = local_numbering.T
 
         # global numbering
         curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
@@ -412,8 +413,9 @@ def rectangle2d_quad4(num_el, ratio, factor):
         curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
 
         # local numbering
-        for elem in range(nelem):
-            curve.topology[:, elem, 0] = np.arange(elem, elem + 2)
+        start_points = np.arange(0, nelem).reshape(nelem, 1)
+        local_numbering = start_points + np.arange(2)
+        curve.topology[:, :, 0] = local_numbering.T
 
         # global numbering
         curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
@@ -565,8 +567,9 @@ def rectangle2d_quad5(num_el, ratio, factor):
         curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
 
         # local numbering
-        for elem in range(nelem):
-            curve.topology[:, elem, 0] = np.arange(elem, elem + 2)
+        start_points = np.arange(0, nelem).reshape(nelem, 1)
+        local_numbering = start_points + np.arange(2)
+        curve.topology[:, :, 0] = local_numbering.T
 
         # global numbering
         curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
@@ -712,8 +715,9 @@ def rectangle2d_quad9(num_el, ratio, factor):
         curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
 
         # local numbering
-        for elem in range(nelem):
-            curve.topology[:, elem, 0] = np.arange(2 * elem, 2 * elem + 3)
+        start_points = np.arange(0, 2*nelem, 2).reshape(nelem, 1)
+        local_numbering = start_points + np.arange(3)
+        curve.topology[:, :, 0] = local_numbering.T
 
         # global numbering
         curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
