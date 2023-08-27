@@ -49,13 +49,20 @@ def distribute_elements(nelem, ratio, factor):
             raise ValueError(f"Invalid value for ratio: {ratio}")
 
 #   generate mesh
-    fac = 1.0 + sum(g**i for i in range(1, nelem))
+    fac = 1.0
+    for i in range(1,nelem):
+        fac = fac + g**i
 
 #   size of first element
     dx_1 = 1.0 / fac
 
 #   generate all elements
-    x = np.insert(np.cumsum(dx_1 * np.power(g, np.arange(nelem))), 0, 0)
+    x = np.zeros(nelem+1)
+    x[0] = 0
+    dx = dx_1
+    for i in range(1, nelem+1):
+        x[i] = x[i-1] + dx
+        dx = g * dx
 
 #   test whether x(n+1) = 1
     if abs(x[-1] - 1) > 1e-10:
