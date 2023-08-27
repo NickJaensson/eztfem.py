@@ -385,11 +385,19 @@ def rectangle2d_quad5(num_el, ratio, factor):
 
         I, J = np.meshgrid(i_vals, j_vals)
 
-        nodes = I + J * nn1row
+        nodes = I + J *  ( nn1row + n_x )
         D = (x1[I] - x3[I]) * (x4[J] - x2[J]) - 1
 
         mesh.coor[nodes, 0] = (x4[J] * (x1[I] - x3[I]) - x1[I]) / D
         mesh.coor[nodes, 1] = (x1[I] * (x4[J] - x2[J]) - x4[J]) / D
+
+        for i in range(n_x):
+            for j in range(n_y):
+                node = i + j*(nn1row+n_x) + nn1row
+                node1 = i + j*(nn1row+n_x)
+                node4 = i + (j+1)*(nn1row+n_x)
+                mesh.coor[node,:] = (mesh.coor[node1,:]+mesh.coor[node1+1,:]+ 
+                                     mesh.coor[node4,:]+mesh.coor[node4+1,:])/4
 
     # points
     mesh.points = np.array([0, nn1row-1, 
