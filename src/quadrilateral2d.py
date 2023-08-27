@@ -233,16 +233,12 @@ def rectangle2d_tria3(num_el, ratio, factor):
         x4 = 1 - x4[::-1]
 
         # create straight lines in reference square [0,1]x[0,1]
-        i_vals = np.arange(nn1row)
-        j_vals = np.arange(nn1col)
-
-        I, J = np.meshgrid(i_vals, j_vals)
-
-        nodes = I + J * nn1row
-        D = (x1[I] - x3[I]) * (x4[J] - x2[J]) - 1
-
-        mesh.coor[nodes, 0] = (x4[J] * (x1[I] - x3[I]) - x1[I]) / D
-        mesh.coor[nodes, 1] = (x1[I] * (x4[J] - x2[J]) - x4[J]) / D
+        for i in range(nn1row):
+            for j in range(nn1col):
+                node = i + j*nn1row
+                D = ( x1[i] - x3[i] ) * ( x4[j] - x2[j] ) - 1
+                mesh.coor[node,0] = ( x4[j] * (x1[i] - x3[i]) - x1[i] ) / D
+                mesh.coor[node,1] = ( x1[i] * (x4[j] - x2[j]) - x4[j] ) / D
 
     # points
     mesh.points = np.array([0, nn1row-1, 
@@ -376,16 +372,12 @@ def rectangle2d_quad4(num_el, ratio, factor):
         x4 = 1 - x4[::-1]
 
         # create straight lines in reference square [0,1]x[0,1]
-        i_vals = np.arange(nn1row)
-        j_vals = np.arange(nn1col)
-
-        I, J = np.meshgrid(i_vals, j_vals)
-
-        nodes = I + J * nn1row
-        D = (x1[I] - x3[I]) * (x4[J] - x2[J]) - 1
-
-        mesh.coor[nodes, 0] = (x4[J] * (x1[I] - x3[I]) - x1[I]) / D
-        mesh.coor[nodes, 1] = (x1[I] * (x4[J] - x2[J]) - x4[J]) / D
+        for i in range(nn1row):
+            for j in range(nn1col):
+                node = i + j*nn1row
+                D = ( x1[i] - x3[i] ) * ( x4[j] - x2[j] ) - 1
+                mesh.coor[node,0] = ( x4[j] * (x1[i] - x3[i]) - x1[i] ) / D
+                mesh.coor[node,1] = ( x1[i] * (x4[j] - x2[j]) - x4[j] ) / D
 
     # points
     mesh.points = np.array([0, nn1row-1, 
@@ -516,29 +508,19 @@ def rectangle2d_quad5(num_el, ratio, factor):
         x4 = 1 - x4[::-1]
 
         # create straight lines in reference square [0,1]x[0,1]
-        i_vals = np.arange(nn1row)
-        j_vals = np.arange(nn1col)
-
-        I, J = np.meshgrid(i_vals, j_vals)
-
-        nodes = I + J *  ( nn1row + n_x )
-        D = (x1[I] - x3[I]) * (x4[J] - x2[J]) - 1
-
-        mesh.coor[nodes, 0] = (x4[J] * (x1[I] - x3[I]) - x1[I]) / D
-        mesh.coor[nodes, 1] = (x1[I] * (x4[J] - x2[J]) - x4[J]) / D
-
-        i_vals_inner = np.arange(n_x)
-        j_vals_inner = np.arange(n_y)
-
-        I_inner, J_inner = np.meshgrid(i_vals_inner, j_vals_inner, 
-                                       indexing='ij')
-
-        node = I_inner + J_inner * (nn1row + n_x) + nn1row
-        node1 = I_inner + J_inner * (nn1row + n_x)
-        node4 = I_inner + (J_inner + 1) * (nn1row + n_x)
-
-        mesh.coor[node,:] = (mesh.coor[node1,:] + mesh.coor[node1+1,:] +
-                             mesh.coor[node4,:] + mesh.coor[node4+1,:]) / 4
+        for i in range(nn1row):
+            for j in range(nn1col):
+                node = i + j*(nn1row+n_x)
+                D = ( x1[i] - x3[i] ) * ( x4[j] - x2[j] ) - 1
+                mesh.coor[node,0] = ( x4[j] * (x1[i] - x3[i]) - x1[i] ) / D
+                mesh.coor[node,1] = ( x1[i] * (x4[j] - x2[j]) - x4[j] ) / D
+        for i in range(n_x):
+            for j in range(n_y):
+                node = i + j*(nn1row+n_x) + nn1row
+                node1 = i + j*(nn1row+n_x)
+                node4 = i + (j+1)*(nn1row+n_x)
+                mesh.coor[node,:] = (mesh.coor[node1,:]+mesh.coor[node1+1,:] + 
+                                     mesh.coor[node4,:]+mesh.coor[node4+1,:])/4
 
     # points
     mesh.points = np.array([0, nn1row-1, 
@@ -676,16 +658,12 @@ def rectangle2d_quad9(num_el, ratio, factor):
         x4 = 1 - x4[::-1]
 
         # create straight lines in reference square [0,1]x[0,1]
-        i_vals = np.arange(nn1row)
-        j_vals = np.arange(nn1col)
-
-        I, J = np.meshgrid(i_vals, j_vals)
-
-        nodes = I + J * nn1row
-        D = (x1[I] - x3[I]) * (x4[J] - x2[J]) - 1
-
-        mesh.coor[nodes, 0] = (x4[J] * (x1[I] - x3[I]) - x1[I]) / D
-        mesh.coor[nodes, 1] = (x1[I] * (x4[J] - x2[J]) - x4[J]) / D
+        for i in range(nn1row):
+            for j in range(nn1col):
+                node = i + j*nn1row
+                D = ( x1[i] - x3[i] ) * ( x4[j] - x2[j] ) - 1
+                mesh.coor[node,0] = ( x4[j] * (x1[i] - x3[i]) - x1[i] ) / D
+                mesh.coor[node,1] = ( x1[i] * (x4[j] - x2[j]) - x4[j] ) / D
 
     # points
     mesh.points = np.array([0, nn1row-1, 
