@@ -47,7 +47,7 @@ class Mesh:
        check2 = [self.curves[i]==other.curves[i] for i in range(self.ncurves)]
 
        # print a warning when not equivalent (for debugging purposes)
-       if not all(check) and all(check2):
+       if not ( all(check) and all(check2) ):
            print("WARNING: Meshes not equivalent:")
            print(check)
            print(check2)
