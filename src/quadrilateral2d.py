@@ -714,13 +714,28 @@ def rectangle2d_tria7(num_el, ratio, factor):
         x4 = 1 - x4[::-1]
 
         # create straight lines in reference square [0,1]x[0,1]
-        for i in range(nn1row):
-            for j in range(nn1col):
-                node = i + j*nn1row
-                D = ( x1[i] - x3[i] ) * ( x4[j] - x2[j] ) - 1
-                mesh.coor[node,0] = ( x4[j] * (x1[i] - x3[i]) - x1[i] ) / D
-                mesh.coor[node,1] = ( x1[i] * (x4[j] - x2[j]) - x4[j] ) / D
+        for i in range(1,nn1row+1):
+            for j in range(1,nn1col+1):
+                if j % 2 == 0: # even row (Python 0-based indexing)
+                    node = i + (j-1)*nn1row + j*n_x
+                else: # odd row
+                    node = i + (j-1)*(nn1row+n_x)
+                D = ( x1[i-1] - x3[i-1] ) * ( x4[j-1] - x2[j-1] ) - 1
+                mesh.coor[node-1,0] = ( x4[j-1] * (x1[i-1] - x3[i-1]) - x1[i-1] ) / D
+                mesh.coor[node-1,1] = ( x1[i-1] * (x4[j-1] - x2[j-1]) - x4[j-1] ) / D
 
+        for i in range(1,n_x+1):
+            for j in range(1,n_y+1):
+                node = 2*i-1 + nn1row + (j-1)*(2*nn1row+2*n_x)-1
+                node1 = 2*i-1 + (j-1)*(2*nn1row+2*n_x)-1
+                node3 = 2*i-1 + j*(2*nn1row+2*n_x)-1
+                mesh.coor[node,:] = (mesh.coor[node1,:]+ 
+                                     mesh.coor[node3,:]+mesh.coor[node3+2,:])/3
+                node = node + 1
+                node3 = node3 + 2
+                mesh.coor[node,:] = (mesh.coor[node1,:]+mesh.coor[node1+2,:]+
+                                     mesh.coor[node3,:])/3
+        
     # points
     mesh.points = np.array([0, nn1row-1, 
               nn1row*nn1col+2*n_x*n_y-1, nn1row*(nn1col-1)+2*n_x*n_y],dtype=int)
