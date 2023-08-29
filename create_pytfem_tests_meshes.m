@@ -38,6 +38,8 @@ mesh_ez5 = quadrilateral2d([2,3],'quad5','origin',[1,1],'length',[4,3]);
 mesh_ez6 = quadrilateral2d([4,3],'quad5','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
 mesh_ez7 = quadrilateral2d([2,3],'tria3','origin',[1,1],'length',[4,3]);
 mesh_ez8 = quadrilateral2d([4,3],'tria3','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
+mesh_ez9 = quadrilateral2d([2,3],'tria4','origin',[1,1],'length',[4,3]);
+mesh_ez10 = quadrilateral2d([4,3],'tria4','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
 
 %% define the same commands for pytfem
 
@@ -49,6 +51,8 @@ cmd_mesh_py5 =       "    mesh_py = quadrilateral2d([2,3],'quad5',origin=np.arra
 cmd_mesh_py6 =       "    mesh_py = quadrilateral2d([4,3],'quad5',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
 cmd_mesh_py7 =       "    mesh_py = quadrilateral2d([2,3],'tria3',origin=np.array([1,1]),length=np.array([4,3]))";
 cmd_mesh_py8 =       "    mesh_py = quadrilateral2d([4,3],'tria3',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py9 =       "    mesh_py = quadrilateral2d([2,3],'tria4',origin=np.array([1,1]),length=np.array([4,3]))";
+cmd_mesh_py10 =       "    mesh_py = quadrilateral2d([4,3],'tria4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
 
 
 %% write some header stuff
@@ -73,6 +77,8 @@ write_test("test5",mesh_ez5,cmd_mesh_py5);
 write_test("test6",mesh_ez6,cmd_mesh_py6);
 write_test("test7",mesh_ez7,cmd_mesh_py7);
 write_test("test8",mesh_ez8,cmd_mesh_py8);
+write_test("test9",mesh_ez9,cmd_mesh_py9);
+%write_test("test10",mesh_ez10,cmd_mesh_py10);
 
 %% test for quadrilateral2d
 
