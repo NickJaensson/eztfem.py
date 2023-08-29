@@ -381,10 +381,22 @@ def rectangle2d_tria4(num_el, ratio, factor):
         # create straight lines in reference square [0,1]x[0,1]
         for i in range(nn1row):
             for j in range(nn1col):
-                node = i + j*nn1row
+                node = i + j*(nn1row+2*n_x)
                 D = ( x1[i] - x3[i] ) * ( x4[j] - x2[j] ) - 1
                 mesh.coor[node,0] = ( x4[j] * (x1[i] - x3[i]) - x1[i] ) / D
                 mesh.coor[node,1] = ( x1[i] * (x4[j] - x2[j]) - x4[j] ) / D
+
+        for i in range(1,n_x+1):
+            for j in range(1,n_y+1):
+                node = 2*i-1 + (j-1)*(nn1row+2*n_x) + nn1row
+                node1 = i + (j-1)*(nn1row+2*n_x)
+                node3 = i + j*(nn1row+2*n_x)
+                mesh.coor[node-1,:] = (mesh.coor[node1-1,:]+
+                                    mesh.coor[node3-1,:]+mesh.coor[node3-1+1,:])/3
+                node = node + 1
+                node3 = node3 + 1
+                mesh.coor[node-1,:] = (mesh.coor[node1-1,:]+mesh.coor[node1-1+1,:]+
+                                    mesh.coor[node3-1,:])/3
 
     # points
     mesh.points = np.array([0, nn1row-1, 
@@ -401,12 +413,8 @@ def rectangle2d_tria4(num_el, ratio, factor):
     mesh.curves[0].nodes = np.arange(nn1row)
     mesh.curves[1].nodes = (nn1row+2*n_x) * ( np.arange(nn1col) + 1 ) - 2*n_x - 1
     mesh.curves[2].nodes = (nn1col - 1) * nn1row + 2*n_x*n_y + np.arange(nn1row)[::-1]
-    mesh.curves[3].nodes = -2*n_x+(nn1row+2*n_x) * np.arange(nn1col)[::-1]
+    mesh.curves[3].nodes = (nn1row+2*n_x) * np.arange(nn1col)[::-1]
 
-#  mesh.curves[3].nodes = nn1row * np.arange(nn1col)[::-1]
-
- #1-nn1row     +  nn1row     *(nn1col:-1:1) ;   % curve 4  
- #1-nn1row-2*n + (nn1row+2*n)*(nn1col:-1:1) ; % curve 4
     # topology of elements on curves
     for curve in mesh.curves:
 
