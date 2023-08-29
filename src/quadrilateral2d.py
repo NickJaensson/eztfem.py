@@ -358,14 +358,14 @@ def rectangle2d_tria4(num_el, ratio, factor):
             for j in range(nn1col):
                 node = i + j * ( nn1row + 2 * n_x )
                 mesh.coor[node] = [i * deltax, j * deltay]
-        for i in range(1,n_x+1):
-            for j in range(1,n_y+1):
-                node = 2*i-1 + (j-1)*(nn1row+2*n_x) + nn1row
-                mesh.coor[node-1,0] = (i-1) * deltax + deltax/3
-                mesh.coor[node-1,1] = (j-1) * deltay + 2*deltay/3
+        for i in range(n_x):
+            for j in range(n_y):
+                node = 2*i + j*(nn1row+2*n_x) + nn1row
+                mesh.coor[node,0] = i * deltax + deltax/3
+                mesh.coor[node,1] = j * deltay + 2*deltay/3
                 node = node + 1
-                mesh.coor[node-1,0] = (i-1) * deltax + 2*deltax/3
-                mesh.coor[node-1,1] = (j-1) * deltay + deltay/3
+                mesh.coor[node,0] = i * deltax + 2*deltax/3
+                mesh.coor[node,1] = j * deltay + deltay/3
     else:
         # non-equidistant
         x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
@@ -386,17 +386,17 @@ def rectangle2d_tria4(num_el, ratio, factor):
                 mesh.coor[node,0] = ( x4[j] * (x1[i] - x3[i]) - x1[i] ) / D
                 mesh.coor[node,1] = ( x1[i] * (x4[j] - x2[j]) - x4[j] ) / D
 
-        for i in range(1,n_x+1):
-            for j in range(1,n_y+1):
-                node = 2*i-1 + (j-1)*(nn1row+2*n_x) + nn1row
-                node1 = i + (j-1)*(nn1row+2*n_x)
-                node3 = i + j*(nn1row+2*n_x)
-                mesh.coor[node-1,:] = (mesh.coor[node1-1,:]+
-                                    mesh.coor[node3-1,:]+mesh.coor[node3-1+1,:])/3
+        for i in range(n_x):
+            for j in range(n_y):
+                node = 2*i + j*(nn1row+2*n_x) + nn1row
+                node1 = i + j*(nn1row+2*n_x)
+                node3 = i + (j+1)*(nn1row+2*n_x)
+                mesh.coor[node,:] = (mesh.coor[node1,:]+
+                                    mesh.coor[node3,:]+mesh.coor[node3+1,:])/3
                 node = node + 1
                 node3 = node3 + 1
-                mesh.coor[node-1,:] = (mesh.coor[node1-1,:]+mesh.coor[node1-1+1,:]+
-                                    mesh.coor[node3-1,:])/3
+                mesh.coor[node,:] = (mesh.coor[node1,:]+mesh.coor[node1+1,:]+
+                                    mesh.coor[node3,:])/3
 
     # points
     mesh.points = np.array([0, nn1row-1, 
