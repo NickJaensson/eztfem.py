@@ -432,9 +432,157 @@ def rectangle2d_tria4(num_el, ratio, factor):
     return mesh
 
 
-def rectangle2d_tria6(ne, ratio, factor):
-    raise NotImplementedError
+def rectangle2d_tria6(num_el, ratio, factor):
+    """
+    Generate a mesh on region [0,1]x[0,1] using triangular elements with 6 nodes.
+    The numbering for both nodal points and elements is row by row.
+    For example a 2x2 mesh is numbered as follows
+   
+      Nodes:
+   
+         21 -- 22 -- 23 -- 24 -- 25
+          |        /  |        /  |
+         16    17    18    19    20
+          | /         | /         |
+         11 -- 12 -- 13 -- 14 -- 15
+          |        /  |        /  |
+          6     7     8     9    10
+          | /         | /         |
+          1 --  2 --  3 --  4 --  5
+   
+      Elements:
+   
+          x --  x --  x --  x --  x
+          | 5      /  | 7      /  |
+          x     x     x     x     x
+          | /      6  | /      8  |
+          x --  x --  x --  x --  x
+          |  1     /  |  3     /  |
+          x     x     x     x     x
+          | /      2  | /      4  |
+          x --  x --  x --  x --  x
+   
+     Also generated are four points and four curves:
+    
+                  <----- 
+                     C3
+         P4 --------------------- P3
+          |                       |           Note:   C1=P1-P2
+          |                       |                   C2=P2-P3
+     |    |                       |    ^              C3=P3-P4
+     | C4 |                       | C2 |              C4=P4-P1
+    \|/   |                       |    |
+          |                       |
+          |                       |
+         P1 --------------------- P2
+                     C1
+                   ----->
+   
+    """
+    
+    print('rectangle_tria6')
 
+    n_x, n_y = num_el
+
+    numnod = 6 # number of nodes per element
+    nn1row = 2 * n_x + 1 # number of nodes in one row
+    nn1col = 2 * n_y + 1 # number of nodes in one column
+
+    # create mesh and fill structure
+    nelem = 2 * n_x * n_y
+    nnodes = nn1row * nn1col
+    mesh = Mesh(ndim=2, nnodes=nnodes, elshape=4, nelem=nelem, 
+                elnumnod=numnod, npoints=4, ncurves=4, 
+                topology=np.zeros((numnod, nelem),dtype=int),
+                coor=np.zeros((nnodes, 2)), points=np.zeros((4),dtype=int))
+
+    # topology
+    for i in range(n_x):
+        for j in range(n_y):
+            nn1 = 2 * j * nn1row + 2 * i # number of nodes before element (i,j)
+            nn2 = nn1 + nn1row # number of nodes before element (i,j) + 1 row
+            nn3 = nn2 + nn1row # number of nodes before element (i,j) + 2 rows
+
+            elem = 2 * i + 2 * j * n_x # element number
+    
+            mesh.topology[:, elem] = [nn1, nn2+1, nn3+2, nn3+1, nn3, nn2]
+            
+            elem += 1 # element number
+
+            mesh.topology[:, elem] = [nn1, nn1+1, nn1+2, nn2+2, nn3+2, nn2+1]
+
+    # coordinates
+    if ratio is None:
+        # equidistant
+        deltax = 0.5 / n_x
+        deltay = 0.5 / n_y
+        for i in range(nn1row):
+            for j in range(nn1col):
+                node = i + j * nn1row
+                mesh.coor[node] = [i * deltax, j * deltay]
+    else:
+        # non-equidistant
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
+        arrays = [x1, x2, x3, x4]
+        for idx, array in enumerate(arrays):
+            array[::2] = distribute_elements(n_x if idx % 2 == 0 
+                                             else n_y, ratio[idx], factor[idx])
+        
+        # mid-side nodes
+        for elem in range(n_x):
+            k = 2 * elem # nodes before element elem
+            x1[k + 1] = 0.5 * (x1[k] + x1[k + 2])
+            x3[k + 1] = 0.5 * (x3[k] + x3[k + 2])
+        
+        for elem in range(n_y):
+            k = 2 * elem # nodes before element elem
+            x2[k + 1] = 0.5 * (x2[k] + x2[k + 2])
+            x4[k + 1] = 0.5 * (x4[k] + x4[k + 2])
+
+        x3 = 1 - x3[::-1]
+        x4 = 1 - x4[::-1]
+
+        # create straight lines in reference square [0,1]x[0,1]
+        for i in range(nn1row):
+            for j in range(nn1col):
+                node = i + j*nn1row
+                D = ( x1[i] - x3[i] ) * ( x4[j] - x2[j] ) - 1
+                mesh.coor[node,0] = ( x4[j] * (x1[i] - x3[i]) - x1[i] ) / D
+                mesh.coor[node,1] = ( x1[i] * (x4[j] - x2[j]) - x4[j] ) / D
+
+    # points
+    mesh.points = np.array([0, nn1row-1, 
+                            nn1row*nn1col-1, nn1row*(nn1col-1)],dtype=int)
+
+    # curves
+    temp_a = [nn1row, nn1col, nn1row, nn1col]
+    temp_b = [n_x, n_y, n_x, n_y]
+
+    mesh.curves = [Geometry(elshape=2,ndim=2,elnumnod=3,nnodes=temp_a[curve],
+                            nelem=temp_b[curve]) for curve in range(4)]
+
+    # nodes of curves
+    mesh.curves[0].nodes = np.arange(nn1row)
+    mesh.curves[1].nodes = nn1row * ( np.arange(nn1col) + 1 ) - 1
+    mesh.curves[2].nodes = (nn1col - 1) * nn1row + np.arange(nn1row)[::-1]
+    mesh.curves[3].nodes = nn1row * np.arange(nn1col)[::-1]
+
+    # topology of elements on curves
+    for curve in mesh.curves:
+
+        nelem = curve.nelem
+        elnumnod = curve.elnumnod
+        curve.topology = np.zeros((elnumnod, nelem, 2), dtype=int)
+
+        # local numbering
+        for elem in range(nelem):
+            curve.topology[:, elem, 0] = np.arange(2 * elem, 2 * elem + 3)
+
+        # global numbering
+        curve.topology[:, :, 1] = curve.nodes[ curve.topology[:, :, 0] ]
+
+    return mesh
 def rectangle2d_tria7(ne, ratio, factor):
     raise NotImplementedError
 
