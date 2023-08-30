@@ -200,7 +200,7 @@ mywritelines("    user_ez = User()");
 write_attrib("    ",user_ez,"user_ez")
 mywritelines("    user_py = User()");
 mywritelines(cmd_gauss_py);
-mywritelines("    check1=np.allclose(user_py.wg,user_ez.wg,atol=1e-15,rtol=0)")
+mywritelines("    check1=np.allclose(user_py.xr,user_ez.xr,atol=1e-15,rtol=0)")
 mywritelines("    check2=np.allclose(user_py.wg,user_ez.wg,atol=1e-15,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'gauss_legendre failed test!' )");
 
