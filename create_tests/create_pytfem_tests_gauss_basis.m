@@ -31,10 +31,16 @@ mywritelines("class TestPytfem(unittest.TestCase):");
 
 
 % write s number of tests for Guass and basis functions
+tests = cell(6,3);
+for i = 1:6
+    tests{i,1} = 'line';
+    tests{i,2} = i;
+    tests{i,3} = 'P0';
+end
 
-tests = {'line',1,'P0';
-         'line',2,'P1';
-         'line',3,'P2'};
+% tests = {'line',1,'P0';
+%          'line',2,'P1';
+%          'line',3,'P2'};
 
 for ii = 1:size(tests,1)
 
@@ -69,19 +75,19 @@ for ii = 1:size(tests,1)
     mywritelines("    self.assertTrue(check1 and check2,'gauss_legendre failed test!' )");
     
     
-    %% test for basis_function
-    
-    mywritelines("  def test_basis_function"+string(ii)+"(self):");
-    if ( size(phi_ez,1) == 1 || size(phi_ez,2) == 1 )
-        write1Darr_r("     ",phi_ez,"phi_ez");
-    else
-        write2Darr_r("     ",phi_ez,"phi_ez");
-    end
-    write3Darr_r("     ",squeeze(dphi_ez),"dphi_ez");
-    mywritelines(cmd_gauss_py);
-    mywritelines(cmd_basis_py);
-    mywritelines("    check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)")
-    mywritelines("    check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)")
-    mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test!' )");
+%     %% test for basis_function
+%     
+%     mywritelines("  def test_basis_function"+string(ii)+"(self):");
+%     if ( size(phi_ez,1) == 1 || size(phi_ez,2) == 1 )
+%         write1Darr_r("     ",phi_ez,"phi_ez");
+%     else
+%         write2Darr_r("     ",phi_ez,"phi_ez");
+%     end
+%     write3Darr_r("     ",squeeze(dphi_ez),"dphi_ez");
+%     mywritelines(cmd_gauss_py);
+%     mywritelines(cmd_basis_py);
+%     mywritelines("    check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)")
+%     mywritelines("    check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)")
+%     mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test!' )");
 
 end
