@@ -5,22 +5,33 @@ from src.pos_array_vec import pos_array_vec
 
 def build_system(mesh, problem, element, user, **kwargs):
     """
-    Build the system matrix
-
-    Parameters:
-    mesh: Mesh structure
-    problem: Problem object
-    element: Function handle to the element function routine
-    user: Can be used by the user for transferring data to the element routine
-    **kwargs: Optional arguments
-              - physqrow: array of physical quantity numbers for the rows of the matrix and for the right-hand side vector
-              - physqcol: array of physical quantity numbers for the columns of the matrix
-              - order: the sequence order of the degrees of freedom on element level
-              - posvectors: supply the position of vectors to the element routine
-    
-    Returns:
-    A: System matrix
-    f: System vector
+    BUILD_SYSTEM  Build the system matrix
+      [ A, f ] = BUILD_SYSTEM ( mesh, problem, element, user, 'option1', value1, .... )
+      input:
+        mesh: mesh structure
+        mesh: problem structure
+        element: function handle to the element function routine
+        user: can be used by the user for transferring data to the element routine
+      optional arguments:
+        string, value couples to set options:
+        'physqrow' array of physical quantity numbers for the rows of the matrix
+                   and for the right-hand side vector.
+                   default: all physical quantities
+        'physqcol' array of physical quantity numbers for the columns of the matrix
+                   default: all physical quantities
+        'order'  the sequence order of the degrees of freedom on element level:
+                 'ND' : the most inner loop is over the degrees of freedom
+                 'DN' : the most inner loop is over the nodal points
+                 default = 'DN'  
+                 NOTE: the outside loop is always given by the physical quantities.
+        'posvectors' supply the position of vectors to the element routine
+                 default=0
+        For example:
+          [ A, f ] = build_system ( mesh, problem, @element, user, 'order', 'ND' )
+        to change the order.
+      output:
+        A: the system matrix. 
+        f: the system vector. 
     """
 
     # Set default optional arguments
