@@ -50,20 +50,20 @@ mesh_ez14 = quadrilateral2d([7,5],'tria7','vertices',[1,1;2,2;2,4;1,4],'ratio',[
 
 %% define the same commands for pytfem
 
-cmd_mesh_py01 =       "    mesh_py = quadrilateral2d([4,7],'quad4',origin=np.array([1,1]),length=np.array([7,5]))";
-cmd_mesh_py02 =       "    mesh_py = quadrilateral2d([7,5],'quad4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
-cmd_mesh_py03 =       "    mesh_py = quadrilateral2d([4,7],'quad9',origin=np.array([1,1]),length=np.array([7,5]))";
-cmd_mesh_py04 =       "    mesh_py = quadrilateral2d([7,5],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
-cmd_mesh_py05 =       "    mesh_py = quadrilateral2d([4,7],'quad5',origin=np.array([1,1]),length=np.array([7,5]))";
-cmd_mesh_py06 =       "    mesh_py = quadrilateral2d([7,5],'quad5',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
-cmd_mesh_py07 =       "    mesh_py = quadrilateral2d([4,7],'tria3',origin=np.array([1,1]),length=np.array([7,5]))";
-cmd_mesh_py08 =       "    mesh_py = quadrilateral2d([7,5],'tria3',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
-cmd_mesh_py09 =       "    mesh_py = quadrilateral2d([4,7],'tria4',origin=np.array([1,1]),length=np.array([7,5]))";
-cmd_mesh_py10 =       "    mesh_py = quadrilateral2d([7,5],'tria4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
-cmd_mesh_py11 =       "    mesh_py = quadrilateral2d([4,7],'tria6',origin=np.array([1,1]),length=np.array([7,5]))";
-cmd_mesh_py12 =       "    mesh_py = quadrilateral2d([7,5],'tria6',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
-cmd_mesh_py13 =       "    mesh_py = quadrilateral2d([4,7],'tria7',origin=np.array([1,1]),length=np.array([7,5]))";
-cmd_mesh_py14 =       "    mesh_py = quadrilateral2d([7,5],'tria7',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py01 = "    mesh_py = quadrilateral2d([4,7],'quad4',origin=np.array([1,1]),length=np.array([7,5]))";
+cmd_mesh_py02 = "    mesh_py = quadrilateral2d([7,5],'quad4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py03 = "    mesh_py = quadrilateral2d([4,7],'quad9',origin=np.array([1,1]),length=np.array([7,5]))";
+cmd_mesh_py04 = "    mesh_py = quadrilateral2d([7,5],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py05 = "    mesh_py = quadrilateral2d([4,7],'quad5',origin=np.array([1,1]),length=np.array([7,5]))";
+cmd_mesh_py06 = "    mesh_py = quadrilateral2d([7,5],'quad5',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py07 = "    mesh_py = quadrilateral2d([4,7],'tria3',origin=np.array([1,1]),length=np.array([7,5]))";
+cmd_mesh_py08 = "    mesh_py = quadrilateral2d([7,5],'tria3',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py09 = "    mesh_py = quadrilateral2d([4,7],'tria4',origin=np.array([1,1]),length=np.array([7,5]))";
+cmd_mesh_py10 = "    mesh_py = quadrilateral2d([7,5],'tria4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py11 = "    mesh_py = quadrilateral2d([4,7],'tria6',origin=np.array([1,1]),length=np.array([7,5]))";
+cmd_mesh_py12 = "    mesh_py = quadrilateral2d([7,5],'tria6',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py13 = "    mesh_py = quadrilateral2d([4,7],'tria7',origin=np.array([1,1]),length=np.array([7,5]))";
+cmd_mesh_py14 = "    mesh_py = quadrilateral2d([7,5],'tria7',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
 
 
 %% write some header stuff
