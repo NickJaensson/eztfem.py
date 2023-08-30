@@ -34,18 +34,6 @@ global fn
 fn = "~/Desktop/eztfem.py/dotest_gauss_basis.py"; 
 
 
-%% run the problem in eztfem
-
-[xr_ez,wg_ez] = gauss_legendre('quad','n', 3 );
-[phi_ez,dphi_ez] = basis_function('quad','Q2', xr_ez );
-
-
-%% define the same commands for pytfem
-
-cmd_gauss_py = "    xr_py, wg_py = gauss_legendre('quad',n=3 )";
-cmd_basis_py = "    phi_py, dphi_py = basis_function('quad','Q2', xr_py );";
-
-
 %% write some header stuff
 
 writelines("# run with: python -m unittest dotest.py",fn);
@@ -57,24 +45,49 @@ mywritelines("from src.basis_function import basis_function");
 mywritelines("class TestPytfem(unittest.TestCase):");
 
 
-%% test for gauss_legendre
+% write s number of tests for Guass and basis functions
 
-mywritelines("  def test_gauss_legendre(self):");
-write2Darr_r("     ",xr_ez,"xr_ez");
-write1Darr_r("     ",wg_ez,"wg_ez");
-mywritelines(cmd_gauss_py);
-mywritelines("    check1=np.allclose(xr_py,xr_ez,atol=1e-15,rtol=0)")
-mywritelines("    check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)")
-mywritelines("    self.assertTrue(check1 and check2,'gauss_legendre failed test!' )");
+tests = {'quad',2,'Q2';
+         'quad',3,'Q2'};
 
+for ii = 1:size(tests,1)
 
-%% test for basis_function
+    shape = tests{ii,1};
+    n = tests{ii,2};
+    intpol = tests{ii,3};
 
-mywritelines("  def test_basis_function(self):");
-write2Darr_r("     ",phi_ez,"phi_ez");
-write3Darr_r("     ",dphi_ez,"dphi_ez");
-mywritelines(cmd_gauss_py);
-mywritelines(cmd_basis_py);
-mywritelines("    check1=np.allclose(phi_py,phi_ez,atol=1e-15,rtol=0)")
-mywritelines("    check2=np.allclose(dphi_py,dphi_ez,atol=1e-15,rtol=0)")
-mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test!' )");
+    %% run the problem in eztfem
+    
+    [xr_ez,wg_ez] = gauss_legendre(shape,'n', n );
+    [phi_ez,dphi_ez] = basis_function(shape, intpol, xr_ez );
+    
+    
+    %% define the same commands for pytfem
+    
+    cmd_gauss_py = "    xr_py, wg_py = gauss_legendre('"+shape+"',n="+string(n)+" )";
+    cmd_basis_py = "    phi_py, dphi_py = basis_function('"+shape+"','"+intpol+"', xr_py )";
+    
+    
+    %% test for gauss_legendre
+    
+    mywritelines("  def test_gauss_legendre"+string(ii)+"(self):");
+    write2Darr_r("     ",xr_ez,"xr_ez");
+    write1Darr_r("     ",wg_ez,"wg_ez");
+    mywritelines(cmd_gauss_py);
+    mywritelines("    check1=np.allclose(xr_py,xr_ez,atol=1e-15,rtol=0)")
+    mywritelines("    check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)")
+    mywritelines("    self.assertTrue(check1 and check2,'gauss_legendre failed test!' )");
+    
+    
+    %% test for basis_function
+    
+    mywritelines("  def test_basis_function"+string(ii)+"(self):");
+    write2Darr_r("     ",phi_ez,"phi_ez");
+    write3Darr_r("     ",dphi_ez,"dphi_ez");
+    mywritelines(cmd_gauss_py);
+    mywritelines(cmd_basis_py);
+    mywritelines("    check1=np.allclose(phi_py,phi_ez,atol=1e-15,rtol=0)")
+    mywritelines("    check2=np.allclose(dphi_py,dphi_ez,atol=1e-15,rtol=0)")
+    mywritelines("    self.assertTrue(check1 and check2,'basis_functions failed test!' )");
+
+end
