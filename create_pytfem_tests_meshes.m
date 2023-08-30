@@ -1,6 +1,6 @@
 close all; clear
 
-addpath("subs/");
+addpath('subs/')
 
 eztfempath = "~/Desktop/eztfem/";
 addpath(eztfempath);
@@ -26,7 +26,7 @@ addpath(append(eztfempath,"addons/meshes"))
 
 
 %% filename for python test file
-global fn
+global fn 
 fn = "~/Desktop/eztfem.py/dotest_meshes.py"; 
 
 
@@ -115,4 +115,103 @@ function write_test(test_name,mesh_ez_in,cmd_mesh_py_in)
     mywritelines("    mesh_ez.topology = mesh_ez.topology - 1 # Python indexing");
     mywritelines("    mesh_ez.points = mesh_ez.points - 1 # Python indexing");
     mywritelines("    self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )");
+end
+
+
+%% helper functions
+
+function mywritelines(str)
+    global fn
+    writelines(str,fn,WriteMode="append");
+end
+
+function write1Darr_r(skip,arr,name)
+    mywritelines("    "+name+" = np.array([");
+    for i=1:length(arr)
+        mywritelines(skip+sprintf('%25.16e',arr(i))+",");
+    end
+    mywritelines("    ])");
+end
+
+function write1Darr_i(skip,arr,name)
+    mywritelines("    "+name+" = np.array([");
+    for i=1:length(arr)
+        mywritelines(skip+sprintf('%12i,',arr(i)));
+    end
+    mywritelines("    ],dtype=int)");
+end
+
+function write2Darr_r(skip,arr,name)
+    mywritelines("    "+name+" = np.array([");
+    for i=1:size(arr,1)
+        mywritelines(skip+"["+sprintf('%25.16e,',arr(i,:))+"],");
+    end
+    mywritelines("    ])");
+end
+
+function write2Darr_i(skip,arr,name)
+    mywritelines("    "+name+" = np.array([");
+    for i=1:size(arr,1)
+        mywritelines(skip+"["+sprintf('%12i,',arr(i,:))+"],");
+    end
+    mywritelines("    ],dtype=int)");
+end
+
+function write3Darr_i(skip,arr,name)
+    mywritelines("    "+name+" = np.array([");
+    for i=1:size(arr,1)
+        mywritelines("    [")
+        for j=1:size(arr,2)
+            mywritelines(skip+"["+sprintf('%12i,',arr(i,j,:))+"],");
+        end
+        mywritelines("    ],")
+    end
+    mywritelines("    ],dtype=int)");
+end
+
+function write3Darr_r(skip,arr,name)
+    mywritelines("    "+name+" = np.array([");
+    for i=1:size(arr,1)
+        mywritelines("    [")
+        for j=1:size(arr,2)
+            mywritelines(skip+"["+sprintf('%25.16e,',arr(i,j,:))+"],");
+        end
+        mywritelines("    ],")
+    end
+    mywritelines("    ])");
+end
+
+function write_attrib(skip,struct,name)
+    fns = fieldnames(struct);
+    for k=1:numel(fns)
+        tmp = struct.(fns{k});
+        if isnumeric(tmp)
+            if ndims(tmp) > 3
+                error("error write_attrib: dims("+fns{k}+") > 3")
+            end
+            if isscalar(tmp)
+                mywritelines(skip+name+"."+fns{k}+" = "+string(tmp));
+            elseif all(mod(tmp,1)<1e-15,'all') % array of integers
+                if ndims(tmp) == 2 
+                    if size(tmp,1)==1 || size(tmp,2)==1
+                        write1Darr_i(skip,tmp,name+"."+fns{k});
+                    else 
+                        write2Darr_i(skip,tmp,name+"."+fns{k});
+                    end
+                else
+                    write3Darr_i(skip,tmp,name+"."+fns{k});
+                end
+            else 
+                if ndims(tmp) == 2 
+                    if size(tmp,1)==1 || size(tmp,2)==1
+                        write1Darr_r(skip,tmp,name+"."+fns{k}); 
+                    else
+                        write2Darr_r(skip,tmp,name+"."+fns{k});
+                    end
+                else
+                    write3Darr_r(skip,tmp,name+"."+fns{k});
+                end
+            end
+        end
+    end
 end
