@@ -2,22 +2,25 @@ import numpy as np
 
 def basis_function(shape, intpol, xr):
     """
-    basis function and the derivative with respect to the reference coordinates.
-
-    Parameters:
-    - shape: Shape of the element. 
-             Possible values: 'line', 'quad', 'triangle'.
-    - intpol: Interpolation on the element.
-              Possible values for P-family: 'P0', 'P1', 'P1+', 'P2', 'P2+'
-              Possible values for Q-family: 'Q1', 'Q1+', 'Q2'
-              (Note: Not all combinations of shape-intpol are possible!)
-    - xr: Reference coordinates where phi and dphi must be computed.
-          xr[i][j] with i the point in space and j the direction in space.
-
-    Returns:
-    - phi: basis function phi[i][j], with i the point in space and j the unknown.
-    - dphi: derivative of the basis function dphi[i][j][k], with i the point in space, 
-            j the unknown and k the direction in space.
+    BASIS_FUNCTION basis function and the derivative with respect to the
+                     reference coordinates.
+      [ phi, dphi ] = BASIS_FUNCTION ( shape, intpol, xr )
+      input:
+        shape, shape of the element:
+          'line', line element on the reference interval [-1,1]
+          'quad', quadrilateral element on the reference domain [-1,1]x[-1,1]
+          'triangle', triangular element, on the reference domain left-lower 
+             half of [0,1]x[0,1]
+        intpol: interpolation on the element:
+          P-family: 'P0', 'P1', 'P1+', 'P2', 'P2+'
+          Q-family: 'Q1', 'Q1+', 'Q2'
+          Note: not all combinations of shape-intpol are possible!
+        xr: Reference coordinates where phi and dphi must be computed.
+            xr(i,j) with i the point in space and j the direction in space
+      output:
+        phi: basis function phi(i,j), with i the point in space and j the unknown
+        dphi: derivative of the basis function dphi(i,j,k), with i the point in
+              space j the unknown and k the direction in space.
     """
 
     if shape == 'line':
