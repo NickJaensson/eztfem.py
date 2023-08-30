@@ -47,6 +47,11 @@ mesh_ez12 = quadrilateral2d([7,5],'tria6','vertices',[1,1;2,2;2,4;1,4],'ratio',[
 mesh_ez13 = quadrilateral2d([4,7],'tria7','origin',[1,1],'length',[7,5]);
 mesh_ez14 = quadrilateral2d([7,5],'tria7','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
 
+mesh_ez15 = line1d(5,'line2');
+mesh_ez16 = line1d(5,'line2','ratio',1,'factor',1.2,'length',5,'origin',2);
+mesh_ez17 = line1d(5,'line3');
+mesh_ez18 = line1d(5,'line3','ratio',1,'factor',1.2,'length',5,'origin',2);
+
 
 %% define the same commands for pytfem
 
@@ -65,6 +70,11 @@ cmd_mesh_py12 = "    mesh_py = quadrilateral2d([7,5],'tria6',vertices=np.array([
 cmd_mesh_py13 = "    mesh_py = quadrilateral2d([4,7],'tria7',origin=np.array([1,1]),length=np.array([7,5]))";
 cmd_mesh_py14 = "    mesh_py = quadrilateral2d([7,5],'tria7',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
 
+cmd_mesh_py15 = "    mesh_py = line1d(5,'line2')";
+cmd_mesh_py16 = "    mesh_py = line1d(5,'line2',ratio=1,factor=1.2,length=5.0,origin=2.0)";
+cmd_mesh_py17 = "    mesh_py = line1d(5,'line3')";
+cmd_mesh_py18 = "    mesh_py = line1d(5,'line3',ratio=1,factor=1.2,length=5.0,origin=2.0)";
+
 
 %% write some header stuff
 
@@ -74,7 +84,7 @@ mywritelines("import unittest");
 mywritelines("from src.distribute_elements import distribute_elements");
 mywritelines("from src.quadrilateral2d import quadrilateral2d");
 mywritelines("from src.mesh_class import Mesh, Geometry");
-
+mywritelines("from src.line_1d import line1d");
 mywritelines("class TestPytfem(unittest.TestCase):");
 
 
@@ -95,6 +105,10 @@ write_test("test12",mesh_ez12,cmd_mesh_py12);
 write_test("test13",mesh_ez13,cmd_mesh_py13);
 write_test("test14",mesh_ez14,cmd_mesh_py14);
 
+write_test("test15",mesh_ez15,cmd_mesh_py15);
+write_test("test16",mesh_ez16,cmd_mesh_py16);
+write_test("test17",mesh_ez17,cmd_mesh_py17);
+write_test("test18",mesh_ez18,cmd_mesh_py18);
 
 %% test for quadrilateral2d
 
