@@ -36,7 +36,7 @@ fn = "~/Desktop/eztfem.py/dotest_poisson.py";
 
 %% run the problem in eztfem
 
-mesh_ez = quadrilateral2d([3,2],'quad9','origin',[1,1],'length',[4,3]);
+mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
 
 elementdof_ez = [1,1,1,1,1,1,1,1,1; 2,2,2,2,2,2,2,2,2]' ;
 problem_ez = problem_definition(mesh_ez,elementdof_ez,'nphysq',1);
@@ -65,7 +65,7 @@ gradu_ez = deriv_vector ( mesh_ez, problem_ez, @poisson_deriv, user_ez2 ) ;
 
 %% define the same commands for pytfem
 
-cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
+cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
 
 cmd_elementdof_py = "    elementdof_py = np.array([[1,1,1,1,1,1,1,1,1],[2,2,2,2,2,2,2,2,2]]).T"; 
 cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=1)";

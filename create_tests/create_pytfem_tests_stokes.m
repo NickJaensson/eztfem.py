@@ -38,7 +38,7 @@ fn = "~/Desktop/eztfem.py/dotest_stokes.py";
 
 problemtype = "stokes";
 
-mesh_ez = quadrilateral2d([3,2],'quad9','origin',[1,1],'length',[4,3]);
+mesh_ez = quadrilateral2d([3,2],'quad9','vertices',[1,1;2,2;2,4;1,4],'ratio',[1,2,3,4],'factor',[1.2,1.3,1.4,1.5]);
 
 elementdof_ez = [2,2,2,2,2,2,2,2,2;
                  1,0,1,0,1,0,1,0,0;
@@ -78,7 +78,7 @@ gammadot_ez = deriv_vector ( mesh_ez, problem_ez, @stokes_deriv, user_ez2 ) ;
 
 %% define the same commands for pytfem
 
-cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',origin=np.array([1,1]),length=np.array([4,3]))";
+cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
 
 cmd_elementdof_py = "    elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T";
 cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)";
