@@ -39,4 +39,5 @@ mat=zeros(3,1,3); disp(size(mat))            % prints: 3  1  3
 mat=zeros(3,3,1); disp(size(mat))            % prints: 3  3
 ```
 A solution for these cases is to always use squeeze on the Matlab size, as 
-well as squeeze on the Python side.
+well as squeeze on the Python side. Note that squeeze cannot be used for the 
+"1D" arrays in Matlab, since Matlab will not squeeze further than N x 1.
