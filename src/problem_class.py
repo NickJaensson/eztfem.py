@@ -115,7 +115,7 @@ class Problem:
         self.maxvecnoddegfd = np.max(self.vec_elnumdegfd)
 
     # equivalence check for testing against Matlab code
-    # NOTE: see the matlab file create_pytfem_tests.m for the use of np.squeeze
+    # NOTE: see the file NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
     def __eq__(self, other):
        check = [self.nphysq == other.nphysq,
                 self.nvec == other.nvec,

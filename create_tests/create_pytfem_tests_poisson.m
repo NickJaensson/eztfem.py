@@ -12,21 +12,6 @@ addpath(append(eztfempath,"addons/poisson"))
 addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
 
 %% Matlab file to generate testing code using eztfem for pytfem 
-% NOTE: arrays are written "as is" (looping of the first index, then the
-% second etc.). It is assumed that in Python they are also read like this
-% 
-% NOTE2: Python has real 1D arrays, whereas Matlab 1D arrays are N x 1
-% (i.e., ndims([1,2]) gives as output 2)
-% This can lead to problems when comparing arrays, since these are not
-% equivalent. 
-% 
-% This is handled on the Matlab side by:
-%  - write scalars as scalars (using isscalar)
-%  - write 2D arrays (so can be 1D or "true" 2D) as 1D when second dim == 1
-%  - write 3D arrays always as a full 3D array
-%
-% And on the Python side:
-%  - in Python: use numpy.squeeze on all 2D arrays to get rid of dim == 1
 
 
 %% filename for python test file

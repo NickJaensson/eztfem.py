@@ -32,7 +32,7 @@ class Mesh:
         self.curves = curves
 
     # equivalence check for testing against Matlab code
-    # NOTE: see the matlab file create_pytfem_tests.m for the use of np.squeeze
+    # NOTE: see the file NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
     def __eq__(self, other):
        check = [self.ndim == other.ndim,
                 self.nnodes == other.nnodes,
@@ -75,7 +75,7 @@ class Geometry:
         self.nodes = nodes
 
     # equivalence check for testing against Matlab code
-    # NOTE: see the matlab file create_pytfem_tests.m for the use of np.squeeze
+    # NOTE: see the file NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
     def __eq__(self, other):
         check = [self.ndim == other.ndim,
                  self.elshape == other.elshape,

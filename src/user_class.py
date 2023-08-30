@@ -12,7 +12,7 @@ class User:
         self.psi = np.array([])
 
     # equivalence check for testing against Matlab code
-    # NOTE: see the matlab file create_pytfem_tests.m for the use of np.squeeze
+    # NOTE: see the file NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
     # NOTE2; only a selection of possible attributes is checked
     def __eq__(self, other):
         # get list of names of attributes
