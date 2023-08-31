@@ -93,7 +93,7 @@ print(max(abs(u-uex)))
 
 print('gradient (dudx,dudy)')
 xr = refcoor_nodal_points ( mesh )
-[user.phi,user.dphi]=basis_function('quad','Q2', xr )
+[user.phi,user.dphi] = basis_function('quad','Q2', xr )
 user.u = u
 
 gradu = deriv_vector ( mesh, problem, poisson_deriv, user )
