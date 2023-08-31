@@ -14,17 +14,10 @@ def l_shape2d(ne, eltype, **kwargs):
       - mesh: mesh structure for the domain
     """
 
-    # Optional arguments
-    o = [0, 0]
-    l = [1, 1, 1, 1]
-    f = [1, 1, 1, 1]
-
-    if 'origin' in kwargs:
-        o = kwargs['origin']
-    if 'length' in kwargs:
-        l = kwargs['length']
-    if 'factor' in kwargs:
-        f = kwargs['factor']
+    # optional arguments
+    o = kwargs.get('origin', [0, 0])
+    l = kwargs.get('length', [1, 1, 1, 1])
+    f = kwargs.get('factor', [1, 1, 1, 1])
 
     n1, n2, n3, n4 = ne
     o1, o2 = o
