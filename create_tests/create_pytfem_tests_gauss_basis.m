@@ -38,20 +38,21 @@ for i = 1:20
     tests{i,2} = i;
     tests{i,3} = 'P0';
 end
-test{19,3} = 'P1'; test{20,3} = 'P2'; 
+tests{19,3} = 'P1'; tests{20,3} = 'P2'; 
 
 for i = 21:40
     tests{i,1} = 'quad';
     tests{i,2} = i-20;
     tests{i,3} = 'P0';
 end
-test{37,3} = 'P1'; test{38,3} = 'Q1'; test{39,3} = 'Q1+'; test{40,3} = 'Q2'; 
+tests{37,3} = 'P1'; tests{38,3} = 'Q1'; tests{39,3} = 'Q1+'; tests{40,3} = 'Q2'; 
 
 for i = 41:61
     tests{i,1} = 'triangle';
     tests{i,2} = i-40;
     tests{i,3} = 'P0';
 end
+tests{58,3} = 'P1'; tests{59,3} = 'P1+'; tests{60,3} = 'P2'; tests{61,3} = 'P2+'; 
 
 for ii = 1:size(tests,1)
 
