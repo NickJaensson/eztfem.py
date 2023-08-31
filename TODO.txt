@@ -2,6 +2,8 @@ src/add_boundary_elements.m
 src/integrate_boundary_elements.m
 src/isoparametric_deformation_curve.m
 src/mesh_merge.m
+addons/meshes/l_shape2d.m
+addons/meshes/two_blocks2d.m
 
 ====================================================
 
