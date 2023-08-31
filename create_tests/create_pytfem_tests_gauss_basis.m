@@ -31,8 +31,8 @@ mywritelines("class TestPytfem(unittest.TestCase):");
 
 
 % write s number of tests for Guass and basis functions
-tests = cell(10,3);
-for i = 1:10
+tests = cell(20,3);
+for i = 1:20
     tests{i,1} = 'line';
     tests{i,2} = i;
     tests{i,3} = 'P0';
