@@ -67,7 +67,15 @@ def basis_function(shape, intpol, xr):
     return phi, dphi
 
 def basis_triangle_P0(xr):
-    raise NotImplementedError
+    ni = xr.shape[0]
+    nn = 1
+    phi = np.zeros((ni, nn))
+    dphi = np.zeros((ni, nn, 2))
+    
+    phi[:, :] = 1
+    dphi[:, :, :] = 0
+
+    return phi, dphi
 
 def basis_triangle_P1(xr):
     raise NotImplementedError
