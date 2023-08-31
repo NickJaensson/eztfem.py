@@ -30,17 +30,13 @@ mywritelines("from src.basis_function import basis_function");
 mywritelines("class TestPytfem(unittest.TestCase):");
 
 
-% write s number of tests for Guass and basis functions
-tests = cell(1,20);
-for i = 1:20
-    tests{i,1} = 'quad';
+% write number of tests for Gauss and basis functions
+tests = cell(1,5);
+for i = 1:5
+    tests{i,1} = 'triangle';
     tests{i,2} = i;
     tests{i,3} = 'P0';
 end
-
-% tests = {'line',1,'P0';
-%          'line',2,'P1';
-%          'line',3,'P2'};
 
 for ii = 1:size(tests,1)
 
