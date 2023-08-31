@@ -1,4 +1,4 @@
-from src.mesh_class import Mesh, Geometry
+from src.mesh_class import Mesh
 import numpy as np
 
 def mesh_merge(mesh1, mesh2, **kwargs):
@@ -10,8 +10,8 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         raise ValueError('elshape different in mesh1 and mesh2')
 
     def check_type(var):
-        if isinstance(var, (int, np.integer)):
-          var = [var]
+        var_out = [var] if isinstance(var, (int, np.integer)) else var
+        return var_out
 
     # Default values for optional arguments
     points1 = check_type(kwargs.get('points1', []))
