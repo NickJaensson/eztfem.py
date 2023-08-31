@@ -31,9 +31,9 @@ mywritelines("class TestPytfem(unittest.TestCase):");
 
 
 % write s number of tests for Guass and basis functions
-tests = cell(20,3);
+tests = cell(1,20);
 for i = 1:20
-    tests{i,1} = 'line';
+    tests{i,1} = 'quad';
     tests{i,2} = i;
     tests{i,3} = 'P0';
 end
@@ -45,18 +45,26 @@ end
 for ii = 1:size(tests,1)
 
     shape = tests{ii,1};
-    n = tests{ii,2};
+    n_or_p = tests{ii,2};
     intpol = tests{ii,3};
 
     %% run the problem in eztfem
     
-    [xr_ez,wg_ez] = gauss_legendre(shape,'n', n );
+    if strcmp(shape,'triangle')
+        [xr_ez,wg_ez] = gauss_legendre(shape,'p', n_or_p );
+    else
+        [xr_ez,wg_ez] = gauss_legendre(shape,'n', n_or_p );
+    end
     [phi_ez,dphi_ez] = basis_function(shape, intpol, xr_ez );
     
     
     %% define the same commands for pytfem
     
-    cmd_gauss_py = "    xr_py, wg_py = gauss_legendre('"+shape+"',n="+string(n)+" )";
+    if strcmp(shape,'triangle')
+        cmd_gauss_py = "    xr_py, wg_py = gauss_legendre('"+shape+"',p="+string(n_or_p)+" )";
+    else
+        cmd_gauss_py = "    xr_py, wg_py = gauss_legendre('"+shape+"',n="+string(n_or_p)+" )";
+    end
     cmd_basis_py = "    phi_py, dphi_py = basis_function('"+shape+"','"+intpol+"', xr_py )";
     
     
