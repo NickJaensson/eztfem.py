@@ -1,4 +1,4 @@
-# pytfem
+# eztfem.py
 
 Steps for translating a Matlab loop:
 * Copy the Matlab code to the Python file
