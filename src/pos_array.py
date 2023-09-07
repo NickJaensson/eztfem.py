@@ -35,7 +35,7 @@ def pos_array(problem, nodes, **kwargs):
         nodes = np.array([nodes])
 
     pos = [None] * len(physq)
-    ndof = np.zeros(len(physq))
+    ndof = np.zeros(len(physq),dtype=int)
     lpos = np.zeros(problem.maxnoddegfd * nodes.shape[0],dtype=int)
     if order == 'ND':
         for i, phq in enumerate(physq):
@@ -44,7 +44,7 @@ def pos_array(problem, nodes, **kwargs):
                 bp = problem.nodnumdegfd[nodenr] + \
                      sum(problem.vec_nodnumdegfd[nodenr+1, :phq] - problem.vec_nodnumdegfd[nodenr, :phq])
                 nndof = problem.vec_nodnumdegfd[nodenr+1, phq] - problem.vec_nodnumdegfd[nodenr, phq]
-                lpos[dof:dof+nndof] = np.arange(bp, bp+nndof)
+                lpos[dof:dof+nndof] = np.arange(bp, bp+nndof,dtype=int)
                 dof += nndof
             pos[i] = lpos[:dof].tolist() # convert to list: apparently mixing np arrays and lists goes wrong!
             ndof[i] = dof
