@@ -1,9 +1,17 @@
 src/add_boundary_elements.m
 src/integrate_boundary_elements.m
 src/isoparametric_deformation_curve.m
-src/mesh_merge.m
-addons/meshes/l_shape2d.m
-addons/meshes/two_blocks2d.m
+examples/poisson/poisson3.m
+examples/poisson/poisson4.m
+addons/poisson/poisson_natboun_curve.m
+examples/stokes/stokes2.m
+examples/stokes/streamfunction1.m
+examples/stokes/traction_func.m
+addons/stokes/stokes_flowrate_curve.m
+addons/stokes/stokes_natboun_curve.m
+addons/stokes/streamfunction_elem.m
+addons/stokes/streamfunction_natboun_curve.m
+addons/plotlib/
 
 ====================================================
 
