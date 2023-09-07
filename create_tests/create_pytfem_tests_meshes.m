@@ -113,8 +113,8 @@ write_test("test16",mesh_ez16,cmd_mesh_py16);
 write_test("test17",mesh_ez17,cmd_mesh_py17);
 write_test("test18",mesh_ez18,cmd_mesh_py18);
 
-% write_test("test19",mesh_ez19,cmd_mesh_py19);
-% write_test("test20",mesh_ez20,cmd_mesh_py20);
+write_test("test19",mesh_ez19,cmd_mesh_py19);
+write_test("test20",mesh_ez20,cmd_mesh_py20);
 
 write_test("test21",mesh_ez21,cmd_mesh_py21);
 
