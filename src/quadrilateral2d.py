@@ -756,7 +756,7 @@ def rectangle2d_tria7(num_el, ratio, factor):
     mesh.curves[0].nodes = np.arange(nn1row)
     
     # curve 2
-    mesh.curves[1].nodes = np.zeros(nn1col)
+    mesh.curves[1].nodes = np.zeros(nn1col, dtype=int)
     mesh.curves[1].nodes[0:nn1col:2] = (nn1row + n_x) * np.arange(1, nn1col+1, 2) - n_x - 1
     mesh.curves[1].nodes[1:nn1col:2] = (nn1row + n_x) * np.arange(2, nn1col+1, 2) - 1
 
@@ -764,7 +764,7 @@ def rectangle2d_tria7(num_el, ratio, factor):
     mesh.curves[2].nodes = (nn1col-1)*nn1row + 2*n_x*n_y + np.arange(nn1row, 0, -1) - 1
     
     # curve 4
-    mesh.curves[3].nodes = np.zeros(nn1col)
+    mesh.curves[3].nodes = np.zeros(nn1col, dtype=int)
     mesh.curves[3].nodes[0:nn1col:2] = 1-nn1row-n_x + (nn1row+n_x)*(np.arange(nn1col, 0, -2)) - 1
     mesh.curves[3].nodes[1:nn1col:2] = 1-nn1row + (nn1row+n_x)*(np.arange(nn1col-1, 0, -2)) - 1
 
