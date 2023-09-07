@@ -42,7 +42,7 @@ mesh_ez20 = two_blocks2d([4,5,6],'quad4','factor',[10,10,10],'origin',[-1,2],'le
 
 mesh_tmp1 = quadrilateral2d([2, 3], 'quad4', 'origin', [-2.0, 0.0], 'length', [2.0, 3.0]);
 mesh_tmp2 = quadrilateral2d([4, 3], 'quad4', 'origin', [0.0, 0.0], 'length',[4.0, 3.0]);
-mesh_ez21 = mesh_merge(mesh_tmp1, mesh_tmp2, 'curves1', 2, 'curves2', -4, 'deletecurves1', 2);
+mesh_ez21 = mesh_merge(mesh_tmp1, mesh_tmp2, 'curves1', 2, 'curves2', -4, 'deletecurves1', 2, 'deletepoints1',1);
 
 
 %% define the same commands for pytfem
@@ -72,7 +72,7 @@ cmd_mesh_py20 = "    mesh_py = two_blocks2d([4,5,6],'quad4',factor=[10,10,10],or
 
 cmd_mesh_py21 = "    mesh_tmp1 = quadrilateral2d([2, 3], 'quad4', origin=[-2.0, 0.0], length=[2.0, 3.0]);"+...
                 "    mesh_tmp2 = quadrilateral2d([4, 3], 'quad4', origin=[0.0, 0.0], length=[4.0, 3.0]);"+ ...
-                "    mesh_py = mesh_merge(mesh_tmp1, mesh_tmp2, curves1=[1], curves2=[-3], deletecurves1=[1]);";
+                "    mesh_py = mesh_merge(mesh_tmp1, mesh_tmp2, curves1=[1], curves2=[-3], deletecurves1=[1], deletepoints1=[0]);";
 
 
 %% write some header stuff
