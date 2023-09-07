@@ -206,7 +206,7 @@ def mesh_merge(mesh1, mesh2, **kwargs):
 
     # coordinates mesh2
     for i in range(mesh2.nnodes):
-        if work[i] <= mesh1.nnodes:
+        if work[i] < mesh1.nnodes:
             continue
         mesh.coor[work[i]] = mesh2.coor[i]
 

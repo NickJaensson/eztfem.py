@@ -116,7 +116,7 @@ write_test("test18",mesh_ez18,cmd_mesh_py18);
 % write_test("test19",mesh_ez19,cmd_mesh_py19);
 % write_test("test20",mesh_ez20,cmd_mesh_py20);
 
-write_test("test21",mesh_ez20,cmd_mesh_py21);
+write_test("test21",mesh_ez21,cmd_mesh_py21);
 
 
 %% test for quadrilateral2d
