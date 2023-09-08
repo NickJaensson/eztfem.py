@@ -1,9 +1,3 @@
-src/add_boundary_elements.m
-src/integrate_boundary_elements.m
-src/isoparametric_deformation_curve.m
-examples/poisson/poisson3.m
-examples/poisson/poisson4.m
-addons/poisson/poisson_natboun_curve.m
 examples/stokes/stokes2.m
 examples/stokes/streamfunction1.m
 examples/stokes/traction_func.m
