@@ -11,7 +11,7 @@ from src.problem_class import Problem
 from src.gauss_legendre import gauss_legendre
 from src.basis_function import basis_function
 from src.user_class import User
-from func import func
+from examples.poisson.func import func
 
 from src.build_system import build_system
 from src.define_essential import define_essential
@@ -27,61 +27,68 @@ from scipy.sparse.linalg import spsolve
 
 import pretty_errors
 
-# create mesh
+def main():
 
-print('mesh')
-mesh = quadrilateral2d([40,40],'quad4',origin=np.array([-1,-1]),length=np.array([2,2]))
+    # create mesh
 
-# define the problem
+    print('mesh')
+    mesh = quadrilateral2d([40,40],'quad4',origin=np.array([-1,-1]),length=np.array([2,2]))
 
-print('problem_definition')
-elementdof = np.array([[1,1,1,1],
-                       [2,2,2,2]],dtype=int).transpose()
-problem = Problem(mesh,elementdof,nphysq=1)
+    # define the problem
 
-# define Gauss integration and basis functions
+    print('problem_definition')
+    elementdof = np.array([[1,1,1,1],
+                        [2,2,2,2]],dtype=int).transpose()
+    problem = Problem(mesh,elementdof,nphysq=1)
 
-user = User()
-shape='quad'
+    # define Gauss integration and basis functions
 
-print('gauss_legendre')
-user.xr, user.wg = gauss_legendre(shape,n=2)
+    user = User()
+    shape='quad'
 
-print('basis_function phi')
-user.phi, user.dphi = basis_function(shape,'Q1', user.xr )
+    print('gauss_legendre')
+    user.xr, user.wg = gauss_legendre(shape,n=2)
 
-# user struct for setting problem coefficients, ...
+    print('basis_function phi')
+    user.phi, user.dphi = basis_function(shape,'Q1', user.xr )
 
-user.coorsys = 0
-user.alpha = 1
-user.funcnr = 5
-user.func = func
+    # user struct for setting problem coefficients, ...
 
-# assemble the system matrix and vector
+    user.coorsys = 0
+    user.alpha = 1
+    user.funcnr = 5
+    user.func = func
 
-print('build_system')
-A, f = build_system ( mesh, problem, poisson_elem, user )
+    # assemble the system matrix and vector
 
-# define essential boundary conditions (Dirichlet)
+    print('build_system')
+    A, f = build_system ( mesh, problem, poisson_elem, user )
 
-print('define_essential')
-iess = define_essential ( mesh, problem,'curves', [0,1,2,3] )
+    # define essential boundary conditions (Dirichlet)
 
-# fill values for the essential boundary conditions
+    print('define_essential')
+    iess = define_essential ( mesh, problem,'curves', [0,1,2,3] )
 
-print('fill_system_vector')
-uess = np.zeros([problem.numdegfd])
+    # fill values for the essential boundary conditions
 
-# apply essential boundary conditions to the system
+    print('fill_system_vector')
+    uess = np.zeros([problem.numdegfd])
 
-print('apply_essential')
-A, f, _ = apply_essential ( A, f, uess, iess )
+    # apply essential boundary conditions to the system
 
-# solve the system 
+    print('apply_essential')
+    A, f, _ = apply_essential ( A, f, uess, iess )
 
-print('solve')
-u = spsolve(A.tocsr(), f)
+    # solve the system 
 
-# maximum value
+    print('solve')
+    u = spsolve(A.tocsr(), f)
 
-print('Maximum value ' ,max(u))
+    # maximum value
+
+    print('Maximum value ' ,max(u))
+
+    return max(u)
+
+if __name__ == '__main__':
+    main()

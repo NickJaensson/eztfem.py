@@ -11,7 +11,7 @@ from src.problem_class import Problem
 from src.gauss_legendre import gauss_legendre
 from src.basis_function import basis_function
 from src.user_class import User
-from func import func
+from examples.poisson.func import func
 
 from src.build_system import build_system
 from src.define_essential import define_essential
@@ -30,87 +30,95 @@ import pretty_errors
 from src.add_boundary_elements import add_boundary_elements
 from addons.poisson.poisson_natboun_curve import poisson_natboun_curve
 
-# create mesh
+def main():
 
-print('mesh')
-mesh = quadrilateral2d([20,20],'quad9', length=np.array([1.2,1]))
+    # create mesh
 
-# define the problem
+    print('mesh')
+    mesh = quadrilateral2d([20,20],'quad9', length=np.array([1.2,1]))
 
-print('problem_definition')
-elementdof = np.array([[1,1,1,1,1,1,1,1,1],
-                       [2,2,2,2,2,2,2,2,2]],dtype=int).transpose()
-problem = Problem(mesh,elementdof,nphysq=1)
+    # define the problem
 
-# define Gauss integration and basis functions
+    print('problem_definition')
+    elementdof = np.array([[1,1,1,1,1,1,1,1,1],
+                        [2,2,2,2,2,2,2,2,2]],dtype=int).transpose()
+    problem = Problem(mesh,elementdof,nphysq=1)
 
-user = User()
-shape='quad'
+    # define Gauss integration and basis functions
 
-print('gauss_legendre')
-user.xr, user.wg = gauss_legendre(shape,n=3)
+    user = User()
+    shape='quad'
 
-print('basis_function phi')
-user.phi, user.dphi = basis_function(shape,'Q2', user.xr )
+    print('gauss_legendre')
+    user.xr, user.wg = gauss_legendre(shape,n=3)
 
-# user struct for setting problem coefficients, ...
+    print('basis_function phi')
+    user.phi, user.dphi = basis_function(shape,'Q2', user.xr )
 
-user.coorsys = 0
-user.alpha = 1
-user.funcnr = 7
-user.func = func
+    # user struct for setting problem coefficients, ...
 
-# assemble the system matrix and vector
+    user.coorsys = 0
+    user.alpha = 1
+    user.funcnr = 7
+    user.func = func
 
-print('build_system')
-A, f = build_system ( mesh, problem, poisson_elem, user )
+    # assemble the system matrix and vector
 
-# define Gauss integration and basis functions (for boundary integral)
+    print('build_system')
+    A, f = build_system ( mesh, problem, poisson_elem, user )
 
-print('gauss_legendre')
-[xr,user.wg]=gauss_legendre('line',n=3 )
+    # define Gauss integration and basis functions (for boundary integral)
 
-print('basis_function phi')
-[user.phi,user.dphi]=basis_function('line','P2', xr )
+    print('gauss_legendre')
+    [xr,user.wg]=gauss_legendre('line',n=3 )
 
-# add natural boundary condition 
+    print('basis_function phi')
+    [user.phi,user.dphi]=basis_function('line','P2', xr )
 
-print('add_boundary_elements')
-user.funcnr = 8
-f = add_boundary_elements ( mesh, problem, f, poisson_natboun_curve, user, curve=1 )
+    # add natural boundary condition 
 
-# define essential boundary conditions (Dirichlet)
+    print('add_boundary_elements')
+    user.funcnr = 8
+    f = add_boundary_elements ( mesh, problem, f, poisson_natboun_curve, user, curve=1 )
 
-print('define_essential')
-iess = define_essential ( mesh, problem,'curves', [0,2,3] )
+    # define essential boundary conditions (Dirichlet)
 
-# fill values for the essential boundary conditions
+    print('define_essential')
+    iess = define_essential ( mesh, problem,'curves', [0,2,3] )
 
-print('fill_system_vector')
-uess = fill_system_vector ( mesh, problem, 'curves', [0,2,3], func, funcnr=6 )
+    # fill values for the essential boundary conditions
 
-# apply essential boundary conditions to the system
+    print('fill_system_vector')
+    uess = fill_system_vector ( mesh, problem, 'curves', [0,2,3], func, funcnr=6 )
 
-print('apply_essential')
-A, f, _ = apply_essential ( A, f, uess, iess )
+    # apply essential boundary conditions to the system
 
-# solve the system 
+    print('apply_essential')
+    A, f, _ = apply_essential ( A, f, uess, iess )
 
-print('solve')
-u = spsolve(A.tocsr(), f)
+    # solve the system 
 
-# compare with exact solution
+    print('solve')
+    u = spsolve(A.tocsr(), f)
 
-print('Difference with exact solution:')
-uex = fill_system_vector ( mesh, problem, 'nodes', np.arange(mesh.nnodes), func, funcnr=6 ) 
+    # compare with exact solution
 
-print(max(abs(u-uex)))
+    print('Difference with exact solution:')
+    uex = fill_system_vector ( mesh, problem, 'nodes', np.arange(mesh.nnodes), func, funcnr=6 ) 
 
-# gradient (dudx,dudy) of the solution 
+    maxdiff = max(abs(u-uex))
+    print(maxdiff)
 
-print('gradient (dudx,dudy)')
-xr = refcoor_nodal_points ( mesh )
-[user.phi,user.dphi] = basis_function('quad','Q2', xr )
-user.u = u
+    # gradient (dudx,dudy) of the solution 
 
-gradu = deriv_vector ( mesh, problem, poisson_deriv, user )
+    print('gradient (dudx,dudy)')
+    xr = refcoor_nodal_points ( mesh )
+    [user.phi,user.dphi] = basis_function('quad','Q2', xr )
+    user.u = u
+
+    gradu = deriv_vector ( mesh, problem, poisson_deriv, user )
+
+    return maxdiff
+
+if __name__ == '__main__':
+    main()
