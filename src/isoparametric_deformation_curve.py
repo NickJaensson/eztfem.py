@@ -19,7 +19,7 @@ def isoparametric_deformation_curve(x, dphi):
                              Shape: (number of points in space, direction in space).
     """
 
-    npts, ndim = x.shape
+    npts, ndim = dphi.shape[0], x.shape[1]
 
     dxdxi = np.zeros((npts, ndim))
     curvel2 = np.zeros(npts)
@@ -32,7 +32,7 @@ def isoparametric_deformation_curve(x, dphi):
     curvel = np.sqrt(curvel2)
 
     normal = np.zeros((npts, 2))
-    
+
     if ndim == 2:
         normal[:, 0] = dxdxi[:, 1] / curvel
         normal[:, 1] = -dxdxi[:, 0] / curvel

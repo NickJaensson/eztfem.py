@@ -33,7 +33,7 @@ def poisson_natboun_curve(elem, coor, user, pos):
     dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
 
     # Position of the integration points
-    xg = user.phi.dot(coor)
+    xg = user.phi @ coor
 
     # Axisymmetric condition
     if user.coorsys == 1:
@@ -46,6 +46,6 @@ def poisson_natboun_curve(elem, coor, user, pos):
         fg = np.zeros(ninti)
         for ip in range(ninti):
             fg[ip] = user.func(user.funcnr, xg[ip])
-        elemvec = -user.phi.T.dot(fg * curvel * user.wg)
+        elemvec = -user.phi.T @ ( fg * curvel * user.wg )
 
     return elemvec

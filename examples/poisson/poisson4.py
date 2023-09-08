@@ -77,7 +77,7 @@ print('basis_function phi')
 
 print('add_boundary_elements')
 user.funcnr = 8
-add_boundary_elements ( mesh, problem, f, poisson_natboun_curve, user, curve=2 )
+f = add_boundary_elements ( mesh, problem, f, poisson_natboun_curve, user, curve=1 )
 
 # define essential boundary conditions (Dirichlet)
 
