@@ -1,7 +1,6 @@
 Cend.txt
 .vscode/*
 *.asv
-dotest*.py
 *.diff
 .DS_Store
 *.swp
