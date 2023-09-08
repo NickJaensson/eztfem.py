@@ -26,7 +26,7 @@ def isoparametric_deformation_curve(x, dphi):
 
     # Compute dxdxi and curvel2
     for j in range(ndim):
-        dxdxi[:, j] = dphi[:, :] @ x[:, j]
+        dxdxi[:, j] = dphi[:, :, 0] @ x[:, j]
         curvel2 += dxdxi[:, j]**2
 
     curvel = np.sqrt(curvel2)

@@ -191,7 +191,7 @@ def basis_line_P0(xr):
     ni = xr.shape[0]
     nn = 1
     phi = np.zeros((ni, nn))
-    dphi = np.zeros((ni, nn))
+    dphi = np.zeros((ni, nn, 1))
     
     phi[:, :] = 1
     dphi[:, :] = 0
@@ -202,13 +202,13 @@ def basis_line_P1(xr):
     ni = xr.shape[0]
     nn = 2
     phi = np.zeros((ni, nn))
-    dphi = np.zeros((ni, nn))
+    dphi = np.zeros((ni, nn, 1))
     
     phi[:, 0] = (1 - xr) / 2
     phi[:, 1] = (1 + xr) / 2
 
-    dphi[:, 0] = -0.5
-    dphi[:, 1] =  0.5
+    dphi[:, 0, 0] = -0.5
+    dphi[:, 1, 0] =  0.5
 
     return phi, dphi
 
@@ -216,15 +216,15 @@ def basis_line_P2(xr):
     ni = xr.shape[0]
     nn = 3
     phi = np.zeros((ni, nn))
-    dphi = np.zeros((ni, nn))
+    dphi = np.zeros((ni, nn, 1))
     
     phi[:, 0] = -(1 - xr) * xr / 2
     phi[:, 1] = 1 - xr ** 2
     phi[:, 2] = (1 + xr) * xr / 2
 
-    dphi[:, 0] = -(1 - 2 * xr) / 2
-    dphi[:, 1] = -2 * xr
-    dphi[:, 2] = (1 + 2 * xr) / 2
+    dphi[:, 0, 0] = -(1 - 2 * xr) / 2
+    dphi[:, 1, 0] = -2 * xr
+    dphi[:, 2, 0] = (1 + 2 * xr) / 2
 
     return phi, dphi
 
@@ -270,8 +270,8 @@ def basis_quad_Q1(xr):
     for i in range(2):
         for j in range(2):
             phi[:, p[i, j]]     = phi1[:, i] * phi2[:, j]
-            dphi[:, p[i, j], 0] = dphi1[:, i] * phi2[:, j]
-            dphi[:, p[i, j], 1] = phi1[:, i] * dphi2[:, j]
+            dphi[:, p[i, j], 0] = dphi1[:, i, 0] * phi2[:, j]
+            dphi[:, p[i, j], 1] = phi1[:, i] * dphi2[:, j, 0]
 
     return phi, dphi
 
@@ -315,8 +315,8 @@ def basis_quad_Q2(xr):
     for i in range(3):
         for j in range(3):
             phi[:, p[i, j]] = phi1[:, i] * phi2[:, j]
-            dphi[:, p[i, j], 0] = dphi1[:, i] * phi2[:, j]
-            dphi[:, p[i, j], 1] = phi1[:, i] * dphi2[:, j]
+            dphi[:, p[i, j], 0] = dphi1[:, i, 0] * phi2[:, j]
+            dphi[:, p[i, j], 1] = phi1[:, i] * dphi2[:, j, 0]
 
     return phi, dphi
 
