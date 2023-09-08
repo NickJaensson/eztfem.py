@@ -47,8 +47,8 @@ def add_boundary_elements(mesh, problem, fp, element, user, **kwargs):
     # Default optional arguments
     curve = kwargs.get('curve', 0)
     Ap = kwargs.get('Ap', None)
-    physqrow = np.arange(1, problem.nphysq + 1,dtype=int)
-    physqcol = np.arange(1, problem.nphysq + 1,dtype=int)
+    physqrow = np.arange(problem.nphysq,dtype=int)
+    physqcol = np.arange(problem.nphysq,dtype=int)
     order = kwargs.get('order', 'DN')
     posvectors = kwargs.get('posvectors', 0)
 
@@ -67,22 +67,22 @@ def add_boundary_elements(mesh, problem, fp, element, user, **kwargs):
 
     # Assemble loop over elements
     for elem in range(mesh.curves[curve].nelem):
-        # positions in global system (Replace 'pos_array' with appropriate Python function)
-        posrow = pos_array(problem, mesh.curves[curve].topology[elem, 2, :], order=order)
-        print(posrow)
-        posr = np.concatenate(posrow[physqrow])
+
+        posrow, _ = pos_array(problem, mesh.curves[curve].topology[:, elem, 1].T, order=order)
+
+        posr = np.hstack([posrow[i] for i in physqrow]) # indexing a list using another list
 
         if mat:
             if rowcolequal:
                 posc = posr
             else:
-                poscol = pos_array(problem, mesh.curves[curve].topology[elem, 2, :], physq=physqcol, order=order)
+                poscol = pos_array(problem, mesh.curves[curve].topology[:, elem, 1].T, physq=physqcol, order=order)
                 posc = np.concatenate(poscol)
 
-        coor = mesh.coor[mesh.curves[curve].topology[elem, 2, :], :]
+        coor = mesh.coor[mesh.curves[curve].topology[:, elem, 1], :]
 
         if posvectors:
-            posvec = pos_array_vec(problem, mesh.curves[curve].topology[elem, 2, :], order=order)
+            posvec = pos_array_vec(problem, mesh.curves[curve].topology[:, elem, 1].T, order=order)
             if mat:
                 elemvec, elemmat = element(elem, coor, user, posrow, posvec)
                 A[posr[:, None], posc] += elemmat
