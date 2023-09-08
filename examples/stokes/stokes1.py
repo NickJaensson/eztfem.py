@@ -67,14 +67,13 @@ def main():
 
     print('define_essential')
     iess = define_essential ( mesh, problem, 'curves',[0,1,2,3], degfd=0 )
-    iess = define_essential ( mesh, problem, 'curves',[0,2,2,3], degfd=1, iessp=iess )
+    iess = define_essential ( mesh, problem, 'curves',[0,1,2,3], degfd=1, iessp=iess )
     iess = define_essential ( mesh, problem, 'points',[0], physq=1, iessp=iess )
 
     # fill values for the essential boundary conditions
 
     print('fill_system_vector')
-    uess = fill_system_vector ( mesh, problem, 'curves', [0,1], func, funcnr=3 )
-    uess = fill_system_vector ( mesh, problem, 'curves', [2,3], func, funcnr=3, fin=uess )
+    uess = fill_system_vector ( mesh, problem, 'curves', [2], func, funcnr=5 )
 
     # apply essential boundary conditions to the system
 
@@ -116,7 +115,7 @@ def main():
     user.comp = 7 # gammadot, effective strain rate = sqrt(2II_D) 
     gammadot = deriv_vector ( mesh, problem, stokes_deriv, user )
 
-    return max(gammadot.u)
+    return max(omega.u)
 
 if __name__ == '__main__':
     main()
