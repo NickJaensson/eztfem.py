@@ -9,7 +9,7 @@ result1 = examples.poisson.poisson1.main()
 result2 = examples.poisson.poisson2.main()
 result3 = examples.poisson.poisson3.main()
 result4 = examples.poisson.poisson4.main()
-result5 = examples.stokes.stokes1.main()
+result5, _, _, _ = examples.stokes.stokes1.main()
 
 eps = 1e-15
 
