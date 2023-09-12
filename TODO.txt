@@ -1,10 +1,7 @@
 examples/stokes/stokes2.m
-examples/stokes/streamfunction1.m
 examples/stokes/traction_func.m
 addons/stokes/stokes_flowrate_curve.m
 addons/stokes/stokes_natboun_curve.m
-addons/stokes/streamfunction_elem.m
-addons/stokes/streamfunction_natboun_curve.m
 addons/plotlib/
 
 ====================================================
