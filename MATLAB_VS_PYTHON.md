@@ -18,6 +18,8 @@
 - slices left and right-inclusive (Matlab) or only left inclusive (Python)
 - function in Matlab at the end or in different file (main variables not known
   inside function)
+- neglecting output of function Matlab vs Python
+- row-major (Python) vs column major (Matlab)
 
 # Data types
 All variables stored in a computed program are of a certain *data-type*. 
