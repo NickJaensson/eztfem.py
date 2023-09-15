@@ -1,29 +1,19 @@
 # General
-- Open-source vs Mathworks
-- Python2 vs Python3
-- Python: variables are labels
-- Matlab: variables are boxes
-- Objects are important in Matlab, you will see functions as part on 
-  objects (not so in Matlab)
+- Matlab is expensive, Python is open source
+- Matab is and IDE with debugger, language, tooplboxes etc.. Python refers to the language.
+with different interpreters/compilers (altough most use the default interpreter CPython)
+- Matlab uses % for comments, Python uses # for comments
+- Matlab uses straight paranthesis
 - Python designed to be OO, whereas OO was added later in Matlab
-- Values copied when assigned to a new variable (Matlab)
-- Values for some types copied, but not always (Python)
-- Everything is an array in Matlab, everything is an object in Python
-- buckets (Matlab) vs labels (Python)
-- mutable vs immutable (Python)
-- Numpy for arrays
-- Matlab: pass-by-copy
-- Python: pass-by-assignment
-- indexing 0-based vs 1-based
-- slices left and right-inclusive (Matlab) or only left inclusive (Python)
-- function in Matlab at the end or in different file (main variables not known
-  inside function)
-- neglecting output of function Matlab vs Python
 - row-major (Python) vs column major (Matlab)
+- surpresing output with ;
+- line continutation
+- indentation
 
-# Data types
+# Working with variables
+## Data-types
 All variables stored in a computed program are of a certain *data-type*. 
-Integers from mathematics [..., -2, -1, 0, 1, 2, ...] are also in computer science  
+Integers from mathematics [..., -2, -1, 0, 1, 2, ...] are also in computer science 
 known as *integers* (or *ints*). The real numbers from mathematics [1.2, 0.973, 
 $\pi$, $e$, ...] are known in computer science as *floating point numbers* (or 
 *floats*).  
@@ -51,24 +41,82 @@ Matlab does not deal with ints by default, but makes everything floats of double
 | true/false | logical          | bool            |
 | composites | structs and cell-arrays  | lists, dicts and tuples |
 
+## Indexing
+<table width="100%">
+<tr>
+<th>Matlab</th>
+<th>Python</th>
+</tr>
+<tr>
+<td>
+
+```json
+a = [4,8,3];
+disp(a(1)); % will print the value "4"
+```
+</td>
+<td>
+
+```json
+a = [4,8,3]
+print(a[0]) # will print the value "4"
+```
+</td>
+</tr>
+</table>
+
+- slices left and right-inclusive (Matlab) or only left inclusive (Python)
+- slicing to end (left and right?)
+- reverse?
+## Assignment
+- Python: variables are labels
+- Matlab: variables are boxes
+- Assignment statements in Python do not copy objects, they create bindings 
+between a target and an object. Use .copy() of .deepcopy() for real copies (Python)
+- buckets (Matlab) vs labels (Python)
+- mutable vs immutable (Python)
+- Values copied when assigned to a new variable (Matlab)
+- Everything is an array in Matlab, everything is an object in Python
+
 # Control flow
 
 ## For-loops
-### Matlab
-```
+<table width="100%">
+<tr>
+<th>Matlab</th>
+<th>Python</th>
+</tr>
+<tr>
+<td>
+
+```json
 for i = 1:10
-    # do stuff (i goes from 1 to 10)
+    % do stuff (i goes from 1 to 10)
 end
 ```
-### Python
-```
+</td>
+<td>
+
+```json
 for i in range(10):
     # do stuff (i goes from 0 to 9)
+
 ```
+</td>
+</tr>
+</table>
 
 ## If-else statement
-### Matlab
-```
+
+<table width="100%">
+<tr>
+<th>Matlab</th>
+<th>Python</th>
+</tr>
+<tr>
+<td>
+
+```json
 if x < 3
     % do stuff
 elseif x < 5
@@ -77,21 +125,27 @@ else
     % do stuff
 end
 ```
-### Python
-```
+</td>
+<td>
+
+```json
 if x < 3:
     # do stuff
 elif x < 5:
     # do stuff
 else
     # do stuff
+
 ```
+</td>
+</tr>
+</table>
 
 ## While-loops
 ### Matlab
 ```
 while x < 3
-    # do stuff
+    % do stuff
 end
 ```
 ### Python
@@ -126,7 +180,7 @@ match x:
 ### Matlab
 ```
 try
-    # try something
+    % try something
 catch
     disp("An exception occurred")
 end
@@ -144,6 +198,11 @@ except:
 - Pass by value: Values copied when entering a function (Matlab)
 - Pass by assignment: For some datatypes value copied, and for some datatypes
                       reference passed
+- Matlab: pass-by-copy
+- Python: pass-by-assignment
+- neglecting output of function Matlab vs Python
+- function in Matlab at the end or in different file (main variables not known
+  inside function)
 
 # Object-oriented programming (advanced topic)
 
