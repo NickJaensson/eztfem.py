@@ -5,16 +5,19 @@ https://github.com/fortran-lang/webpage/blob/main/source/learn/rosetta_stone.md
 
 # Matlab-Python Rosetta Stone
 ## General
-- Matlab is expensive, Python is open source
-- Matab is and IDE with debugger, language, tooplboxes etc.. Python refers to the language.
-with different interpreters/compilers (altough most use the default interpreter CPython)
-- Matlab uses % for comments, Python uses # for comments
-- Matlab uses straight paranthesis
-- Python designed to be OO, whereas OO was added later in Matlab
-- row-major (Python) vs column major (Matlab)
-- surpresing output with ;
+- *Matlab is a software product* from the company Mathworks, which includes an
+integrated development enverinment (IDE), the Matlab language, toolboxes etc.
+- *Python is an open-source language*, which can be run using several interpreters 
+or compilers (default is the CPython interpreter). Different IDEs are available to 
+use with Python.
+- The Matlab language uses % for comments, whereas Python uses # for comments.
+- In Matlab, a line that does not end with a semicolon (;), will generally write something to the command-line. In Python this is not the case.
+- Indentation in Matlab is optional for readibility, and the keyword ```end```
+is used the control flow. In Python, indentation is not optional as it plays a
+crucial role in control flow.
 - line continutation
-- indentation
+- something on parentheses? () vs [] vs {}
+- row-major (Python) vs column major (Matlab)
 
 ## Working with variables
 ### Data-types
