@@ -1,4 +1,10 @@
-# General
+<!---
+Nice example:
+https://github.com/fortran-lang/webpage/blob/main/source/learn/rosetta_stone.md
+-->
+
+# Matlab-Python Rosetta Stone
+## General
 - Matlab is expensive, Python is open source
 - Matab is and IDE with debugger, language, tooplboxes etc.. Python refers to the language.
 with different interpreters/compilers (altough most use the default interpreter CPython)
@@ -10,8 +16,8 @@ with different interpreters/compilers (altough most use the default interpreter 
 - line continutation
 - indentation
 
-# Working with variables
-## Data-types
+## Working with variables
+### Data-types
 All variables stored in a computed program are of a certain *data-type*. 
 Integers from mathematics [..., -2, -1, 0, 1, 2, ...] are also in computer science 
 known as *integers* (or *ints*). The real numbers from mathematics [1.2, 0.973, 
@@ -41,23 +47,23 @@ Matlab does not deal with ints by default, but makes everything floats of double
 | true/false | logical          | bool            |
 | composites | structs and cell-arrays  | lists, dicts and tuples |
 
-## Indexing
+### Indexing
 <table width="100%">
 <tr>
-<th>Matlab</th>
-<th>Python</th>
+<th style="border-bottom: none;">Matlab</th>
+<th style="border-bottom: none;">Python</th>
 </tr>
 <tr>
 <td>
 
-```json
+```
 a = [4,8,3];
 disp(a(1)); % will print the value "4"
 ```
 </td>
 <td>
 
-```json
+```
 a = [4,8,3]
 print(a[0]) # will print the value "4"
 ```
@@ -68,7 +74,7 @@ print(a[0]) # will print the value "4"
 - slices left and right-inclusive (Matlab) or only left inclusive (Python)
 - slicing to end (left and right?)
 - reverse?
-## Assignment
+### Assignment
 - Python: variables are labels
 - Matlab: variables are boxes
 - Assignment statements in Python do not copy objects, they create bindings 
@@ -78,18 +84,18 @@ between a target and an object. Use .copy() of .deepcopy() for real copies (Pyth
 - Values copied when assigned to a new variable (Matlab)
 - Everything is an array in Matlab, everything is an object in Python
 
-# Control flow
+## Control flow
 
-## For-loops
+### For-loops
 <table width="100%">
 <tr>
-<th>Matlab</th>
-<th>Python</th>
+<th style="border-bottom: none;">Matlab</th>
+<th style="border-bottom: none;">Python</th>
 </tr>
 <tr>
 <td>
 
-```json
+```
 for i = 1:10
     % do stuff (i goes from 1 to 10)
 end
@@ -97,7 +103,7 @@ end
 </td>
 <td>
 
-```json
+```
 for i in range(10):
     # do stuff (i goes from 0 to 9)
 
@@ -106,17 +112,17 @@ for i in range(10):
 </tr>
 </table>
 
-## If-else statement
+### If-else statement
 
 <table width="100%">
 <tr>
-<th>Matlab</th>
-<th>Python</th>
+<th style="border-bottom: none;">Matlab</th>
+<th style="border-bottom: none;">Python</th>
 </tr>
 <tr>
 <td>
 
-```json
+```
 if x < 3
     % do stuff
 elseif x < 5
@@ -128,7 +134,7 @@ end
 </td>
 <td>
 
-```json
+```
 if x < 3:
     # do stuff
 elif x < 5:
@@ -141,20 +147,41 @@ else
 </tr>
 </table>
 
-## While-loops
-### Matlab
+### While-loops
+<table width="100%">
+<tr>
+<th style="border-bottom: none;">Matlab</th>
+<th style="border-bottom: none;">Python</th>
+</tr>
+<tr>
+<td>
+
 ```
 while x < 3
     % do stuff
 end
 ```
-### Python
+</td>
+<td>
+
 ```
 while x < 3:
     # do stuff
-```
 
-## Case-matching
+```
+</td>
+</tr>
+</table>
+
+### Case-matching
+<table width="100%">
+<tr>
+<th style="border-bottom: none;">Matlab</th>
+<th style="border-bottom: none;">Python</th>
+</tr>
+<tr>
+<td>
+
 ```
 switch x
     case 1
@@ -165,7 +192,9 @@ switch x
         % do stuff (none of the cases match)
 end
 ```
-### Python
+</td>
+<td>
+
 ```
 match x:
     case 1:
@@ -174,27 +203,44 @@ match x:
         # do stuff
     other:
         # do stuff (none of the cases match)
+    
 ```
+</td>
+</tr>
+</table>
 
-## Try and catch exceptions
-### Matlab
+### Try and catch exceptions
+<table width="100%">
+<tr>
+<th style="border-bottom: none;">Matlab</th>
+<th style="border-bottom: none;">Python</th>
+</tr>
+<tr>
+<td>
+
 ```
 try
     % try something
 catch
     disp("An exception occurred")
 end
-
 ```
-### Python
+</td>
+<td>
+
 ```
 try:
     print(x)
 except:
     print("An exception occurred")
-```
 
-# Functions
+    
+```
+</td>
+</tr>
+</table>
+
+## Functions
 - Pass by value: Values copied when entering a function (Matlab)
 - Pass by assignment: For some datatypes value copied, and for some datatypes
                       reference passed
@@ -204,6 +250,6 @@ except:
 - function in Matlab at the end or in different file (main variables not known
   inside function)
 
-# Object-oriented programming (advanced topic)
+## Object-oriented programming (advanced topic)
 
-# Numerical computing in Python (advanced topic)
+## Numerical computing in Python (advanced topic)
