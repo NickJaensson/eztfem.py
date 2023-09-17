@@ -1,4 +1,4 @@
-# run with: python -m unittest dotest.py
+# run with: python -m unittest dotest_gauss_basis.py
 import numpy as np
 import unittest
 from src.gauss_legendre import gauss_legendre

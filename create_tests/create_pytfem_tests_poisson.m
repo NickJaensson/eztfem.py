@@ -81,7 +81,7 @@ cmd_deriv_vector =  "    user_py2 = user_py;" + ...
 
 %% write some header stuff
 
-writelines("# run with: python -m unittest dotest.py",fn);
+writelines("# run with: python -m unittest dotest_poisson.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("from src.distribute_elements import distribute_elements");

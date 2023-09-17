@@ -1,4 +1,4 @@
-# run with: python -m unittest dotest.py
+# run with: python -m unittest dotest_stokes.py
 import numpy as np
 import unittest
 from src.distribute_elements import distribute_elements

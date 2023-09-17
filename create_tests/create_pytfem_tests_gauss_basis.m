@@ -21,7 +21,7 @@ fn = "~/Desktop/eztfem.py/dotest_gauss_basis.py";
 
 %% write some header stuff
 
-writelines("# run with: python -m unittest dotest.py",fn);
+writelines("# run with: python -m unittest dotest_gauss_basis.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("from src.gauss_legendre import gauss_legendre");
