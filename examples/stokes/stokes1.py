@@ -47,8 +47,14 @@ def main():
 
     user = User()
     shape='quad'
+
+    print('gauss_legendre')
     user.xr, user.wg = gauss_legendre(shape,n=3)
+
+    print('basis_function phi')
     user.phi, user.dphi = basis_function(shape,'Q2', user.xr )
+
+    print('basis_function psi')
     user.psi, _ = basis_function(shape,'Q1', user.xr )
 
     # user struct for setting problem coefficients, ...
