@@ -18,6 +18,7 @@ crucial role in control flow.
 - line continutation
 - something on parentheses? () vs [] vs {}
 - row-major (Python) vs column major (Matlab)
+- Matlab: functions in same folder or use addpath, Python use import
 
 ## Working with variables
 ### Data-types
