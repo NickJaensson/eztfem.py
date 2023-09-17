@@ -16,7 +16,7 @@ addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
 
 %% filename for python test file
 global fn 
-fn = "~/Desktop/eztfem.py/test_gauss_basis.py"; 
+fn = "~/Desktop/eztfem.py/test/test_gauss_basis.py"; 
 
 
 %% write some header stuff

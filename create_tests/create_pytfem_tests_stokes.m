@@ -16,7 +16,7 @@ addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
 
 %% filename for python test file
 global fn 
-fn = "~/Desktop/eztfem.py/test_stokes.py"; 
+fn = "~/Desktop/eztfem.py/test/test_stokes.py"; 
 
 
 %% run the problem in eztfem

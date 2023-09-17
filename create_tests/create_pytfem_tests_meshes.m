@@ -12,7 +12,7 @@ addpath(append(eztfempath,"addons/meshes"))
 
 %% filename for python test file
 global fn
-fn = "~/Desktop/eztfem.py/test_meshes.py"; 
+fn = "~/Desktop/eztfem.py/test/test_meshes.py"; 
 
 
 %% run the problem in eztfem
