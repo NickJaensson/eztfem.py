@@ -1,4 +1,9 @@
 # eztfem.py
+## Running tests
+executing "python -m unittest" runs all the tests in the "test/" folder that
+have a filename matching "test*.py" (empty __init__.py in the test directory
+is needed for this)
+
 
 ## Steps for translating a Matlab loop:
 * Copy the Matlab code to the Python file
