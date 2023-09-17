@@ -29,6 +29,9 @@ from addons.stokes.stokes_deriv import stokes_deriv
 from src.add_boundary_elements import add_boundary_elements
 from addons.stokes.stokes_natboun_curve import stokes_natboun_curve
 
+from src.integrate_boundary_elements import integrate_boundary_elements
+from addons.stokes.stokes_flowrate_curve import stokes_flowrate_curve
+
 from scipy.sparse.linalg import spsolve
 
 import pretty_errors
@@ -114,9 +117,11 @@ def main():
 
     # flow rate
 
-    # user.u = u
-    # flowrate = integrate_boundary_elements ( mesh, problem,
-    #      stokes_flowrate_curve, user, curve=1 )
+    user.u = u
+    flowrate = integrate_boundary_elements ( mesh, problem,
+         stokes_flowrate_curve, user, curve=1 )
+
+    print('flowrate = ',flowrate)
 
     # Pressure in all nodes for plotting
 
