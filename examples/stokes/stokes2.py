@@ -113,8 +113,6 @@ def main():
     print('solve')
     u = spsolve(A.tocsr(), f)
 
-    print(u.mean())
-
     # flow rate
 
     user.u = u
@@ -153,7 +151,7 @@ def main():
     user.comp = 7 # gammadot, effective strain rate = sqrt(2II_D) 
     gammadot = deriv_vector ( mesh, problem, stokes_deriv, user )
 
-    return max(omega.u), mesh, problem, u
+    return flowrate, mesh, problem, u
 
 if __name__ == '__main__':
     main()
