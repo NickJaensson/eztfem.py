@@ -1,22 +1,24 @@
-# run with: python -m unittest dotest_poisson.py
+# run with: python -m unittest test_poisson.py
 import numpy as np
 import unittest
-from src.distribute_elements import distribute_elements
-from src.quadrilateral2d import quadrilateral2d
-from src.mesh_class import Mesh, Geometry
-from src.problem_class import Problem
-from src.user_class import User
-from src.gauss_legendre import gauss_legendre
-from src.basis_function import basis_function
-from src.build_system import build_system
-from addons.poisson.poisson_elem import poisson_elem
-from addons.poisson.poisson_deriv import poisson_deriv
-from src.define_essential import define_essential
-from src.fill_system_vector import fill_system_vector
-from src.apply_essential import apply_essential
-from src.vector_class import Vector
-from src.deriv_vector import deriv_vector
-from src.refcoor_nodal_points import refcoor_nodal_points
+import sys
+sys.path.append('..')
+from eztfem.src.distribute_elements import distribute_elements
+from eztfem.src.quadrilateral2d import quadrilateral2d
+from eztfem.src.mesh_class import Mesh, Geometry
+from eztfem.src.problem_class import Problem
+from eztfem.src.user_class import User
+from eztfem.src.gauss_legendre import gauss_legendre
+from eztfem.src.basis_function import basis_function
+from eztfem.src.build_system import build_system
+from eztfem.addons.poisson.poisson_elem import poisson_elem
+from eztfem.addons.poisson.poisson_deriv import poisson_deriv
+from eztfem.src.define_essential import define_essential
+from eztfem.src.fill_system_vector import fill_system_vector
+from eztfem.src.apply_essential import apply_essential
+from eztfem.src.vector_class import Vector
+from eztfem.src.deriv_vector import deriv_vector
+from eztfem.src.refcoor_nodal_points import refcoor_nodal_points
 from scipy.sparse.linalg import spsolve
 from examples.poisson.func import func
 class TestPytfem(unittest.TestCase):

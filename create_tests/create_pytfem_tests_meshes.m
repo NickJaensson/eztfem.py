@@ -77,16 +77,18 @@ cmd_mesh_py21 = "    mesh_tmp1 = quadrilateral2d([2, 3], 'quad4', origin=[-2.0, 
 
 %% write some header stuff
 
-writelines("# run with: python -m unittest dotest_meshes.py",fn);
+writelines("# run with: python -m unittest test_meshes.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
-mywritelines("from src.distribute_elements import distribute_elements");
-mywritelines("from src.quadrilateral2d import quadrilateral2d");
-mywritelines("from src.mesh_class import Mesh, Geometry");
-mywritelines("from src.line_1d import line1d");
-mywritelines("from addons.meshes.l_shape2d import l_shape2d");
-mywritelines("from addons.meshes.two_blocks2d import two_blocks2d");
-mywritelines("from src.mesh_merge import mesh_merge");
+mywritelines("import sys");
+mywritelines("sys.path.append('..')");
+mywritelines("from eztfem.src.distribute_elements import distribute_elements");
+mywritelines("from eztfem.src.quadrilateral2d import quadrilateral2d");
+mywritelines("from eztfem.src.mesh_class import Mesh, Geometry");
+mywritelines("from eztfem.src.line_1d import line1d");
+mywritelines("from eztfem.addons.meshes.l_shape2d import l_shape2d");
+mywritelines("from eztfem.addons.meshes.two_blocks2d import two_blocks2d");
+mywritelines("from eztfem.src.mesh_merge import mesh_merge");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
 

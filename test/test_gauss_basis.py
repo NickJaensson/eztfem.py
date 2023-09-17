@@ -1,8 +1,10 @@
-# run with: python -m unittest dotest_gauss_basis.py
+# run with: python -m unittest test_gauss_basis.py
 import numpy as np
 import unittest
-from src.gauss_legendre import gauss_legendre
-from src.basis_function import basis_function
+import sys
+sys.path.append('..')
+from eztfem.src.gauss_legendre import gauss_legendre
+from eztfem.src.basis_function import basis_function
 class TestPytfem(unittest.TestCase):
   def test_gauss_legendre1(self):
     xr_ez = np.array([

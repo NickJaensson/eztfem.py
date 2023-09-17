@@ -21,11 +21,13 @@ fn = "~/Desktop/eztfem.py/test/test_gauss_basis.py";
 
 %% write some header stuff
 
-writelines("# run with: python -m unittest dotest_gauss_basis.py",fn);
+writelines("# run with: python -m unittest test_gauss_basis.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
-mywritelines("from src.gauss_legendre import gauss_legendre");
-mywritelines("from src.basis_function import basis_function");
+mywritelines("import sys");
+mywritelines("sys.path.append('..')");
+mywritelines("from eztfem.src.gauss_legendre import gauss_legendre");
+mywritelines("from eztfem.src.basis_function import basis_function");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
 

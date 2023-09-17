@@ -81,27 +81,29 @@ cmd_deriv_vector =  "    user_py2 = user_py;" + ...
 
 %% write some header stuff
 
-writelines("# run with: python -m unittest dotest_poisson.py",fn);
+writelines("# run with: python -m unittest test_poisson.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
-mywritelines("from src.distribute_elements import distribute_elements");
-mywritelines("from src.quadrilateral2d import quadrilateral2d");
-mywritelines("from src.mesh_class import Mesh, Geometry");
-mywritelines("from src.problem_class import Problem");
-mywritelines("from src.user_class import User");
-mywritelines("from src.gauss_legendre import gauss_legendre");
-mywritelines("from src.basis_function import basis_function");
-mywritelines("from src.build_system import build_system");
-mywritelines("from addons.poisson.poisson_elem import poisson_elem");
-mywritelines("from addons.poisson.poisson_deriv import poisson_deriv");
+mywritelines("import sys");
+mywritelines("sys.path.append('..')");
+mywritelines("from eztfem.src.distribute_elements import distribute_elements");
+mywritelines("from eztfem.src.quadrilateral2d import quadrilateral2d");
+mywritelines("from eztfem.src.mesh_class import Mesh, Geometry");
+mywritelines("from eztfem.src.problem_class import Problem");
+mywritelines("from eztfem.src.user_class import User");
+mywritelines("from eztfem.src.gauss_legendre import gauss_legendre");
+mywritelines("from eztfem.src.basis_function import basis_function");
+mywritelines("from eztfem.src.build_system import build_system");
+mywritelines("from eztfem.addons.poisson.poisson_elem import poisson_elem");
+mywritelines("from eztfem.addons.poisson.poisson_deriv import poisson_deriv");
 
-mywritelines("from src.define_essential import define_essential");
+mywritelines("from eztfem.src.define_essential import define_essential");
 
-mywritelines("from src.fill_system_vector import fill_system_vector");
-mywritelines("from src.apply_essential import apply_essential");
-mywritelines("from src.vector_class import Vector");
-mywritelines("from src.deriv_vector import deriv_vector");
-mywritelines("from src.refcoor_nodal_points import refcoor_nodal_points");
+mywritelines("from eztfem.src.fill_system_vector import fill_system_vector");
+mywritelines("from eztfem.src.apply_essential import apply_essential");
+mywritelines("from eztfem.src.vector_class import Vector");
+mywritelines("from eztfem.src.deriv_vector import deriv_vector");
+mywritelines("from eztfem.src.refcoor_nodal_points import refcoor_nodal_points");
 
 mywritelines("from scipy.sparse.linalg import spsolve")
 mywritelines("from examples.poisson.func import func");

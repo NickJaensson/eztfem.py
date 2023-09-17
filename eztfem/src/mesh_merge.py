@@ -1,5 +1,5 @@
 import numpy as np
-from src.mesh_class import Mesh, Geometry
+from eztfem.src.mesh_class import Mesh, Geometry
 
 def mesh_merge(mesh1, mesh2, **kwargs):
     """

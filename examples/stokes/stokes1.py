@@ -6,23 +6,23 @@ sys.path.append('/Users/njaensson/Desktop/eztfem.py/')
 
 import numpy as np
 from pprint import pprint
-from src.quadrilateral2d import quadrilateral2d
-from src.problem_class import Problem
-from src.gauss_legendre import gauss_legendre
-from src.basis_function import basis_function
-from src.user_class import User
+from eztfem.src.quadrilateral2d import quadrilateral2d
+from eztfem.src.problem_class import Problem
+from eztfem.src.gauss_legendre import gauss_legendre
+from eztfem.src.basis_function import basis_function
+from eztfem.src.user_class import User
 from examples.stokes.func import func
 
-from src.build_system import build_system
-from src.define_essential import define_essential
-from src.fill_system_vector import fill_system_vector
-from src.apply_essential import apply_essential
-from src.refcoor_nodal_points import refcoor_nodal_points
-from src.deriv_vector import deriv_vector
+from eztfem.src.build_system import build_system
+from eztfem.src.define_essential import define_essential
+from eztfem.src.fill_system_vector import fill_system_vector
+from eztfem.src.apply_essential import apply_essential
+from eztfem.src.refcoor_nodal_points import refcoor_nodal_points
+from eztfem.src.deriv_vector import deriv_vector
 
-from addons.stokes.stokes_elem import stokes_elem
-from addons.stokes.stokes_pressure import stokes_pressure
-from addons.stokes.stokes_deriv import stokes_deriv
+from eztfem.addons.stokes.stokes_elem import stokes_elem
+from eztfem.addons.stokes.stokes_pressure import stokes_pressure
+from eztfem.addons.stokes.stokes_deriv import stokes_deriv
 
 from scipy.sparse.linalg import spsolve
 

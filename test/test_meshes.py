@@ -1,13 +1,15 @@
-# run with: python -m unittest dotest_meshes.py
+# run with: python -m unittest test_meshes.py
 import numpy as np
 import unittest
-from src.distribute_elements import distribute_elements
-from src.quadrilateral2d import quadrilateral2d
-from src.mesh_class import Mesh, Geometry
-from src.line_1d import line1d
-from addons.meshes.l_shape2d import l_shape2d
-from addons.meshes.two_blocks2d import two_blocks2d
-from src.mesh_merge import mesh_merge
+import sys
+sys.path.append('..')
+from eztfem.src.distribute_elements import distribute_elements
+from eztfem.src.quadrilateral2d import quadrilateral2d
+from eztfem.src.mesh_class import Mesh, Geometry
+from eztfem.src.line_1d import line1d
+from eztfem.addons.meshes.l_shape2d import l_shape2d
+from eztfem.addons.meshes.two_blocks2d import two_blocks2d
+from eztfem.src.mesh_merge import mesh_merge
 class TestPytfem(unittest.TestCase):
   def test01_quadrilaterial2d(self):
     mesh_py = quadrilateral2d([4,7],'quad4',origin=np.array([1,1]),length=np.array([7,5]))

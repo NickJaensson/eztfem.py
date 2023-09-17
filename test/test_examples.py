@@ -1,4 +1,6 @@
 from math import isclose
+import sys
+sys.path.append('..')
 import examples.poisson.poisson1
 import examples.poisson.poisson2
 import examples.poisson.poisson3

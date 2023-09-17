@@ -1,5 +1,5 @@
 import numpy as np
-from src.pos_array import pos_array
+from eztfem.src.pos_array import pos_array
 
 def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
     """
