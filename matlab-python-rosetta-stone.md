@@ -5,12 +5,18 @@ https://github.com/fortran-lang/webpage/blob/main/source/learn/rosetta_stone.md
 
 # Matlab-Python Rosetta Stone
 ## General
-- *Matlab is a software product* from the company Mathworks, which includes an
+- What is it exactly?
+  - *Matlab* is a software product from the company Mathworks, which includes an
 integrated development enverinment (IDE), the Matlab language, toolboxes etc.
-- *Python is an open-source language*, which can be run using several interpreters 
+  - *Python* is an open-source language, which can be run using several interpreters 
 or compilers (default is the CPython interpreter). Different IDEs are available to 
 use with Python.
-- The Matlab language uses % for comments, whereas Python uses # for comments.
+- Documentation: 
+  - *Matlab*: https://www.mathworks.com/help/matlab/
+  - *Python*: https://docs.python.org/3/
+- Commenting:
+  - *Matlab*: use % for comments.
+  - *Python*: uses # for comments.
 - In Matlab, a line that does not end with a semicolon (;), will generally write something to the command-line. In Python this is not the case.
 - Indentation in Matlab is optional for readibility, and the keyword ```end```
 is used the control flow. In Python, indentation is not optional as it plays a
@@ -18,8 +24,9 @@ crucial role in control flow.
 - line continutation
 - something on parentheses? () vs [] vs {}
 - row-major (Python) vs column major (Matlab)
-- Matlab: functions in same folder or use addpath, 
-  Python: modules in same folder and use import, for different 
+- Structuring a project:
+  - Matlab: functions in same folder or use addpath, 
+  - Python: modules in same folder and use import, for different 
   folder not in current folder use sys.path.append
 
 ## Working with variables
