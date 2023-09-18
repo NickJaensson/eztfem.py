@@ -1,16 +1,10 @@
-<!---
-Nice example:
-https://github.com/fortran-lang/webpage/blob/main/source/learn/rosetta_stone.md
--->
-
 # Matlab-Python Rosetta Stone
 ## General
 - What is it exactly?
-  - *Matlab* is a software product from the company Mathworks, which includes an
-integrated development enverinment (IDE), the Matlab language, toolboxes etc.
-  - *Python* is an open-source language, which can be run using several interpreters 
-or compilers (default is the CPython interpreter). Different IDEs are available to 
-use with Python.
+  - *Matlab* is a software product developed by the company Mathworks. Matlab includes an
+integrated development enverinment (IDE), the Matlab language, toolboxes, official support, and more.
+  - *Python* is an open-source programming language. The Python comminuty drives the 
+  development of interpreters/compilers, IDEs, packages, support, and more
 - Documentation: 
   - *Matlab*: https://www.mathworks.com/help/matlab/
   - *Python*: https://docs.python.org/3/
@@ -18,12 +12,13 @@ use with Python.
   - *Matlab*: use % for comments.
   - *Python*: uses # for comments.
 - In Matlab, a line that does not end with a semicolon (;), will generally write something to the command-line. In Python this is not the case.
+- Both Matlab and Python can be used *interactively*
 - Indentation in Matlab is optional for readibility, and the keyword ```end```
 is used the control flow. In Python, indentation is not optional as it plays a
 crucial role in control flow.
 - line continutation
 - something on parentheses? () vs [] vs {}
-- row-major (Python) vs column major (Matlab)
+- row-major (Python) vs column major (Matlab) (Reshape!)
 - Structuring a project:
   - Matlab: functions in same folder or use addpath, 
   - Python: modules in same folder and use import, for different 
@@ -92,7 +87,7 @@ print(a[0]) # will print the value "4"
 - Matlab: variables are boxes
 - Assignment statements in Python do not copy objects, they create bindings 
 between a target and an object. Use .copy() of .deepcopy() for real copies (Python)
-- buckets (Matlab) vs labels (Python)
+https://docs.python.org/3/library/copy.html
 - mutable vs immutable (Python)
 - Values copied when assigned to a new variable (Matlab)
 - Everything is an array in Matlab, everything is an object in Python
@@ -257,8 +252,8 @@ except:
 - Pass by value: Values copied when entering a function (Matlab)
 - Pass by assignment: For some datatypes value copied, and for some datatypes
                       reference passed
-- Matlab: pass-by-copy
-- Python: pass-by-assignment
+- Matlab: pass-by-copy https://www.mathworks.com/help/matlab/matlab_prog/avoid-unnecessary-copies-of-data.html
+- Python: pass-by-assignment https://docs.python.org/3/faq/programming.html#how-do-i-write-a-function-with-output-parameters-call-by-reference
 - neglecting output of function Matlab vs Python
 - function in Matlab at the end or in different file (main variables not known
   inside function)
