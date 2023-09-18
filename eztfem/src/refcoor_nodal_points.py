@@ -1,5 +1,5 @@
 import numpy as np
-from eztfem.src.mesh_class import Mesh
+from .mesh_class import Mesh
 
 def refcoor_nodal_points(mesh):
     """

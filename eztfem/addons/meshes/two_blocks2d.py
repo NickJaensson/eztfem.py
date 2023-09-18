@@ -1,5 +1,5 @@
-from eztfem.src.quadrilateral2d import quadrilateral2d
-from eztfem.src.mesh_merge import mesh_merge
+from ...src.quadrilateral2d import quadrilateral2d
+from ...src.mesh_merge import mesh_merge
 
 def two_blocks2d(ne, eltype, **kwargs):
     """

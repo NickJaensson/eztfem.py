@@ -1,6 +1,6 @@
 import numpy as np
-from eztfem.src.mesh_class import Mesh, Geometry
-from eztfem.src.distribute_elements import distribute_elements
+from .mesh_class import Mesh, Geometry
+from .distribute_elements import distribute_elements
 
 def line1d(ne, eltype, **kwargs):
     '''

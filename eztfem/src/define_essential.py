@@ -1,5 +1,5 @@
 import numpy as np
-from eztfem.src.pos_array import pos_array
+from .pos_array import pos_array
 
 def define_essential(mesh, problem, geometry, numbers, **kwargs):
     """

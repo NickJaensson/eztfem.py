@@ -1,5 +1,5 @@
 import numpy as np
-from eztfem.src.isoparametric_deformation_curve import isoparametric_deformation_curve
+from ...src.isoparametric_deformation_curve import isoparametric_deformation_curve
 
 def poisson_natboun_curve(elem, coor, user, pos):
     """

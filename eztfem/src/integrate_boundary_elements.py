@@ -1,6 +1,6 @@
 import numpy as np
-from eztfem.src.pos_array import pos_array
-from eztfem.src.pos_array_vec import pos_array_vec
+from .pos_array import pos_array
+from .pos_array_vec import pos_array_vec
 
 def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
     # Optional arguments

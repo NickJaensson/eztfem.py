@@ -1,7 +1,7 @@
 import numpy as np
-from eztfem.src.pos_array import pos_array
-from eztfem.src.pos_array_vec import pos_array_vec
-from eztfem.src.vector_class import Vector
+from .pos_array import pos_array
+from .pos_array_vec import pos_array_vec
+from .vector_class import Vector
 
 def deriv_vector(mesh, problem, element, user, **kwargs):
     """
