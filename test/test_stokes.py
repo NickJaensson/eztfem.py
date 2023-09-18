@@ -3,29 +3,13 @@ import numpy as np
 import unittest
 import sys
 sys.path.append('..')
-from eztfem.src.distribute_elements import distribute_elements
-from eztfem.src.quadrilateral2d import quadrilateral2d
-from eztfem.src.mesh_class import Mesh, Geometry
-from eztfem.src.problem_class import Problem
-from eztfem.src.user_class import User
-from eztfem.src.gauss_legendre import gauss_legendre
-from eztfem.src.basis_function import basis_function
-from eztfem.src.build_system import build_system
-from eztfem.addons.stokes.stokes_elem import stokes_elem
-from eztfem.addons.stokes.stokes_pressure import stokes_pressure
-from eztfem.addons.stokes.stokes_deriv import stokes_deriv
-from eztfem.src.define_essential import define_essential
-from eztfem.src.fill_system_vector import fill_system_vector
-from eztfem.src.apply_essential import apply_essential
-from eztfem.src.vector_class import Vector
-from eztfem.src.deriv_vector import deriv_vector
-from eztfem.src.refcoor_nodal_points import refcoor_nodal_points
+import eztfem as ezt
 from scipy.sparse.linalg import spsolve
 from examples.poisson.func import func
 class TestPytfem(unittest.TestCase):
   def test_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 35
     mesh_ez.elshape = 6
@@ -87,7 +71,7 @@ class TestPytfem(unittest.TestCase):
               35,
               29,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 2
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 3
@@ -121,7 +105,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 2
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 3
@@ -150,7 +134,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 2
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 3
@@ -184,7 +168,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 2
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 3
@@ -218,10 +202,10 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test_problem_definition(self):
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
     elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T
-    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)
-    problem_ez = Problem(mesh_py,elementdof_py)
+    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)
+    problem_ez = ezt.Problem(mesh_py,elementdof_py)
     problem_ez.nphysq = 2
     problem_ez.nvec = 3
     problem_ez.vec_elnumdegfd = np.array([
@@ -332,7 +316,7 @@ class TestPytfem(unittest.TestCase):
     problem_ez.maxvecnoddegfd = 2
     self.assertTrue(problem_py==problem_ez,'problem_definition failed test!' )
   def test_user(self):
-    user_ez = User()
+    user_ez = ezt.User()
     user_ez.xr = np.array([
     [  -7.7459666924148340e-01,  -7.7459666924148340e-01,],
     [   0.0000000000000000e+00,  -7.7459666924148340e-01,],
@@ -481,12 +465,12 @@ class TestPytfem(unittest.TestCase):
     user_ez.coorsys = 0
     user_ez.mu = 1
     user_ez.funcnr = 0
-    user_py = User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
-    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )
-    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )
+    user_py = ezt.User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
+    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )
+    user_py.phi, user_py.dphi = ezt.basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = ezt.basis_function('quad','Q1', user_py.xr )
     self.assertTrue(user_py==user_ez,'users failed test!' )
   def test_gauss_legendre(self):
-    user_ez = User()
+    user_ez = ezt.User()
     user_ez.xr = np.array([
     [  -7.7459666924148340e-01,  -7.7459666924148340e-01,],
     [   0.0000000000000000e+00,  -7.7459666924148340e-01,],
@@ -635,13 +619,13 @@ class TestPytfem(unittest.TestCase):
     user_ez.coorsys = 0
     user_ez.mu = 1
     user_ez.funcnr = 0
-    user_py = User()
-    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )
+    user_py = ezt.User()
+    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )
     check1=np.allclose(user_py.xr,user_ez.xr,atol=1e-15,rtol=0)
     check2=np.allclose(user_py.wg,user_ez.wg,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
   def test_basis_function(self):
-    user_ez = User()
+    user_ez = ezt.User()
     user_ez.xr = np.array([
     [  -7.7459666924148340e-01,  -7.7459666924148340e-01,],
     [   0.0000000000000000e+00,  -7.7459666924148340e-01,],
@@ -790,17 +774,17 @@ class TestPytfem(unittest.TestCase):
     user_ez.coorsys = 0
     user_ez.mu = 1
     user_ez.funcnr = 0
-    user_py = User()
-    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )
-    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )
+    user_py = ezt.User()
+    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )
+    user_py.phi, user_py.dphi = ezt.basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = ezt.basis_function('quad','Q1', user_py.xr )
     check1=np.allclose(user_py.phi,user_ez.phi,atol=1e-15,rtol=0)
     check2=np.allclose(user_py.dphi,user_ez.dphi,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
   def test_build_system(self):
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
     elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T
-    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)
-    problem_ez = Problem(mesh_py,elementdof_py)
+    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)
+    problem_ez = ezt.Problem(mesh_py,elementdof_py)
     problem_ez.nphysq = 2
     problem_ez.nvec = 3
     problem_ez.vec_elnumdegfd = np.array([
@@ -909,7 +893,7 @@ class TestPytfem(unittest.TestCase):
     problem_ez.numdegfd = 82
     problem_ez.maxnoddegfd = 3
     problem_ez.maxvecnoddegfd = 2
-    user_ez = User()
+    user_ez = ezt.User()
     user_ez.xr = np.array([
     [  -7.7459666924148340e-01,  -7.7459666924148340e-01,],
     [   0.0000000000000000e+00,  -7.7459666924148340e-01,],
@@ -1058,9 +1042,9 @@ class TestPytfem(unittest.TestCase):
     user_ez.coorsys = 0
     user_ez.mu = 1
     user_ez.funcnr = 0
-    user_py = User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
-    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )
-    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )
+    user_py = ezt.User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
+    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )
+    user_py.phi, user_py.dphi = ezt.basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = ezt.basis_function('quad','Q1', user_py.xr )
     A_ez = np.array([
     [   1.6814634842143761e+00,   1.7777339457258506e-01,   1.2450335107007068e-01,  -2.6499958493614377e+00,  -3.7306274775633591e-01,   2.7994274562925692e-01,   1.0320718038489611e-01,   3.3342935739608962e-02,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   9.7980397378486661e-01,   4.1781703042296431e-01,   1.4395801149503767e-01,  -4.0284288511037403e-01,  -1.7717257321416813e-01,   8.9123161587863126e-02,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,  -5.9533082640689705e-01,  -9.3422980693339860e-02,  -8.4211441810015195e-03,   3.3634317266075797e-01,   1.0671685930659017e-01,   9.8786119820785251e-04,  -2.5309012714848901e-02,  -3.9031278209478160e-18,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,],
     [   1.7777339457258506e-01,   9.5988031091114812e-01,   4.2146428678426599e-02,   2.9360391891033077e-01,  -1.2660727935015452e+00,  -6.3459486281770602e-02,   1.0927259680072353e-01,  -7.1449000635079622e-07,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,  -2.4884963624370252e-01,   3.5486260069289699e-01,  -4.0284288511037403e-01,   2.3136555050837938e-03,   8.9123161587863126e-02,  -5.2310028359373824e-02,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   7.3243685973326852e-02,  -2.8092641662109369e-01,   8.4291431829015828e-03,   1.0671685930659014e-01,   1.7716917798527029e-01,  -2.5309012714848898e-02,  -4.1891034131096190e-03,   3.7947076036992655e-18,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,],
@@ -1229,14 +1213,14 @@ class TestPytfem(unittest.TestCase):
        0.0000000000000000e+00,
        0.0000000000000000e+00,
     ])
-    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)
+    A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.stokes_elem, user_py)
     check1=np.allclose(A_py.toarray(),A_ez,atol=1e-12,rtol=0)
     check2=np.allclose(f_py,f_ez,atol=1e-12,rtol=0)
     self.assertTrue(check1 and check2,'build_system failed test!' )
   def test_define_essential(self):
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
     elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T
-    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)
+    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)
     iess_ez = np.array([
                1,
                2,
@@ -1280,12 +1264,12 @@ class TestPytfem(unittest.TestCase):
               80,
               81,
     ],dtype=int)
-    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
+    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = ezt.define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
     self.assertTrue((iess_ez-1==iess_py).all(),'define_essential failed test!' )
   def test_fill_system_vector(self):
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
     elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T
-    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)
+    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)
     uess_ez = np.array([
        2.0000000000000000e+00,
        0.0000000000000000e+00,
@@ -1370,20 +1354,20 @@ class TestPytfem(unittest.TestCase):
        0.0000000000000000e+00,
        0.0000000000000000e+00,
     ])
-    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
-    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
+    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = ezt.define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
+    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
     self.assertTrue(np.allclose(uess_py,uess_ez,atol=1e-15,rtol=0),'fill_system_vector failed test!' )
   def test_apply_essential(self):
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
     elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T
-    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)
-    user_py = User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
-    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )
-    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )
-    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)
-    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
-    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
-    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )
+    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)
+    user_py = ezt.User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
+    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )
+    user_py.phi, user_py.dphi = ezt.basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = ezt.basis_function('quad','Q1', user_py.xr )
+    A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.stokes_elem, user_py)
+    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = ezt.define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
+    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
+    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
     A_ez2 = np.array([
     [   1.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,],
     [   0.0000000000000000e+00,   1.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,],
@@ -1640,21 +1624,21 @@ class TestPytfem(unittest.TestCase):
        0.0000000000000000e+00,
       -5.2315568085336457e+00,
     ])
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
     elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T
-    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)
-    user_py = User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
-    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )
-    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )
-    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)
-    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
-    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
-    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )
+    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)
+    user_py = ezt.User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
+    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )
+    user_py.phi, user_py.dphi = ezt.basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = ezt.basis_function('quad','Q1', user_py.xr )
+    A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.stokes_elem, user_py)
+    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = ezt.define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
+    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
+    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
     u_py = spsolve(A_py2.tocsr(), f_py2)
     #print('max diff = ',(abs(u_ez-u_py)).max())
     self.assertTrue(np.allclose(u_py,u_ez,atol=1e-12,rtol=0),'solve failed test, max diff = '+str((abs(u_ez-u_py)).max()) )
   def test_deriv_vector(self):
-    pressure_ez = Vector()
+    pressure_ez = ezt.Vector()
     pressure_ez.vec = 3
     pressure_ez.u = np.array([
        0.0000000000000000e+00,
@@ -1694,21 +1678,21 @@ class TestPytfem(unittest.TestCase):
       -5.2315568085336457e+00,
     ])
     pressure_ez.vec += -1 # compensate for Python indexing
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
     elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T
-    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)
-    user_py = User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
-    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )
-    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )
-    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)
-    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
-    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
-    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )
+    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)
+    user_py = ezt.User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
+    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )
+    user_py.phi, user_py.dphi = ezt.basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = ezt.basis_function('quad','Q1', user_py.xr )
+    A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.stokes_elem, user_py)
+    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = ezt.define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
+    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
+    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
     u_py = spsolve(A_py2.tocsr(), f_py2)
-    user_py2 = user_py;    xr_py = refcoor_nodal_points ( mesh_py );    user_py2.psi, _ = basis_function('quad','Q1', xr_py );    user_py2.u = u_py;    pressure_py = deriv_vector ( mesh_py, problem_py, stokes_pressure, user_py2 )
+    user_py2 = user_py;    xr_py = ezt.refcoor_nodal_points ( mesh_py );    user_py2.psi, _ = ezt.basis_function('quad','Q1', xr_py );    user_py2.u = u_py;    pressure_py = ezt.deriv_vector ( mesh_py, problem_py, ezt.stokes_pressure, user_py2 )
     self.assertTrue(pressure_ez==pressure_py,'deriv_vector failed test, max diff = '+str((abs(pressure_ez.u-pressure_py.u)).max()) )
   def test_deriv_vector2(self):
-    divu_ez = Vector()
+    divu_ez = ezt.Vector()
     divu_ez.vec = 3
     divu_ez.u = np.array([
        2.2717450038275970e+00,
@@ -1748,7 +1732,7 @@ class TestPytfem(unittest.TestCase):
        1.7047668657225756e-01,
     ])
     divu_ez.vec += -1 # compensate for Python indexing
-    gammadot_ez = Vector()
+    gammadot_ez = ezt.Vector()
     gammadot_ez.vec = 3
     gammadot_ez.u = np.array([
        4.2985669030418023e+00,
@@ -1788,16 +1772,16 @@ class TestPytfem(unittest.TestCase):
        2.5737050922513163e+00,
     ])
     gammadot_ez.vec += -1 # compensate for Python indexing
-    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
     elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T
-    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)
-    user_py = User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
-    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )
-    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )
-    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)
-    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
-    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
-    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )
+    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)
+    user_py = ezt.User();    user_py.coorsys = 0;    user_py.mu = 1;    user_py.funcnr = 0;     user_py.func = func
+    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )
+    user_py.phi, user_py.dphi = ezt.basis_function('quad','Q2', user_py.xr );    user_py.psi, _ = ezt.basis_function('quad','Q1', user_py.xr )
+    A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.stokes_elem, user_py)
+    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );    iess_py = ezt.define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )
+    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
+    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
     u_py = spsolve(A_py2.tocsr(), f_py2)
-    user_py2 = user_py;    xr_py = refcoor_nodal_points ( mesh_py );    user_py2.phi, user_py2.dphi = basis_function('quad','Q2', xr_py );    user_py2.u = u_py;    user_py2.comp = 6;    divu_py = deriv_vector ( mesh_py, problem_py, stokes_deriv, user_py2 );    user_py2.comp = 7;    gammadot_py = deriv_vector ( mesh_py, problem_py, stokes_deriv, user_py2 )
+    user_py2 = user_py;    xr_py = ezt.refcoor_nodal_points ( mesh_py );    user_py2.phi, user_py2.dphi = ezt.basis_function('quad','Q2', xr_py );    user_py2.u = u_py;    user_py2.comp = 6;    divu_py = ezt.deriv_vector ( mesh_py, problem_py, ezt.stokes_deriv, user_py2 );    user_py2.comp = 7;    gammadot_py = ezt.deriv_vector ( mesh_py, problem_py, ezt.stokes_deriv, user_py2 )
     self.assertTrue(divu_ez==divu_py and gammadot_ez==gammadot_py,'deriv_vector2 failed test, max diff = '+str((abs(divu_ez.u-divu_py.u)).max())+' and '+str((abs(gammadot_ez.u-gammadot_py.u)).max()))

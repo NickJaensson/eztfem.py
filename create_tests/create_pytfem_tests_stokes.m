@@ -63,45 +63,45 @@ gammadot_ez = deriv_vector ( mesh_ez, problem_ez, @stokes_deriv, user_ez2 ) ;
 
 %% define the same commands for pytfem
 
-cmd_mesh_py =       "    mesh_py = quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
+cmd_mesh_py =       "    mesh_py = ezt.quadrilateral2d([3,2],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))";
 
 cmd_elementdof_py = "    elementdof_py = np.array([[2,2,2,2,2,2,2,2,2],[1,0,1,0,1,0,1,0,0],[1,1,1,1,1,1,1,1,1]]).T";
-cmd_problem_py =    "    problem_py = Problem(mesh_py,elementdof_py,nphysq=2)";
-cmd_fill_user_py =  "    user_py = User();" + ...
+cmd_problem_py =    "    problem_py = ezt.Problem(mesh_py,elementdof_py,nphysq=2)";
+cmd_fill_user_py =  "    user_py = ezt.User();" + ...
                     "    user_py.coorsys = 0;"+...
                     "    user_py.mu = 1;"+...
                     "    user_py.funcnr = 0; "+...
                     "    user_py.func = func";
-cmd_gauss_py =      "    user_py.xr, user_py.wg = gauss_legendre('quad',n=3 )";
-cmd_basis_py =      "    user_py.phi, user_py.dphi = basis_function('quad','Q2', user_py.xr );"+...
-                    "    user_py.psi, _ = basis_function('quad','Q1', user_py.xr )";
+cmd_gauss_py =      "    user_py.xr, user_py.wg = ezt.gauss_legendre('quad',n=3 )";
+cmd_basis_py =      "    user_py.phi, user_py.dphi = ezt.basis_function('quad','Q2', user_py.xr );"+...
+                    "    user_py.psi, _ = ezt.basis_function('quad','Q1', user_py.xr )";
 
-cmd_build_sys_py =  "    A_py,f_py = build_system ( mesh_py, problem_py, stokes_elem, user_py)";
-cmd_define_ess_py = "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );"+...
-                    "    iess_py = define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );"+...
-                    "    iess_py = define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )";
+cmd_build_sys_py =  "    A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.stokes_elem, user_py)";
+cmd_define_ess_py = "    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );"+...
+                    "    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=1, iessp=iess_py );"+...
+                    "    iess_py = ezt.define_essential ( mesh_py, problem_py,'points', 0, physq=1, iessp=iess_py  )";
 
-cmd_fill_sys_py =   "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );"+...
-                    "    uess_py = fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )";
+cmd_fill_sys_py =   "    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );"+...
+                    "    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )";
 
-cmd_apply_ess_py =  "    A_py2, f_py2, _ = apply_essential ( A_py, f_py, uess_py, iess_py )";
+cmd_apply_ess_py =  "    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )";
 
 cmd_solve_py     =  "    u_py = spsolve(A_py2.tocsr(), f_py2)";
 
 cmd_deriv_vector =  "    user_py2 = user_py;" + ...
-                    "    xr_py = refcoor_nodal_points ( mesh_py );"+...
-                    "    user_py2.psi, _ = basis_function('quad','Q1', xr_py );"+...
+                    "    xr_py = ezt.refcoor_nodal_points ( mesh_py );"+...
+                    "    user_py2.psi, _ = ezt.basis_function('quad','Q1', xr_py );"+...
                     "    user_py2.u = u_py;"+...
-                    "    pressure_py = deriv_vector ( mesh_py, problem_py, stokes_pressure, user_py2 )";
+                    "    pressure_py = ezt.deriv_vector ( mesh_py, problem_py, ezt.stokes_pressure, user_py2 )";
 
 cmd_deriv_vector2 =  "    user_py2 = user_py;" + ...
-                    "    xr_py = refcoor_nodal_points ( mesh_py );"+... 
-                    "    user_py2.phi, user_py2.dphi = basis_function('quad','Q2', xr_py );"+...
+                    "    xr_py = ezt.refcoor_nodal_points ( mesh_py );"+... 
+                    "    user_py2.phi, user_py2.dphi = ezt.basis_function('quad','Q2', xr_py );"+...
                     "    user_py2.u = u_py;"+...
                     "    user_py2.comp = 6;"+...
-                    "    divu_py = deriv_vector ( mesh_py, problem_py, stokes_deriv, user_py2 );"+...
+                    "    divu_py = ezt.deriv_vector ( mesh_py, problem_py, ezt.stokes_deriv, user_py2 );"+...
                     "    user_py2.comp = 7;"+...
-                    "    gammadot_py = deriv_vector ( mesh_py, problem_py, stokes_deriv, user_py2 )";
+                    "    gammadot_py = ezt.deriv_vector ( mesh_py, problem_py, ezt.stokes_deriv, user_py2 )";
 
 
 %% write some header stuff
@@ -111,26 +111,7 @@ mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("import sys");
 mywritelines("sys.path.append('..')");
-mywritelines("from eztfem.src.distribute_elements import distribute_elements");
-mywritelines("from eztfem.src.quadrilateral2d import quadrilateral2d");
-mywritelines("from eztfem.src.mesh_class import Mesh, Geometry");
-mywritelines("from eztfem.src.problem_class import Problem");
-mywritelines("from eztfem.src.user_class import User");
-mywritelines("from eztfem.src.gauss_legendre import gauss_legendre");
-mywritelines("from eztfem.src.basis_function import basis_function");
-mywritelines("from eztfem.src.build_system import build_system");
-mywritelines("from eztfem.addons.stokes.stokes_elem import stokes_elem");
-mywritelines("from eztfem.addons.stokes.stokes_pressure import stokes_pressure");
-mywritelines("from eztfem.addons.stokes.stokes_deriv import stokes_deriv");
-
-mywritelines("from eztfem.src.define_essential import define_essential");
-
-mywritelines("from eztfem.src.fill_system_vector import fill_system_vector");
-mywritelines("from eztfem.src.apply_essential import apply_essential");
-mywritelines("from eztfem.src.vector_class import Vector");
-mywritelines("from eztfem.src.deriv_vector import deriv_vector");
-mywritelines("from eztfem.src.refcoor_nodal_points import refcoor_nodal_points");
-
+mywritelines("import eztfem as ezt");
 mywritelines("from scipy.sparse.linalg import spsolve")
 mywritelines("from examples.poisson.func import func");
 
@@ -141,10 +122,10 @@ mywritelines("class TestPytfem(unittest.TestCase):");
 
 mywritelines("  def test_quadrilaterial2d(self):");
 mywritelines(cmd_mesh_py);
-mywritelines("    mesh_ez = Mesh()");
+mywritelines("    mesh_ez = ezt.Mesh()");
 write_attrib("    ",mesh_ez,"mesh_ez")
 for i=1:mesh_ez.ncurves
-    mywritelines("    mesh_ez.curves.append(Geometry())");
+    mywritelines("    mesh_ez.curves.append(ezt.Geometry())");
     write_attrib("    ",mesh_ez.curves(i),"mesh_ez.curves["+string(i-1)+"]")
     mywritelines("    mesh_ez.curves["+string(i-1)+"].topology = mesh_ez.curves["...
         +string(i-1)+"].topology - 1 # Python indexing");
@@ -163,7 +144,7 @@ mywritelines("  def test_problem_definition(self):");
 mywritelines(cmd_mesh_py);
 mywritelines(cmd_elementdof_py);
 mywritelines(cmd_problem_py);
-mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
+mywritelines("    problem_ez = ezt.Problem(mesh_py,elementdof_py)");
 write_attrib("    ",problem_ez,"problem_ez")
 mywritelines("    self.assertTrue(problem_py==problem_ez,'problem_definition failed test!' )");
 
@@ -172,7 +153,7 @@ mywritelines("    self.assertTrue(problem_py==problem_ez,'problem_definition fai
 % NOTE: not all attributes checked in Python code, see user.py
 
 mywritelines("  def test_user(self):");
-mywritelines("    user_ez = User()");
+mywritelines("    user_ez = ezt.User()");
 write_attrib("    ",user_ez,"user_ez")
 mywritelines(cmd_fill_user_py);
 mywritelines(cmd_gauss_py);
@@ -183,9 +164,9 @@ mywritelines("    self.assertTrue(user_py==user_ez,'users failed test!' )");
 %% test for gauss_legendre
 
 mywritelines("  def test_gauss_legendre(self):");
-mywritelines("    user_ez = User()");
+mywritelines("    user_ez = ezt.User()");
 write_attrib("    ",user_ez,"user_ez")
-mywritelines("    user_py = User()");
+mywritelines("    user_py = ezt.User()");
 mywritelines(cmd_gauss_py);
 mywritelines("    check1=np.allclose(user_py.xr,user_ez.xr,atol=1e-15,rtol=0)")
 mywritelines("    check2=np.allclose(user_py.wg,user_ez.wg,atol=1e-15,rtol=0)")
@@ -195,9 +176,9 @@ mywritelines("    self.assertTrue(check1 and check2,'gauss_legendre failed test!
 %% test for basis_function
 
 mywritelines("  def test_basis_function(self):");
-mywritelines("    user_ez = User()");
+mywritelines("    user_ez = ezt.User()");
 write_attrib("    ",user_ez,"user_ez")
-mywritelines("    user_py = User()");
+mywritelines("    user_py = ezt.User()");
 mywritelines(cmd_gauss_py);
 mywritelines(cmd_basis_py);
 mywritelines("    check1=np.allclose(user_py.phi,user_ez.phi,atol=1e-15,rtol=0)")
@@ -211,9 +192,9 @@ mywritelines("  def test_build_system(self):");
 mywritelines(cmd_mesh_py);
 mywritelines(cmd_elementdof_py);
 mywritelines(cmd_problem_py);
-mywritelines("    problem_ez = Problem(mesh_py,elementdof_py)");
+mywritelines("    problem_ez = ezt.Problem(mesh_py,elementdof_py)");
 write_attrib("    ",problem_ez,"problem_ez")
-mywritelines("    user_ez = User()");
+mywritelines("    user_ez = ezt.User()");
 write_attrib("    ",user_ez,"user_ez")
 mywritelines(cmd_fill_user_py);
 mywritelines(cmd_gauss_py);
@@ -294,7 +275,7 @@ mywritelines("    self.assertTrue(np.allclose(u_py,u_ez,atol=1e-12,rtol=0)," + .
 %% tests for deriv_vector
 
 mywritelines("  def test_deriv_vector(self):");
-mywritelines("    pressure_ez = Vector()");
+mywritelines("    pressure_ez = ezt.Vector()");
 write_attrib("    ",pressure_ez,"pressure_ez")
 mywritelines("    pressure_ez.vec += -1 # compensate for Python indexing"); 
 
@@ -314,10 +295,10 @@ mywritelines("    self.assertTrue(pressure_ez==pressure_py," + ...
     "'deriv_vector failed test, max diff = '+str((abs(pressure_ez.u-pressure_py.u)).max()) )");
 
 mywritelines("  def test_deriv_vector2(self):");
-mywritelines("    divu_ez = Vector()");
+mywritelines("    divu_ez = ezt.Vector()");
 write_attrib("    ",divu_ez,"divu_ez")
 mywritelines("    divu_ez.vec += -1 # compensate for Python indexing");
-mywritelines("    gammadot_ez = Vector()");
+mywritelines("    gammadot_ez = ezt.Vector()");
 write_attrib("    ",gammadot_ez,"gammadot_ez")
 mywritelines("    gammadot_ez.vec += -1 # compensate for Python indexing"); 
 

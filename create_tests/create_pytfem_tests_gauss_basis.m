@@ -26,8 +26,7 @@ mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("import sys");
 mywritelines("sys.path.append('..')");
-mywritelines("from eztfem.src.gauss_legendre import gauss_legendre");
-mywritelines("from eztfem.src.basis_function import basis_function");
+mywritelines("import eztfem as ezt");
 
 mywritelines("class TestPytfem(unittest.TestCase):");
 
@@ -75,11 +74,11 @@ for ii = 1:size(tests,1)
     %% define the same commands for pytfem
     
     if strcmp(shape,'triangle')
-        cmd_gauss_py = "    xr_py, wg_py = gauss_legendre('"+shape+"',p="+string(n_or_p)+" )";
+        cmd_gauss_py = "    xr_py, wg_py = ezt.gauss_legendre('"+shape+"',p="+string(n_or_p)+" )";
     else
-        cmd_gauss_py = "    xr_py, wg_py = gauss_legendre('"+shape+"',n="+string(n_or_p)+" )";
+        cmd_gauss_py = "    xr_py, wg_py = ezt.gauss_legendre('"+shape+"',n="+string(n_or_p)+" )";
     end
-    cmd_basis_py = "    phi_py, dphi_py = basis_function('"+shape+"','"+intpol+"', xr_py )";
+    cmd_basis_py = "    phi_py, dphi_py = ezt.basis_function('"+shape+"','"+intpol+"', xr_py )";
     
     
     %% test for gauss_legendre

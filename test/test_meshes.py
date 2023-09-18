@@ -3,17 +3,11 @@ import numpy as np
 import unittest
 import sys
 sys.path.append('..')
-from eztfem.src.distribute_elements import distribute_elements
-from eztfem.src.quadrilateral2d import quadrilateral2d
-from eztfem.src.mesh_class import Mesh, Geometry
-from eztfem.src.line_1d import line1d
-from eztfem.addons.meshes.l_shape2d import l_shape2d
-from eztfem.addons.meshes.two_blocks2d import two_blocks2d
-from eztfem.src.mesh_merge import mesh_merge
+import eztfem as ezt
 class TestPytfem(unittest.TestCase):
   def test01_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([4,7],'quad4',origin=np.array([1,1]),length=np.array([7,5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([4,7],'quad4',origin=np.array([1,1]),length=np.array([7,5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 40
     mesh_ez.elshape = 5
@@ -75,7 +69,7 @@ class TestPytfem(unittest.TestCase):
               40,
               36,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -104,7 +98,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -142,7 +136,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -171,7 +165,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -214,8 +208,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test02_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([7,5],'quad4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([7,5],'quad4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 48
     mesh_ez.elshape = 5
@@ -285,7 +279,7 @@ class TestPytfem(unittest.TestCase):
               48,
               41,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -323,7 +317,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -355,7 +349,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -393,7 +387,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -430,8 +424,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test03_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([4,7],'quad9',origin=np.array([1,1]),length=np.array([7,5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([4,7],'quad9',origin=np.array([1,1]),length=np.array([7,5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 135
     mesh_ez.elshape = 6
@@ -593,7 +587,7 @@ class TestPytfem(unittest.TestCase):
              135,
              127,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 2
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 3
@@ -632,7 +626,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 2
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 3
@@ -686,7 +680,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 2
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 3
@@ -725,7 +719,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 2
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 3
@@ -784,8 +778,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test04_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([7,5],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([7,5],'quad9',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 165
     mesh_ez.elshape = 6
@@ -977,7 +971,7 @@ class TestPytfem(unittest.TestCase):
              165,
              151,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 2
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 3
@@ -1031,7 +1025,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 2
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 3
@@ -1075,7 +1069,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 2
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 3
@@ -1129,7 +1123,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 2
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 3
@@ -1178,8 +1172,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test05_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([4,7],'quad5',origin=np.array([1,1]),length=np.array([7,5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([4,7],'quad5',origin=np.array([1,1]),length=np.array([7,5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 68
     mesh_ez.elshape = 9
@@ -1270,7 +1264,7 @@ class TestPytfem(unittest.TestCase):
               68,
               64,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -1299,7 +1293,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -1337,7 +1331,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -1366,7 +1360,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -1409,8 +1403,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test06_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([7,5],'quad5',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([7,5],'quad5',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 83
     mesh_ez.elshape = 9
@@ -1516,7 +1510,7 @@ class TestPytfem(unittest.TestCase):
               83,
               76,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -1554,7 +1548,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -1586,7 +1580,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -1624,7 +1618,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -1661,8 +1655,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test07_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([4,7],'tria3',origin=np.array([1,1]),length=np.array([7,5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([4,7],'tria3',origin=np.array([1,1]),length=np.array([7,5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 40
     mesh_ez.elshape = 3
@@ -1723,7 +1717,7 @@ class TestPytfem(unittest.TestCase):
               40,
               36,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -1752,7 +1746,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -1790,7 +1784,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -1819,7 +1813,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -1862,8 +1856,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test08_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([7,5],'tria3',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([7,5],'tria3',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 48
     mesh_ez.elshape = 3
@@ -1932,7 +1926,7 @@ class TestPytfem(unittest.TestCase):
               48,
               41,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -1970,7 +1964,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -2002,7 +1996,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -2040,7 +2034,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -2077,8 +2071,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test09_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([4,7],'tria4',origin=np.array([1,1]),length=np.array([7,5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([4,7],'tria4',origin=np.array([1,1]),length=np.array([7,5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 96
     mesh_ez.elshape = 10
@@ -2196,7 +2190,7 @@ class TestPytfem(unittest.TestCase):
               96,
               92,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -2225,7 +2219,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -2263,7 +2257,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -2292,7 +2286,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -2335,8 +2329,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test10_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([7,5],'tria4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([7,5],'tria4',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 118
     mesh_ez.elshape = 10
@@ -2476,7 +2470,7 @@ class TestPytfem(unittest.TestCase):
              118,
              111,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -2514,7 +2508,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -2546,7 +2540,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -2584,7 +2578,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -2621,8 +2615,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test11_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([4,7],'tria6',origin=np.array([1,1]),length=np.array([7,5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([4,7],'tria6',origin=np.array([1,1]),length=np.array([7,5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 135
     mesh_ez.elshape = 4
@@ -2781,7 +2775,7 @@ class TestPytfem(unittest.TestCase):
              135,
              127,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 2
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 3
@@ -2820,7 +2814,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 2
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 3
@@ -2874,7 +2868,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 2
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 3
@@ -2913,7 +2907,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 2
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 3
@@ -2972,8 +2966,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test12_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([7,5],'tria6',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([7,5],'tria6',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 165
     mesh_ez.elshape = 4
@@ -3162,7 +3156,7 @@ class TestPytfem(unittest.TestCase):
              165,
              151,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 2
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 3
@@ -3216,7 +3210,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 2
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 3
@@ -3260,7 +3254,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 2
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 3
@@ -3314,7 +3308,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 2
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 3
@@ -3363,8 +3357,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test13_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([4,7],'tria7',origin=np.array([1,1]),length=np.array([7,5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([4,7],'tria7',origin=np.array([1,1]),length=np.array([7,5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 191
     mesh_ez.elshape = 7
@@ -3580,7 +3574,7 @@ class TestPytfem(unittest.TestCase):
              191,
              183,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 2
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 3
@@ -3619,7 +3613,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 2
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 3
@@ -3673,7 +3667,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 2
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 3
@@ -3712,7 +3706,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 2
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 3
@@ -3771,8 +3765,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test14_quadrilaterial2d(self):
-    mesh_py = quadrilateral2d([7,5],'tria7',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
-    mesh_ez = Mesh()
+    mesh_py = ezt.quadrilateral2d([7,5],'tria7',vertices=np.array([[1,1],[2,2],[2,4],[1,4]]),ratio=np.array([1,2,3,4]),factor=np.array([1.2,1.3,1.4,1.5]))
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 235
     mesh_ez.elshape = 7
@@ -4032,7 +4026,7 @@ class TestPytfem(unittest.TestCase):
              235,
              221,
     ],dtype=int)
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 2
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 3
@@ -4086,7 +4080,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 2
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 3
@@ -4130,7 +4124,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 2
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 3
@@ -4184,7 +4178,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 2
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 3
@@ -4233,8 +4227,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test15_quadrilaterial2d(self):
-    mesh_py = line1d(5,'line2')
-    mesh_ez = Mesh()
+    mesh_py = ezt.line1d(5,'line2')
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 1
     mesh_ez.nnodes = 6
     mesh_ez.elshape = 1
@@ -4263,8 +4257,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test16_quadrilaterial2d(self):
-    mesh_py = line1d(5,'line2',ratio=1,factor=1.2,length=5.0,origin=2.0)
-    mesh_ez = Mesh()
+    mesh_py = ezt.line1d(5,'line2',ratio=1,factor=1.2,length=5.0,origin=2.0)
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 1
     mesh_ez.nnodes = 6
     mesh_ez.elshape = 1
@@ -4293,8 +4287,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test17_quadrilaterial2d(self):
-    mesh_py = line1d(5,'line3')
-    mesh_ez = Mesh()
+    mesh_py = ezt.line1d(5,'line3')
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 1
     mesh_ez.nnodes = 11
     mesh_ez.elshape = 2
@@ -4329,8 +4323,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test18_quadrilaterial2d(self):
-    mesh_py = line1d(5,'line3',ratio=1,factor=1.2,length=5.0,origin=2.0)
-    mesh_ez = Mesh()
+    mesh_py = ezt.line1d(5,'line3',ratio=1,factor=1.2,length=5.0,origin=2.0)
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 1
     mesh_ez.nnodes = 11
     mesh_ez.elshape = 2
@@ -4365,8 +4359,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test19_quadrilaterial2d(self):
-    mesh_py = l_shape2d([4,5,6,7],'quad4',factor=[10,10,10,10],origin=[-1,2],length=[1,2,3,4])
-    mesh_ez = Mesh()
+    mesh_py = ezt.l_shape2d([4,5,6,7],'quad4',factor=[10,10,10,10],origin=[-1,2],length=[1,2,3,4])
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 112
     mesh_ez.elshape = 5
@@ -4504,7 +4498,7 @@ class TestPytfem(unittest.TestCase):
               76,
     ],dtype=int)
     mesh_ez.ncurves = 8
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -4533,7 +4527,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -4562,7 +4556,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -4597,7 +4591,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -4632,7 +4626,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[3].topology = mesh_ez.curves[3].topology - 1 # Python indexing
     mesh_ez.curves[3].nodes = mesh_ez.curves[3].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[4].elshape = 1
     mesh_ez.curves[4].ndim = 2
     mesh_ez.curves[4].elnumnod = 2
@@ -4664,7 +4658,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[4].topology = mesh_ez.curves[4].topology - 1 # Python indexing
     mesh_ez.curves[4].nodes = mesh_ez.curves[4].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[5].elshape = 1
     mesh_ez.curves[5].ndim = 2
     mesh_ez.curves[5].elnumnod = 2
@@ -4696,7 +4690,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[5].topology = mesh_ez.curves[5].topology - 1 # Python indexing
     mesh_ez.curves[5].nodes = mesh_ez.curves[5].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[6].elshape = 1
     mesh_ez.curves[6].ndim = 2
     mesh_ez.curves[6].elnumnod = 2
@@ -4734,7 +4728,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[6].topology = mesh_ez.curves[6].topology - 1 # Python indexing
     mesh_ez.curves[6].nodes = mesh_ez.curves[6].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[7].elshape = 1
     mesh_ez.curves[7].ndim = 2
     mesh_ez.curves[7].elnumnod = 2
@@ -4777,8 +4771,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test20_quadrilaterial2d(self):
-    mesh_py = two_blocks2d([4,5,6],'quad4',factor=[10,10,10],origin=[-1,2],length=[1,2,3])
-    mesh_ez = Mesh()
+    mesh_py = ezt.two_blocks2d([4,5,6],'quad4',factor=[10,10,10],origin=[-1,2],length=[1,2,3])
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 70
     mesh_ez.elshape = 5
@@ -4872,7 +4866,7 @@ class TestPytfem(unittest.TestCase):
               70,
     ],dtype=int)
     mesh_ez.ncurves = 6
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -4901,7 +4895,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -4930,7 +4924,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -4965,7 +4959,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -4997,7 +4991,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[3].topology = mesh_ez.curves[3].topology - 1 # Python indexing
     mesh_ez.curves[3].nodes = mesh_ez.curves[3].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[4].elshape = 1
     mesh_ez.curves[4].ndim = 2
     mesh_ez.curves[4].elnumnod = 2
@@ -5032,7 +5026,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[4].topology = mesh_ez.curves[4].topology - 1 # Python indexing
     mesh_ez.curves[4].nodes = mesh_ez.curves[4].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[5].elshape = 1
     mesh_ez.curves[5].ndim = 2
     mesh_ez.curves[5].elnumnod = 2
@@ -5069,8 +5063,8 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test21_quadrilaterial2d(self):
-    mesh_tmp1 = quadrilateral2d([2, 3], 'quad4', origin=[-2.0, 0.0], length=[2.0, 3.0]);    mesh_tmp2 = quadrilateral2d([4, 3], 'quad4', origin=[0.0, 0.0], length=[4.0, 3.0]);    mesh_py = mesh_merge(mesh_tmp1, mesh_tmp2, curves1=[1], curves2=[-3], deletecurves1=[1], deletepoints1=[0]);
-    mesh_ez = Mesh()
+    mesh_tmp1 = ezt.quadrilateral2d([2, 3], 'quad4', origin=[-2.0, 0.0], length=[2.0, 3.0]);    mesh_tmp2 = ezt.quadrilateral2d([4, 3], 'quad4', origin=[0.0, 0.0], length=[4.0, 3.0]);    mesh_py = ezt.mesh_merge(mesh_tmp1, mesh_tmp2, curves1=[1], curves2=[-3], deletecurves1=[1], deletepoints1=[0]);
+    mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 28
     mesh_ez.elshape = 5
@@ -5121,7 +5115,7 @@ class TestPytfem(unittest.TestCase):
               28,
     ],dtype=int)
     mesh_ez.ncurves = 6
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[0].elshape = 1
     mesh_ez.curves[0].ndim = 2
     mesh_ez.curves[0].elnumnod = 2
@@ -5144,7 +5138,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[0].topology = mesh_ez.curves[0].topology - 1 # Python indexing
     mesh_ez.curves[0].nodes = mesh_ez.curves[0].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[1].elshape = 1
     mesh_ez.curves[1].ndim = 2
     mesh_ez.curves[1].elnumnod = 2
@@ -5167,7 +5161,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[1].topology = mesh_ez.curves[1].topology - 1 # Python indexing
     mesh_ez.curves[1].nodes = mesh_ez.curves[1].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[2].elshape = 1
     mesh_ez.curves[2].ndim = 2
     mesh_ez.curves[2].elnumnod = 2
@@ -5193,7 +5187,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[2].topology = mesh_ez.curves[2].topology - 1 # Python indexing
     mesh_ez.curves[2].nodes = mesh_ez.curves[2].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[3].elshape = 1
     mesh_ez.curves[3].ndim = 2
     mesh_ez.curves[3].elnumnod = 2
@@ -5222,7 +5216,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[3].topology = mesh_ez.curves[3].topology - 1 # Python indexing
     mesh_ez.curves[3].nodes = mesh_ez.curves[3].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[4].elshape = 1
     mesh_ez.curves[4].ndim = 2
     mesh_ez.curves[4].elnumnod = 2
@@ -5248,7 +5242,7 @@ class TestPytfem(unittest.TestCase):
     ],dtype=int)
     mesh_ez.curves[4].topology = mesh_ez.curves[4].topology - 1 # Python indexing
     mesh_ez.curves[4].nodes = mesh_ez.curves[4].nodes - 1 # Python indexing
-    mesh_ez.curves.append(Geometry())
+    mesh_ez.curves.append(ezt.Geometry())
     mesh_ez.curves[5].elshape = 1
     mesh_ez.curves[5].ndim = 2
     mesh_ez.curves[5].elnumnod = 2

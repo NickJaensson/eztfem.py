@@ -2,38 +2,19 @@
 # Manufactured solution.
 
 import sys
-sys.path.append('/Users/njaensson/Desktop/eztfem.py/')
+sys.path.append('..')
 
 import numpy as np
-from pprint import pprint
-from eztfem.src.quadrilateral2d import quadrilateral2d
-from eztfem.src.problem_class import Problem
-from eztfem.src.gauss_legendre import gauss_legendre
-from eztfem.src.basis_function import basis_function
-from eztfem.src.user_class import User
-from examples.stokes.func import func
-
-from eztfem.src.build_system import build_system
-from eztfem.src.define_essential import define_essential
-from eztfem.src.fill_system_vector import fill_system_vector
-from eztfem.src.apply_essential import apply_essential
-from eztfem.src.refcoor_nodal_points import refcoor_nodal_points
-from eztfem.src.deriv_vector import deriv_vector
-
-from eztfem.addons.stokes.stokes_elem import stokes_elem
-from eztfem.addons.stokes.stokes_pressure import stokes_pressure
-from eztfem.addons.stokes.stokes_deriv import stokes_deriv
-
+import eztfem as ezt
+from examples.stokes.func import func # use full path to be able to run from different folder
 from scipy.sparse.linalg import spsolve
-
-import pretty_errors
 
 def main():
 
     # create mesh
 
     print('mesh')
-    mesh = quadrilateral2d([20,20],'quad9')
+    mesh = ezt.quadrilateral2d([20,20],'quad9')
 
     # define the problem
 
@@ -41,21 +22,21 @@ def main():
     elementdof = np.array([[2,2,2,2,2,2,2,2,2],
                         [1,0,1,0,1,0,1,0,0],
                         [1,1,1,1,1,1,1,1,1]],dtype=int).transpose()
-    problem = Problem(mesh,elementdof,nphysq=2)
+    problem = ezt.Problem(mesh,elementdof,nphysq=2)
 
     # define Gauss integration and basis functions
 
-    user = User()
+    user = ezt.User()
     shape='quad'
 
     print('gauss_legendre')
-    user.xr, user.wg = gauss_legendre(shape,n=3)
+    user.xr, user.wg = ezt.gauss_legendre(shape,n=3)
 
     print('basis_function phi')
-    user.phi, user.dphi = basis_function(shape,'Q2', user.xr )
+    user.phi, user.dphi = ezt.basis_function(shape,'Q2', user.xr )
 
     print('basis_function psi')
-    user.psi, _ = basis_function(shape,'Q1', user.xr )
+    user.psi, _ = ezt.basis_function(shape,'Q1', user.xr )
 
     # user struct for setting problem coefficients, ...
 
@@ -67,24 +48,24 @@ def main():
     # assemble the system matrix and vector
 
     print('build_system')
-    A, f = build_system ( mesh, problem, stokes_elem, user )
+    A, f = ezt.build_system ( mesh, problem, ezt.stokes_elem, user )
 
     # define essential boundary conditions (Dirichlet)
 
     print('define_essential')
-    iess = define_essential ( mesh, problem, 'curves',[0,1,2,3], degfd=0 )
-    iess = define_essential ( mesh, problem, 'curves',[0,1,2,3], degfd=1, iessp=iess )
-    iess = define_essential ( mesh, problem, 'points',[0], physq=1, iessp=iess )
+    iess = ezt.define_essential ( mesh, problem, 'curves',[0,1,2,3], degfd=0 )
+    iess = ezt.define_essential ( mesh, problem, 'curves',[0,1,2,3], degfd=1, iessp=iess )
+    iess = ezt.define_essential ( mesh, problem, 'points',[0], physq=1, iessp=iess )
 
     # fill values for the essential boundary conditions
 
     print('fill_system_vector')
-    uess = fill_system_vector ( mesh, problem, 'curves', [2], func, funcnr=5 )
+    uess = ezt.fill_system_vector ( mesh, problem, 'curves', [2], func, funcnr=5 )
 
     # apply essential boundary conditions to the system
 
     print('apply_essential')
-    A, f, _ = apply_essential ( A, f, uess, iess )
+    A, f, _ = ezt.apply_essential ( A, f, uess, iess )
 
     # solve the system 
 
@@ -94,32 +75,32 @@ def main():
     # Pressure in all nodes for plotting
 
     print('pressure in nodes')
-    xr = refcoor_nodal_points ( mesh )
-    user.psi, _ = basis_function('quad','Q1', xr )
+    xr = ezt.refcoor_nodal_points ( mesh )
+    user.psi, _ = ezt.basis_function('quad','Q1', xr )
     user.u = u
-    pressure = deriv_vector ( mesh, problem, stokes_pressure, user )
+    pressure = ezt.deriv_vector ( mesh, problem, ezt.stokes_pressure, user )
 
     # derivatives of the velocity
 
     print('velocity derivatives')
-    xr = refcoor_nodal_points ( mesh )
-    user.phi, user.dphi = basis_function('quad','Q2', xr )
+    xr = ezt.refcoor_nodal_points ( mesh )
+    user.phi, user.dphi = ezt.basis_function('quad','Q2', xr )
     user.u = u
 
     user.comp = 0 # dudx
-    dudx = deriv_vector ( mesh, problem, stokes_deriv, user ) 
+    dudx = ezt.deriv_vector ( mesh, problem, ezt.stokes_deriv, user ) 
     user.comp = 1 # dudy
-    dudy = deriv_vector ( mesh, problem, stokes_deriv, user )
+    dudy = ezt.deriv_vector ( mesh, problem, ezt.stokes_deriv, user )
     user.comp = 2 # dvdx
-    dvdx = deriv_vector ( mesh, problem, stokes_deriv, user ) 
+    dvdx = ezt.deriv_vector ( mesh, problem, ezt.stokes_deriv, user ) 
     user.comp = 3 # dvdy
-    dvdy = deriv_vector ( mesh, problem, stokes_deriv, user )
+    dvdy = ezt.deriv_vector ( mesh, problem, ezt.stokes_deriv, user )
     user.comp = 4 # dvdx - dudy = vorticity
-    omega = deriv_vector ( mesh, problem, stokes_deriv, user ) 
+    omega = ezt.deriv_vector ( mesh, problem, ezt.stokes_deriv, user ) 
     user.comp = 6 # divu, divergence of the velocity field
-    divu = deriv_vector ( mesh, problem, stokes_deriv, user ) 
+    divu = ezt.deriv_vector ( mesh, problem, ezt.stokes_deriv, user ) 
     user.comp = 7 # gammadot, effective strain rate = sqrt(2II_D) 
-    gammadot = deriv_vector ( mesh, problem, stokes_deriv, user )
+    gammadot = ezt.deriv_vector ( mesh, problem, ezt.stokes_deriv, user )
 
     return max(omega.u), mesh, problem, u
 

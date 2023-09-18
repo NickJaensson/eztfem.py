@@ -3,8 +3,7 @@ import numpy as np
 import unittest
 import sys
 sys.path.append('..')
-from eztfem.src.gauss_legendre import gauss_legendre
-from eztfem.src.basis_function import basis_function
+import eztfem as ezt
 class TestPytfem(unittest.TestCase):
   def test_gauss_legendre1(self):
     xr_ez = np.array([
@@ -13,7 +12,7 @@ class TestPytfem(unittest.TestCase):
     wg_ez = np.array([
         2.0000000000000000e+00,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=1 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=1 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -26,8 +25,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=1 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=1 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -40,7 +39,7 @@ class TestPytfem(unittest.TestCase):
         1.0000000000000000e+00,
         1.0000000000000000e+00,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=2 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=2 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -57,8 +56,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=2 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=2 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -73,7 +72,7 @@ class TestPytfem(unittest.TestCase):
         8.8888888888888884e-01,
         5.5555555555555558e-01,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=3 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=3 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -94,8 +93,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=3 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=3 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -112,7 +111,7 @@ class TestPytfem(unittest.TestCase):
         6.5214515486254609e-01,
         3.4785484513745385e-01,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=4 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=4 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -137,8 +136,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=4 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=4 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -157,7 +156,7 @@ class TestPytfem(unittest.TestCase):
         4.7862867049936647e-01,
         2.3692688505618908e-01,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=5 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=5 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -186,8 +185,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=5 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=5 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -208,7 +207,7 @@ class TestPytfem(unittest.TestCase):
         3.6076157304813861e-01,
         1.7132449237917036e-01,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=6 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=6 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -241,8 +240,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=6 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=6 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -265,7 +264,7 @@ class TestPytfem(unittest.TestCase):
         2.7970539148927664e-01,
         1.2948496616886970e-01,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=7 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=7 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -302,8 +301,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=7 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=7 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -328,7 +327,7 @@ class TestPytfem(unittest.TestCase):
         2.2238103445337448e-01,
         1.0122853629037626e-01,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=8 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=8 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -369,8 +368,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=8 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=8 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -397,7 +396,7 @@ class TestPytfem(unittest.TestCase):
         1.8064816069485740e-01,
         8.1274388361574412e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=9 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=9 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -442,8 +441,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=9 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=9 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -472,7 +471,7 @@ class TestPytfem(unittest.TestCase):
         1.4945134915058059e-01,
         6.6671344308688138e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=10 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=10 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -521,8 +520,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=10 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=10 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -553,7 +552,7 @@ class TestPytfem(unittest.TestCase):
         1.2558036946490461e-01,
         5.5668567116173663e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=11 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=11 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -606,8 +605,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=11 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=11 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -640,7 +639,7 @@ class TestPytfem(unittest.TestCase):
         1.0693932599531843e-01,
         4.7175336386511828e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=12 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=12 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -697,8 +696,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=12 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=12 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -733,7 +732,7 @@ class TestPytfem(unittest.TestCase):
         9.2121499837728452e-02,
         4.0484004765315877e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=13 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=13 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -794,8 +793,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=13 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=13 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -832,7 +831,7 @@ class TestPytfem(unittest.TestCase):
         8.0158087159760208e-02,
         3.5119460331751860e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=14 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=14 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -897,8 +896,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=14 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=14 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -937,7 +936,7 @@ class TestPytfem(unittest.TestCase):
         7.0366047488108124e-02,
         3.0753241996117269e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=15 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=15 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1006,8 +1005,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=15 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=15 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1048,7 +1047,7 @@ class TestPytfem(unittest.TestCase):
         6.2253523938647894e-02,
         2.7152459411754096e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=16 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=16 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1121,8 +1120,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=16 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=16 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1165,7 +1164,7 @@ class TestPytfem(unittest.TestCase):
         5.5459529373987203e-02,
         2.4148302868547931e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=17 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=17 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1242,8 +1241,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=17 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=17 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1288,7 +1287,7 @@ class TestPytfem(unittest.TestCase):
         4.9714548894969797e-02,
         2.1616013526483312e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=18 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=18 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1369,8 +1368,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=18 )
-    phi_py, dphi_py = basis_function('line','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=18 )
+    phi_py, dphi_py = ezt.basis_function('line','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1417,7 +1416,7 @@ class TestPytfem(unittest.TestCase):
         4.4814226765699600e-02,
         1.9461788229726478e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=19 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=19 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1521,8 +1520,8 @@ class TestPytfem(unittest.TestCase):
      [   5.0000000000000000e-01,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=19 )
-    phi_py, dphi_py = basis_function('line','P1', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=19 )
+    phi_py, dphi_py = ezt.basis_function('line','P1', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1571,7 +1570,7 @@ class TestPytfem(unittest.TestCase):
         4.0601429800386939e-02,
         1.7614007139152118e-02,
     ])
-    xr_py, wg_py = gauss_legendre('line',n=20 )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=20 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1700,8 +1699,8 @@ class TestPytfem(unittest.TestCase):
      [   1.4931285991850949e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('line',n=20 )
-    phi_py, dphi_py = basis_function('line','P2', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('line',n=20 )
+    phi_py, dphi_py = ezt.basis_function('line','P2', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1713,7 +1712,7 @@ class TestPytfem(unittest.TestCase):
     wg_ez = np.array([
         4.0000000000000000e+00,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=1 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=1 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1729,8 +1728,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=1 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=1 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1747,7 +1746,7 @@ class TestPytfem(unittest.TestCase):
         1.0000000000000000e+00,
         1.0000000000000000e+00,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=2 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=2 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1776,8 +1775,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=2 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=2 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1804,7 +1803,7 @@ class TestPytfem(unittest.TestCase):
         4.9382716049382713e-01,
         3.0864197530864201e-01,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=3 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=3 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1858,8 +1857,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=3 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=3 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -1900,7 +1899,7 @@ class TestPytfem(unittest.TestCase):
         2.2685185185185183e-01,
         1.2100299328560200e-01,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=4 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=4 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -1989,8 +1988,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=4 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=4 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -2049,7 +2048,7 @@ class TestPytfem(unittest.TestCase):
         1.1340000000000000e-01,
         5.6134348862428636e-02,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=5 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=5 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -2183,8 +2182,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=5 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=5 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -2265,7 +2264,7 @@ class TestPytfem(unittest.TestCase):
         6.1807293372383332e-02,
         2.9352081688980403e-02,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=6 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=6 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -2454,8 +2453,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=6 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=6 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -2562,7 +2561,7 @@ class TestPytfem(unittest.TestCase):
         3.6217643154239441e-02,
         1.6766356463753330e-02,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=7 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=7 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -2816,8 +2815,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=7 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=7 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -2954,7 +2953,7 @@ class TestPytfem(unittest.TestCase):
         2.2511306616454833e-02,
         1.0247216559492024e-02,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=8 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=8 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -3283,8 +3282,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=8 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=8 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -3455,7 +3454,7 @@ class TestPytfem(unittest.TestCase):
         1.4682068769117942e-02,
         6.6055262035480226e-03,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=9 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=9 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -3869,8 +3868,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=9 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=9 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -4079,7 +4078,7 @@ class TestPytfem(unittest.TestCase):
         9.9641223566163256e-03,
         4.4450681519276423e-03,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=10 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=10 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -4588,8 +4587,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=10 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=10 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -4840,7 +4839,7 @@ class TestPytfem(unittest.TestCase):
         6.9908792260309277e-03,
         3.0989893647679319e-03,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=11 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=11 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -5454,8 +5453,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=11 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=11 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -5752,7 +5751,7 @@ class TestPytfem(unittest.TestCase):
         5.0448986767759954e-03,
         2.2255123631805466e-03,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=12 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=12 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -6481,8 +6480,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=12 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=12 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -6829,7 +6828,7 @@ class TestPytfem(unittest.TestCase):
         3.7294472384186445e-03,
         1.6389546418381187e-03,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=13 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=13 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -7683,8 +7682,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=13 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=13 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -8085,7 +8084,7 @@ class TestPytfem(unittest.TestCase):
         2.8151087622763069e-03,
         1.2333764939934924e-03,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=14 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=14 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -9074,8 +9073,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=14 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=14 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -9534,7 +9533,7 @@ class TestPytfem(unittest.TestCase):
         2.1639840867120688e-03,
         9.4576189327175088e-04,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=15 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=15 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -10668,8 +10667,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=15 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=15 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -11190,7 +11189,7 @@ class TestPytfem(unittest.TestCase):
         1.6903362819827988e-03,
         7.3725605210695356e-04,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=16 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=16 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -12479,8 +12478,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=16 )
-    phi_py, dphi_py = basis_function('quad','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=16 )
+    phi_py, dphi_py = ezt.basis_function('quad','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -13067,7 +13066,7 @@ class TestPytfem(unittest.TestCase):
         1.3392535122701734e-03,
         5.8314053143112025e-04,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=17 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=17 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -14810,8 +14809,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,   1.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=17 )
-    phi_py, dphi_py = basis_function('quad','P1', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=17 )
+    phi_py, dphi_py = ezt.basis_function('quad','P1', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -15468,7 +15467,7 @@ class TestPytfem(unittest.TestCase):
         1.0746303613766832e-03,
         4.6725204077710948e-04,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=18 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=18 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -17745,8 +17744,8 @@ class TestPytfem(unittest.TestCase):
      [  -4.9789129210523275e-01,   2.1087078947672755e-03,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=18 )
-    phi_py, dphi_py = basis_function('quad','Q1', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=18 )
+    phi_py, dphi_py = ezt.basis_function('quad','Q1', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -18477,7 +18476,7 @@ class TestPytfem(unittest.TestCase):
         8.7216499099298573e-04,
         3.7876120109872006e-04,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=19 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=19 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -21374,8 +21373,8 @@ class TestPytfem(unittest.TestCase):
      [  -3.0027564085501057e-02,  -3.0027564085501057e-02,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=19 )
-    phi_py, dphi_py = basis_function('quad','Q1+', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=19 )
+    phi_py, dphi_py = ezt.basis_function('quad','Q1+', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -22184,7 +22183,7 @@ class TestPytfem(unittest.TestCase):
         7.1515387436379908e-04,
         3.1025324749810179e-04,
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=20 )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=20 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -26993,8 +26992,8 @@ class TestPytfem(unittest.TestCase):
      [  -2.7202955246837694e-02,  -2.7202955246837694e-02,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('quad',n=20 )
-    phi_py, dphi_py = basis_function('quad','Q2', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('quad',n=20 )
+    phi_py, dphi_py = ezt.basis_function('quad','Q2', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27006,7 +27005,7 @@ class TestPytfem(unittest.TestCase):
     wg_ez = np.array([
         5.0000000000000000e-01,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=1 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=1 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27022,8 +27021,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=1 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=1 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27038,7 +27037,7 @@ class TestPytfem(unittest.TestCase):
         1.6666666666666666e-01,
         1.6666666666666666e-01,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=2 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=2 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27062,8 +27061,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=2 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=2 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27084,7 +27083,7 @@ class TestPytfem(unittest.TestCase):
         2.6091765446176841e-02,
         2.6091765446176841e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=3 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=3 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27123,8 +27122,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=3 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=3 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27145,7 +27144,7 @@ class TestPytfem(unittest.TestCase):
         5.4975871827660935e-02,
         5.4975871827660935e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=4 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=4 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27184,8 +27183,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=4 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=4 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27208,7 +27207,7 @@ class TestPytfem(unittest.TestCase):
         6.6197076394253096e-02,
         1.1250000000000000e-01,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=5 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=5 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27252,8 +27251,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=5 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=5 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27286,7 +27285,7 @@ class TestPytfem(unittest.TestCase):
         4.1425537809186785e-02,
         4.1425537809186785e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=6 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=6 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27355,8 +27354,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=6 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=6 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27395,7 +27394,7 @@ class TestPytfem(unittest.TestCase):
         2.8060072141687677e-02,
         2.8060072141687677e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=7 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=7 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27479,8 +27478,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=7 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=7 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27521,7 +27520,7 @@ class TestPytfem(unittest.TestCase):
         1.3615157087217496e-02,
         1.3615157087217496e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=8 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=8 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27610,8 +27609,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=8 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=8 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27658,7 +27657,7 @@ class TestPytfem(unittest.TestCase):
         2.1641769688644688e-02,
         2.1641769688644688e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=9 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=9 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27762,8 +27761,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=9 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=9 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -27822,7 +27821,7 @@ class TestPytfem(unittest.TestCase):
         1.3474676295939981e-02,
         1.3474676295939981e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=10 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=10 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -27956,8 +27955,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=10 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=10 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -28022,7 +28021,7 @@ class TestPytfem(unittest.TestCase):
         2.0363998229149520e-02,
         2.0363998229149520e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=11 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=11 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -28171,8 +28170,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=11 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=11 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -28247,7 +28246,7 @@ class TestPytfem(unittest.TestCase):
         2.0185778883190463e-02,
         2.0185778883190463e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=12 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=12 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -28421,8 +28420,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=12 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=12 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -28505,7 +28504,7 @@ class TestPytfem(unittest.TestCase):
         4.7953405017716316e-03,
         4.7953405017716316e-03,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=13 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=13 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -28699,8 +28698,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=13 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=13 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -28801,7 +28800,7 @@ class TestPytfem(unittest.TestCase):
         3.4823316867592063e-03,
         3.4823316867592063e-03,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=14 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=14 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -29040,8 +29039,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=14 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=14 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -29154,7 +29153,7 @@ class TestPytfem(unittest.TestCase):
         2.3071532644835515e-03,
         2.3071532644835515e-03,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=15 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=15 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -29423,8 +29422,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=15 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=15 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -29543,7 +29542,7 @@ class TestPytfem(unittest.TestCase):
         3.6498984697158812e-03,
         3.6498984697158812e-03,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=16 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=16 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -29827,8 +29826,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=16 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=16 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -29959,7 +29958,7 @@ class TestPytfem(unittest.TestCase):
         1.3722186996229164e-02,
         1.3722186996229164e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=17 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=17 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -30273,8 +30272,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=17 )
-    phi_py, dphi_py = basis_function('triangle','P0', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=17 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P0', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -30427,7 +30426,7 @@ class TestPytfem(unittest.TestCase):
         2.1634287304382093e-03,
         2.1634287304382093e-03,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=18 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=18 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -30868,8 +30867,8 @@ class TestPytfem(unittest.TestCase):
      [   0.0000000000000000e+00,   1.0000000000000000e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=18 )
-    phi_py, dphi_py = basis_function('triangle','P1', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=18 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P1', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -31024,7 +31023,7 @@ class TestPytfem(unittest.TestCase):
         1.8999644276509570e-03,
         1.8999644276509570e-03,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=19 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=19 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -31544,8 +31543,8 @@ class TestPytfem(unittest.TestCase):
      [  -2.3562558429730759e-01,   1.3809746922558375e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=19 )
-    phi_py, dphi_py = basis_function('triangle','P1+', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=19 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P1+', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -31730,7 +31729,7 @@ class TestPytfem(unittest.TestCase):
         2.6839028690937264e-03,
         2.6839028690937264e-03,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=20 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=20 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -32531,8 +32530,8 @@ class TestPytfem(unittest.TestCase):
      [  -1.4127516153479887e+00,   1.1474701524141788e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=20 )
-    phi_py, dphi_py = basis_function('triangle','P2', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=20 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P2', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )
@@ -32723,7 +32722,7 @@ class TestPytfem(unittest.TestCase):
         1.1538396094746340e-02,
         1.1538396094746340e-02,
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=21 )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=21 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
     check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
@@ -33642,8 +33641,8 @@ class TestPytfem(unittest.TestCase):
      [  -9.3131817330067057e-01,   1.2237135742638023e+00,],
     ],
     ])
-    xr_py, wg_py = gauss_legendre('triangle',p=21 )
-    phi_py, dphi_py = basis_function('triangle','P2+', xr_py )
+    xr_py, wg_py = ezt.gauss_legendre('triangle',p=21 )
+    phi_py, dphi_py = ezt.basis_function('triangle','P2+', xr_py )
     check1=np.allclose(np.squeeze(phi_py),np.squeeze(phi_ez),atol=1e-15,rtol=0)
     check2=np.allclose(np.squeeze(dphi_py),np.squeeze(dphi_ez),atol=1e-15,rtol=0)
     self.assertTrue(check1 and check2,'basis_functions failed test!' )

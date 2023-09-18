@@ -2,55 +2,37 @@
 # Manufactured solution.
 
 import sys
-sys.path.append('/Users/njaensson/Desktop/eztfem.py/')
+sys.path.append('..')
 
 import numpy as np
-from pprint import pprint
-from eztfem.src.quadrilateral2d import quadrilateral2d
-from eztfem.src.problem_class import Problem
-from eztfem.src.gauss_legendre import gauss_legendre
-from eztfem.src.basis_function import basis_function
-from eztfem.src.user_class import User
-from examples.poisson.func import func
-
-from eztfem.src.build_system import build_system
-from eztfem.src.define_essential import define_essential
-from eztfem.src.fill_system_vector import fill_system_vector
-from eztfem.src.apply_essential import apply_essential
-from eztfem.src.refcoor_nodal_points import refcoor_nodal_points
-from eztfem.src.deriv_vector import deriv_vector
-
-from eztfem.addons.poisson.poisson_elem import poisson_elem
-from eztfem.addons.poisson.poisson_deriv import poisson_deriv
-
+import eztfem as ezt
+from examples.poisson.func import func # use full path to be able to run from different folder
 from scipy.sparse.linalg import spsolve
-
-import pretty_errors
 
 def main():
 
     # create mesh
 
     print('mesh')
-    mesh = quadrilateral2d([20,20],'quad9')
+    mesh = ezt.quadrilateral2d([20,20],'quad9')
 
     # define the problem
 
     print('problem_definition')
     elementdof = np.array([[1,1,1,1,1,1,1,1,1],
                         [2,2,2,2,2,2,2,2,2]],dtype=int).transpose()
-    problem = Problem(mesh,elementdof,nphysq=1)
+    problem = ezt.Problem(mesh,elementdof,nphysq=1)
 
     # define Gauss integration and basis functions
 
-    user = User()
+    user = ezt.User()
     shape='quad'
 
     print('gauss_legendre')
-    user.xr, user.wg = gauss_legendre(shape,n=3)
+    user.xr, user.wg = ezt.gauss_legendre(shape,n=3)
 
     print('basis_function phi')
-    user.phi, user.dphi = basis_function(shape,'Q2', user.xr )
+    user.phi, user.dphi = ezt.basis_function(shape,'Q2', user.xr )
 
     # user struct for setting problem coefficients, ...
 
@@ -62,22 +44,22 @@ def main():
     # assemble the system matrix and vector
 
     print('build_system')
-    A, f = build_system ( mesh, problem, poisson_elem, user )
+    A, f = ezt.build_system ( mesh, problem, ezt.poisson_elem, user )
 
     # define essential boundary conditions (Dirichlet)
 
     print('define_essential')
-    iess = define_essential ( mesh, problem,'curves', [0,1,2,3] )
+    iess = ezt.define_essential ( mesh, problem,'curves', [0,1,2,3] )
 
     # fill values for the essential boundary conditions
 
     print('fill_system_vector')
-    uess = fill_system_vector ( mesh, problem, 'curves', [0,1,2,3], func, funcnr=3 )
+    uess = ezt.fill_system_vector ( mesh, problem, 'curves', [0,1,2,3], func, funcnr=3 )
 
     # apply essential boundary conditions to the system
 
     print('apply_essential')
-    A, f, _ = apply_essential ( A, f, uess, iess )
+    A, f, _ = ezt.apply_essential ( A, f, uess, iess )
 
     # solve the system 
 
@@ -87,7 +69,7 @@ def main():
     # compare with exact solution
 
     print('Difference with exact solution:')
-    uex = fill_system_vector ( mesh, problem, 'nodes', np.arange(mesh.nnodes), func, funcnr=3 ) 
+    uex = ezt.fill_system_vector ( mesh, problem, 'nodes', np.arange(mesh.nnodes), func, funcnr=3 ) 
 
     maxdiff = max(abs(u-uex))
     print(maxdiff)
@@ -95,11 +77,11 @@ def main():
     # gradient (dudx,dudy) of the solution 
 
     print('gradient (dudx,dudy)')
-    xr = refcoor_nodal_points ( mesh )
-    [user.phi,user.dphi] = basis_function('quad','Q2', xr )
+    xr = ezt.refcoor_nodal_points ( mesh )
+    [user.phi,user.dphi] = ezt.basis_function('quad','Q2', xr )
     user.u = u
 
-    gradu = deriv_vector ( mesh, problem, poisson_deriv, user )
+    gradu = ezt.deriv_vector ( mesh, problem, ezt.poisson_deriv, user )
 
     return maxdiff
 

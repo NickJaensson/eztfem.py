@@ -1,38 +1,11 @@
 # Streamfunction from the velocity field
 
 import sys
-sys.path.append('/Users/njaensson/Desktop/eztfem.py/')
+sys.path.append('..')
 
 import numpy as np
-from pprint import pprint
-from eztfem.src.quadrilateral2d import quadrilateral2d
-from eztfem.src.problem_class import Problem
-from eztfem.src.gauss_legendre import gauss_legendre
-from eztfem.src.basis_function import basis_function
-from eztfem.src.user_class import User
-from examples.stokes.func import func
-
-from eztfem.src.build_system import build_system
-from eztfem.src.define_essential import define_essential
-from eztfem.src.fill_system_vector import fill_system_vector
-from eztfem.src.apply_essential import apply_essential
-from eztfem.src.refcoor_nodal_points import refcoor_nodal_points
-from eztfem.src.deriv_vector import deriv_vector
-
-from eztfem.addons.stokes.stokes_elem import stokes_elem
-from eztfem.addons.stokes.stokes_pressure import stokes_pressure
-from eztfem.addons.stokes.stokes_deriv import stokes_deriv
-from eztfem.addons.stokes.streamfunction_elem import streamfunction_elem
-
+import eztfem as ezt
 from scipy.sparse.linalg import spsolve
-
-import pretty_errors
-
-from eztfem.src.pos_array import pos_array
-from eztfem.src.mesh_class import Mesh
-
-from eztfem.src.add_boundary_elements import add_boundary_elements
-from eztfem.addons.stokes.streamfunction_natboun_curve import streamfunction_natboun_curve
 
 def main(mesh=None, problem=None, u=None):
 
@@ -50,48 +23,48 @@ def main(mesh=None, problem=None, u=None):
     print('problem_definition')
     elementdof = np.array([[1,1,1,1,1,1,1,1,1],
                            [2,2,2,2,2,2,2,2,2]],dtype=int).transpose()
-    problem_s = Problem(mesh,elementdof,nphysq=1)
+    problem_s = ezt.Problem(mesh,elementdof,nphysq=1)
 
     # define Gauss integration and basis functions
 
-    user = User()
+    user = ezt.User()
     shape='quad'
-    user.xr, user.wg = gauss_legendre(shape,n=3)
-    user.phi, user.dphi = basis_function(shape,'Q2', user.xr )
+    user.xr, user.wg = ezt.gauss_legendre(shape,n=3)
+    user.phi, user.dphi = ezt.basis_function(shape,'Q2', user.xr )
 
     # user struct for setting problem coefficients, ...
 
     user.coorsys = 0
 
     # Get velocities node for node
-    pos, _ = pos_array(problem, np.arange(mesh.nnodes), physq=0, order='ND')
+    pos, _ = ezt.pos_array(problem, np.arange(mesh.nnodes), physq=0, order='ND')
     user.v = u[pos[0]]
 
     # assemble the system matrix and vector
 
     print('build_system')
-    A, f = build_system ( mesh, problem_s, streamfunction_elem, user, posvectors=True )
+    A, f = ezt.build_system ( mesh, problem_s, ezt.streamfunction_elem, user, posvectors=True )
 
     # define Gauss integration and basis functions (for boundary integral)
 
     print('gauss_legendre')
-    [xr,user.wg]=gauss_legendre('line',n=3 )
+    [xr,user.wg]=ezt.gauss_legendre('line',n=3 )
 
     print('basis_function phi')
-    [user.phi,user.dphi]=basis_function('line','P2', xr )
+    [user.phi,user.dphi]=ezt.basis_function('line','P2', xr )
 
     # add natural boundary condition 
 
     print('add_boundary_elements')
     for crv in range(3):
-        f = add_boundary_elements ( mesh, problem_s, f, 
-                                   streamfunction_natboun_curve, user, 
+        f = ezt.add_boundary_elements ( mesh, problem_s, f, 
+                                   ezt.streamfunction_natboun_curve, user, 
                                    posvectors=True, curve=crv )
         
     # define essential boundary conditions (Dirichlet)
 
     print('define_essential')
-    iess = define_essential ( mesh, problem_s, 'points',[0] )
+    iess = ezt.define_essential ( mesh, problem_s, 'points',[0] )
 
     # fill values for the essential boundary conditions
 
@@ -101,7 +74,7 @@ def main(mesh=None, problem=None, u=None):
     # apply essential boundary conditions to the system
 
     print('apply_essential')
-    A, f, _ = apply_essential ( A, f, uess, iess )
+    A, f, _ = ezt.apply_essential ( A, f, uess, iess )
 
     # solve the system 
 
@@ -116,8 +89,8 @@ def main(mesh=None, problem=None, u=None):
 
 if __name__ == '__main__':
 
-    import examples.stokes.stokes1
+    import stokes1
 
-    _, mesh, problem, u = examples.stokes.stokes1.main()
+    _, mesh, problem, u = stokes1.main()
 
     main(mesh,problem,u)
