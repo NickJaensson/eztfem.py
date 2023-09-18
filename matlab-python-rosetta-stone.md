@@ -22,7 +22,8 @@ crucial role in control flow.
 - Structuring a project:
   - Matlab: functions in same folder or use addpath, 
   - Python: modules in same folder and use import, for different 
-  folder not in current folder use sys.path.append
+  folder not in current folder use sys.path.append (relative vs absolute imports, __init__.py file etc.)
+- import math in Python
 
 ## Working with variables
 ### Data-types
