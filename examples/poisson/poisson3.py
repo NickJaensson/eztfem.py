@@ -2,7 +2,9 @@
 # This problem solves Example 1.1.2 of the book of Elman et al.
 
 import sys
+sys.path.append('.')
 sys.path.append('..')
+sys.path.append('../..')
 
 import numpy as np
 import eztfem as ezt
