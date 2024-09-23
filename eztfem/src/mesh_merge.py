@@ -57,14 +57,15 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     deletecurves1 = kwargs.get('deletecurves1', None)
     deletecurves2 = kwargs.get('deletecurves2', None)
 
-    pnts1 = points1 is not None
-    pnts2 = points2 is not None
-    crvs1 = curves1 is not None
-    crvs2 = curves2 is not None
-    delpnts1 = deletepoints1 is not None
-    delpnts2 = deletepoints2 is not None
-    delcrvs1 = deletecurves1 is not None
-    delcrvs2 = deletecurves2 is not None
+    # booleans to indicate if the optional argument was present
+    pnts1_present = points1 is not None
+    pnts2_present = points2 is not None
+    crvs1_present = curves1 is not None
+    crvs2_present = curves2 is not None
+    delpnts1_present = deletepoints1 is not None
+    delpnts2_present = deletepoints2 is not None
+    delcrvs1_present = deletecurves1 is not None
+    delcrvs2_present = deletecurves2 is not None
 
     for option in kwargs:
         if option not in ['points1', 'points2', 'curves1', 'curves2', 
@@ -72,23 +73,23 @@ def mesh_merge(mesh1, mesh2, **kwargs):
                           'deletecurves2']:
             raise ValueError(f'Invalid option: {option}')
         
-    if pnts1 and pnts2:
+    if pnts1_present and pnts2_present:
         if len(points1) != len(points2):
             raise ValueError('points1 and points2 need to be of the same length')
         pnts = 1
-    elif pnts1 or pnts2:
+    elif pnts1_present or pnts2_present:
         raise ValueError('both points1 and points2 need to be present')
     else:
         pnts = 0
 
-    if crvs1 and crvs2:
+    if crvs1_present and crvs2_present:
         if len(curves1) != len(curves2):
             raise ValueError('curves1 and curves2 need to be of the same length')
         for i in range(len(curves1)):
             if mesh1.curves[curves1[i]].nnodes != mesh2.curves[abs(curves2[i])].nnodes:
                 raise ValueError('number of nodes different for curves1 and curves2')
         crvs = 1
-    elif crvs1 or crvs2:
+    elif crvs1_present or crvs2_present:
         raise ValueError('both curves1 and curves2 need to be present')
     else:
         crvs = 0
@@ -111,10 +112,10 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         work[mesh2.points[points2]] = mesh1.points[points1]
     
     # delete points
-    if delpnts1:
+    if delpnts1_present:
         delpoints1[deletepoints1] = 1
     
-    if delpnts2:
+    if delpnts2_present:
         delpoints2[deletepoints2] = 1
     
     numdelp1 = np.sum(delpoints1)
@@ -134,10 +135,10 @@ def mesh_merge(mesh1, mesh2, **kwargs):
                 work[mesh2.curves[-crv2].nodes[mesh2.curves[-crv2].nnodes - 1::-1]] = mesh1.curves[crv1].nodes
 
     # delete curves
-    if delcrvs1:
+    if delcrvs1_present:
         delcurves1[deletecurves1] = 1
 
-    if delcrvs2:
+    if delcrvs2_present:
         delcurves2[deletecurves2] = 1
 
     numdelc1 = np.sum(delcurves1)
