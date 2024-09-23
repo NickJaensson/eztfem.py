@@ -3,14 +3,43 @@ from .mesh_class import Mesh, Geometry
 
 def mesh_merge(mesh1, mesh2, **kwargs):
     """
-    Merges two meshes into a single mesh.
-    
-    Parameters:
-    mesh1, mesh2: Dictionaries representing the two meshes
-    kwargs: Optional arguments to guide the merge
-    
-    Returns:
-    mesh: A dictionary representing the merged mesh
+    Create a new mesh by merging two other meshes.
+
+    Parameters
+    ----------
+    mesh1 : Mesh
+        The first mesh to be merged.
+    mesh2 : Mesh
+        The second mesh to be merged.
+    **kwargs : dict, optional
+        Additional options to set various parameters:
+        
+        - 'point1', 'point2' : array_like
+            Vectors of equal size giving the points in both meshes that need to be merged into one.
+            NOTE: points2[i] corresponds to points1[i].
+        
+        - 'curves1', 'curves2' : array_like
+            Vectors of equal size giving the curves in both meshes that need to be merged into one.
+            If curves2[i] < 0, the curve number is |curves2[i]| and the curve is traversed in the opposite direction.
+            NOTE: curves2[i] corresponds to curves1[i].
+
+        - 'deletepoints1', 'deletepoints2' : array_like
+            Vectors to indicate which points of mesh1 and mesh2 must not be included in the new merged mesh.
+            NOTE: all double points are removed automatically already.
+        
+        - 'deletecurves1', 'deletecurves2' : array_like
+            Vectors to indicate which curves of mesh1 and mesh2 must not be included in the new merged mesh.
+            NOTE: merged curves are removed automatically already.
+
+    Returns
+    -------
+    mesh : Mesh
+        The new merged mesh structure.
+
+    Examples
+    --------
+    >>> mesh = mesh_merge(mesh1, mesh2, curves1=[1, 2], curves2=[2, -3])
+    Creates a mesh from two meshes where the curves 1 and 2 of mesh1 are merged with curves 2 and 3 of mesh2 into two curves of the new mesh. Curve 3 of mesh2 is traversed in the opposite direction.
     """
     
     if mesh1.ndim != mesh2.ndim:
