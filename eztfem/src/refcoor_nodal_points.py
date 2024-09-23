@@ -3,12 +3,17 @@ from .mesh_class import Mesh
 
 def refcoor_nodal_points(mesh):
     """
-    REFCOOR_NODAL_POINTS  reference coordinates of the nodal points
-      [ x ] = REFCOOR_NODAL_POINTS ( mesh, 'optarg', value )
-      input:
-        mesh: mesh structure
-      output:
-        x : reference coordinates of the nodal points
+    Find the reference coordinates of the nodal points.
+
+    Parameters
+    ----------
+    mesh : Mesh
+        Mesh object.
+
+    Returns
+    -------
+    x : numpy.ndarray
+        Reference coordinates of the nodal points.
     """
 
     elshape = mesh.elshape
