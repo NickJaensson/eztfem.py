@@ -1,5 +1,4 @@
 src/add_boundary_elements.py
-src/apply_essential.py
 src/basis_function.py
 src/build_system.py
 src/define_essential.py

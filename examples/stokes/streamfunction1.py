@@ -74,7 +74,7 @@ def main(mesh=None, problem=None, u=None):
     # apply essential boundary conditions to the system
 
     print('apply_essential')
-    A, f, _ = ezt.apply_essential ( A, f, uess, iess )
+    ezt.apply_essential ( A, f, uess, iess )
 
     # solve the system 
 

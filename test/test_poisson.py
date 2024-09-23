@@ -1159,7 +1159,7 @@ class TestPytfem(unittest.TestCase):
     A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.poisson_elem, user_py)
     iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );
     uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
-    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
+    ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
     A_ez2 = np.array([
     [   1.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,],
     [   0.0000000000000000e+00,   1.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,   0.0000000000000000e+00,],
@@ -1234,8 +1234,8 @@ class TestPytfem(unittest.TestCase):
        1.8175074977079950e+00,
        2.0000000000000000e+00,
     ])
-    check1=np.allclose(A_py2.toarray(),A_ez2,atol=1e-12,rtol=0)
-    check2=np.allclose(f_py2,f_ez2,atol=1e-12,rtol=0)
+    check1=np.allclose(A_py.toarray(),A_ez2,atol=1e-12,rtol=0)
+    check2=np.allclose(f_py,f_ez2,atol=1e-12,rtol=0)
     self.assertTrue(check1 and check2,'apply_essential failed test!' )
   def test_solve(self):
     u_ez = np.array([
@@ -1284,8 +1284,8 @@ class TestPytfem(unittest.TestCase):
     A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.poisson_elem, user_py)
     iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );
     uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
-    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
-    u_py = spsolve(A_py2.tocsr(), f_py2)
+    ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
+    u_py = spsolve(A_py.tocsr(), f_py)
     #print('max diff = ',(abs(u_ez-u_py)).max())
     self.assertTrue(np.allclose(u_py,u_ez,atol=1e-12,rtol=0),'solve failed test, max diff = '+str((abs(u_ez-u_py)).max()) )
   def test_deriv_vector(self):
@@ -1373,7 +1373,7 @@ class TestPytfem(unittest.TestCase):
     A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt.poisson_elem, user_py)
     iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );
     uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )
-    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
-    u_py = spsolve(A_py2.tocsr(), f_py2)
+    ezt.apply_essential ( A_py, f_py, uess_py, iess_py )
+    u_py = spsolve(A_py.tocsr(), f_py)
     user_py2 = user_py;    xr_py = ezt.refcoor_nodal_points ( mesh_py );    user_py2.phi, user_py2.dphi = ezt.basis_function('quad','Q2', xr_py );    user_py2.u = u_py;    gradu_py = ezt.deriv_vector ( mesh_py, problem_py, ezt.poisson_deriv, user_py2 )
     self.assertTrue(gradu_ez==gradu_py,'deriv_vector failed test, max diff = '+str((abs(gradu_ez.u-gradu_py.u)).max()) )

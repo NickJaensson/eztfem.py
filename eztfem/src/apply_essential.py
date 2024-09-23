@@ -1,25 +1,31 @@
 import numpy as np
 from scipy.sparse import eye, lil_matrix
 
-def apply_essential(Ain, fin, uess, iess):
+def apply_essential(A, f, uess, iess):
     """
-    APPLY_ESSENTIAL  apply essential degrees of freedom
-      [ A, f, Aup ] = APPLY_ESSENTIAL ( Ain, fin, iess )
-      input:
-        Ain: system matrix
-        fin: right-hand side.
-        uess: a system vector containing the values for essential bc
-        iess: index of defined essential degrees
-      output:
-        A, f: the system matrix and right-hand side with ess bc applied
-        Aup: matrix partition of unknown rows and prescribed columns.
+    Add effect of essential boundary conditions to right-hand side.
+
+    NOTE: This function modifies the input arguments `A` and `f` in place.
+
+    Parameters
+    ----------
+    Ain : scipy.sparse.lil_matrix
+        System matrix.
+    fin : numpy.ndarray
+        Right-hand side vector.
+    uess : numpy.ndarray
+        Vector containing the values for essential boundary conditions.
+    iess : numpy.ndarray
+        Index of defined essential degrees.
+
+    Returns
+    -------
+    Aup : scipy.sparse.lil_matrix
+        Matrix partition of unknown rows and prescribed columns.
     """
     
-    # copy the system matrix and vector
-    A = Ain.copy()
-    f = np.array(fin)
-    
-    nd = fin.shape[0]
+    # initialize some parameters
+    nd = f.shape[0]
     npp = iess.shape[0]
     nu = nd - npp
 
@@ -29,7 +35,7 @@ def apply_essential(Ain, fin, uess, iess):
     iu = np.where(tmp == 0)[0]
 
     # extract Aup
-    Aup = Ain[iu,:][:,iess]
+    Aup = A[iu,:][:,iess]
 
     # modify A
     A[iu[:,None], iess] = lil_matrix((nu, npp))
@@ -40,4 +46,4 @@ def apply_essential(Ain, fin, uess, iess):
     f[iu] -= Aup.dot(uess[iess])
     f[iess] = uess[iess]
 
-    return A, f, Aup
+    return Aup
