@@ -7,39 +7,42 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
     """
     Derive a vector of special structure.
 
-    Parameters:
-    - mesh (dict): Mesh structure.
-    - problem (dict): Problem structure.
-    - element (func): Function handle to the element function routine.
-    - user: Can be used by the user for transferring data to the element routine.
+    Parameters
+    ----------
+    mesh : Mesh
+        Mesh structure.
+    problem : Problem
+        Problem structure.
+    element : callable
+        Function handle to the element function routine.
+    user : Any
+        User object to pass parameters and data to the element routine.
+    **kwargs : dict, optional
+        Optional arguments:
+        vec : int, optional
+            The vector number. Default is problem['nphysq'].
+        order : str, optional
+            The sequence order of the degrees of freedom on element level.
+            'ND' : the most inner loop is over the degrees of freedom.
+            'DN' : the most inner loop is over the nodal points.
+            Default is 'DN'.
+        posvectors : bool, optional
+            Supply the position of vectors to the element routine. Default: False.
 
-    Keyword arguments:
-    - vec (int): The vector number. Default is problem['nphysq'] + 1.
-    - order (str): The sequence order of the degrees of freedom on element level.
-                   'ND': the most inner loop is over the degrees of freedom.
-                   'DN': the most inner loop is over the nodal points.
-                   Default is 'DN'.
-    - posvectors (int): Supply the position of vectors to the element routine. Default is 0.
-
-    Returns:
-    - v (dict): The vector. Contains 'vec' and 'u'.
+    Returns
+    -------
+    v : Vector
+        Vector object containing the derived data.
     """
 
-    # Default values for optional arguments
-    vec = problem.nphysq # first vec after nphysq (starting at zero)
-    order = 'DN'
-    posvectors = 0
+    # Set default optional arguments
+    vec = kwargs.get('vec', problem.nphysq)  # first vec after nphysq (starting at zero)
+    order = kwargs.get('order', 'DN')
+    posvectors = kwargs.get('posvectors', 0)
 
-    # Process optional arguments
-    for key, value in kwargs.items():
-        if key == 'vec':
-            vec = value
-        elif key == 'order':
-            order = value
-        elif key == 'posvectors':
-            posvectors = value
-        else:
-            raise ValueError(f"Invalid option: {key}")
+    for kwarg in kwargs:
+        if kwarg not in ['vec', 'order', 'posvectors']:
+            raise ValueError(f'Invalid argument: {kwarg}')
 
     v = Vector(vec=vec)
     n = problem.vec_numdegfd[vec]
