@@ -2,25 +2,30 @@ import numpy as np
 
 def basis_function(shape, intpol, xr):
     """
-    BASIS_FUNCTION basis function and the derivative with respect to the
-                     reference coordinates.
-      [ phi, dphi ] = BASIS_FUNCTION ( shape, intpol, xr )
-      input:
-        shape, shape of the element:
-          'line', line element on the reference interval [-1,1]
-          'quad', quadrilateral element on the reference domain [-1,1]x[-1,1]
-          'triangle', triangular element, on the reference domain left-lower 
-             half of [0,1]x[0,1]
-        intpol: interpolation on the element:
-          P-family: 'P0', 'P1', 'P1+', 'P2', 'P2+'
-          Q-family: 'Q1', 'Q1+', 'Q2'
-          Note: not all combinations of shape-intpol are possible!
-        xr: Reference coordinates where phi and dphi must be computed.
-            xr(i,j) with i the point in space and j the direction in space
-      output:
-        phi: basis function phi(i,j), with i the point in space and j the unknown
-        dphi: derivative of the basis function dphi(i,j,k), with i the point in
-              space j the unknown and k the direction in space.
+    Compute the basis function and its derivative at reference coordinates.
+
+    Parameters
+    ----------
+    shape : {'line', 'quad', 'triangle'}
+        Shape of the element:
+        - 'line': line element on the reference interval [-1, 1]
+        - 'quad': quadrilateral element on the reference domain [-1, 1] x [-1, 1]
+        - 'triangle': triangular element on the reference domain left-lower half of [0, 1] x [0, 1]
+    intpol : {'P0', 'P1', 'P1+', 'P2', 'P2+', 'Q1', 'Q1+', 'Q2'}
+        Interpolation on the element:
+        - P-family: 'P0', 'P1', 'P1+', 'P2', 'P2+'
+        - Q-family: 'Q1', 'Q1+', 'Q2'
+        Note: not all combinations of shape and intpol are possible!
+    xr : array_like
+        Reference coordinates where phi and dphi must be computed.
+        xr[i, j] with i the point in space and j the direction in space.
+
+    Returns
+    -------
+    phi : numpy.ndarray
+        Basis function phi[i, j], with i the point in space and j the unknown.
+    dphi : numpy.ndarray
+        Derivative of the basis function dphi[i, j, k], with i the point in space, j the unknown, and k the direction in space.
     """
 
     if shape == 'line':
@@ -82,17 +87,6 @@ def basis_triangle_P1(xr):
   return phi, dphi
 
 def basis_triangle_P1plus(xr):
-    """
-    Calculate the phi and dphi based on the barycentric coordinates.
-    
-    Parameters:
-    - xr: Reference coordinates.
-    - barycentric: A function to calculate barycentric coordinates and their derivatives.
-
-    Returns:
-    - phi: The computed phi matrix.
-    - dphi: Derivative of phi.
-    """
     
     ni, _ = xr.shape
     nn = 4
@@ -120,12 +114,6 @@ def basis_triangle_P1plus(xr):
     dphi[:, 3, :] = 27 * dbubble[:, 0, :]
 
     return phi, dphi
-
-# Assuming you have defined the `barycentric` function earlier.
-# xr = np.array(...)  # You will need to provide some sample xr matrix here.
-# phi, dphi = compute_phi(xr, barycentric)
-# print(phi)
-# print(dphi)
 
 def basis_triangle_P2(xr):
     ni, _ = xr.shape
@@ -322,29 +310,41 @@ def basis_quad_Q2(xr):
 
 def barycentric(xr):
     """
-    lambda(i,j), with i the point in space and j the number
-    derivative of lambda: dlambda(i,j,k), with i the point in space
-    j the number and k the direction in space.
+    Compute the barycentric coordinates and their derivatives for a triangular 
+    element at reference coordinates.
+
+    Parameters
+    ----------
+    xr : array_like
+        Reference coordinates where lambda and dlambda must be computed.
+        xr[i, j] with i the point in space and j the direction in space.
+
+    Returns
+    -------
+    lambda : numpy.ndarray
+        Barycentric coordinates lambda[i, j], with i the point in space and j the number.
+    dlambda : numpy.ndarray
+        Derivative of the barycentric coordinates dlambda[i, j, k], with i the point in space, j the number, and k the direction in space.
+
+    Notes
+    -----
     Triangles:
-    ---------
- 
-    the reference region of a triangle is
-       
-       1 |\               eta \in [0,1] 
-       ^ |  \             xi  \in [0,1]
-    eta| |    \           xi + eta <= 1
-         |      \
-       0 ---------
-         0  xi -> 1
- 
-    The reference coordinates xr=(xi,eta) are in lower triangle of
-    the region [0,1]x[0,1]  (xi+eta<=1)
- 
-    The three barycentric coordinates are
- 
-    lambda1=1-xi-eta
-    lambda2=xi
-    lambda3=eta
+    The reference region of a triangle is defined as:
+    
+        1 |\               eta ∈ [0,1] 
+        ^ |  \             xi  ∈ [0,1]
+    eta | |    \           xi + eta <= 1
+          |      \
+        0 ---------
+          0  xi -> 1
+
+    The reference coordinates xr = (xi, eta) are in the lower triangle of the region [0,1] x [0,1] (xi + eta <= 1).
+
+    The three barycentric coordinates are:
+    
+    - lambda1 = 1 - xi - eta
+    - lambda2 = xi
+    - lambda3 = eta
     """
     
     # Get sizes from xr shape
