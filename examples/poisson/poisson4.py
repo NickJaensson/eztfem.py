@@ -60,7 +60,7 @@ def main():
 
     print('add_boundary_elements')
     user.funcnr = 8
-    f = ezt.add_boundary_elements ( mesh, problem, f, ezt.poisson_natboun_curve, user, curve=1 )
+    ezt.add_boundary_elements ( mesh, problem, f, ezt.poisson_natboun_curve, user, curve=1 )
 
     # define essential boundary conditions (Dirichlet)
 

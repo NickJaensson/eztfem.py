@@ -57,7 +57,7 @@ def main(mesh=None, problem=None, u=None):
 
     print('add_boundary_elements')
     for crv in range(3):
-        f = ezt.add_boundary_elements ( mesh, problem_s, f, 
+        ezt.add_boundary_elements ( mesh, problem_s, f, 
                                    ezt.streamfunction_natboun_curve, user, 
                                    posvectors=True, curve=crv )
         

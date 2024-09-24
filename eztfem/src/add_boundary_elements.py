@@ -2,66 +2,52 @@ import numpy as np
 from .pos_array import pos_array
 from .pos_array_vec import pos_array_vec
 
-def add_boundary_elements(mesh, problem, fp, element, user, **kwargs):
+def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
     """
     Add boundary elements to the system vector and optionally to the system matrix.
-    
-    Parameters:
-        mesh : dict
-            Mesh structure.
-        problem : dict
-            Problem structure.
-        fp : np.ndarray
-            "Previous" system vector input. Result added to this vector.
-        element : callable
-            Function handle to the element function routine.
-        user : Any
-            Can be used by the user for transferring data to the element routine.
-        kwargs : dict
-            Optional arguments:
-            curve : int
-                Build on given curve number. (Required)
-            Ap : np.ndarray
-                "Previous" system matrix. If present, element matrices will be needed
-                and added to this matrix.
-            physqrow : np.ndarray
-                Array of physical quantity numbers for the rows of the matrix
-                and for the right-hand side vector.
-                Default: All physical quantities.
-            physqcol : np.ndarray
-                Array of physical quantity numbers for the columns of the matrix.
-                Default: All physical quantities.
-            order : str
-                The sequence order of the degrees of freedom on element level:
-                'ND' or 'DN'. Default = 'DN'
-            posvectors : int
-                Supply the position of vectors to the element routine. Default=0
 
-    Returns:
-        f : np.ndarray
-            The system vector.
-        A : np.ndarray
-            The system matrix (optionally).
+    NOTE: This function modifies the input arguments `f` and optionally `A` in place.
+    
+    Parameters
+    ----------
+    mesh : dict
+        Mesh structure.
+    problem : dict
+        Problem structure.
+    f : numpy.ndarray
+        "Previous" system vector input. Result added to this vector.
+    element : callable
+        Function handle to the element function routine.
+    user : Any
+        Can be used by the user for transferring data to the element routine.
+    curve : int
+        Build on given curve number.      
+    **kwargs : dict, optional
+        Optional arguments:
+        A : numpy.ndarray
+            "Previous" system matrix. If present, element matrices will be needed
+            and added to this matrix.
+        physqrow : numpy.ndarray
+            Array of physical quantity numbers for the rows of the matrix
+            and for the right-hand side vector. Default: All physical quantities.
+        physqcol : numpy.ndarray
+            Array of physical quantity numbers for the columns of the matrix.
+            Default: All physical quantities.
+        order : str
+            The sequence order of the degrees of freedom on element level:
+            'ND' or 'DN'. Default = 'DN'
+        posvectors : bool
+            Supply the position of vectors to the element routine. Default=False
     """
 
     # Default optional arguments
-    curve = kwargs.get('curve', -1)
-    Ap = kwargs.get('Ap', None)
+    A = kwargs.get('A', None)
     physqrow = kwargs.get('physqrow',np.arange(problem.nphysq,dtype=int))
     physqcol = kwargs.get('physqcol',np.arange(problem.nphysq,dtype=int))
     order = kwargs.get('order', 'DN')
     posvectors = kwargs.get('posvectors', False)
 
-    if curve == -1:
-        raise ValueError('Argument curve is missing.')
-
-    # Make a copy of fp to f
-    f = fp.copy()
-    if Ap is not None:
-        A = Ap.copy()
-        mat = True
-    else:
-        mat = False
+    mat_present = A is not None
 
     rowcolequal = np.array_equal(physqrow, physqcol)
 
@@ -72,7 +58,7 @@ def add_boundary_elements(mesh, problem, fp, element, user, **kwargs):
 
         posr = np.hstack([posrow[i] for i in physqrow]) # indexing a list using another list
 
-        if mat:
+        if mat_present:
             if rowcolequal:
                 posc = posr
             else:
@@ -85,21 +71,16 @@ def add_boundary_elements(mesh, problem, fp, element, user, **kwargs):
 
         if posvectors:
             posvec, _ = pos_array_vec(problem, mesh.curves[curve].topology[:, elem, 1].T, order=order)
-            if mat:
+            if mat_present:
                 elemvec, elemmat = element(elem, coor, user, posrow, posvec)
                 A[posr[:, None], posc] += elemmat
             else:
                 elemvec = element(elem, coor, user, posrow, posvec)
         else:
-            if mat:
+            if mat_present:
                 elemvec, elemmat = element(elem, coor, user, posrow)
                 A[posr[:, None], posc] += elemmat
             else:
                 elemvec = element(elem, coor, user, posrow)
 
         f[posr] += elemvec
-
-    if mat:
-        return f, A
-    else:
-        return f

@@ -67,7 +67,7 @@ def main():
     print('add_boundary_elements')
     user.funcnr = 1
     user.func = traction_func
-    f=ezt.add_boundary_elements ( mesh, problem, f,
+    ezt.add_boundary_elements ( mesh, problem, f,
            ezt.stokes_natboun_curve, user, physqrow=[0], curve=3 )
 
     # define essential boundary conditions (Dirichlet)
