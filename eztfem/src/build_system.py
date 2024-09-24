@@ -5,50 +5,53 @@ from .pos_array_vec import pos_array_vec
 
 def build_system(mesh, problem, element, user, **kwargs):
     """
-    BUILD_SYSTEM  Build the system matrix
-      [ A, f ] = BUILD_SYSTEM ( mesh, problem, element, user, 'option1', value1, .... )
-      input:
-        mesh: mesh structure
-        mesh: problem structure
-        element: function handle to the element function routine
-        user: can be used by the user for transferring data to the element routine
-      optional arguments:
-        string, value couples to set options:
-        'physqrow' array of physical quantity numbers for the rows of the matrix
-                   and for the right-hand side vector.
-                   default: all physical quantities
-        'physqcol' array of physical quantity numbers for the columns of the matrix
-                   default: all physical quantities
-        'order'  the sequence order of the degrees of freedom on element level:
-                 'ND' : the most inner loop is over the degrees of freedom
-                 'DN' : the most inner loop is over the nodal points
-                 default = 'DN'  
-                 NOTE: the outside loop is always given by the physical quantities.
-        'posvectors' supply the position of vectors to the element routine
-                 default=0
-        For example:
-          [ A, f ] = build_system ( mesh, problem, @element, user, 'order', 'ND' )
-        to change the order.
-      output:
-        A: the system matrix. 
-        f: the system vector. 
+    Build the system matrix and right hand side.
+
+    Parameters
+    ----------
+    mesh : dict
+        Mesh structure.
+    problem : dict
+        Problem structure.
+    element : callable
+        Function handle to the element function routine.
+    user : User
+        User object to pass parameters and data to the element routine.
+    **kwargs : dict, optional
+        Optional arguments:
+        physqrow : numpy.ndarray, optional
+            Array of physical quantity numbers for the rows of the matrix
+            and for the right-hand side vector. Default: all physical quantities.
+        physqcol : numpy.ndarray, optional
+            Array of physical quantity numbers for the columns of the matrix.
+            Default: all physical quantities.
+        order : str, optional
+            The sequence order of the degrees of freedom on element level:
+            'ND' : the most inner loop is over the degrees of freedom.
+            'DN' : the most inner loop is over the nodal points.
+            Default: 'DN'.
+            NOTE: the outside loop is always given by the physical quantities.
+        posvectors : bool, optional
+            Supply the position of vectors to the element routine. Default: False.
+
+    Returns
+    -------
+    A : numpy.ndarray
+        The system matrix.
+    f : numpy.ndarray
+        The right hand side.
+
+    Examples
+    --------
+    To change the order:
+    >>> A, f = build_system(mesh, problem, element, user, order='ND')
     """
 
     # Set default optional arguments
-    physqrow = np.arange(problem.nphysq,dtype=int)
-    physqcol = np.arange(problem.nphysq,dtype=int)
-    order = 'DN'
-    posvectors = False
-
-    # Override optional arguments if provided
-    if 'physqrow' in kwargs:
-        physqrow = kwargs['physqrow']
-    if 'physqcol' in kwargs:
-        physqcol = kwargs['physqcol']
-    if 'order' in kwargs:
-        order = kwargs['order']
-    if 'posvectors' in kwargs:
-        posvectors = kwargs['posvectors']
+    physqrow = kwargs.get('physqrow', np.arange(problem.nphysq, dtype=int))
+    physqcol = kwargs.get('physqcol', np.arange(problem.nphysq, dtype=int))
+    order = kwargs.get('order', 'DN')
+    posvectors = kwargs.get('posvectors', False)
 
     rowcolequal = np.array_equal(physqrow, physqcol)
 
