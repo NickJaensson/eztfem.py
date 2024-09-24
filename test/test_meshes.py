@@ -5063,7 +5063,7 @@ class TestPytfem(unittest.TestCase):
     mesh_ez.points = mesh_ez.points - 1 # Python indexing
     self.assertTrue(mesh_py==mesh_ez,'quadrilateral2d failed test!' )
   def test21_quadrilaterial2d(self):
-    mesh_tmp1 = ezt.quadrilateral2d([2, 3], 'quad4', origin=[-2.0, 0.0], length=[2.0, 3.0]);    mesh_tmp2 = ezt.quadrilateral2d([4, 3], 'quad4', origin=[0.0, 0.0], length=[4.0, 3.0]);    mesh_py = ezt.mesh_merge(mesh_tmp1, mesh_tmp2, curves1=[1], curves2=[-3], deletecurves1=[1], deletepoints1=[0]);
+    mesh_tmp1 = ezt.quadrilateral2d([2, 3], 'quad4', origin=[-2.0, 0.0], length=[2.0, 3.0]);    mesh_tmp2 = ezt.quadrilateral2d([4, 3], 'quad4', origin=[0.0, 0.0], length=[4.0, 3.0]);    mesh_py = ezt.mesh_merge(mesh_tmp1, mesh_tmp2, curves1=[1], curves2=[3], dir_curves2=[-1], deletecurves1=[1], deletepoints1=[0]);
     mesh_ez = ezt.Mesh()
     mesh_ez.ndim = 2
     mesh_ez.nnodes = 28

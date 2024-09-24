@@ -52,6 +52,6 @@ def two_blocks2d(ne, eltype, **kwargs):
   
     mesh2 = quadrilateral2d ( [n2, n3], eltype, origin=[o1,o2],length=[l2,l3], ratio=[1,3,3,1], factor=[f2,f3,f2,f3] )
   
-    mesh = mesh_merge ( mesh1, mesh2, curves1=[1], curves2=[-3], deletecurves1=[1] )
+    mesh = mesh_merge ( mesh1, mesh2, curves1=[1], curves2=[3], dir_curves2=[-1], deletecurves1=[1] )
 
     return mesh

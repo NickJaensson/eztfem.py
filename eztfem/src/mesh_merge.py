@@ -20,8 +20,12 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         
         - 'curves1', 'curves2' : array_like
             Vectors of equal size giving the curves in both meshes that need to be merged into one.
-            If curves2[i] < 0, the curve number is |curves2[i]| and the curve is traversed in the opposite direction.
             NOTE: curves2[i] corresponds to curves1[i].
+
+        - 'dir_curves2' : array_like
+           Array with value of 1 or -1, indicating the direction in which curves2 is traversed,
+           Must be present if curves2 is present, and of same length as curves2
+           The curve number is curves2[i] and the curve is traversed in the opposite direction if dir_curves2[i] < 0.
 
         - 'deletepoints1', 'deletepoints2' : array_like
             Vectors to indicate which points of mesh1 and mesh2 must not be included in the new merged mesh.
@@ -52,6 +56,7 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     points2 = kwargs.get('points2', None)
     curves1 = kwargs.get('curves1', None)
     curves2 = kwargs.get('curves2', None)
+    dir_curves2 = kwargs.get('dir_curves2', None)
     deletepoints1 = kwargs.get('deletepoints1', None)
     deletepoints2 = kwargs.get('deletepoints2', None)
     deletecurves1 = kwargs.get('deletecurves1', None)
@@ -62,13 +67,14 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     pnts2_present = points2 is not None
     crvs1_present = curves1 is not None
     crvs2_present = curves2 is not None
+    dir_crvs2_present = dir_curves2 is not None
     delpnts1_present = deletepoints1 is not None
     delpnts2_present = deletepoints2 is not None
     delcrvs1_present = deletecurves1 is not None
     delcrvs2_present = deletecurves2 is not None
 
     for option in kwargs:
-        if option not in ['points1', 'points2', 'curves1', 'curves2', 
+        if option not in ['points1', 'points2', 'curves1', 'curves2', 'dir_curves2', 
                           'deletepoints1', 'deletepoints2', 'deletecurves1', 
                           'deletecurves2']:
             raise ValueError(f'Invalid option: {option}')
@@ -93,6 +99,17 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         raise ValueError('both curves1 and curves2 need to be present')
     else:
         crvs = 0
+
+    if crvs2_present and not dir_crvs2_present:
+        raise ValueError('curves2 and dir_curves2 must be both present')
+    elif crvs2_present and dir_crvs2_present:
+        if len(curves2) != len(dir_curves2):
+            raise ValueError('curves2 and dir_curves2 need to be of the same length')
+        for ii, val in enumerate(curves2):
+            if val < 0:
+                raise ValueError('curves2 must be a non-negative curve number')
+            if dir_curves2[ii] not in [1, -1]:      
+                raise ValueError('curves2_dir must be 1 or -1')   
 
     # work storage for new numbering of new nodes for mesh2
     # NOTE: -1 indicates that a node has not been assigned yet
@@ -129,10 +146,11 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         for crv in range(len(curves2)):
             crv1 = curves1[crv]
             crv2 = curves2[crv]
-            if crv2 > 0:
+            dir2 = dir_curves2[crv]
+            if dir2 > 0:
                 work[mesh2.curves[crv2].nodes] = mesh1.curves[crv1].nodes
             else:
-                work[mesh2.curves[-crv2].nodes[mesh2.curves[-crv2].nnodes - 1::-1]] = mesh1.curves[crv1].nodes
+                work[mesh2.curves[crv2].nodes[mesh2.curves[crv2].nnodes - 1::-1]] = mesh1.curves[crv1].nodes
 
     # delete curves
     if delcrvs1_present:
