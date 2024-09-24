@@ -3,24 +3,35 @@ from .pos_array import pos_array
 
 def define_essential(mesh, problem, geometry, numbers, **kwargs):
     """
-    Define essential degrees of freedom.
+    Get the indices of the essential degrees of freedom.
 
-    Parameters:
-        mesh: mesh structure
-        problem: problem structure
-        geometry: the 'geometry' to put essential degrees on
-                  'nodes': in the nodes given by numbers
-                  'points': in the points given by numbers
-                  'curves': in the curves given by numbers
-        numbers: an array of 'geometry' numbers
-        **kwargs: Optional arguments
-                  'physq': physical quantity number. default=1
-                  'degfd': degree of freedom within the physical quantity. default=1
-                  'iessp': index of previously defined essential degrees. Newly defined bc
-                           will be added.
+    Parameters
+    ----------
+    mesh : Mesh
+        Mesh structure.
+    problem : Problem
+        Problem structure.
+    geometry : str
+        The 'geometry' to put essential degrees on:
+        'nodes' : in the nodes given by numbers.
+        'points' : in the points given by numbers.
+        'curves' : in the curves given by numbers.
+    numbers : array_like
+        An array of 'geometry' numbers.
+    **kwargs : dict, optional
+        Optional arguments:
+        physq : int, optional
+            Physical quantity number. Default is 0.
+        degfd : int, optional
+            Degree of freedom within the physical quantity. Default is 0.
+        iessp : int, optional
+            Index of previously defined essential degrees. Newly defined boundary 
+            conditions will be added. Default is 0.
 
-    Returns:
-        iess: index of defined essential degrees
+    Returns
+    -------
+    iess : numpy.ndarray
+        Index of defined essential degrees.
     """
     
     # Optional arguments
