@@ -5,36 +5,51 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
     """
     Fill system vector.
 
-    Parameters:
-        mesh: mesh structure
-        problem: problem structure
-        geometry: the 'geometry' to fill degrees on:
-                  'nodes': in the nodes given by numbers
-                  'points': in the points given by numbers
-                  'curves': in the curves given by numbers
-        numbers: an array of 'geometry' numbers
-        func: scalar function for filling. Only argument is x, a coordinate vector.
-        **kwargs: Optional arguments
-                  'funcnr': function number for func, i.e. func(funcnr,x). default=1
-                  'physq': physical quantity number. default=1
-                  'degfd': degree of freedom within the physical quantity. default=1
-                  'fin': an existing system vector
+    NOTE: If f is present, this function modifies the input arguments `f`
+          in place. If f is not present, f is returned by the function.
+    
+    Parameters
+    ----------
+    mesh : object
+        Mesh structure.
+    problem : object
+        Problem structure.
+    geometry : str
+        The 'geometry' to fill degrees on:
+        - 'nodes': in the nodes given by numbers
+        - 'points': in the points given by numbers
+        - 'curves': in the curves given by numbers
+    numbers : array_like
+        An array of 'geometry' numbers.
+    func : callable
+        Scalar function for filling. Only argument is x, a coordinate vector.
+    **kwargs : optional
+        Optional arguments:
+        - funcnr : int, optional
+            Function number for func, i.e. func(funcnr, x). Default is 1.
+        - physq : int, optional
+            Physical quantity number. Default is 1.
+        - degfd : int, optional
+            Degree of freedom within the physical quantity. Default is 1.
+        - f : numpy.ndarray, optional
+            An existing system vector.
 
-    Returns:
-        f: filled system vector. If fin is present, f is a copy of fin with
-           newly filled values where specified. Otherwise the non-filled part
-           is initialized with zero.
+    Returns
+    -------
+    f : numpy.ndarray (optional)
+        Filled system vector. Will only be returned if f is not present in the 
+        function call (if it is present, f is modified in place).
     """
     
     funcnr = kwargs.get('funcnr', 0)
     physq = kwargs.get('physq', 0)
     degfd = kwargs.get('degfd', 0)
-    fin = kwargs.get('fin', None)
+    f = kwargs.get('f', None)
 
-    if fin is None:
+    f_present = f is not None
+
+    if not f_present:
         f = np.zeros(problem.numdegfd)
-    else:
-        f = np.array(fin) # copy the array
 
     # Convert numbers to a list if an int is supplied
     if isinstance(numbers, (int, np.integer)):
@@ -62,4 +77,5 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
 
         f[posn[0][degfd]] = func(funcnr, mesh.coor[node])
 
-    return f
+    if not f_present:
+        return f
