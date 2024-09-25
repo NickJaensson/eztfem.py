@@ -1,4 +1,3 @@
-src/gauss_legendre.py
 src/integrate_boundary_elements.py
 src/isoparametric_deformation.py
 src/isoparametric_deformation_curve.py

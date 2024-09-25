@@ -2,22 +2,33 @@ import numpy as np
 
 def gauss_legendre(shape, **kwargs):
     """
-    Gauss-Legendre integration points and weights
-    
-    Args:
-        shape: shape of the domain:
-            'line', interval [-1,1]
-            'quad', domain [-1,1]x[-1,1]
-            'triangle', reference triangle, left-lower half of [0,1]x[0,1]
-        **kwargs: Optional keyword arguments to set optional parameters:
-                  'n': the number of integration points in one direction. This only applies
-                       to shape='line' and shape='quad', where the number of integration
-                       points will be n and n^2, respectively.
-                  'p': the order of the integration rule (=order polynomial integrated exact).
-                       This only applies to shape='triangle'.
-    Returns:
-        x, w: coordinates and weights of the integration scheme.
+    Gauss-Legendre integration points and weights.
+
+    Parameters
+    ----------
+    shape : {'line', 'quad', 'triangle'}
+        Shape of the domain:
+        - 'line': interval [-1, 1]
+        - 'quad': domain [-1, 1] x [-1, 1]
+        - 'triangle': reference triangle, left-lower half of [0, 1] x [0, 1]
+    **kwargs : optional
+        Optional keyword arguments to set optional parameters:
+        - n : int, optional
+            The number of integration points in one direction. This only applies to 
+            shape='line' and shape='quad', where the number of integration points 
+            will be n and n^2, respectively.
+        - p : int, optional
+            The order of the integration rule (order polynomial integrated exact). 
+            This only applies to shape='triangle'.
+
+    Returns
+    -------
+    x : numpy.ndarray
+        Coordinates of the integration points.
+    w : numpy.ndarray
+        Weights of the integration scheme.
     """
+
     n = kwargs.get('n', -1)
     p = kwargs.get('p', -1)
 
@@ -43,12 +54,22 @@ def gauss_legendre(shape, **kwargs):
     return x, w
 
 
-# Gauss Legendre in 1D defined on the interval [-1,1]
 def gauss_legendre_line(n):
     """
-    n = number of integration points
-    x(i), w(i), i=1,n = the reference coordinates and weights of the
-      integration points
+    Compute Gauss-Legendre integration points and weights for a line segment.
+    Gauss Legendre in 1D defined on the interval [-1,1]
+
+    Parameters
+    ----------
+    n : int
+        Number of integration points.
+
+    Returns
+    -------
+    x : numpy.ndarray
+        Reference coordinates of the integration points.
+    w : numpy.ndarray
+        Weights of the integration points.
     """
 
     x = np.zeros(n)
@@ -377,13 +398,24 @@ def gauss_legendre_line(n):
 
     return x, w
 
-# Gauss Legendre in 2D defined on the region [-1,1]x[-1,1]
 def gauss_legendre_quad(n):
     """
-    n = number of integration points in one dimension
-    x(i,1:2), w(i), i=1,n^2 = the reference coordinates and weights of
-       the integration points
+    Compute Gauss-Legendre integration points and weights for a quadrilateral.
+    Gauss Legendre in 2D defined on the region [-1,1]x[-1,1]
+    
+    Parameters
+    ----------
+    n : int
+        Number of integration points in one dimension.
+
+    Returns
+    -------
+    x : numpy.ndarray
+        Reference coordinates of the integration points, shape (n^2, 2).
+    w : numpy.ndarray
+        Weights of the integration points, shape (n^2,).
     """
+
     x1, w1 = gauss_legendre_line(n)
 
     m = n**2
@@ -399,27 +431,38 @@ def gauss_legendre_quad(n):
 
     return x, w
 
-# Gauss Legendre in 1D defined on the interval [-1,1]
 def gauss_legendre_triangle(p):
     """
-    p = order of integration rule (=order polynomial integrated exact).
-    x(i,1:2), w(i), i=1,ni = the reference coordinates and weights of
-       the integration points  
-     the reference region of a triangle is
-        
-        1 |\               eta \in [0,1] 
-        ^ |  \             xi  \in [0,1]
-    eta | |    \           xi + eta <= 1
-          |      \
+    Compute Gauss-Legendre integration points and weights for a triangle.
+    Gauss Legendre in 2D defined triangle, left-lower half of [0, 1] x [0, 1]
+    
+    Parameters
+    ----------
+    p : int
+        Order of the integration rule (order polynomial integrated exact).
+
+    Returns
+    -------
+    x : numpy.ndarray
+        Reference coordinates of the integration points, shape (ni, 2).
+    w : numpy.ndarray
+        Weights of the integration points, shape (ni,).
+
+    Notes
+    -----
+    The reference region of a triangle is defined as:
+    
+        1 |\\               eta ∈ [0, 1]
+        ^ |  \\             xi  ∈ [0, 1]
+    eta | |    \\           xi + eta <= 1
+          |      \\
         0 ---------
           0  xi -> 1
-  
-  
+
     The numerical values are based on:
-  
+
     L. Zhang, T. Cui, H. Liu, "A set of symmetric quadrature rules on triangles
-    and tetrahedra", Journal of Computational Mathematics, Vol. 27, No. 1, 2009,
-    89-96.
+    and tetrahedra", Journal of Computational Mathematics, Vol. 27, No. 1, 2009, 89-96.
     """
 
     # number of integration points
