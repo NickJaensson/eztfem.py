@@ -2,30 +2,44 @@ import numpy as np
 
 def distribute_elements(nelem, ratio, factor):
     """
-    DISTRIBUTE_ELEMENTS  Generate noequidistant n elements on the interval [0,1] 
-      [ x ] = DISTRIBUTE_ELEMENTS ( n, ratio, factor )
-      input:
-        nelem: number of elements
-        ratio, factor: 
-          ratio = 0: equidistant mesh
-          ratio = 1: the size of the last element is factor times the first
-          ratio = 2: the size of an element is factor times the previous one
-          ratio = 3: the size of the last element is 1/factor times the first
-          ratio = 4: the size of an element is 1/factor times the previous one
-      output:
-        x : coordinates of n+1 points
-    
-      The interval [0:1] is divided into n elements:
-    
-         dx_{i+1} = g dx_{i-1}
-                                                   1 - g^n
-         1 = (1+g+g^2+g^3+....+g^{n-1}) dx_1   (= -------- dx_1)
-                                                   1 - g
-       with fac = 1+g+g^2+g^3+....+g^{n-1} we have
-    
-         dx_1 = 1 / fac        (=(1-g)/(1-g^n))
-         dx_n = g^{n-1} dx_1
-         
+    Generate non-equidistant n elements on the interval [0, 1].
+
+    Parameters
+    ----------
+    n : int
+        Number of elements.
+    ratio : int
+        Determines the distribution of elements:
+        0: Equidistant mesh.
+        1: The size of the last element is `factor` times the first.
+        2: The size of an element is `factor` times the previous one.
+        3: The size of the last element is `1/factor` times the first.
+        4: The size of an element is `1/factor` times the previous one.
+    factor : float
+        Factor used in the distribution calculations.
+
+    Returns
+    -------
+    x : numpy.ndarray
+        Coordinates of n+1 points.
+
+    Notes
+    -----
+    The interval [0, 1] is divided into n elements:
+
+    .. math::
+        dx_{i+1} = g \cdot dx_{i-1}
+
+    .. math::
+        1 = (1 + g + g^2 + g^3 + \\ldots + g^{n-1}) \\cdot dx_1 = \\frac{1 - g^n}{1 - g} \\cdot dx_1
+
+    With :math:`fac = 1 + g + g^2 + \\ldots + g^{n-1}`, we have:
+
+    .. math::
+        dx_1 = \\frac{1}{fac} = \\frac{1 - g}{1 - g^n}
+
+    .. math::
+        dx_n = g^{n-1} \\cdot dx_1
     """
     
     if factor < 0:
