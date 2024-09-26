@@ -3,36 +3,46 @@ from .mesh_class import Mesh, Geometry
 from .distribute_elements import distribute_elements
 
 def line1d(ne, eltype, **kwargs):
-    '''
-    LINE1D  Simple meshgenerator for 1D lines on the interval [0:1].
-      Simple meshgenerator for 1D lines on the interval [0:1] with an optional
-      translation and scaling of the region.
-      mesh = LINE1D ( n, eltype, 'option1', value1, .... )
-      input:
-        ne: number of elements 
-        eltype: shape number 
-                 eltype='line2': 2 node elements
-                 eltype='line3': 3 node elements
-      optional arguments:
-        string, value couples to set options:
-        'origin', origin of the domain
-        'length', length of the domain
-        'ratio', where
-            ratio = 0: equidistant mesh
-            ratio = 1: the size of the last element is factor times the first
-            ratio = 2: the size of an element is factor times the previous one
-            ratio = 3: the size of the last element is 1/factor times the first
-            ratio = 4: the size of an element is 1/factor times the previous one
-           default=0
-        'factor' factor
-           default=1
-      For example:
-        mesh = line1d ( 10, 1, 'origin', 1, 'length', 2 )
-      to create a 10-element line mesh with 2-node elements on the domain [1,3].
-      output:
-        mesh: mesh structure. See function quadrilateral2d for the components.
-              Note, that the components curves are not present for LINE1D!
-    '''
+    """
+    Simple mesh generator for 1D lines on the interval [0, 1].
+
+    Generates a simple 1D line mesh on the interval [0, 1] with optional translation and scaling of the region.
+
+    Parameters
+    ----------
+    ne : int
+        Number of elements.
+    eltype : str
+        Shape number.
+        - 'line2' : 2-node elements.
+        - 'line3' : 3-node elements.
+    **kwargs : optional
+        Additional options.
+        - 'origin' : float, optional
+            Origin of the domain.
+        - 'length' : float, optional
+            Length of the domain.
+        - 'ratio' : int, optional, default=0
+            Mesh ratio.
+            - 0 : Equidistant mesh.
+            - 1 : The size of the last element is factor times the first.
+            - 2 : The size of an element is factor times the previous one.
+            - 3 : The size of the last element is 1/factor times the first.
+            - 4 : The size of an element is 1/factor times the previous one.
+        - 'factor' : float, optional, default=1
+            Factor for the mesh ratio.
+
+    Returns
+    -------
+    mesh : Mesh
+        Mesh object. See function `quadrilateral2d` for the components.
+        Note that the components curves are not present for `LINE1D`.
+
+    Examples
+    --------
+    >>> mesh = line1d(10, 'line2', origin=1, length=2)
+    Creates a 10-element line mesh with 2-node elements on the domain [1, 3].
+    """
 
     # optional arguments
     ori = kwargs.get('origin', None)
@@ -72,7 +82,9 @@ def line1d_2node(n, ratio, factor):
     Also generated are two points and the end of the interval
     
          P1 --------------------- P2
-   '''
+
+    .. :noindex:
+    '''
     
     print('line1d_2node')
     
@@ -116,6 +128,8 @@ def line1d_3node(n, ratio, factor):
               1           2     
     Also generated are two points and the end of the interval    
        P1 --------------------- P2
+
+    .. :noindex:
     '''
     print('line1d_3node')
     

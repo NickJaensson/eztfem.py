@@ -1,4 +1,3 @@
-src/line_1d.py
 src/mesh_class.py
 src/pos_array.py
 src/pos_array_vec.py
