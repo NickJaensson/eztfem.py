@@ -9,10 +9,10 @@ def build_system(mesh, problem, element, user, **kwargs):
 
     Parameters
     ----------
-    mesh : dict
-        Mesh structure.
-    problem : dict
-        Problem structure.
+    mesh : Mesh
+        Mesh object.
+    problem : Problem
+        Problem object.
     element : callable
         Function handle to the element function routine.
     user : User

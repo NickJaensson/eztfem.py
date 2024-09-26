@@ -10,10 +10,10 @@ def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
     
     Parameters
     ----------
-    mesh : dict
-        Mesh structure.
-    problem : dict
-        Problem structure.
+    mesh : Mesh
+        Mesh object.
+    problem : Problem
+        Problem object.
     f : numpy.ndarray
         "Previous" system vector input. Result added to this vector.
     element : callable

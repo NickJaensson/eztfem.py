@@ -8,9 +8,9 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
     Parameters
     ----------
     mesh : Mesh
-        Mesh structure.
+        Mesh object.
     problem : Problem
-        Problem structure.
+        Problem object.
     geometry : str
         The 'geometry' to put essential degrees on:
         'nodes' : in the nodes given by numbers.
