@@ -2,23 +2,33 @@ import numpy as np
 
 def isoparametric_deformation(x, dphi):
     """
-    ISOPARAMETRIC_DEFORMATION  Isoparametric deformation of an element.
-      [ F, Finv, detF ] = ISOPARAMETRIC_DEFORMATION ( x, dphi )
-      input:
-        x: coordinates of the nodes = position of the unknowns for phi and dphi
-           x(i,j) with i the point in space and j the direction in space
-        dphi: derivatives of the shape function with respect to the reference
-              coordinates dphi(i,j,k), with i the point in space j the unknown
-              and k the direction in space.
-      output:
-        F: Deformation gradient matrix between the reference element and the
-           actual element. F(i,j,m) means that in point i the transformation is
-    
-                             F(j,m) = d x  / d xi
-                                         j       m
-        Finv: The inverse of F 
-        detF: The determinant of F (Jacobian) detF(i) gives the determinant
-              in point i
+    Isoparametric deformation of an element.
+
+    Parameters
+    ----------
+    x : numpy.ndarray
+        Coordinates of the nodes, representing the position of the unknowns for phi and dphi.
+        x[i, j] with i being the point in space and j the direction in space.
+    dphi : numpy.ndarray
+        Derivatives of the shape function with respect to the reference coordinates.
+        dphi[i, j, k], with i being the point in space, j the unknown, and k the direction in space.
+
+    Returns
+    -------
+    F : numpy.ndarray
+        Deformation gradient matrix between the reference element and the actual element.
+        F[i, j, m] means that at point i, the transformation is:
+        
+        .. math::
+            F[j, m] = \\frac{d x_j}{d \\xi_m}
+    Finv : numpy.ndarray
+        The inverse of F.
+    detF : numpy.ndarray
+        The determinant of F (Jacobian). detF[i] gives the determinant at point i.
+
+    Examples
+    --------
+    >>> F, Finv, detF = isoparametric_deformation(x, dphi)
     """
     
     npts, ndim = dphi.shape[0], x.shape[1]
