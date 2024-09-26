@@ -1,5 +1,5 @@
 import numpy as np
-from .mesh_class import Mesh, Geometry
+from .class_mesh import Mesh, Geometry
 from .distribute_elements import distribute_elements
 
 def quadrilateral2d(num_el, eltype, **kwargs):

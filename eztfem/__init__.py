@@ -11,15 +11,15 @@ from .src.integrate_boundary_elements import integrate_boundary_elements
 from .src.isoparametric_deformation_curve import isoparametric_deformation_curve
 from .src.isoparametric_deformation import isoparametric_deformation
 from .src.line_1d import line1d
-from .src.mesh_class import Mesh, Geometry
+from .src.class_mesh import Mesh, Geometry
 from .src.mesh_merge import mesh_merge
 from .src.pos_array_vec import pos_array_vec
 from .src.pos_array import pos_array
-from .src.problem_class import Problem
+from .src.class_problem import Problem
 from .src.quadrilateral2d import quadrilateral2d
 from .src.refcoor_nodal_points import refcoor_nodal_points
-from .src.user_class import User
-from .src.vector_class import Vector
+from .src.class_user import User
+from .src.class_vector import Vector
 
 from .addons.meshes.l_shape2d import l_shape2d
 from .addons.meshes.two_blocks2d import two_blocks2d

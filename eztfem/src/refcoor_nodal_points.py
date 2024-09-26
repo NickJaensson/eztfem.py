@@ -1,5 +1,5 @@
 import numpy as np
-from .mesh_class import Mesh
+from .class_mesh import Mesh
 
 def refcoor_nodal_points(mesh):
     """
