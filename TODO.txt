@@ -1,4 +1,3 @@
-src/isoparametric_deformation_curve.py
 src/line_1d.py
 src/mesh_class.py
 src/pos_array.py

@@ -4,19 +4,30 @@ def isoparametric_deformation_curve(x, dphi):
     """
     Isoparametric deformation of curved line elements.
 
-    Parameters:
-        x (np.ndarray): Coordinates of the nodes = position of the unknowns for phi and dphi.
-                        Shape: (number of points in space, direction in space).
-        dphi (np.ndarray): Derivative of the shape function with respect to the reference
-                           coordinate. Shape: (number of points in space, number of unknowns, 1).
+    Parameters
+    ----------
+    x : numpy.ndarray
+        Coordinates of the nodes, representing the position of the unknowns for phi and dphi.
+        Shape: (number of points in space, direction in space).
+    dphi : numpy.ndarray
+        Derivative of the shape function with respect to the reference coordinate.
+        Shape: (number of points in space, number of unknowns, 1).
 
-    Returns:
-        dxdxi (np.ndarray): Derivative of the coordinates x with respect to the reference coordinate (tangential vector).
-                            Shape: (number of points in space, direction in space).
-        curvel (np.ndarray): The length of the vector dxdxi.
-                             Shape: (number of points in space).
-        normal (np.ndarray): Unit normal vector to the curve.
-                             Shape: (number of points in space, direction in space).
+    Returns
+    -------
+    dxdxi : numpy.ndarray
+        Derivative of the coordinates x with respect to the reference coordinate (tangential vector).
+        Shape: (number of points in space, direction in space).
+    curvel : numpy.ndarray
+        The length of the vector dxdxi.
+        Shape: (number of points in space).
+    normal : numpy.ndarray
+        Unit normal vector to the curve.
+        Shape: (number of points in space, direction in space).
+
+    Examples
+    --------
+    >>> dxdxi, curvel, normal = isoparametric_deformation_curved_line(x, dphi)
     """
 
     npts, ndim = dphi.shape[0], x.shape[1]
