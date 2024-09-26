@@ -82,8 +82,6 @@ def line1d_2node(n, ratio, factor):
     Also generated are two points and the end of the interval
     
          P1 --------------------- P2
-
-    .. :noindex:
     '''
     
     print('line1d_2node')
@@ -128,8 +126,6 @@ def line1d_3node(n, ratio, factor):
               1           2     
     Also generated are two points and the end of the interval    
        P1 --------------------- P2
-
-    .. :noindex:
     '''
     print('line1d_3node')
     
