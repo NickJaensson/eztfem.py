@@ -1,5 +1,5 @@
 import numpy as np
-from ...src.isoparametric_deformation import isoparametric_deformation
+from ...core.isoparametric_deformation import isoparametric_deformation
 
 def streamfunction_elem(elem, coor, user, pos, posvec):
     # Set some values

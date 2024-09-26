@@ -1,5 +1,5 @@
 import numpy as np
-from ...src.isoparametric_deformation_curve import isoparametric_deformation_curve
+from ...core.isoparametric_deformation_curve import isoparametric_deformation_curve
 
 import numpy as np
 

@@ -1,5 +1,5 @@
 import numpy as np
-from ...src.isoparametric_deformation import isoparametric_deformation
+from ...core.isoparametric_deformation import isoparametric_deformation
 
 def poisson_elem(elem, coor, user, pos):
     """

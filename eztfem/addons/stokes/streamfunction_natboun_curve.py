@@ -1,5 +1,5 @@
 import numpy as np
-from ...src.isoparametric_deformation_curve import isoparametric_deformation_curve
+from ...core.isoparametric_deformation_curve import isoparametric_deformation_curve
 
 def streamfunction_natboun_curve(elem, coor, user, pos, posvec):
 
