@@ -3,91 +3,102 @@ from .mesh_class import Mesh, Geometry
 from .distribute_elements import distribute_elements
 
 def quadrilateral2d(num_el, eltype, **kwargs):
-    """"
-    QUADRILATERAL2D  Simple meshgenerator for quadrilateral 2D regions.
-      Simple meshgenerator for 2D on the region [0,1]x[0,1] with an optional
-      translation and/or scaling or deformation of the region.
-      mesh = QUADRILATERAL2D ( ne, eltype, 'option1', value1, .... )
-      input:
-        num_el=[nx,ny]: number of elements in x and y direction
-        eltype: element type
-                eltype='tria3': 3 node triangle
-                eltype='tria4': 4 node triangle
-                eltype='tria6': 6 node triangle
-                eltype='tria7': 7 node triangle
-                eltype='quad4': 4 node quadrilateral
-                eltype='quad9': 9 node quadrilateral
-                eltype='quad5': 5 node quadrilateral
-      optional arguments:
-        string, value couples to set options:
-        'origin', origin of the domain [ox,uy]
-        'length', length and width of the domain [lx,ly]
-        'vertices', give four vertices of the domain in the format
-                   [ x1 y1; x2 y2; x3 y3; x4 y4 ]
-                  note, that origin/length arguments are ignored if vertices are
-                  given.
-        'ratio', a vector [ratio1 ratio2 ratio3 ratio4] where for each of the 
-            four curves the ratio is given, where
-            ratio = 0: equidistant mesh
-            ratio = 1: the size of the last element is factor times the first
-            ratio = 2: the size of an element is factor times the previous one
-            ratio = 3: the size of the last element is 1/factor times the first
-            ratio = 4: the size of an element is 1/factor times the previous one
-           default=0
-        'factor' a vector [factor1,factor2,factor3,factor4] where for each of
-            the four curves the factor is given.
-           default=[1 1 1 1]
-      Examples:
-        mesh = quadrilateral2d ( [10,10], 3, 'origin', [1,2], 'length', [2,3] )
-      to create a 10x10 mesh of 3 node triangles, where the left lower corner of
-      the domain is (1,2) and the size of the domain is 2 by 3.
-        mesh = quadrilateral2d ( [10,10], 5, 'vertices', [1,1;3,2;4,5;-1,4] )
-      to create a 10x10 mesh of 4 node quadrilateral elements, where the left
-      lower corner, right lower corner, upper right corner and upper left corner
-      of the domain are (1,1), (3,2), (4,5) and (-1,4), respectively. The edges
-      are straight.
-      output:
-        mesh: mesh structure, having the components
-           ndim: dimension of space (ndim=1 or 2)
-           nnodes: number of nodes
-           coor: array of size (nnodes,ndim), where coor(i,:) are the
-                 coordinates of node i, with 1<=i<=nnodes.
-           nelem: number of elements
-           elshape: shape number of the elements. Table of shapes:
-                 elshape=1: 2 node line elements
-                 elshape=2: 3 node line elements
-                 elshape=3: 3 node triangle
-                 elshape=4: 6 node triangle
-                 elshape=5: 4 node quadrilateral
-                 elshape=6: 9 node quadrilateral
-                 elshape=7: 7 node triangle
-                 elshape=9: 5 node quadrilateral
-                 elshape=10: 4 node triangle
-           elnumnod: number of nodes in a single element
-           topology: array of size (elnumnod,nelem), where topology(:,elem) is
-                     an array of global node numbers element elem is connected 
-                     to
-           npoints: number of points
-           points: an array containing the node numbers of the points, hence
-                   points(i) is the node of point i, with 1<=i<=npoints.
-           ncurves: number of curves
-           curves: an array of structures, where each structure has the 
-               components
-               ndim: dimension of space (ndim=2)
-               nnodes: number of nodes
-               nelem: number of elements
-               elshape: shape number of the elements. Table of shapes:
-                 elshape=1: 2 node elements
-                 elshape=2: 3 node elements
-               elnumnod: number of nodes in a single element
-               nodes: array of size nnodes containing the global node numbers,
-                 i.e. nodes(i) is the global node number of local node i.
-               topology: array of size (elnumnod,nelem,2), where
-                 topology(:,elem,1) is an array of local node numbers element
-                 elem is connected to.
-                 topology(:,elem,2) is an array of global node numbers element
-                 elem is connected to.
-             
+    """
+    Simple mesh generator for quadrilateral 2D regions.
+
+    Generates a simple 2D mesh on the region [0, 1] x [0, 1] with optional translation and/or scaling or deformation of the region.
+
+    Parameters
+    ----------
+    num_el : array_like
+        Number of elements in x and y direction, e.g., [nx, ny].
+    eltype : str
+        Element type.
+        - 'tria3' : 3-node triangle.
+        - 'tria4' : 4-node triangle.
+        - 'tria6' : 6-node triangle.
+        - 'tria7' : 7-node triangle.
+        - 'quad4' : 4-node quadrilateral.
+        - 'quad9' : 9-node quadrilateral.
+        - 'quad5' : 5-node quadrilateral.
+    **kwargs : optional
+        Additional options.
+        - 'origin' : array_like, optional
+            Origin of the domain [ox, uy].
+        - 'length' : array_like, optional
+            Length and width of the domain [lx, ly].
+        - 'vertices' : array_like, optional
+            Four vertices of the domain in the format [[x1, y1], [x2, y2], [x3, y3], [x4, y4]].
+            Note that origin/length arguments are ignored if vertices are given.
+        - 'ratio' : list of int, optional, default=[0, 0, 0, 0]
+            A vector [ratio1, ratio2, ratio3, ratio4] where for each of the four curves the ratio is given:
+            - 0 : Equidistant mesh.
+            - 1 : The size of the last element is factor times the first.
+            - 2 : The size of an element is factor times the previous one.
+            - 3 : The size of the last element is 1/factor times the first.
+            - 4 : The size of an element is 1/factor times the previous one.
+        - 'factor' : array_like, optional, default=[1, 1, 1, 1]
+            A vector [factor1, factor2, factor3, factor4] where for each of the four curves the factor is given.
+
+    Returns
+    -------
+    mesh : Mesh
+        Mesh object, having the components:
+        - ndim : int
+            Dimension of space (ndim=1 or 2).
+        - nnodes : int
+            Number of nodes.
+        - coor : numpy.ndarray
+            Array of size (nnodes, ndim), where coor[i, :] are the coordinates of node i, with 1 <= i <= nnodes.
+        - nelem : int
+            Number of elements.
+        - elshape : int
+            Shape number of the elements. Table of shapes:
+            - 1 : 2-node line elements.
+            - 2 : 3-node line elements.
+            - 3 : 3-node triangle.
+            - 4 : 6-node triangle.
+            - 5 : 4-node quadrilateral.
+            - 6 : 9-node quadrilateral.
+            - 7 : 7-node triangle.
+            - 9 : 5-node quadrilateral.
+            - 10 : 4-node triangle.
+        - elnumnod : int
+            Number of nodes in a single element.
+        - topology : numpy.ndarray
+            Array of size (elnumnod, nelem), where topology[:, elem] is an array of global node numbers element elem is connected to.
+        - npoints : int
+            Number of points.
+        - points : numpy.ndarray
+            An array containing the node numbers of the points, hence points[i] is the node of point i, with 1 <= i <= npoints.
+        - ncurves : int
+            Number of curves.
+        - curves : list of dict
+            An array of structures, where each structure has the components:
+            - ndim : int
+                Dimension of space (ndim=2).
+            - nnodes : int
+                Number of nodes.
+            - nelem : int
+                Number of elements.
+            - elshape : int
+                Shape number of the elements. Table of shapes:
+                - 1 : 2-node elements.
+                - 2 : 3-node elements.
+            - elnumnod : int
+                Number of nodes in a single element.
+            - nodes : numpy.ndarray
+                Array of size nnodes containing the global node numbers, i.e., nodes[i] is the global node number of local node i.
+            - topology : numpy.ndarray
+                Array of size (elnumnod, nelem, 2), where topology[:, elem, 0] is an array of local node numbers element elem is connected to, and topology[:, elem, 1] is an array of global node numbers element elem is connected to.
+
+    Examples
+    --------
+    >>> mesh = quadrilateral2d([10, 10], 'tria3', origin=[1, 2], length=[2, 3])
+    Creates a 10x10 mesh of 3-node triangles, where the left lower corner of the domain is (1, 2) and the size of the domain is 2 by 3.
+
+    >>> mesh = quadrilateral2d([10, 10], 'quad5', vertices=[[1, 1], [3, 2], [4, 5], [-1, 4]])
+    Creates a 10x10 mesh of 4-node quadrilateral elements, where the left lower corner, right lower corner, upper right corner, and upper left corner of the domain are (1, 1), (3, 2), (4, 5), and (-1, 4), respectively. The edges are straight.
     """
 
     # optional arguments

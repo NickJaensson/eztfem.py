@@ -2,19 +2,31 @@ import numpy as np
 
 def pos_array_vec(problem, nodes, **kwargs):
     """
-    Get the index of the degrees of freedom of one or more vectors of 
-    special structure in the given nodes.
+    Get the index of the degrees of freedom of one or more vectors of special structure in the given nodes.
 
-    Parameters:
-    problem: object representing the problem structure
-    nodes: An array of node numbers
-    **kwargs: Optional arguments
-        - vec: Array of vector numbers, default: all vectors
-        - order: The sequence order of the degrees of freedom in the nodes
-    
-    Returns:
-    pos: List of arrays containing the positions of the degrees of freedom of each vector
-    ndof: List of the number of degrees in pos of each vector
+    Parameters
+    ----------
+    problem : Problem
+        Problem object representing the problem structure.
+    nodes : array_like
+        An array of node numbers.
+    **kwargs : optional
+        Additional options.
+        - vec : array_like, optional
+            Array of vector numbers. Default is all vectors.
+        - order : str, optional
+            The sequence order of the degrees of freedom in the nodes.
+
+    Returns
+    -------
+    pos : list of arrays
+        List of arrays containing the positions of the degrees of freedom of each vector.
+    ndof : list of int
+        List of the number of degrees of freedom in `pos` of each vector.
+
+    Examples
+    --------
+    >>> pos, ndof = get_vector_dof_indices(problem, nodes, vec=[1, 2], order='ND')
     """
 
     # Set default optional arguments

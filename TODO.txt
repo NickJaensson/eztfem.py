@@ -1,8 +1,5 @@
 src/mesh_class.py
-src/pos_array.py
-src/pos_array_vec.py
 src/problem_class.py
-src/quadrilateral2d.py
 src/user_class.py
 src/vector_class.py
 

@@ -4,16 +4,29 @@ def pos_array(problem, nodes, **kwargs):
     """
     Get the index of the system degrees of freedom in the given nodes.
 
-    Parameters:
-    problem: object representing the problem structure
-    nodes: An array of node numbers
-    **kwargs: Optional arguments
-        - physq: Array of physical quantity numbers, default: all physical quantities
-        - order: The sequence order of the degrees of freedom in the nodes
-    
-    Returns:
-    pos: List of arrays containing the positions of the degrees of freedom of each physq
-    ndof: List of the number of degrees in pos of each physq
+    Parameters
+    ----------
+    problem : Problem
+        Problem object representing the problem structure.
+    nodes : array_like
+        An array of node numbers.
+    **kwargs : optional
+        Additional options.
+        - physq : array_like, optional
+            Array of physical quantity numbers. Default is all physical quantities.
+        - order : str, optional
+            The sequence order of the degrees of freedom in the nodes.
+
+    Returns
+    -------
+    pos : list of arrays
+        List of arrays containing the positions of the degrees of freedom of each physical quantity.
+    ndof : list of int
+        List of the number of degrees of freedom in `pos` of each physical quantity.
+
+    Examples
+    --------
+    >>> pos, ndof = get_dof_indices(problem, nodes, physq=[1, 2], order='ND')
     """
 
     # Set default optional arguments
