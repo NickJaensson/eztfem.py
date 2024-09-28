@@ -1,6 +1,7 @@
 import numpy as np
 from .pos_array import pos_array
 
+
 def define_essential(mesh, problem, geometry, numbers, **kwargs):
     """
     Get the indices of the essential degrees of freedom.
@@ -25,15 +26,15 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         degfd : int, optional
             Degree of freedom within the physical quantity. Default is 0.
         iessp : int, optional
-            Index of previously defined essential degrees. Newly defined boundary 
-            conditions will be added. Default is 0.
+            Index of previously defined essential degrees. Newly defined
+            boundary conditions will be added. Default is 0.
 
     Returns
     -------
     iess : numpy.ndarray
         Index of defined essential degrees.
     """
-    
+
     # Optional arguments
     physq = kwargs.get('physq', 0)
     degfd = kwargs.get('degfd', 0)
@@ -53,9 +54,9 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         nnodes = len(numbers)
     elif geometry == 'curves':
         nnodes = sum([mesh.curves[curve].nnodes for curve in numbers])
-        nodes = np.array([],dtype=int)
+        nodes = np.array([], dtype=int)
         for curve in numbers:
-            nodes = np.append(nodes,mesh.curves[curve].nodes)
+            nodes = np.append(nodes, mesh.curves[curve].nodes)
     else:
         raise ValueError(f"Invalid geometry: {geometry}")
 

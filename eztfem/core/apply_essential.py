@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.sparse import eye, lil_matrix
 
+
 def apply_essential(A, f, uess, iess):
     """
     Add effect of essential boundary conditions to right-hand side.
@@ -23,7 +24,7 @@ def apply_essential(A, f, uess, iess):
     Aup : scipy.sparse.lil_matrix
         Matrix partition of unknown rows and prescribed columns.
     """
-    
+
     # initialize some parameters
     nd = f.shape[0]
     npp = iess.shape[0]
@@ -35,12 +36,12 @@ def apply_essential(A, f, uess, iess):
     iu = np.where(tmp == 0)[0]
 
     # extract Aup
-    Aup = A[iu,:][:,iess]
+    Aup = A[iu, :][:, iess]
 
     # modify A
-    A[iu[:,None], iess] = lil_matrix((nu, npp))
-    A[iess[:,None], iu] = lil_matrix((npp, nu))
-    A[iess[:,None], iess] = eye(npp)
+    A[iu[:, None], iess] = lil_matrix((nu, npp))
+    A[iess[:, None], iu] = lil_matrix((npp, nu))
+    A[iess[:, None], iess] = eye(npp)
 
     # modify f
     f[iu] -= Aup.dot(uess[iess])

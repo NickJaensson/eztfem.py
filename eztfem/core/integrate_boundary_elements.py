@@ -1,6 +1,6 @@
-import numpy as np
 from .pos_array import pos_array
 from .pos_array_vec import pos_array_vec
+
 
 def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
     """
@@ -53,13 +53,16 @@ def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
     # Start summing loop over elements
     resultsum = 0
 
-    for elem in range(mesh.curves[curve].nelem ):
+    for elem in range(mesh.curves[curve].nelem):
+
+        nodes = mesh.curves[curve].topology[:, elem, 1].T
+
         # Positions in global system
-        pos, _ = pos_array(problem, mesh.curves[curve].topology[:, elem, 1].T, order=order)
+        pos, _ = pos_array(problem, nodes, order=order)
         coor = mesh.coor[mesh.curves[curve].topology[:, elem, 1], :]
 
         if posvectors:
-            posvec, _ = pos_array_vec(problem, mesh.curves[curve].topology[:, elem, 1].T, order=order)
+            posvec, _ = pos_array_vec(problem, nodes, order=order)
             resultsum += element(elem, coor, user, pos, posvec)
         else:
             resultsum += element(elem, coor, user, pos)

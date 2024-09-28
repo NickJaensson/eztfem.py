@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def isoparametric_deformation_curve(x, dphi):
     """
     Isoparametric deformation of curved line elements.
@@ -7,16 +8,19 @@ def isoparametric_deformation_curve(x, dphi):
     Parameters
     ----------
     x : numpy.ndarray
-        Coordinates of the nodes, representing the position of the unknowns for phi and dphi.
+        Coordinates of the nodes, representing the position of the unknowns for
+        phi and dphi.
         Shape: (number of points in space, direction in space).
     dphi : numpy.ndarray
-        Derivative of the shape function with respect to the reference coordinate.
+        Derivative of the shape function with respect to the reference
+        coordinate.
         Shape: (number of points in space, number of unknowns, 1).
 
     Returns
     -------
     dxdxi : numpy.ndarray
-        Derivative of the coordinates x with respect to the reference coordinate (tangential vector).
+        Derivative of the coordinates x with respect to the reference
+        coordinate (tangential vector).
         Shape: (number of points in space, direction in space).
     curvel : numpy.ndarray
         The length of the vector dxdxi.

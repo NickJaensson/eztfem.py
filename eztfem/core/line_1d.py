@@ -1,12 +1,14 @@
 import numpy as np
-from .class_mesh import Mesh, Geometry
+from .class_mesh import Mesh
 from .distribute_elements import distribute_elements
+
 
 def line1d(ne, eltype, **kwargs):
     """
     Simple mesh generator for 1D lines on the interval [0, 1].
 
-    Generates a simple 1D line mesh on the interval [0, 1] with optional translation and scaling of the region.
+    Generates a simple 1D line mesh on the interval [0, 1] with optional
+    translation and scaling of the region.
 
     Parameters
     ----------
@@ -72,24 +74,24 @@ def line1d(ne, eltype, **kwargs):
 def line1d_2node(n, ratio, factor):
     '''
     Generate a mesh on region [0,1] using line elements with 2 nodes.
-    The numbering is straightforward: 
-    For example a 4 element mesh is numbered as follows    
-      Nodes:    
-          1 --  2 --  3 --  4 --  5    
-      Elements:    
+    The numbering is straightforward:
+    For example a 4 element mesh is numbered as follows
+      Nodes:
+          1 --  2 --  3 --  4 --  5
+      Elements:
           x --  x --  x --  x --  x
-             1     2     3     4    
+             1     2     3     4
     Also generated are two points and the end of the interval
-    
+
          P1 --------------------- P2
     '''
-    
+
     print('line1d_2node')
-    
+
     # create mesh object
-    mesh = Mesh(ndim=1,nnodes=n+1,elshape=1,nelem=n,elnumnod=2,npoints=2,
+    mesh = Mesh(ndim=1, nnodes=n+1, elshape=1, nelem=n, elnumnod=2, npoints=2,
                 topology=np.zeros((2, n)), coor=np.zeros((n + 1, 1)),
-                points = np.zeros(2))
+                points=np.zeros(2))
 
     # topology
     for elem in range(n):
@@ -117,22 +119,23 @@ def line1d_2node(n, ratio, factor):
 def line1d_3node(n, ratio, factor):
     '''
     Generate a mesh on region [0,1] using line elements with 3 nodes.
-    The numbering is straightforward: 
-    For example a 2 element mesh is numbered as follows    
-    Nodes:    
-        1 --  2 --  3 --  4 --  5    
-    Elements:    
+    The numbering is straightforward:
+    For example a 2 element mesh is numbered as follows
+    Nodes:
+        1 --  2 --  3 --  4 --  5
+    Elements:
         x --  x --  x --  x --  x
-              1           2     
-    Also generated are two points and the end of the interval    
+              1           2
+    Also generated are two points and the end of the interval
        P1 --------------------- P2
     '''
+
     print('line1d_3node')
-    
+
     # create mesh object
-    mesh = Mesh(ndim=1,nnodes=2*n+1,elshape=2,nelem=n,elnumnod=3,npoints=2,
-                topology=np.zeros((3, n)), coor=np.zeros((2*n + 1, 1)),
-                points = np.zeros(2))
+    mesh = Mesh(ndim=1, nnodes=2*n+1, elshape=2, nelem=n, elnumnod=3,
+                npoints=2, topology=np.zeros((3, n)),
+                coor=np.zeros((2*n + 1, 1)), points=np.zeros(2))
 
     # topology
     for elem in range(n):

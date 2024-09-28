@@ -3,6 +3,7 @@ from .pos_array import pos_array
 from .pos_array_vec import pos_array_vec
 from .class_vector import Vector
 
+
 def deriv_vector(mesh, problem, element, user, **kwargs):
     """
     Derive a vector of special structure.
@@ -27,7 +28,8 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
             'DN' : the most inner loop is over the nodal points.
             Default is 'DN'.
         posvectors : bool, optional
-            Supply the position of vectors to the element routine. Default: False.
+            Supply the position of vectors to the element routine.
+            Default: False.
 
     Returns
     -------
@@ -36,7 +38,8 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
     """
 
     # Set default optional arguments
-    vec = kwargs.get('vec', problem.nphysq)  # first vec after nphysq (starting at zero)
+    # NOTE: default vec is first vec after nphysq (starting at zero)
+    vec = kwargs.get('vec', problem.nphysq)
     order = kwargs.get('order', 'DN')
     posvectors = kwargs.get('posvectors', 0)
 
@@ -53,12 +56,14 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
     for elem in range(mesh.nelem):
         # Positions in the global system
         pos, _ = pos_array(problem, mesh.topology[:, elem].T, order=order)
-        posvec, _ = pos_array_vec(problem, mesh.topology[:, elem].T, vec=vec, order=order)
+        posvec, _ = pos_array_vec(problem, mesh.topology[:, elem].T, vec=vec,
+                                  order=order)
         posv = np.array(posvec).flatten()
-        coor = mesh.coor[mesh.topology[:,elem],:]
+        coor = mesh.coor[mesh.topology[:, elem], :]
 
         if posvectors:
-            posvec, _ = pos_array_vec(problem, mesh.topology[:, elem].T, order=order)
+            posvec, _ = pos_array_vec(problem, mesh.topology[:, elem].T,
+                                      order=order)
             elemvec = element(elem, coor, user, pos, posvec)
         else:
             elemvec = element(elem, coor, user, pos)

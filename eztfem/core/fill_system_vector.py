@@ -1,13 +1,14 @@
 import numpy as np
 from .pos_array import pos_array
 
+
 def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
     """
     Fill system vector.
 
     NOTE: If f is present, this function modifies the input arguments `f`
           in place. If f is not present, f is returned by the function.
-    
+
     Parameters
     ----------
     mesh : object
@@ -37,10 +38,10 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
     Returns
     -------
     f : numpy.ndarray (optional)
-        Filled system vector. Will only be returned if f is not present in the 
+        Filled system vector. Will only be returned if f is not present in the
         function call (if it is present, f is modified in place).
     """
-    
+
     funcnr = kwargs.get('funcnr', 0)
     physq = kwargs.get('physq', 0)
     degfd = kwargs.get('degfd', 0)
@@ -61,17 +62,17 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
     elif geometry == 'points':
         nodes = mesh.points[numbers]
     elif geometry == 'curves':
-        nnodes = sum([mesh.curves[curve].nnodes for curve in numbers])
-        nodes = np.array([],dtype=int)
+        # nnodes = sum([mesh.curves[curve].nnodes for curve in numbers])
+        nodes = np.array([], dtype=int)
         for curve in numbers:
-            nodes = np.append(nodes,mesh.curves[curve].nodes)
+            nodes = np.append(nodes, mesh.curves[curve].nodes)
     else:
         raise ValueError(f"Invalid geometry: {geometry}")
 
     # Fill vector
     for node in nodes:
         posn, ndof = pos_array(problem, node, physq=physq, order='ND')
-        
+
         if degfd > ndof[0]:
             continue
 
