@@ -77,6 +77,8 @@ cmd_mesh_py21 = "    mesh_tmp1 = ezt.quadrilateral2d([2, 3], 'quad4', origin=[-2
 
 %% write some header stuff
 
+writelines("# this test was automatically generated using",fn);
+writelines("# create_pytfem_tests_meshes.m",fn);
 writelines("# run with: python -m unittest test_meshes.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");

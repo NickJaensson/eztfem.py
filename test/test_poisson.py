@@ -1,3 +1,5 @@
+# this test was automatically generated using
+# create_pytfem_tests_poisson.m
 # run with: python -m unittest test_poisson.py
 import numpy as np
 import unittest

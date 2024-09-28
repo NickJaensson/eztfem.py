@@ -106,6 +106,8 @@ cmd_deriv_vector2 =  "    user_py2 = user_py;" + ...
 
 %% write some header stuff
 
+writelines("# this test was automatically generated using",fn);
+writelines("# create_pytfem_tests_stokes.m",fn);
 writelines("# run with: python -m unittest test_stokes.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");

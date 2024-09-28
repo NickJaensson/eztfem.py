@@ -21,6 +21,8 @@ fn = "~/Desktop/eztfem.py/test/test_gauss_basis.py";
 
 %% write some header stuff
 
+writelines("# this test was automatically generated using",fn);
+writelines("# create_pytfem_tests_gauss_basis.m",fn);
 writelines("# run with: python -m unittest test_gauss_basis.py",fn);
 mywritelines("import numpy as np")
 mywritelines("import unittest");
