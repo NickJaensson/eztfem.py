@@ -23,87 +23,34 @@ def quadrilateral2d(num_el, eltype, **kwargs):
         - 'quad4' : 4-node quadrilateral.
         - 'quad9' : 9-node quadrilateral.
         - 'quad5' : 5-node quadrilateral.
-    **kwargs : optional
-        Additional options.
-        - 'origin' : array_like, optional
-            Origin of the domain [ox, uy].
-        - 'length' : array_like, optional
-            Length and width of the domain [lx, ly].
-        - 'vertices' : array_like, optional
-            Four vertices of the domain in the format
-            [[x1, y1], [x2, y2], [x3, y3], [x4, y4]].
-            Note that origin/length arguments are ignored if vertices are
-            given.
-        - 'ratio' : list of int, optional, default=[0, 0, 0, 0]
-            A vector [ratio1, ratio2, ratio3, ratio4] where for each of the
-            four curves the ratio is given:
-            - 0 : Equidistant mesh.
-            - 1 : The size of the last element is factor times the first.
-            - 2 : The size of an element is factor times the previous one.
-            - 3 : The size of the last element is 1/factor times the first.
-            - 4 : The size of an element is 1/factor times the previous one.
-        - 'factor' : array_like, optional, default=[1, 1, 1, 1]
-            A vector [factor1, factor2, factor3, factor4] where for each of
-            the four curves the factor is given.
+
+    Keyword arguments
+    -----------------
+    origin : array_like, optional, default=[0, 0]
+        Origin of the domain [ox, uy].
+    length : array_like, optional, default=[1.0, 1.0]
+        Length and width of the domain [lx, ly].
+    vertices : array_like, optional, default=[[0, 0], [1, 0], [1, 1], [0, 1]]
+        Four vertices of the domain in the format
+        [[x1, y1], [x2, y2], [x3, y3], [x4, y4]].
+        Note that origin/length arguments are ignored if vertices are
+        given.
+    ratio : list of int, optional, default=[0, 0, 0, 0]
+        A vector [ratio1, ratio2, ratio3, ratio4] where for each of the
+        four curves the ratio is given:
+        - 0 : Equidistant mesh.
+        - 1 : The size of the last element is factor times the first.
+        - 2 : The size of an element is factor times the previous one.
+        - 3 : The size of the last element is 1/factor times the first.
+        - 4 : The size of an element is 1/factor times the previous one.
+    factor : array_like, optional, default=[1, 1, 1, 1]
+        A vector [factor1, factor2, factor3, factor4] where for each of
+        the four curves the factor is given.
 
     Returns
     -------
     mesh : Mesh
-        Mesh object, having the components:
-        - ndim : int
-            Dimension of space (ndim=1 or 2).
-        - nnodes : int
-            Number of nodes.
-        - coor : numpy.ndarray
-            Array of size (nnodes, ndim), where coor[i, :] are the coordinates
-            of node i, with 1 <= i <= nnodes.
-        - nelem : int
-            Number of elements.
-        - elshape : int
-            Shape number of the elements. Table of shapes:
-            - 1 : 2-node line elements.
-            - 2 : 3-node line elements.
-            - 3 : 3-node triangle.
-            - 4 : 6-node triangle.
-            - 5 : 4-node quadrilateral.
-            - 6 : 9-node quadrilateral.
-            - 7 : 7-node triangle.
-            - 9 : 5-node quadrilateral.
-            - 10 : 4-node triangle.
-        - elnumnod : int
-            Number of nodes in a single element.
-        - topology : numpy.ndarray
-            Array of size (elnumnod, nelem), where topology[:, elem] is an
-            array of global node numbers element elem is connected to.
-        - npoints : int
-            Number of points.
-        - points : numpy.ndarray
-            An array containing the node numbers of the points, hence points[i]
-            is the node of point i, with 1 <= i <= npoints.
-        - ncurves : int
-            Number of curves.
-        - curves : list of dict
-            An array of structures, where each structure has the components:
-            - ndim : int
-                Dimension of space (ndim=2).
-            - nnodes : int
-                Number of nodes.
-            - nelem : int
-                Number of elements.
-            - elshape : int
-                Shape number of the elements. Table of shapes:
-                - 1 : 2-node elements.
-                - 2 : 3-node elements.
-            - elnumnod : int
-                Number of nodes in a single element.
-            - nodes : numpy.ndarray
-                Array of size nnodes containing the global node numbers, i.e.,
-                nodes[i] is the global node number of local node i.
-            - topology : numpy.ndarray
-                Array of size (elnumnod, nelem, 2), where topology[:, elem, 0]
-                is an array of local node numbers element elem is connected to,
-                and topology[:, elem, 1] is an array of global node numbers
-                element elem is connected to.
+        Mesh object
 
     Examples
     --------
@@ -117,6 +64,7 @@ def quadrilateral2d(num_el, eltype, **kwargs):
     lower corner, right lower corner, upper right corner, and upper left
     corner of the domain are (1, 1), (3, 2), (4, 5), and (-1, 4), respectively.
     The edges are straight.
+
     """
 
     # optional arguments
@@ -173,8 +121,11 @@ def rectangle2d_tria3(num_el, ratio, factor):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 3
     nodes.
+
     The numbering for both nodal points and elements is row by row.
     For example a 2x2 mesh is numbered as follows
+
+    ::
 
       Nodes:
 
@@ -200,21 +151,24 @@ def rectangle2d_tria3(num_el, ratio, factor):
           | /    2  | /    4  |
           x ------- x ------- x
 
-     Also generated are four points and four curves:
+    Also generated are four points and four curves:
 
-                  <-----
-                     C3
-         P4 --------------------- P3
-          |                       |           Note:   C1=P1-P2
-          |                       |                   C2=P2-P3
-     |    |                       |    ^              C3=P3-P4
-     | C4 |                       | C2 |              C4=P4-P1
-    \\|/   |                       |    |
-          |                       |
-          |                       |
-         P1 --------------------- P2
-                     C1
-                   ----->
+    ::
+
+                      <-----
+                         C3
+             P4 --------------------- P3
+              |                       |           Note:   C1=P1-P2
+              |                       |                   C2=P2-P3
+         |    |                       |    ^              C3=P3-P4
+         | C4 |                       | C2 |              C4=P4-P1
+        \\|/   |                       |    |
+              |                       |
+              |                       |
+             P1 --------------------- P2
+                         C1
+                       ----->
+
     """
 
     print('rectangle2d_tria3')
@@ -313,8 +267,11 @@ def rectangle2d_tria4(num_el, ratio, factor):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 4
     nodes.
+
     The numbering for both nodal points and elements is row by row.
     For example a 2x2 mesh is numbered as follows
+
+    ::
 
       Nodes:
 
@@ -340,21 +297,23 @@ def rectangle2d_tria4(num_el, ratio, factor):
           | /    2  | /    4  |
           x ------- x ------- x
 
-     Also generated are four points and four curves:
+    Also generated are four points and four curves:
 
-                  <-----
-                     C3
-         P4 --------------------- P3
-          |                       |           Note:   C1=P1-P2
-          |                       |                   C2=P2-P3
-     |    |                       |    ^              C3=P3-P4
-     | C4 |                       | C2 |              C4=P4-P1
-    \\|/   |                       |    |
-          |                       |
-          |                       |
-         P1 --------------------- P2
-                     C1
-                   ----->
+    ::
+
+                      <-----
+                         C3
+             P4 --------------------- P3
+              |                       |           Note:   C1=P1-P2
+              |                       |                   C2=P2-P3
+         |    |                       |    ^              C3=P3-P4
+         | C4 |                       | C2 |              C4=P4-P1
+        \\|/   |                       |    |
+              |                       |
+              |                       |
+             P1 --------------------- P2
+                         C1
+                       ----->
 
     """
 
@@ -482,8 +441,11 @@ def rectangle2d_tria6(num_el, ratio, factor):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 6
     nodes.
+
     The numbering for both nodal points and elements is row by row.
     For example a 2x2 mesh is numbered as follows
+
+    ::
 
       Nodes:
 
@@ -509,21 +471,23 @@ def rectangle2d_tria6(num_el, ratio, factor):
           | /      2  | /      4  |
           x --  x --  x --  x --  x
 
-     Also generated are four points and four curves:
+    Also generated are four points and four curves:
 
-                  <-----
-                     C3
-         P4 --------------------- P3
-          |                       |           Note:   C1=P1-P2
-          |                       |                   C2=P2-P3
-     |    |                       |    ^              C3=P3-P4
-     | C4 |                       | C2 |              C4=P4-P1
-    \\|/   |                       |    |
-          |                       |
-          |                       |
-         P1 --------------------- P2
-                     C1
-                   ----->
+    ::
+
+                      <-----
+                         C3
+             P4 --------------------- P3
+              |                       |           Note:   C1=P1-P2
+              |                       |                   C2=P2-P3
+         |    |                       |    ^              C3=P3-P4
+         | C4 |                       | C2 |              C4=P4-P1
+        \\|/   |                       |    |
+              |                       |
+              |                       |
+             P1 --------------------- P2
+                         C1
+                       ----->
 
     """
 
@@ -639,8 +603,11 @@ def rectangle2d_tria7(num_el, ratio, factor):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 7
     nodes.
+
     The numbering for both nodal points and elements is row by row.
     For example a 2x2 mesh is numbered as follows
+
+    ::
 
       Nodes:
 
@@ -666,21 +633,24 @@ def rectangle2d_tria7(num_el, ratio, factor):
           | /      2  | /      4  |
           x --  x --  x --  x --  x
 
-     Also generated are four points and four curves:
+    Also generated are four points and four curves:
 
-                  <-----
-                     C3
-         P4 --------------------- P3
-          |                       |           Note:   C1=P1-P2
-          |                       |                   C2=P2-P3
-     |    |                       |    ^              C3=P3-P4
-     | C4 |                       | C2 |              C4=P4-P1
-    \\|/   |                       |    |
-          |                       |
-          |                       |
-         P1 --------------------- P2
-                     C1
-                   ----->
+    ::
+
+                      <-----
+                         C3
+             P4 --------------------- P3
+              |                       |           Note:   C1=P1-P2
+              |                       |                   C2=P2-P3
+         |    |                       |    ^              C3=P3-P4
+         | C4 |                       | C2 |              C4=P4-P1
+        \\|/   |                       |    |
+              |                       |
+              |                       |
+             P1 --------------------- P2
+                         C1
+                       ----->
+
     """
 
     print('rectangle_tria7')
@@ -846,8 +816,12 @@ def rectangle2d_tria7(num_el, ratio, factor):
 def rectangle2d_quad4(num_el, ratio, factor):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 4 nodes.
+
     The numbering for both nodal points and elements is row by row.
     For example a 2x2 mesh is numbered as follows
+
+    ::
+
       Nodes:
           7 ------- 8 ------- 9
           |         |         |
@@ -868,21 +842,25 @@ def rectangle2d_quad4(num_el, ratio, factor):
           |    1    |    2    |
           |         |         |
           x ------- x ------- x
-     Also generated are four points and four curves:
 
-                  <-----
-                     C3
-         P4 --------------------- P3
-          |                       |           Note:   C1=P1-P2
-          |                       |                   C2=P2-P3
-     |    |                       |    ^              C3=P3-P4
-     | C4 |                       | C2 |              C4=P4-P1
-    \\|/   |                       |    |
-          |                       |
-          |                       |
-         P1 --------------------- P2
-                     C1
-                   ----->
+    Also generated are four points and four curves:
+
+    ::
+
+                      <-----
+                         C3
+             P4 --------------------- P3
+              |                       |           Note:   C1=P1-P2
+              |                       |                   C2=P2-P3
+         |    |                       |    ^              C3=P3-P4
+         | C4 |                       | C2 |              C4=P4-P1
+        \\|/   |                       |    |
+              |                       |
+              |                       |
+             P1 --------------------- P2
+                         C1
+                       ----->
+
     """
 
     print('rectangle_quad4')
@@ -978,8 +956,12 @@ def rectangle2d_quad4(num_el, ratio, factor):
 def rectangle2d_quad5(num_el, ratio, factor):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 5 nodes.
+
     The numbering for both nodal points and elements is row by row.
     For example a 2x2 mesh is numbered as follows
+
+    ::
+
       Nodes:
           11------- 12------- 13
           |         |         |
@@ -990,6 +972,7 @@ def rectangle2d_quad5(num_el, ratio, factor):
           |    4    |    5    |
           |         |         |
           1 ------- 2 ------- 3
+
       Elements:
           x ------- x ------- x
           |         |         |
@@ -1000,21 +983,25 @@ def rectangle2d_quad5(num_el, ratio, factor):
           |    1    |    2    |
           |         |         |
           x ------- x ------- x
-     Also generated are four points and four curves:
 
-                  <-----
-                     C3
-         P4 --------------------- P3
-          |                       |           Note:   C1=P1-P2
-          |                       |                   C2=P2-P3
-     |    |                       |    ^              C3=P3-P4
-     | C4 |                       | C2 |              C4=P4-P1
-    \\|/   |                       |    |
-          |                       |
-          |                       |
-         P1 --------------------- P2
-                     C1
-                   ----->
+    Also generated are four points and four curves:
+
+    ::
+
+                      <-----
+                         C3
+             P4 --------------------- P3
+              |                       |           Note:   C1=P1-P2
+              |                       |                   C2=P2-P3
+         |    |                       |    ^              C3=P3-P4
+         | C4 |                       | C2 |              C4=P4-P1
+        \\|/   |                       |    |
+              |                       |
+              |                       |
+             P1 --------------------- P2
+                         C1
+                       ----->
+
     """
 
     print('rectangle_quad5')
@@ -1129,42 +1116,51 @@ def rectangle2d_quad5(num_el, ratio, factor):
 def rectangle2d_quad9(num_el, ratio, factor):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 9 nodes.
+
     The numbering for both nodal points and elements is row by row.
     For example a 2x2 mesh is numbered as follows
-        21 -- 22 -- 23 -- 24 -- 25
-        |           |           |
-        16    17    18    19    20
-        |           |           |
-        11 -- 12 -- 13 -- 14 -- 15
-        |           |           |
-        6     7     8     9    10
-        |           |           |
-        1 --  2 --  3 --  4 --  5
-    Elements:
-        x --  x --  x --  x --  x
-        |           |           |
-        x     3     x     4     x
-        |           |           |
-        x --  x --  x --  x --  x
-        |           |           |
-        x     1     x     2     x
-        |           |           |
-        x --  x --  x --  x --  x
+
+    ::
+
+      Nodes
+          21 -- 22 -- 23 -- 24 -- 25
+          |           |           |
+          16    17    18    19    20
+          |           |           |
+          11 -- 12 -- 13 -- 14 -- 15
+          |           |           |
+          6     7     8     9    10
+          |           |           |
+          1 --  2 --  3 --  4 --  5
+      Elements:
+          x --  x --  x --  x --  x
+          |           |           |
+          x     3     x     4     x
+          |           |           |
+          x --  x --  x --  x --  x
+          |           |           |
+          x     1     x     2     x
+          |           |           |
+          x --  x --  x --  x --  x
+
     Also generated are four points and four curves:
 
-                <-----
-                    C3
-        P4 --------------------- P3
-        |                       |           Note:   C1=P1-P2
-        |                       |                   C2=P2-P3
-    |    |                       |    ^              C3=P3-P4
-    | C4 |                       | C2 |              C4=P4-P1
-    \\|/   |                       |    |
-        |                       |
-        |                       |
-        P1 --------------------- P2
-                    C1
-                ----->
+    ::
+
+                    <-----
+                        C3
+            P4 --------------------- P3
+            |                       |           Note:   C1=P1-P2
+            |                       |                   C2=P2-P3
+        |   |                       |    ^              C3=P3-P4
+        | C4|                       | C2 |              C4=P4-P1
+       \\|/  |                       |    |
+            |                       |
+            |                       |
+            P1 --------------------- P2
+                        C1
+                    ----->
+
     """
 
     print('rectangle_quad9')

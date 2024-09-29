@@ -18,6 +18,7 @@ class Vector:
         Initializes the Vector object with the given attributes.
     __eq__(self, other):
         Checks equivalence of two Vector objects (overloads == sign).
+
     """
 
     def __init__(self, vec=0):
@@ -28,6 +29,7 @@ class Vector:
         ----------
         vec : int or float, optional
             The vector value (default is 0).
+
         """
         self.vec = vec
         self.u = np.array([])
@@ -49,6 +51,7 @@ class Vector:
         Notes
         -----
         See NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze.
+
         """
         check = [self.vec == other.vec,
                  np.allclose(np.squeeze(self.u), other.u, atol=1e-12, rtol=0)]

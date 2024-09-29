@@ -16,17 +16,18 @@ def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
         Function handle to the element function routine.
     user : any
         Can be used by the user for transferring data to the element routine.
-    **kwargs : optional
-        Additional options.
-        - 'curve' : int
-            Build on given curve number.
-        - 'order' : {'ND', 'DN'}, default='DN'
-            The sequence order of the degrees of freedom on element level:
-            - 'ND' : the most inner loop is over the degrees of freedom.
-            - 'DN' : the most inner loop is over the nodal points.
-            NOTE: The outside loop is always given by the physical quantities.
-        - 'posvectors' : bool, default=False
-            Supply the position of vectors to the element routine.
+
+    Keyword arguments
+    -----------------
+    curve : int
+        Build on given curve number.
+    order : {'ND', 'DN'}, default='DN'
+        The sequence order of the degrees of freedom on element level:
+        - 'ND' : the most inner loop is over the degrees of freedom.
+        - 'DN' : the most inner loop is over the nodal points.
+        NOTE: The outside loop is always given by the physical quantities.
+    posvectors : bool, default=False
+        Supply the position of vectors to the element routine.
 
     Returns
     -------
@@ -40,6 +41,7 @@ def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
     Examples
     --------
     >>> resultsum = integrate_boundary_elements(mesh, problem, element, user)
+
     """
 
     # Optional arguments

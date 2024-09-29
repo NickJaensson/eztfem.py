@@ -25,24 +25,26 @@ def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
         Can be used by the user for transferring data to the element routine.
     curve : int
         Build on given curve number.
-    **kwargs : dict, optional
-        Optional arguments:
-        A : numpy.ndarray
-            "Previous" system matrix. If present, element matrices will be
-            needed and added to this matrix.
-        physqrow : numpy.ndarray
-            Array of physical quantity numbers for the rows of the matrix
-            and for the right-hand side vector. Default: All physical
-            quantities.
-        physqcol : numpy.ndarray
-            Array of physical quantity numbers for the columns of the matrix.
-            Default: All physical quantities.
-        order : str
-            The sequence order of the degrees of freedom on element level:
-            'ND' or 'DN'. Default = 'DN'
-        posvectors : bool
-            Supply the position of vectors to the element routine.
-            Default=False
+
+    Keyword arguments
+    -----------------
+    A : numpy.ndarray
+        "Previous" system matrix. If present, element matrices will be
+        needed and added to this matrix.
+    physqrow : numpy.ndarray
+        Array of physical quantity numbers for the rows of the matrix
+        and for the right-hand side vector. Default: All physical
+        quantities.
+    physqcol : numpy.ndarray
+        Array of physical quantity numbers for the columns of the matrix.
+        Default: All physical quantities.
+    order : str
+        The sequence order of the degrees of freedom on element level:
+        'ND' or 'DN'. Default = 'DN'
+    posvectors : bool
+        Supply the position of vectors to the element routine.
+        Default=False
+
     """
 
     # Default optional arguments

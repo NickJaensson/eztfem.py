@@ -29,6 +29,8 @@ def two_blocks2d(ne, eltype, **kwargs):
     -----
     The domain is divided into two rectangles side by side:
 
+    ::
+
           L3 -----------------------
              |        |            |
              |        |            |
@@ -38,6 +40,7 @@ def two_blocks2d(ne, eltype, **kwargs):
            0 -----------------------
             -L1       0            L2
                  n1         n2
+
     """
 
     # Optional arguments

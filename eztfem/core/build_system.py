@@ -18,24 +18,25 @@ def build_system(mesh, problem, element, user, **kwargs):
         Function handle to the element function routine.
     user : User
         User object to pass parameters and data to the element routine.
-    **kwargs : dict, optional
-        Optional arguments:
-        physqrow : numpy.ndarray, optional
-            Array of physical quantity numbers for the rows of the matrix
-            and for the right-hand side vector. Default: all physical
-            quantities.
-        physqcol : numpy.ndarray, optional
-            Array of physical quantity numbers for the columns of the matrix.
-            Default: all physical quantities.
-        order : str, optional
-            The sequence order of the degrees of freedom on element level:
-            'ND' : the most inner loop is over the degrees of freedom.
-            'DN' : the most inner loop is over the nodal points.
-            Default: 'DN'.
-            NOTE: the outside loop is always given by the physical quantities.
-        posvectors : bool, optional
-            Supply the position of vectors to the element routine.
-            Default: False.
+
+    Keyword arguments
+    -----------------
+    physqrow : numpy.ndarray, optional
+        Array of physical quantity numbers for the rows of the matrix
+        and for the right-hand side vector. Default: all physical
+        quantities.
+    physqcol : numpy.ndarray, optional
+        Array of physical quantity numbers for the columns of the matrix.
+        Default: all physical quantities.
+    order : str, optional
+        The sequence order of the degrees of freedom on element level:
+        'ND' : the most inner loop is over the degrees of freedom.
+        'DN' : the most inner loop is over the nodal points.
+        Default: 'DN'.
+        NOTE: the outside loop is always given by the physical quantities.
+    posvectors : bool, optional
+        Supply the position of vectors to the element routine.
+        Default: False.
 
     Returns
     -------
@@ -48,6 +49,7 @@ def build_system(mesh, problem, element, user, **kwargs):
     --------
     To change the order:
     >>> A, f = build_system(mesh, problem, element, user, order='ND')
+
     """
 
     # Set default optional arguments

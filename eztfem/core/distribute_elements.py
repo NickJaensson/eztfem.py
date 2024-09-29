@@ -42,6 +42,7 @@ def distribute_elements(nelem, ratio, factor):
 
     .. math::
         dx_n = g^{n-1} \\cdot dx_1
+
     """
 
     if factor < 0:

@@ -12,12 +12,13 @@ def pos_array_vec(problem, nodes, **kwargs):
         Problem object representing the problem structure.
     nodes : array_like
         An array of node numbers.
-    **kwargs : optional
-        Additional options.
-        - vec : array_like, optional
-            Array of vector numbers. Default is all vectors.
-        - order : str, optional
-            The sequence order of the degrees of freedom in the nodes.
+
+    Keyword argument
+    ----------------
+    vec : array_like, optional
+        Array of vector numbers. Default is all vectors.
+    order : str, optional
+        The sequence order of the degrees of freedom in the nodes.
 
     Returns
     -------
@@ -31,6 +32,7 @@ def pos_array_vec(problem, nodes, **kwargs):
     --------
     >>> pos, ndof = get_vector_dof_indices(problem, nodes, vec=[1, 2],
                                            order='ND')
+
     """
 
     # Set default optional arguments

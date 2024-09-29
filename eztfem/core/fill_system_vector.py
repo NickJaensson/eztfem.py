@@ -24,22 +24,24 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
         An array of 'geometry' numbers.
     func : callable
         Scalar function for filling. Only argument is x, a coordinate vector.
-    **kwargs : optional
-        Optional arguments:
-        - funcnr : int, optional
-            Function number for func, i.e. func(funcnr, x). Default is 1.
-        - physq : int, optional
-            Physical quantity number. Default is 1.
-        - degfd : int, optional
-            Degree of freedom within the physical quantity. Default is 1.
-        - f : numpy.ndarray, optional
-            An existing system vector.
+
+    Keyword arguments
+    -----------------
+    funcnr : int, optional
+        Function number for func, i.e. func(funcnr, x). Default is 1.
+    physq : int, optional
+        Physical quantity number. Default is 1.
+    degfd : int, optional
+        Degree of freedom within the physical quantity. Default is 1.
+    f : numpy.ndarray, optional
+        An existing system vector which will be modified in-place.
 
     Returns
     -------
     f : numpy.ndarray (optional)
         Filled system vector. Will only be returned if f is not present in the
         function call (if it is present, f is modified in place).
+
     """
 
     funcnr = kwargs.get('funcnr', 0)

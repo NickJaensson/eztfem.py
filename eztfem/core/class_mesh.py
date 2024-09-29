@@ -8,36 +8,49 @@ class Mesh:
     Attributes
     ----------
     ndim : int
-        Number of dimensions.
+       Dimension of space (ndim=1 or 2).
     nnodes : int
         Number of nodes.
     nelem : int
         Number of elements.
     elshape : int
-        Shape of the elements.
+        Shape number of the elements. Table of shapes:
+        - 1 : 2-node line elements.
+        - 2 : 3-node line elements.
+        - 3 : 3-node triangle.
+        - 4 : 6-node triangle.
+        - 5 : 4-node quadrilateral.
+        - 6 : 9-node quadrilateral.
+        - 7 : 7-node triangle.
+        - 9 : 5-node quadrilateral.
+        - 10 : 4-node triangle.
     elnumnod : int
-        Number of nodes per element.
+        Number of nodes in a single element.
     npoints : int
         Number of points.
     ncurves : int
         Number of curves.
     topology : np.ndarray
-        Topology of the mesh.
+        Array of size (elnumnod, nelem), where topology[:, elem] is an
+        array of global node numbers element elem is connected to.
     coor : np.ndarray
-        Coordinates of the nodes.
+        Array of size (nnodes, ndim), where coor[i, :] are the coordinates
+        of node i, with 1 <= i <= nnodes.
     points : np.ndarray
-        Points in the mesh.
+        An array containing the node numbers of the points, hence points[i]
+        is the node of point i, with 1 <= i <= npoints.
     curves : list
-        Curves in the mesh.
+        An array of objects of type Geometry
 
     Methods
     -------
     __init__(self, ndim=0, nnodes=0, nelem=0, elshape=0, elnumnod=0,
-             npoints=0, ncurves=0, topology=None, coor=None, points=None,
-             curves=None):
+        npoints=0, ncurves=0, topology=None, coor=None, points=None,
+        curves=None):
         Initializes the Mesh object with the given attributes.
     __eq__(self, other):
         Checks equivalence of two Mesh objects (overloads == sign)
+
     """
 
     def __init__(self, ndim=0, nnodes=0, nelem=0, elshape=0, elnumnod=0,
@@ -76,6 +89,7 @@ class Mesh:
         It is not recommended to use mutable objects as default values in
         function def (e.g., for coor, points or curves). See:
         docs.python.org/3/tutorial/controlflow.html#default-argument-values
+
         """
         if topology is None:
             topology = np.array([])
@@ -116,6 +130,7 @@ class Mesh:
         Notes
         -----
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
+
         """
         check = [self.ndim == other.ndim,
                  self.nnodes == other.nnodes,
@@ -146,27 +161,34 @@ class Geometry:
     Attributes
     ----------
     elshape : int
-        Shape of the elements.
+        Shape number of the elements. Table of shapes:
+        - 1 : 2-node elements.
+        - 2 : 3-node elements.
     ndim : int
-        Number of dimensions.
+        Dimension of space (ndim=2).
     elnumnod : int
-        Number of nodes per element.
+        Number of nodes in a single element.
     nnodes : int
         Number of nodes.
     nelem : int
         Number of elements.
     topology : np.ndarray
-        Topology of the geometry.
+        Array of size (elnumnod, nelem, 2), where topology[:, elem, 0]
+        is an array of local node numbers element elem is connected to,
+        and topology[:, elem, 1] is an array of global node numbers
+        element elem is connected to.
     nodes : np.ndarray
-        Nodes in the geometry.
+        Array of size nnodes containing the global node numbers, i.e.,
+        nodes[i] is the global node number of local node i.
 
     Methods
     -------
     __init__(self, elshape=0, ndim=0, elnumnod=0, nnodes=0, nelem=0,
-             topology=None, nodes=None):
+        topology=None, nodes=None):
         Initializes the Geometry object with the given attributes.
     __eq__(self, other):
         Checks equivalence of two Geometry objects (overloads == sign).
+
     """
 
     def __init__(self, elshape=0, ndim=0, elnumnod=0, nnodes=0, nelem=0,
@@ -190,6 +212,7 @@ class Geometry:
             Topology of the geometry (default is None).
         nodes : np.ndarray, optional
             Nodes in the geometry (default is None).
+
         """
         if topology is None:
             topology = np.array([])
@@ -221,6 +244,7 @@ class Geometry:
         Notes
         -----
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
+
         """
         check = [self.ndim == other.ndim,
                  self.elshape == other.elshape,

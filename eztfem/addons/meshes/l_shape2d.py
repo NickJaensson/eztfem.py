@@ -24,6 +24,7 @@ def l_shape2d(ne, eltype, **kwargs):
     -------
     mesh : Mesh
         Mesh object for the domain.
+
     """
 
     # optional arguments

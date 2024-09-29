@@ -32,6 +32,7 @@ def isoparametric_deformation_curve(x, dphi):
     Examples
     --------
     >>> dxdxi, curvel, normal = isoparametric_deformation_curved_line(x, dphi)
+
     """
 
     npts, ndim = dphi.shape[0], x.shape[1]

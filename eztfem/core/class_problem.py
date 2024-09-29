@@ -35,6 +35,7 @@ class Problem:
         Maximum number of system DOF in the nodal points.
     maxvecnoddegfd : int
         Maximum number of vector DOF in the nodal points.
+
     """
 
     def __init__(self, mesh, elementdof, **kwargs):
@@ -60,6 +61,7 @@ class Problem:
             If the first dimension of elementdof does not match mesh.elnumnod.
         TypeError
             If an unexpected keyword argument is provided.
+
         """
         if elementdof.shape[0] != mesh.elnumnod:
             raise ValueError("First dimension of elementdof does not match \
@@ -145,6 +147,7 @@ class Problem:
         Notes
         -----
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
+
         """
         check = [
             self.nphysq == other.nphysq,

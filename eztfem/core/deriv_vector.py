@@ -18,23 +18,25 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
         Function handle to the element function routine.
     user : Any
         User object to pass parameters and data to the element routine.
-    **kwargs : dict, optional
-        Optional arguments:
-        vec : int, optional
-            The vector number. Default is problem['nphysq'].
-        order : str, optional
-            The sequence order of the degrees of freedom on element level.
-            'ND' : the most inner loop is over the degrees of freedom.
-            'DN' : the most inner loop is over the nodal points.
-            Default is 'DN'.
-        posvectors : bool, optional
-            Supply the position of vectors to the element routine.
-            Default: False.
+
+    Keyword arguments
+    -----------------
+    vec : int, optional
+        The vector number. Default is problem['nphysq'].
+    order : str, optional
+        The sequence order of the degrees of freedom on element level.
+        'ND' : the most inner loop is over the degrees of freedom.
+        'DN' : the most inner loop is over the nodal points.
+        Default is 'DN'.
+    posvectors : bool, optional
+        Supply the position of vectors to the element routine.
+        Default: False.
 
     Returns
     -------
     v : Vector
         Vector object containing the derived data.
+
     """
 
     # Set default optional arguments

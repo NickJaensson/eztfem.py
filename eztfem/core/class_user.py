@@ -25,6 +25,7 @@ class User:
         Initializes the User object with the given attributes.
     __eq__(self, other):
         Checks equivalence of two User objects (overloads == sign).
+
     """
 
     def __init__(self):
@@ -55,6 +56,7 @@ class User:
         -----
         See NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze.
         Only a selection of possible attributes is checked.
+
         """
         # Get list of names of attributes
         attributes_self = [attr for attr in self.__dict__.keys()]

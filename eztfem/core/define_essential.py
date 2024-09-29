@@ -19,20 +19,22 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         'curves' : in the curves given by numbers.
     numbers : array_like
         An array of 'geometry' numbers.
-    **kwargs : dict, optional
-        Optional arguments:
-        physq : int, optional
-            Physical quantity number. Default is 0.
-        degfd : int, optional
-            Degree of freedom within the physical quantity. Default is 0.
-        iessp : int, optional
-            Index of previously defined essential degrees. Newly defined
-            boundary conditions will be added. Default is 0.
+
+    Keyword arguments
+    -----------------
+    physq : int, optional
+        Physical quantity number. Default is 0.
+    degfd : int, optional
+        Degree of freedom within the physical quantity. Default is 0.
+    iessp : int, optional
+        Index of previously defined essential degrees. Newly defined
+        boundary conditions will be added. Default is 0.
 
     Returns
     -------
     iess : numpy.ndarray
         Index of defined essential degrees.
+
     """
 
     # Optional arguments

@@ -12,35 +12,35 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         The first mesh to be merged.
     mesh2 : Mesh
         The second mesh to be merged.
-    **kwargs : dict, optional
-        Additional options to set various parameters:
 
-        - 'point1', 'point2' : array_like
-            Vectors of equal size giving the points in both meshes that need
-            to be merged into one.
-            NOTE: points2[i] corresponds to points1[i].
+    Keyword arguments
+    -----------------
+    point1, point2 : array_like
+        Vectors of equal size giving the points in both meshes that need
+        to be merged into one.
+        NOTE: points2[i] corresponds to points1[i].
 
-        - 'curves1', 'curves2' : array_like
-            Vectors of equal size giving the curves in both meshes that need
-            to be merged into one.
-            NOTE: curves2[i] corresponds to curves1[i].
+    curves1, curves2 : array_like
+        Vectors of equal size giving the curves in both meshes that need
+        to be merged into one.
+        NOTE: curves2[i] corresponds to curves1[i].
 
-        - 'dir_curves2' : array_like
-           Array with value of 1 or -1, indicating the direction in which
-           curves2 is traversed. Must be present if curves2 is present, and of
-           same length as curves2
-           The curve number is curves2[i] and the curve is traversed in the
-           opposite direction if dir_curves2[i] < 0.
+    dir_curves2 : array_like
+        Array with value of 1 or -1, indicating the direction in which
+        curves2 is traversed. Must be present if curves2 is present, and of
+        same length as curves2
+        The curve number is curves2[i] and the curve is traversed in the
+        opposite direction if dir_curves2[i] < 0.
 
-        - 'deletepoints1', 'deletepoints2' : array_like
-            Vectors to indicate which points of mesh1 and mesh2 must not be
-            included in the new merged mesh.
-            NOTE: all double points are removed automatically already.
+    deletepoints1, deletepoints2 : array_like
+        Vectors to indicate which points of mesh1 and mesh2 must not be
+        included in the new merged mesh.
+        NOTE: all double points are removed automatically already.
 
-        - 'deletecurves1', 'deletecurves2' : array_like
-            Vectors to indicate which curves of mesh1 and mesh2 must not be
-            included in the new merged mesh.
-            NOTE: merged curves are removed automatically already.
+    deletecurves1, deletecurves2 : array_like
+        Vectors to indicate which curves of mesh1 and mesh2 must not be
+        included in the new merged mesh.
+        NOTE: merged curves are removed automatically already.
 
     Returns
     -------
@@ -53,6 +53,7 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     Creates a mesh from two meshes where the curves 1 and 2 of mesh1 are
     merged with curves 2 and 3 of mesh2 into two curves of the new mesh.
     Curve 3 of mesh2 is traversed in the opposite direction.
+
     """
 
     if mesh1.ndim != mesh2.ndim:

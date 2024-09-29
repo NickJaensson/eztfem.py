@@ -11,9 +11,9 @@ def basis_function(shape, intpol, xr):
         Shape of the element:
         - 'line': line element on the reference interval [-1, 1]
         - 'quad': quadrilateral element on the reference domain
-                  [-1, 1] x [-1, 1]
+        [-1, 1] x [-1, 1]
         - 'triangle': triangular element on the reference domain left-lower
-                      half of [0, 1] x [0, 1]
+        half of [0, 1] x [0, 1]
     intpol : {'P0', 'P1', 'P1+', 'P2', 'P2+', 'Q1', 'Q1+', 'Q2'}
         Interpolation on the element:
         - P-family: 'P0', 'P1', 'P1+', 'P2', 'P2+'
@@ -30,6 +30,7 @@ def basis_function(shape, intpol, xr):
     dphi : numpy.ndarray
         Derivative of the basis function dphi[i, j, k], with i the point in
         space, j the unknown, and k the direction in space.
+
     """
 
     if shape == 'line':
@@ -361,24 +362,24 @@ def barycentric(xr):
 
     Notes
     -----
-    Triangles:
-    The reference region of a triangle is defined as:
 
-        1 |\\               eta ∈ [0,1]
-        ^ |  \\             xi  ∈ [0,1]
-    eta | |    \\           xi + eta <= 1
-          |      \\
-        0 ---------
-          0  xi -> 1
+    ::
 
-    The reference coordinates xr = (xi, eta) are in the lower triangle of the
-    region [0,1] x [0,1] (xi + eta <= 1).
+        Triangles:
+        The reference region of a triangle is defined as:
+                1 |\\               eta ∈ [0,1]
+                ^ |  \\             xi  ∈ [0,1]
+            eta | |    \\           xi + eta <= 1
+                  |      \\
+                0 ---------
+                  0  xi -> 1
+        The reference coordinates xr = (xi, eta) are in the lower triangle of the
+        region [0,1] x [0,1] (xi + eta <= 1).
+        The three barycentric coordinates are:
+        - lambda1 = 1 - xi - eta
+        - lambda2 = xi
+        - lambda3 = eta
 
-    The three barycentric coordinates are:
-
-    - lambda1 = 1 - xi - eta
-    - lambda2 = xi
-    - lambda3 = eta
     """
 
     # Get sizes from xr shape

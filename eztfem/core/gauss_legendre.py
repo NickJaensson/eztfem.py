@@ -12,15 +12,16 @@ def gauss_legendre(shape, **kwargs):
         - 'line': interval [-1, 1]
         - 'quad': domain [-1, 1] x [-1, 1]
         - 'triangle': reference triangle, left-lower half of [0, 1] x [0, 1]
-    **kwargs : optional
-        Optional keyword arguments to set optional parameters:
-        - n : int, optional
-            The number of integration points in one direction. This only
-            applies to shape='line' and shape='quad', where the number of
-            integration points will be n and n^2, respectively.
-        - p : int, optional
-            The order of the integration rule (order polynomial integrated
-            exact). This only applies to shape='triangle'.
+
+    Keyword arguments
+    -----------------
+    n : int, optional
+        The number of integration points in one direction. This only
+        applies to shape='line' and shape='quad', where the number of
+        integration points will be n and n^2, respectively.
+    p : int, optional
+        The order of the integration rule (order polynomial integrated
+        exact). This only applies to shape='triangle'.
 
     Returns
     -------
@@ -28,6 +29,7 @@ def gauss_legendre(shape, **kwargs):
         Coordinates of the integration points.
     w : numpy.ndarray
         Weights of the integration scheme.
+
     """
 
     n = kwargs.get('n', -1)
@@ -71,6 +73,7 @@ def gauss_legendre_line(n):
         Reference coordinates of the integration points.
     w : numpy.ndarray
         Weights of the integration points.
+
     """
 
     x = np.zeros(n)
@@ -429,6 +432,7 @@ def gauss_legendre_quad(n):
         Reference coordinates of the integration points, shape (n^2, 2).
     w : numpy.ndarray
         Weights of the integration points, shape (n^2,).
+
     """
 
     x1, w1 = gauss_legendre_line(n)
@@ -468,18 +472,21 @@ def gauss_legendre_triangle(p):
     -----
     The reference region of a triangle is defined as:
 
-        1 |\\               eta ∈ [0, 1]
-        ^ |  \\             xi  ∈ [0, 1]
-    eta | |    \\           xi + eta <= 1
-          |      \\
-        0 ---------
-          0  xi -> 1
+    ::
+
+            1 |\\               eta ∈ [0, 1]
+            ^ |  \\             xi  ∈ [0, 1]
+        eta | |    \\           xi + eta <= 1
+              |      \\
+            0 ---------
+              0  xi -> 1
 
     The numerical values are based on:
 
     L. Zhang, T. Cui, H. Liu, "A set of symmetric quadrature rules on triangles
     and tetrahedra", Journal of Computational Mathematics, Vol. 27, No. 1,
     2009, 89-96.
+
     """
 
     # number of integration points

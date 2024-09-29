@@ -18,21 +18,22 @@ def line1d(ne, eltype, **kwargs):
         Shape number.
         - 'line2' : 2-node elements.
         - 'line3' : 3-node elements.
-    **kwargs : optional
-        Additional options.
-        - 'origin' : float, optional
-            Origin of the domain.
-        - 'length' : float, optional
-            Length of the domain.
-        - 'ratio' : int, optional, default=0
-            Mesh ratio.
-            - 0 : Equidistant mesh.
-            - 1 : The size of the last element is factor times the first.
-            - 2 : The size of an element is factor times the previous one.
-            - 3 : The size of the last element is 1/factor times the first.
-            - 4 : The size of an element is 1/factor times the previous one.
-        - 'factor' : float, optional, default=1
-            Factor for the mesh ratio.
+
+    Keyword arguments
+    -----------------
+    origin : float, optional
+        Origin of the domain.
+    length : float, optional
+        Length of the domain.
+    ratio : int, optional, default=0
+        Mesh ratio.
+        - 0 : Equidistant mesh.
+        - 1 : The size of the last element is factor times the first.
+        - 2 : The size of an element is factor times the previous one.
+        - 3 : The size of the last element is 1/factor times the first.
+        - 4 : The size of an element is 1/factor times the previous one.
+    factor : float, optional, default=1
+        Factor for the mesh ratio.
 
     Returns
     -------
@@ -44,6 +45,7 @@ def line1d(ne, eltype, **kwargs):
     --------
     >>> mesh = line1d(10, 'line2', origin=1, length=2)
     Creates a 10-element line mesh with 2-node elements on the domain [1, 3].
+
     """
 
     # optional arguments
@@ -76,14 +78,21 @@ def line1d_2node(n, ratio, factor):
     Generate a mesh on region [0,1] using line elements with 2 nodes.
     The numbering is straightforward:
     For example a 4 element mesh is numbered as follows
+
+    ..
+
       Nodes:
           1 --  2 --  3 --  4 --  5
       Elements:
           x --  x --  x --  x --  x
              1     2     3     4
+
     Also generated are two points and the end of the interval
 
+    ..
+
          P1 --------------------- P2
+
     '''
 
     print('line1d_2node')
@@ -121,13 +130,21 @@ def line1d_3node(n, ratio, factor):
     Generate a mesh on region [0,1] using line elements with 3 nodes.
     The numbering is straightforward:
     For example a 2 element mesh is numbered as follows
+
+    ..
+
     Nodes:
         1 --  2 --  3 --  4 --  5
     Elements:
         x --  x --  x --  x --  x
               1           2
+
     Also generated are two points and the end of the interval
+
+    ..
+
        P1 --------------------- P2
+
     '''
 
     print('line1d_3node')

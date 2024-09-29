@@ -14,6 +14,7 @@ def refcoor_nodal_points(mesh):
     -------
     x : numpy.ndarray
         Reference coordinates of the nodal points.
+
     """
 
     elshape = mesh.elshape
