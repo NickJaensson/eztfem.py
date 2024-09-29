@@ -3,20 +3,21 @@ import numpy as np
 
 class User:
     """
-    A class used to represent a User.
+    Define the User class: this class is mainly a collection of parameters and
+    data that should be accessible to the element routines.
 
     Attributes
     ----------
     wg : np.ndarray
-        Weighting factors.
+        Weights of Gauss points.
     xr : np.ndarray
-        X-coordinates.
+        Location of Gauss points.
     phi : np.ndarray
-        Potential function values.
+        Values of phi shape function in Gauss points.
     dphi : np.ndarray
-        Derivatives of the potential function.
+        Values of phi shape function derivatives in Gauss points.
     psi : np.ndarray
-        Stream function values.
+        Values of psi shape function in Gauss points.
 
     Methods
     -------
