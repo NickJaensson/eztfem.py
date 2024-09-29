@@ -1,5 +1,4 @@
-# this test was automatically generated using
-# create_pytfem_tests_gauss_basis.m
+# this test was automatically generated using create_pytfem_tests_gauss_basis.m
 # run with: python -m unittest test_gauss_basis.py
 import numpy as np
 import unittest

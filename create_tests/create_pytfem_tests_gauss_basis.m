@@ -4,10 +4,10 @@ addpath("subs/");
 
 eztfempath = "~/Desktop/eztfem/";
 addpath(eztfempath);
-addpath(append(eztfempath,"src"))
-addpath(append(eztfempath,"addons/plotlib"))
-addpath(append(eztfempath,"addons/meshes"))
-addpath(append(eztfempath,"addons/poisson"))
+addpath(append(eztfempath,"src/core"))
+addpath(append(eztfempath,"src/addons/plotlib"))
+addpath(append(eztfempath,"src/addons/meshes"))
+addpath(append(eztfempath,"src/addons/poisson"))
 
 addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
 
@@ -16,14 +16,13 @@ addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
 
 %% filename for python test file
 global fn 
-fn = "~/Desktop/eztfem.py/test/test_gauss_basis.py"; 
+fn = "./test_gauss_basis.py"; 
 
 
 %% write some header stuff
 
-writelines("# this test was automatically generated using",fn);
-writelines("# create_pytfem_tests_gauss_basis.m",fn);
-writelines("# run with: python -m unittest test_gauss_basis.py",fn);
+writelines("# this test was automatically generated using create_pytfem_tests_gauss_basis.m",fn);
+mywritelines("# run with: python -m unittest test_gauss_basis.py");
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("import sys");

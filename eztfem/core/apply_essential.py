@@ -25,6 +25,8 @@ def apply_essential(A, f, uess, iess):
         Matrix partition of unknown rows and prescribed columns.
     """
 
+    assert ( uess is not None )
+
     # initialize some parameters
     nd = f.shape[0]
     npp = iess.shape[0]

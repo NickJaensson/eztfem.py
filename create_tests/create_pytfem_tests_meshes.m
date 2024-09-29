@@ -4,15 +4,15 @@ addpath("subs/");
 
 eztfempath = "~/Desktop/eztfem/";
 addpath(eztfempath);
-addpath(append(eztfempath,"src"))
-addpath(append(eztfempath,"addons/meshes"))
+addpath(append(eztfempath,"src/core"))
+addpath(append(eztfempath,"src/addons/meshes"))
 
 %% Matlab file to generate testing code using eztfem for pytfem 
 
 
 %% filename for python test file
 global fn
-fn = "~/Desktop/eztfem.py/test/test_meshes.py"; 
+fn = "./test_meshes.py"; 
 
 
 %% run the problem in eztfem
@@ -72,14 +72,13 @@ cmd_mesh_py20 = "    mesh_py = ezt.two_blocks2d([4,5,6],'quad4',factor=[10,10,10
 
 cmd_mesh_py21 = "    mesh_tmp1 = ezt.quadrilateral2d([2, 3], 'quad4', origin=[-2.0, 0.0], length=[2.0, 3.0]);"+...
                 "    mesh_tmp2 = ezt.quadrilateral2d([4, 3], 'quad4', origin=[0.0, 0.0], length=[4.0, 3.0]);"+ ...
-                "    mesh_py = ezt.mesh_merge(mesh_tmp1, mesh_tmp2, curves1=[1], curves2=[-3], deletecurves1=[1], deletepoints1=[0]);";
+                "    mesh_py = ezt.mesh_merge(mesh_tmp1, mesh_tmp2, curves1=[1], curves2=[3], dir_curves2=[-1], deletecurves1=[1], deletepoints1=[0]);";
 
 
 %% write some header stuff
 
-writelines("# this test was automatically generated using",fn);
-writelines("# create_pytfem_tests_meshes.m",fn);
-writelines("# run with: python -m unittest test_meshes.py",fn);
+writelines("# this test was automatically generated using create_pytfem_tests_meshes.m",fn);
+mywritelines("# run with: python -m unittest test_meshes.py");
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("import sys");

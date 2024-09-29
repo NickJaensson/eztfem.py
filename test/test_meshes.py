@@ -1,5 +1,4 @@
-# this test was automatically generated using
-# create_pytfem_tests_meshes.m
+# this test was automatically generated using create_pytfem_tests_meshes.m
 # run with: python -m unittest test_meshes.py
 import numpy as np
 import unittest

@@ -4,10 +4,10 @@ addpath("subs/");
 
 eztfempath = "~/Desktop/eztfem/";
 addpath(eztfempath);
-addpath(append(eztfempath,"src"))
-addpath(append(eztfempath,"addons/plotlib"))
-addpath(append(eztfempath,"addons/meshes"))
-addpath(append(eztfempath,"addons/poisson"))
+addpath(append(eztfempath,"src/core"))
+addpath(append(eztfempath,"src/addons/plotlib"))
+addpath(append(eztfempath,"src/addons/meshes"))
+addpath(append(eztfempath,"src/addons/poisson"))
 
 addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
 
@@ -16,7 +16,7 @@ addpath(append(eztfempath,"examples/poisson"))  % use func.m from poisson
 
 %% filename for python test file
 global fn 
-fn = "~/Desktop/eztfem.py/test/test_poisson.py"; 
+fn = "./test_poisson.py"; 
 
 
 %% run the problem in eztfem
@@ -66,11 +66,11 @@ cmd_build_sys_py =  "    A_py,f_py = ezt.build_system ( mesh_py, problem_py, ezt
 cmd_define_ess_py = "    iess_py = ezt.define_essential ( mesh_py, problem_py,'curves', [0,1,2,3], degfd=0 );";
 
 cmd_fill_sys_py =   "    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [0,1], func, funcnr=3 );"+...
-                    "    uess_py = ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, fin=uess_py )";
+                    "    ezt.fill_system_vector ( mesh_py, problem_py, 'curves', [2,3], func, funcnr=3, f=uess_py )";
 
-cmd_apply_ess_py =  "    A_py2, f_py2, _ = ezt.apply_essential ( A_py, f_py, uess_py, iess_py )";
+cmd_apply_ess_py =  "    ezt.apply_essential ( A_py, f_py, uess_py, iess_py )";
 
-cmd_solve_py     =  "    u_py = spsolve(A_py2.tocsr(), f_py2)";
+cmd_solve_py     =  "    u_py = spsolve(A_py.tocsr(), f_py)";
 
 cmd_deriv_vector =  "    user_py2 = user_py;" + ...
                     "    xr_py = ezt.refcoor_nodal_points ( mesh_py );"+...
@@ -81,9 +81,8 @@ cmd_deriv_vector =  "    user_py2 = user_py;" + ...
 
 %% write some header stuff
 
-writelines("# this test was automatically generated using",fn);
-writelines("# create_pytfem_tests_poisson.m",fn);
-writelines("# run with: python -m unittest test_poisson.py",fn);
+writelines("# this test was automatically generated using create_pytfem_tests_poisson.m",fn);
+mywritelines("# run with: python -m unittest test_poisson.py");
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("import sys");
@@ -222,8 +221,8 @@ mywritelines(cmd_fill_sys_py);
 mywritelines(cmd_apply_ess_py);
 write2Darr_r("    ",full(A_ez2),"A_ez2")
 write1Darr_r("    ",f_ez2,"f_ez2")
-mywritelines("    check1=np.allclose(A_py2.toarray(),A_ez2,atol=1e-12,rtol=0)")
-mywritelines("    check2=np.allclose(f_py2,f_ez2,atol=1e-12,rtol=0)")
+mywritelines("    check1=np.allclose(A_py.toarray(),A_ez2,atol=1e-12,rtol=0)")
+mywritelines("    check2=np.allclose(f_py,f_ez2,atol=1e-12,rtol=0)")
 mywritelines("    self.assertTrue(check1 and check2,'apply_essential failed test!' )");
 
 
