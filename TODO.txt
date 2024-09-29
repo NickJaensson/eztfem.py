@@ -1,23 +1,2 @@
-src/mesh_class.py
-src/problem_class.py
-src/user_class.py
-src/vector_class.py
-
-addons/meshes/l_shape2d.py
-addons/meshes/two_blocks2d.py
-
-addons/poisson/poisson_deriv.py
-addons/poisson/poisson_elem.py
-addons/poisson/poisson_natboun_curve.py
-
-addons/stokes/stokes_deriv.py
-addons/stokes/stokes_elem.py
-addons/stokes/stokes_flowrate_curve.py
-addons/stokes/stokes_natboun_curve.py
-addons/stokes/stokes_pressure.py
-addons/stokes/streamfunction_elem.py
-addons/stokes/streamfunction_natboun_curve.py
-
-====================================================
-
+Jupyter notebooks of examples
 addons/plotlib/
