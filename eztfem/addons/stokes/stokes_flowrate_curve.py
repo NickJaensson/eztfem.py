@@ -1,13 +1,42 @@
 import numpy as np
-from ...core.isoparametric_deformation_curve import isoparametric_deformation_curve
+from ...core.isoparametric_deformation_curve import \
+      isoparametric_deformation_curve
 
-import numpy as np
 
 def stokes_flowrate_curve(elem, coor, user, pos):
+    """
+    Compute the flowrate through a curve for boundary elements.
+
+    Parameters
+    ----------
+    elem : int
+        Element number.
+    coor : ndarray
+        Coordinates of the nodes of the element, shape (n_points, n_dim).
+    user : User
+        User object containing shape function, Gauss points, parameters
+    pos : list of ndarray
+        Positions of the degrees of freedom of each physical quantity.
+
+    Returns
+    -------
+    flowrate : float
+        The computed element flowrate.
+
+    Notes
+    -----
+    This function must be called in `integrate_boundary_curve` using 
+    `posvectors=0` (default).
+
+    """
+
+    # Function implementation goes here
+    pass
+
     # Set some values
     ninti = user.phi.shape[0]  # Number of integration points
-    ndf = user.phi.shape[1]    # Number of degrees of freedom of the velocity for each spatial direction
-    ndim = coor.shape[1]          # Dimension of space
+    ndf = user.phi.shape[1]    # Number of velocity dofs per spatial direction
+    ndim = coor.shape[1]  # Dimension of space
 
     # Compute mapping of reference to real element
     dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
@@ -33,4 +62,3 @@ def stokes_flowrate_curve(elem, coor, user, pos):
     flowrate = np.sum(un * curvel * user.wg)
 
     return flowrate
-

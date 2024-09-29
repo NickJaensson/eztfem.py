@@ -1,15 +1,40 @@
 import numpy as np
 from ...core.isoparametric_deformation import isoparametric_deformation
 
-def stokes_elem(elem, coor, user, pos):
-    # STOKES_ELEM  Element routines for the Stokes equation
 
-    # - nabla.( mu (nabla u+nabla u^T) ) + nabla p = f
-    #   nabla.u = 0
+def stokes_elem(elem, coor, user, pos):
+    """
+    Element routine for the Poisson equation:
+    - nabla.( mu (nabla u+nabla u^T) ) + nabla p = f and nabla.u = 0
+
+    Parameters
+    ----------
+    elem : int
+        Element number.
+    coor : ndarray
+        Coordinates of the nodes of the element, shape (n_points, n_dim).
+    user : User
+        User object containing shape function, Gauss points, parameters
+    pos : list of ndarray
+        Positions of the degrees of freedom of each physical quantity.
+
+    Returns
+    -------
+    elemmat : ndarray
+        Element matrix, shape (n_df, n_df).
+    elemvec : ndarray
+        Element vector, shape (n_df,).
+
+    Notes
+    -----
+    This function computes the element matrix and vector for the Stokes
+    equation using isoparametric finite element methods.
+
+    """
 
     ndim = coor.shape[1]  # dimension of space
     ninti = user.phi.shape[0]  # number of integration points
-    ndf = user.phi.shape[1]  # number of degrees of freedom of the velocity for each spatial direction
+    ndf = user.phi.shape[1]  # number of velocity dofs per spatial direction
     ndfp = user.psi.shape[1]  # number of degrees of freedom of the pressure
 
     # compute mapping of reference to real element
@@ -22,9 +47,9 @@ def stokes_elem(elem, coor, user, pos):
         # axisymmetric
         detF = 2 * np.pi * xg[:, 1] * detF
 
-    # compute derivative of the basis functions with respect to the real coordinates
+    # compute derivative of the basis functions with respect to the real
+    # coordinates
     dphidx = np.zeros((ninti, ndf, ndim))
-    ndr = Finv.shape[1]
 
     for ip in range(ninti):
         dphidx[ip, :, :] = user.dphi[ip, :, :] @ Finv[ip, :, :]
@@ -67,12 +92,14 @@ def stokes_elem(elem, coor, user, pos):
     # velocity pressure blocks
     for N in range(ndfp):
         for M in range(ndf):
-            Lu[N, M] = np.sum(user.psi[:, N] * dphidx[:, M, 0] * detF * user.wg)
+            Lu[N, M] = np.sum(user.psi[:, N] * dphidx[:, M, 0] * detF
+                              * user.wg)
             if user.coorsys == 1:
                 work = dphidx[:, M, 1] + user.phi[:, M] / xg[:, 1]
                 Lv[N, M] = np.sum(user.psi[:, N] * work * detF * user.wg)
             else:
-                Lv[N, M] = np.sum(user.psi[:, N] * dphidx[:, M, 1] * detF * user.wg)
+                Lv[N, M] = np.sum(user.psi[:, N] * dphidx[:, M, 1] * detF
+                                  * user.wg)
 
     elemmat = np.zeros((2*ndf + ndfp, 2*ndf + ndfp))
     elemmat[0:i1, 0:i1] = Suu

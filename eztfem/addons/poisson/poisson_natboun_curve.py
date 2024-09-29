@@ -35,7 +35,6 @@ def poisson_natboun_curve(elem, coor, user, pos):
     # Set some values
     ninti = user.phi.shape[0]  # Number of integration points
     ndf = user.phi.shape[1]    # Number of degrees of freedom
-    ndim = coor.shape[1]       # Dimension of space
 
     # Compute mapping of reference to real element
     dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
