@@ -1,55 +1,84 @@
 import numpy as np
 
 
-# class definition for User objects
 class User:
+    """
+    A class used to represent a User.
 
-    # initialize attributes (will be filled elsewhere)
+    Attributes
+    ----------
+    wg : np.ndarray
+        Weighting factors.
+    xr : np.ndarray
+        X-coordinates.
+    phi : np.ndarray
+        Potential function values.
+    dphi : np.ndarray
+        Derivatives of the potential function.
+    psi : np.ndarray
+        Stream function values.
+
+    Methods
+    -------
+    __init__(self):
+        Initializes the User object with the given attributes.
+    __eq__(self, other):
+        Checks equivalence of two User objects (overloads == sign).
+    """
+
     def __init__(self):
+        """
+        Initializes the User object with empty numpdy.ndarray.
+        """
         self.wg = np.array([])
         self.xr = np.array([])
         self.phi = np.array([])
         self.dphi = np.array([])
         self.psi = np.array([])
 
-    # equivalence check for testing against Matlab code
-    # NOTE: see the file NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
-    # NOTE2; only a selection of possible attributes is checked
     def __eq__(self, other):
-        # get list of names of attributes
-        attributes_self = []
-        for attr, _ in self.__dict__.items():
-            attributes_self.append(attr)
-        attributes_other = []
-        for attr, _ in other.__dict__.items():
-            attributes_other.append(attr)
+        """
+        Checks equivalence of two User objects (overloads == sign).
 
-        # check if attributes exist in both Users
-        check0 = []
-        check0.append(('wg' in attributes_self) is ('wg' in attributes_other))
-        check0.append(('xr' in attributes_self) is ('xr' in attributes_other))
-        check0.append(('phi' in attributes_self)
-                      is ('phi' in attributes_other))
-        check0.append(('psi' in attributes_self)
-                      is ('psi' in attributes_other))
-        check0.append(('dphi' in attributes_self)
-                      is ('dphi' in attributes_other))
-        check0.append(('coorsys' in attributes_self)
-                      is ('coorsys' in attributes_other))
-        check0.append(('alpha' in attributes_self)
-                      is ('alpha' in attributes_other))
-        check0.append(('mu' in attributes_self)
-                      is ('mu' in attributes_other))
-        check0.append(('funcnr' in attributes_self)
-                      is ('funcnr' in attributes_other))
+        Parameters
+        ----------
+        other : User
+            The other User object to compare with.
+
+        Returns
+        -------
+        bool
+            True if the User objects are equivalent, False otherwise.
+
+        Notes
+        -----
+        See NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze.
+        Only a selection of possible attributes is checked.
+        """
+        # Get list of names of attributes
+        attributes_self = [attr for attr in self.__dict__.keys()]
+        attributes_other = [attr for attr in other.__dict__.keys()]
+
+        # Check if attributes exist in both Users
+        check0 = [
+            ('wg' in attributes_self) is ('wg' in attributes_other),
+            ('xr' in attributes_self) is ('xr' in attributes_other),
+            ('phi' in attributes_self) is ('phi' in attributes_other),
+            ('psi' in attributes_self) is ('psi' in attributes_other),
+            ('dphi' in attributes_self) is ('dphi' in attributes_other),
+            ('coorsys' in attributes_self) is ('coorsys' in attributes_other),
+            ('alpha' in attributes_self) is ('alpha' in attributes_other),
+            ('mu' in attributes_self) is ('mu' in attributes_other),
+            ('funcnr' in attributes_self) is ('funcnr' in attributes_other)
+        ]
 
         if not all(check0):
             print("WARNING: Users do not have equal attributes:")
             print(check0)
             return False
 
-        # check if existing attributes have same values
-        check1 = [True]  # avoid empty list
+        # Check if existing attributes have same values
+        check1 = [True]  # Avoid empty list
         if 'wg' in attributes_self:
             check1.append(np.allclose(self.wg, other.wg, atol=1e-15, rtol=0))
         if 'xr' in attributes_self:
@@ -62,8 +91,8 @@ class User:
             check1.append(np.allclose(np.squeeze(self.psi), other.psi,
                                       atol=1e-15, rtol=0))
         if 'dphi' in attributes_self:
-            check1.append(np.allclose(self.dphi, other.dphi,
-                                      atol=1e-15, rtol=0))
+            check1.append(np.allclose(self.dphi, other.dphi, atol=1e-15,
+                                      rtol=0))
         if 'coorsys' in attributes_self:
             check1.append(self.coorsys == other.coorsys)
         if 'alpha' in attributes_self:
@@ -73,7 +102,7 @@ class User:
         if 'funcnr' in attributes_self:
             check1.append(self.funcnr == other.funcnr)
 
-        # print a warning when not equivalent (for debugging purposes)
+        # Print a warning when not equivalent (for debugging purposes)
         if not all(check1):
             print("WARNING: User attributes not equivalent:")
             print(check1)
