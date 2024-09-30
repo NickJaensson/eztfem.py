@@ -2,7 +2,7 @@ import numpy as np
 from scipy.sparse import eye, lil_matrix
 
 
-def apply_essential(A, f, uess, iess):
+def apply_essential(A, f, uess, iess, **kwargs):
     """
     Add effect of essential boundary conditions to right-hand side.
 
@@ -19,6 +19,11 @@ def apply_essential(A, f, uess, iess):
     iess : numpy.ndarray
         Index of defined essential degrees.
 
+    Keyword argument
+    ----------------
+    return_Aup : bool, optional
+        Return the Aup matrix if True (Default = False)
+
     Returns
     -------
     Aup : scipy.sparse.lil_matrix
@@ -26,6 +31,8 @@ def apply_essential(A, f, uess, iess):
     """
 
     assert ( uess is not None )
+
+    return_Aup = kwargs.get('return_Aup', False)
 
     # initialize some parameters
     nd = f.shape[0]
@@ -49,4 +56,5 @@ def apply_essential(A, f, uess, iess):
     f[iu] -= Aup.dot(uess[iess])
     f[iess] = uess[iess]
 
-    return Aup
+    if return_Aup:
+        return Aup
