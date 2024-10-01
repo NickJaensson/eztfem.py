@@ -8,7 +8,8 @@ from .core.distribute_elements import distribute_elements
 from .core.fill_system_vector import fill_system_vector
 from .core.gauss_legendre import gauss_legendre
 from .core.integrate_boundary_elements import integrate_boundary_elements
-from .core.isoparametric_deformation_curve import isoparametric_deformation_curve
+from .core.isoparametric_deformation_curve import \
+    isoparametric_deformation_curve
 from .core.isoparametric_deformation import isoparametric_deformation
 from .core.line_1d import line1d
 from .core.class_mesh import Mesh, Geometry
@@ -34,4 +35,8 @@ from .addons.stokes.stokes_flowrate_curve import stokes_flowrate_curve
 from .addons.stokes.stokes_natboun_curve import stokes_natboun_curve
 from .addons.stokes.stokes_pressure import stokes_pressure
 from .addons.stokes.streamfunction_elem import streamfunction_elem
-from .addons.stokes.streamfunction_natboun_curve import streamfunction_natboun_curve
+from .addons.stokes.streamfunction_natboun_curve import \
+    streamfunction_natboun_curve
+
+from .addons.plotlib.plotlib import plot_sol, plot_mesh
+from .addons.meshes.pyvista_mesh import generate_pyvista_mesh
