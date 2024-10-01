@@ -23,14 +23,16 @@ def plot_mesh(mesh_pv, **kwargs):
 
     style = kwargs.get('style', "wireframe")
     color = kwargs.get('color', "black")
+    window_size = kwargs.get('window_size', (800, 400))
 
     kwargs.pop('style', None)
     kwargs.pop('color', None)
+    kwargs.pop('window_size', None)
 
     surface = mesh_pv.separate_cells().extract_surface(nonlinear_subdivision=4)
     edges = surface.extract_feature_edges()
 
-    plotter = pv.Plotter()
+    plotter = pv.Plotter(window_size=window_size)
     plotter.add_mesh(surface)
     plotter.add_mesh(edges, style=style, color=color, **kwargs)
     plotter.camera_position = 'xy'
@@ -56,6 +58,9 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
     # Optional arguments
     physq = kwargs.get('physq', 0)
     degfd = kwargs.get('degfd', 0)
+    window_size = kwargs.get('window_size', (800, 400))
+
+    kwargs.pop('window_size', None)
 
     nnodes = mesh_pv.number_of_points
 
@@ -68,7 +73,7 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
 
     mesh_pv.point_data['u'] = u_plot
 
-    plotter = pv.Plotter()
+    plotter = pv.Plotter(window_size=window_size)
     plotter.add_mesh(mesh_pv, scalars="u", **kwargs)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
