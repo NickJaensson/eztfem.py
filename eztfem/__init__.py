@@ -22,8 +22,7 @@ from .core.refcoor_nodal_points import refcoor_nodal_points
 from .core.class_user import User
 from .core.class_vector import Vector
 
-from .addons.meshes.l_shape2d import l_shape2d
-from .addons.meshes.two_blocks2d import two_blocks2d
+from .addons.meshes.compound_meshgen import l_shape2d, two_blocks2d
 
 from .addons.poisson.poisson_deriv import poisson_deriv
 from .addons.poisson.poisson_elem import poisson_elem
@@ -39,4 +38,4 @@ from .addons.stokes.streamfunction_natboun_curve import \
     streamfunction_natboun_curve
 
 from .addons.plotlib.plotlib import plot_sol, plot_mesh
-from .addons.meshes.pyvista_mesh import generate_pyvista_mesh
+from .addons.meshes.pyvista_meshgen import generate_pyvista_mesh
