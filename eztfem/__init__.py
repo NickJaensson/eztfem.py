@@ -24,12 +24,11 @@ from .core.class_vector import Vector
 
 from .addons.meshes.compound_meshgen import l_shape2d, two_blocks2d
 
-from .addons.poisson.poisson_elements import poisson_deriv, poisson_elem, \
+from .addons.elements.poisson_elements import poisson_deriv, poisson_elem, \
     poisson_natboun_curve
-
-from .addons.stokes.stokes_elements import stokes_elem, stokes_deriv, \
+from .addons.elements.stokes_elements import stokes_elem, stokes_deriv, \
     stokes_flowrate_curve, stokes_natboun_curve, stokes_pressure
-from .addons.stokes.streamfunction_elements import streamfunction_elem, \
+from .addons.elements.streamfunction_elements import streamfunction_elem, \
     streamfunction_natboun_curve    
 
 from .addons.plotlib.plotting_functions import plot_sol, plot_mesh
