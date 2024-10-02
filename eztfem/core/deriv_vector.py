@@ -1,7 +1,7 @@
 import numpy as np
 from .pos_array import pos_array
 from .pos_array_vec import pos_array_vec
-from .class_definitions import Vector
+from .class_vector import Vector
 
 
 def deriv_vector(mesh, problem, element, user, **kwargs):

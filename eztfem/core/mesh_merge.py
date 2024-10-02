@@ -1,5 +1,5 @@
 import numpy as np
-from .class_definitions import Mesh
+from .class_mesh import Mesh
 
 
 def mesh_merge(mesh1, mesh2, **kwargs):
