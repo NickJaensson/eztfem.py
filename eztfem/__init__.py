@@ -27,14 +27,10 @@ from .addons.meshes.compound_meshgen import l_shape2d, two_blocks2d
 from .addons.poisson.poisson_elements import poisson_deriv, poisson_elem, \
     poisson_natboun_curve
 
-from .addons.stokes.stokes_deriv import stokes_deriv
-from .addons.stokes.stokes_elem import stokes_elem
-from .addons.stokes.stokes_flowrate_curve import stokes_flowrate_curve
-from .addons.stokes.stokes_natboun_curve import stokes_natboun_curve
-from .addons.stokes.stokes_pressure import stokes_pressure
-from .addons.stokes.streamfunction_elem import streamfunction_elem
-from .addons.stokes.streamfunction_natboun_curve import \
-    streamfunction_natboun_curve
+from .addons.stokes.stokes_elements import stokes_elem, stokes_deriv, \
+    stokes_flowrate_curve, stokes_natboun_curve, stokes_pressure
+from .addons.stokes.streamfunction_elements import streamfunction_elem, \
+    streamfunction_natboun_curve    
 
 from .addons.plotlib.plotting_functions import plot_sol, plot_mesh
 from .addons.meshes.pyvista_meshgen import generate_pyvista_mesh
