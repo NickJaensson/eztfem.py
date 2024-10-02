@@ -24,9 +24,8 @@ from .core.class_vector import Vector
 
 from .addons.meshes.compound_meshgen import l_shape2d, two_blocks2d
 
-from .addons.poisson.poisson_deriv import poisson_deriv
-from .addons.poisson.poisson_elem import poisson_elem
-from .addons.poisson.poisson_natboun_curve import poisson_natboun_curve
+from .addons.poisson.poisson_elements import poisson_deriv, poisson_elem, \
+    poisson_natboun_curve
 
 from .addons.stokes.stokes_deriv import stokes_deriv
 from .addons.stokes.stokes_elem import stokes_elem
@@ -37,5 +36,5 @@ from .addons.stokes.streamfunction_elem import streamfunction_elem
 from .addons.stokes.streamfunction_natboun_curve import \
     streamfunction_natboun_curve
 
-from .addons.plotlib.plotlib import plot_sol, plot_mesh
+from .addons.plotlib.plotting_functions import plot_sol, plot_mesh
 from .addons.meshes.pyvista_meshgen import generate_pyvista_mesh
