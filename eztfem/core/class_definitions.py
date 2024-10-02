@@ -309,11 +309,12 @@ class Problem:
         elementdof : np.ndarray
             A matrix of size (mesh.elnumnod, nvec), where nvec is the number of
             vectors of special structure.
-        **kwargs : dict, optional
-            Optional arguments to set additional parameters.
-            - nphysq : int, optional
-                Number of physical quantities. Default is the number of columns
-                in elementdof.
+
+        Keyword arguments
+        -----------------
+        nphysq : int, optional
+            Number of physical quantities. Default is the number of columns
+            in elementdof.
 
         Raises
         ------
