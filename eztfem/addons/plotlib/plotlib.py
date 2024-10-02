@@ -11,7 +11,10 @@ def plot_mesh(mesh_pv, **kwargs):
     ----------
     mesh_pv : pyvista.PolyData
         The mesh to be plotted.
-    **kwargs : dict, optional
+
+    Keyword arguments
+    -----------------
+    kwargs : dict, optional
         Additional keyword arguments to pass to the plotter.add_mesh function.
 
     Notes
@@ -51,8 +54,12 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
         The problem object.
     u : numpy.ndarray
         The solution vector.
-    **kwargs : dict, optional
+
+    Keyword arguments
+    -----------------
+    kwargs : dict, optional
         Additional keyword arguments to pass to the plotter.add_mesh function.
+
     """
 
     # Optional arguments
