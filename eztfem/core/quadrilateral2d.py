@@ -1,5 +1,5 @@
 import numpy as np
-from .class_mesh import Mesh, Geometry
+from .class_definitions import Mesh, Geometry
 from .distribute_elements import distribute_elements
 
 
