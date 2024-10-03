@@ -55,13 +55,6 @@ class Problem:
             Number of physical quantities. Default is the number of columns
             in elementdof.
 
-        Raises
-        ------
-        ValueError
-            If the first dimension of elementdof does not match mesh.elnumnod.
-        TypeError
-            If an unexpected keyword argument is provided.
-
         """
         if elementdof.shape[0] != mesh.elnumnod:
             raise ValueError("First dimension of elementdof does not match \
