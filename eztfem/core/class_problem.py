@@ -38,7 +38,7 @@ class Problem:
 
     """
 
-    def __init__(self, mesh, elementdof, **kwargs):
+    def __init__(self, mesh, elementdof, nphysq=None):
         """
         Initializes the Problem object for a given mesh, elementdof and
         nphys (optional). All other attributes are filled in the initialization
@@ -51,9 +51,6 @@ class Problem:
         elementdof : np.ndarray
             A matrix of size (mesh.elnumnod, nvec), where nvec is the number of
             vectors of special structure.
-
-        Keyword arguments for initialization
-        ------------------------------------
         nphysq : int, optional
             Number of physical quantities. Default is the number of columns
             in elementdof.
@@ -72,16 +69,8 @@ class Problem:
 
         self.elementdof = elementdof
 
-        # Optional arguments
-        allowed_values = ['nphysq']
-        for k in kwargs.keys():
-            if k not in allowed_values:
-                raise TypeError(f"Unexpected keyword argument '{k}'")
-
-        nphysq = kwargs.get('nphysq', None)
-
         # Number of physical quantities
-        if nphysq is None or nphysq == 0:
+        if nphysq is None:
             self.nphysq = self.elementdof.shape[1]
         elif len(self.elementdof) < nphysq:
             raise ValueError("Length of elementdof must be at least nphysq.")
