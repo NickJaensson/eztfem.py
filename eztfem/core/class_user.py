@@ -19,18 +19,13 @@ class User:
     psi : np.ndarray
         Values of psi shape function in Gauss points.
 
-    Methods
-    -------
-    __init__(self):
-        Initializes the User object with the given attributes.
-    __eq__(self, other):
-        Checks equivalence of two User objects (overloads == sign).
-
     """
 
     def __init__(self):
         """
-        Initializes the User object with empty numpdy.ndarray.
+        Initializes the Problem object with the all attributes empty numpy
+        arrays (np.array([])).
+
         """
         self.wg = np.array([])
         self.xr = np.array([])

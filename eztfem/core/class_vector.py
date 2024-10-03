@@ -12,21 +12,15 @@ class Vector:
     u : np.ndarray
         An array to store vector data.
 
-    Methods
-    -------
-    __init__(self, vec=0):
-        Initializes the Vector object with the given attributes.
-    __eq__(self, other):
-        Checks equivalence of two Vector objects (overloads == sign).
-
     """
 
     def __init__(self, vec=0):
         """
-        Initializes the Vector object with the given attributes.
+        Initializes the Vector object with the given attributes. The stored
+        vecor data (u) is initialized as an empty numpy array (np.array([])).
 
-        Parameters
-        ----------
+        Parameters for initialization
+        -----------------------------
         vec : int or float, optional
             The vector value (default is 0).
 

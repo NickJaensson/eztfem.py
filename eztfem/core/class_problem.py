@@ -40,18 +40,20 @@ class Problem:
 
     def __init__(self, mesh, elementdof, **kwargs):
         """
-        Initialize the Problem instance.
+        Initializes the Problem object for a given mesh, elementdof and
+        nphys (optional). All other attributes are filled in the initialization
+        function.
 
-        Parameters
-        ----------
-        mesh : object
-            Mesh structure.
+        Parameters for initialization
+        -----------------------------
+        mesh : Mesh
+            Mesh object.
         elementdof : np.ndarray
             A matrix of size (mesh.elnumnod, nvec), where nvec is the number of
             vectors of special structure.
 
-        Keyword arguments
-        -----------------
+        Keyword arguments for initialization
+        ------------------------------------
         nphysq : int, optional
             Number of physical quantities. Default is the number of columns
             in elementdof.

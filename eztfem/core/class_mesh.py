@@ -42,15 +42,6 @@ class Mesh:
     curves : list
         An array of objects of type Geometry
 
-    Methods
-    -------
-    __init__(self, ndim=0, nnodes=0, nelem=0, elshape=0, elnumnod=0,
-        npoints=0, ncurves=0, topology=None, coor=None, points=None,
-        curves=None):
-        Initializes the Mesh object with the given attributes.
-    __eq__(self, other):
-        Checks equivalence of two Mesh objects (overloads == sign)
-
     """
 
     def __init__(self, ndim=0, nnodes=0, nelem=0, elshape=0, elnumnod=0,
@@ -59,8 +50,8 @@ class Mesh:
         """
         Initializes the Mesh object with the given attributes.
 
-        Parameters
-        ----------
+        Parameters for initialization
+        -----------------------------
         ndim : int, optional
             Number of dimensions (default is 0).
         nnodes : int, optional
@@ -76,19 +67,18 @@ class Mesh:
         ncurves : int, optional
             Number of curves (default is 0).
         topology : np.ndarray, optional
-            Topology of the mesh (default is None).
+            Topology of the mesh (default is np.array([])).
         coor : np.ndarray, optional
-            Coordinates of the nodes (default is None).
+            Coordinates of the nodes (default is np.array([])).
         points : np.ndarray, optional
-            Points in the mesh (default is None).
+            Points in the mesh (default is np.array([])).
         curves : list, optional
-            Curves in the mesh (default is None).
+            Curves in the mesh (default is []]).
 
         Notes
         -----
-        It is not recommended to use mutable objects as default values in
-        function def (e.g., for coor, points or curves). See:
-        docs.python.org/3/tutorial/controlflow.html#default-argument-values
+        The default values for the mutable arguments are set inside the
+        initialization function to ensure they are re-created at every call.
 
         """
         if topology is None:
@@ -181,14 +171,6 @@ class Geometry:
         Array of size nnodes containing the global node numbers, i.e.,
         nodes[i] is the global node number of local node i.
 
-    Methods
-    -------
-    __init__(self, elshape=0, ndim=0, elnumnod=0, nnodes=0, nelem=0,
-        topology=None, nodes=None):
-        Initializes the Geometry object with the given attributes.
-    __eq__(self, other):
-        Checks equivalence of two Geometry objects (overloads == sign).
-
     """
 
     def __init__(self, elshape=0, ndim=0, elnumnod=0, nnodes=0, nelem=0,
@@ -196,8 +178,8 @@ class Geometry:
         """
         Initializes the Geometry object with the given attributes.
 
-        Parameters
-        ----------
+        Parameters for initialization
+        -----------------------------
         elshape : int, optional
             Shape of the elements (default is 0).
         ndim : int, optional
@@ -209,9 +191,14 @@ class Geometry:
         nelem : int, optional
             Number of elements (default is 0).
         topology : np.ndarray, optional
-            Topology of the geometry (default is None).
+            Topology of the geometry (default is np.array([])).
         nodes : np.ndarray, optional
-            Nodes in the geometry (default is None).
+            Nodes in the geometry (default is np.array([])).
+
+        Notes
+        -----
+        The default values for the mutable arguments are set inside the
+        initialization function to ensure they are re-created at every call.
 
         """
         if topology is None:
