@@ -8,7 +8,7 @@ sys.path.append('../..')
 
 import numpy as np
 import eztfem as ezt
-from examples.stokes.func import func # use full path to be able to run from different folder
+from examples.stokes.func import func
 from scipy.sparse.linalg import spsolve
 
 def main():
