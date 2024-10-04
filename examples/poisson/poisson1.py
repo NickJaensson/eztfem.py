@@ -1,14 +1,9 @@
 # Poisson problem on a unit square with Dirichlet boundary conditions
 # Manufactured solution.
 
-import sys
-sys.path.append('.')
-sys.path.append('..')
-sys.path.append('../..')
-
 import numpy as np
 import eztfem as ezt
-from examples.poisson.func import func
+from func import func
 from scipy.sparse.linalg import spsolve
 
 

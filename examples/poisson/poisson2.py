@@ -1,14 +1,9 @@
 # Poisson problem on a square [-1,1]x[-1,1] with Dirichlet boundary conditions
 # This problem solves Example 1.1.1 of the book of Elman et al.
 
-import sys
-sys.path.append('.')
-sys.path.append('..')
-sys.path.append('../..')
-
 import numpy as np
 import eztfem as ezt
-from examples.poisson.func import func
+from func import func
 from scipy.sparse.linalg import spsolve
 
 

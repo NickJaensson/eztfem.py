@@ -86,6 +86,7 @@ mywritelines("# run with: python -m unittest test_poisson.py");
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("import sys");
+mywritelines("sys.path.append('.')");
 mywritelines("sys.path.append('..')");
 mywritelines("import eztfem as ezt");
 mywritelines("from scipy.sparse.linalg import spsolve")

@@ -26,6 +26,7 @@ mywritelines("# run with: python -m unittest test_gauss_basis.py");
 mywritelines("import numpy as np")
 mywritelines("import unittest");
 mywritelines("import sys");
+mywritelines("sys.path.append('.')");
 mywritelines("sys.path.append('..')");
 mywritelines("import eztfem as ezt");
 
