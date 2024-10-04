@@ -1,8 +1,5 @@
 # Streamfunction from the velocity field
 
-import sys
-sys.path.append('..')
-
 import numpy as np
 import eztfem as ezt
 from scipy.sparse.linalg import spsolve
