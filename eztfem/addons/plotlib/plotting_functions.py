@@ -1,9 +1,10 @@
 import numpy as np
 from ...core.pos_array import pos_array
 import pyvista as pv
+import matplotlib.pyplot as plt
 
 
-def plot_mesh(mesh_pv, **kwargs):
+def plot_mesh_pv(mesh_pv, **kwargs):
     """
     Plot a mesh.
 
@@ -67,6 +68,8 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
     degfd = kwargs.get('degfd', 0)
     window_size = kwargs.get('window_size', (800, 400))
 
+    kwargs.pop('physq', None)
+    kwargs.pop('degfd', None)
     kwargs.pop('window_size', None)
 
     nnodes = mesh_pv.number_of_points
@@ -82,6 +85,262 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
 
     plotter = pv.Plotter(window_size=window_size)
     plotter.add_mesh(mesh_pv, scalars="u", **kwargs)
+    plotter.camera_position = 'xy'
+    plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
+                     font_size=12)
+    plotter.show()
+
+
+def plot_mesh(mesh, **kwargs):
+    """
+    Plot mesh structure.
+
+    Parameters:
+    mesh: mesh structure
+    Optional arguments:
+    - nodemarks: plot node marks (default: 0)
+    - nodenumbers: plot node numbers (default: 0)
+    - elementnumbers: plot element numbers (default: 0)
+    """
+
+    if mesh.ndim != 2:
+        raise ValueError('Only 2D meshes can be plotted')
+
+    # Set default options
+    nodemarks = kwargs.get('nodemarks', 0)
+    nodenumbers = kwargs.get('nodenumbers', 0)
+    elementnumbers = kwargs.get('elementnumbers', 0)
+
+    # Determine element type
+    if mesh.elshape in [3, 4, 5]:  # all boundary nodes
+        elnumnod = mesh.elnumnod
+    elif mesh.elshape in [6, 7, 9, 10]:  # do not include center nodes
+        elnumnod = mesh.elnumnod - 1
+    else:
+        raise ValueError(f'Invalid elshape = {mesh.elshape}')
+
+    # Set coordinates
+    x = np.zeros((elnumnod, mesh.nelem))
+    y = np.zeros((elnumnod, mesh.nelem))
+
+    for elem in range(mesh.nelem):
+        for node in range(elnumnod):
+            x[node, elem] = mesh.coor[mesh.topology[node, elem], 0]
+            y[node, elem] = mesh.coor[mesh.topology[node, elem], 1]
+
+    # Plot figure
+    plt.fill(x, y, facecolor='none', edgecolor='k')
+    plt.axis('equal')
+    plt.axis('off')
+    plt.title('Mesh')
+
+    # Plot node marks
+    if nodemarks:
+        for node in range(mesh.nnodes):
+            plt.text(mesh.coor[node, 0], mesh.coor[node, 1], 'X', fontsize=12,
+                     color='g', ha='center')
+
+    # Plot node numbers
+    if nodenumbers:
+        for node in range(mesh.nnodes):
+            plt.text(mesh.coor[node, 0], mesh.coor[node, 1], str(node + 1),
+                     fontsize=8, color='b')
+
+    # Plot element numbers
+    if elementnumbers:
+        for elem in range(mesh.nelem):
+            plt.text(np.mean(x[:, elem]), np.mean(y[:, elem]), str(elem + 1),
+                     fontsize=8, color='r', ha='center', va='center')
+
+    plt.show()
+
+
+def plot_curves(mesh, **kwargs):
+    """
+    Plot curves (and optionally points) of the mesh.
+
+    Parameters:
+    mesh: mesh structure
+    Optional arguments:
+    - curves: the curves to be plotted (default: all curves)
+    - nodemarks: plot node marks (default: 0)
+    - nodenumbers: plot node numbers (0=off, 1=local, 2=global; default: 0)
+    - elementnumbers: plot element numbers (default: 0)
+    - curvenumbers: plot curve numbers (default: 0)
+    - pointnumbers: plot point numbers (default: 0)
+    """
+
+    if mesh.ndim != 2:
+        raise ValueError('Only 2D curves can be plotted')
+
+    # Set default options
+    curves = list(range(mesh.ncurves))
+    nodemarks = 0
+    nodenumbers = 0
+    elementnumbers = 0
+    curvenumbers = 0
+    pointnumbers = 0
+
+    # Update options based on kwargs
+    if 'curves' in kwargs:
+        curves = kwargs['curves']
+    if 'nodemarks' in kwargs:
+        nodemarks = kwargs['nodemarks']
+    if 'nodenumbers' in kwargs:
+        nodenumbers = kwargs['nodenumbers']
+    if 'elementnumbers' in kwargs:
+        elementnumbers = kwargs['elementnumbers']
+    if 'curvenumbers' in kwargs:
+        curvenumbers = kwargs['curvenumbers']
+    if 'pointnumbers' in kwargs:
+        pointnumbers = kwargs['pointnumbers']
+
+    # Set coordinates (all curves must have the same element type)
+    elnumnod = mesh.curves[0].elnumnod
+    nelem = 0
+    for curve in curves:
+        if elnumnod != mesh.curves[curve].elnumnod:
+            raise ValueError('All curves must have the same element type')
+        nelem += mesh.curves[curve].nelem
+
+    x = np.zeros((elnumnod, nelem))
+    y = np.zeros((elnumnod, nelem))
+
+    el = 0
+    for curve in curves:
+        for elem in range(mesh.curves[curve].nelem):
+            el += 1
+            for node in range(elnumnod):
+                x[node, el-1] = \
+                    mesh.coor[mesh.curves[curve].topology[node, elem, 1], 0]
+                y[node, el-1] = \
+                    mesh.coor[mesh.curves[curve].topology[node, elem, 1], 1]
+
+    # Plot figure
+    plt.plot(x, y, color='k')
+    plt.axis('equal')
+    plt.axis('off')
+
+    # Plot node marks
+    if nodemarks:
+        for curve in curves:
+            for node in mesh.curves[curve].nodes:
+                plt.text(mesh.coor[node, 0], mesh.coor[node, 1], 'X',
+                         fontsize=12, color='g', ha='center')
+
+    # Plot node numbers
+    if nodenumbers == 1:
+        for curve in curves:
+            for nod, node in enumerate(mesh.curves[curve].nodes):
+                plt.text(mesh.coor[node, 0], mesh.coor[node, 1], str(nod + 1),
+                         fontsize=8, color='b')
+    elif nodenumbers == 2:
+        for curve in curves:
+            for node in mesh.curves[curve].nodes:
+                plt.text(mesh.coor[node, 0], mesh.coor[node, 1], str(node + 1),
+                         fontsize=8, color='b')
+
+    # Plot element numbers
+    if elementnumbers:
+        el = 0
+        for curve in curves:
+            for elem in range(mesh.curves[curve].nelem):
+                el += 1
+                plt.text(np.mean(x[:, el-1]), np.mean(y[:, el-1]),
+                         str(elem + 1), fontsize=8, color='r', ha='center',
+                         va='center')
+
+    # Plot curve numbers
+    if curvenumbers:
+        for curve in curves:
+            x1 = np.min(mesh.coor[mesh.curves[curve].nodes, :], axis=0)
+            x2 = np.max(mesh.coor[mesh.curves[curve].nodes, :], axis=0)
+            plt.text((x1[0] + x2[0]) / 2, (x1[1] + x2[1]) / 2,
+                     'C' + str(curve + 1), fontsize=8, color='r',
+                     ha='center', va='center')
+
+    # Plot point numbers
+    if pointnumbers:
+        for point in range(mesh.npoints):
+            node = mesh.points[point]
+            plt.text(mesh.coor[node, 0], mesh.coor[node, 1],
+                     'P' + str(point + 1), fontsize=8, color='b')
+
+    plt.show()
+
+
+def plot_over_line(mesh_pv, points, npoints=200, plot_mesh=False):
+
+    if plot_mesh:
+        line = pv.Line(points[0], points[1])
+        p = pv.Plotter(window_size=(800, 400))
+        p.add_mesh(mesh_pv, color="w")
+        p.add_mesh(line, color="b")
+        p.camera_position = 'xy'
+        p.show()
+
+    mesh_pv.plot_over_line(points[0], points[1], resolution=npoints)
+
+    return mesh_pv.sample_over_line(points[0], points[1],
+                                    resolution=npoints)
+
+
+def plot_quiver(mesh_pv, problem, u, **kwargs):
+    """
+    Plots the solution of a given problem on a mesh using PyVista.
+
+    Parameters
+    ----------
+    mesh_pv : pyvista.PolyData
+        The mesh on which to plot the solution.
+    problem : Problem
+        The problem object.
+    u : numpy.ndarray
+        The solution vector.
+
+    Keyword arguments
+    -----------------
+    kwargs : dict, optional
+        Additional keyword arguments to pass to the plotter.add_mesh function.
+
+    """
+
+    # Optional arguments
+    physq = kwargs.get('physq', 0)
+    window_size = kwargs.get('window_size', (800, 400))
+
+    kwargs.pop('physq', None)
+    kwargs.pop('degfd', None)
+    kwargs.pop('window_size', None)
+
+    ndf = problem.elementdof[0, physq]
+
+    print(ndf)
+
+    assert (problem.elementdof[0, physq] == 2)
+    assert (np.all(problem.elementdof[0, physq] == ndf))
+
+    nnodes = mesh_pv.number_of_points
+
+    # Set coordinates and values
+    u0 = np.zeros(nnodes)
+    u1 = np.zeros(nnodes)
+
+    for node in range(nnodes):
+        posn, _ = pos_array(problem, node, physq=physq, order='DN')
+        u0[node] = u[posn[0][0]]
+        u1[node] = u[posn[0][1]]
+
+    mesh_pv.point_data['u'] = \
+        np.transpose(np.vstack((u0, u1, np.zeros_like(u0))))
+
+    glyphs = mesh_pv.glyph(orient="u", scale=True, factor=0.1)
+
+    plotter = pv.Plotter(window_size=window_size)
+    # plotter.add_mesh(glyphs, show_scalar_bar=False, lighting=False,
+    #                  cmap='coolwarm')
+    plotter.add_mesh(mesh_pv, color="lightgrey")
+    plotter.add_mesh(glyphs, color="black")
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
                      font_size=12)

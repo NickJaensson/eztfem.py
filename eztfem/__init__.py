@@ -29,7 +29,8 @@ from .addons.elements.poisson_elements import poisson_deriv, poisson_elem, \
 from .addons.elements.stokes_elements import stokes_elem, stokes_deriv, \
     stokes_flowrate_curve, stokes_natboun_curve, stokes_pressure
 from .addons.elements.streamfunction_elements import streamfunction_elem, \
-    streamfunction_natboun_curve    
+    streamfunction_natboun_curve
 
-from .addons.plotlib.plotting_functions import plot_sol, plot_mesh
+from .addons.plotlib.plotting_functions import plot_mesh_pv, plot_sol, \
+    plot_mesh, plot_curves, plot_over_line, plot_quiver
 from .addons.meshes.pyvista_meshgen import generate_pyvista_mesh
