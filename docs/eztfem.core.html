@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eztfem.core package &mdash; eztfem.py Oct 2024 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5e95d5fc"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="eztfem.addons.plotlib package" href="eztfem.addons.plotlib.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            eztfem.py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">eztfem</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="eztfem.html">eztfem package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="eztfem.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="eztfem.addons.html">eztfem.addons package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">eztfem.core package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">eztfem.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">eztfem</a></li>
+          <li class="breadcrumb-item"><a href="eztfem.html">eztfem package</a></li>
+      <li class="breadcrumb-item active">eztfem.core package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/eztfem.core.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eztfem-core-package">
+<h1>eztfem.core package<a class="headerlink" href="#eztfem-core-package" title="Link to this heading"></a></h1>
+<section id="module-eztfem.core.add_boundary_elements">
+<span id="eztfem-core-add-boundary-elements-module"></span><h2>eztfem.core.add_boundary_elements module<a class="headerlink" href="#module-eztfem.core.add_boundary_elements" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.add_boundary_elements.add_boundary_elements">
+<span class="sig-name descname"><span class="pre">add_boundary_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.add_boundary_elements.add_boundary_elements" title="Link to this definition"></a></dt>
+<dd><p>Add boundary elements to the system vector and optionally to the system
+matrix.</p>
+<p>NOTE: This function modifies the input arguments <cite>f</cite> and optionally <cite>A</cite> in
+place.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh object.</p>
+</dd>
+<dt>problem<span class="classifier">Problem</span></dt><dd><p>Problem object.</p>
+</dd>
+<dt>f<span class="classifier">numpy.ndarray</span></dt><dd><p>“Previous” system vector input. Result added to this vector.</p>
+</dd>
+<dt>element<span class="classifier">callable</span></dt><dd><p>Function handle to the element function routine.</p>
+</dd>
+<dt>user<span class="classifier">Any</span></dt><dd><p>Can be used by the user for transferring data to the element routine.</p>
+</dd>
+<dt>curve<span class="classifier">int</span></dt><dd><p>Build on given curve number.</p>
+</dd>
+</dl>
+</section>
+<section id="keyword-arguments">
+<h3>Keyword arguments<a class="headerlink" href="#keyword-arguments" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>A<span class="classifier">numpy.ndarray</span></dt><dd><p>“Previous” system matrix. If present, element matrices will be
+needed and added to this matrix.</p>
+</dd>
+<dt>physqrow<span class="classifier">numpy.ndarray</span></dt><dd><p>Array of physical quantity numbers for the rows of the matrix
+and for the right-hand side vector. Default: All physical
+quantities.</p>
+</dd>
+<dt>physqcol<span class="classifier">numpy.ndarray</span></dt><dd><p>Array of physical quantity numbers for the columns of the matrix.
+Default: All physical quantities.</p>
+</dd>
+<dt>order<span class="classifier">str</span></dt><dd><p>The sequence order of the degrees of freedom on element level:
+‘ND’ or ‘DN’. Default = ‘DN’</p>
+</dd>
+<dt>posvectors<span class="classifier">bool</span></dt><dd><p>Supply the position of vectors to the element routine.
+Default=False</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.apply_essential">
+<span id="eztfem-core-apply-essential-module"></span><h2>eztfem.core.apply_essential module<a class="headerlink" href="#module-eztfem.core.apply_essential" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.apply_essential.apply_essential">
+<span class="sig-name descname"><span class="pre">apply_essential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iess</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.apply_essential.apply_essential" title="Link to this definition"></a></dt>
+<dd><p>Add effect of essential boundary conditions to right-hand side.</p>
+<p>NOTE: This function modifies the input arguments <cite>A</cite> and <cite>f</cite> in place.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Ain<span class="classifier">scipy.sparse.lil_matrix</span></dt><dd><p>System matrix.</p>
+</dd>
+<dt>fin<span class="classifier">numpy.ndarray</span></dt><dd><p>Right-hand side vector.</p>
+</dd>
+<dt>uess<span class="classifier">numpy.ndarray</span></dt><dd><p>Vector containing the values for essential boundary conditions.</p>
+</dd>
+<dt>iess<span class="classifier">numpy.ndarray</span></dt><dd><p>Index of defined essential degrees.</p>
+</dd>
+</dl>
+</section>
+<section id="keyword-argument">
+<h3>Keyword argument<a class="headerlink" href="#keyword-argument" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>return_Aup<span class="classifier">bool, optional</span></dt><dd><p>Return the Aup matrix if True (Default = False)</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Aup<span class="classifier">scipy.sparse.lil_matrix</span></dt><dd><p>Matrix partition of unknown rows and prescribed columns.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.basis_function">
+<span id="eztfem-core-basis-function-module"></span><h2>eztfem.core.basis_function module<a class="headerlink" href="#module-eztfem.core.basis_function" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.barycentric">
+<span class="sig-name descname"><span class="pre">barycentric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.barycentric" title="Link to this definition"></a></dt>
+<dd><p>Compute the barycentric coordinates and their derivatives for a triangular
+element at reference coordinates.</p>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>xr<span class="classifier">array_like</span></dt><dd><p>Reference coordinates where lambda and dlambda must be computed.
+xr[i, j] with i the point in space and j the direction in space.</p>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h3>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>lambda<span class="classifier">numpy.ndarray</span></dt><dd><p>Barycentric coordinates lambda[i, j], with i the point in space and j
+the number.</p>
+</dd>
+<dt>dlambda<span class="classifier">numpy.ndarray</span></dt><dd><p>Derivative of the barycentric coordinates dlambda[i, j, k], with i the
+point in space, j the number, and k the direction in space.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Triangles:
+The reference region of a triangle is defined as:
+        1 |\               eta ∈ [0,1]
+        ^ |  \             xi  ∈ [0,1]
+    eta | |    \           xi + eta &lt;= 1
+          |      \
+        0 ---------
+          0  xi -&gt; 1
+The reference coordinates xr = (xi, eta) are in the lower triangle of the
+region [0,1] x [0,1] (xi + eta &lt;= 1).
+The three barycentric coordinates are:
+- lambda1 = 1 - xi - eta
+- lambda2 = xi
+- lambda3 = eta
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_function">
+<span class="sig-name descname"><span class="pre">basis_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_function" title="Link to this definition"></a></dt>
+<dd><p>Compute the basis function and its derivative at reference coordinates.</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>shape<span class="classifier">{‘line’, ‘quad’, ‘triangle’}</span></dt><dd><p>Shape of the element:
+- ‘line’: line element on the reference interval [-1, 1]
+- ‘quad’: quadrilateral element on the reference domain
+[-1, 1] x [-1, 1]
+- ‘triangle’: triangular element on the reference domain left-lower
+half of [0, 1] x [0, 1]</p>
+</dd>
+<dt>intpol<span class="classifier">{‘P0’, ‘P1’, ‘P1+’, ‘P2’, ‘P2+’, ‘Q1’, ‘Q1+’, ‘Q2’}</span></dt><dd><p>Interpolation on the element:
+- P-family: ‘P0’, ‘P1’, ‘P1+’, ‘P2’, ‘P2+’
+- Q-family: ‘Q1’, ‘Q1+’, ‘Q2’
+Note: not all combinations of shape and intpol are possible!</p>
+</dd>
+<dt>xr<span class="classifier">array_like</span></dt><dd><p>Reference coordinates where phi and dphi must be computed.
+xr[i, j] with i the point in space and j the direction in space.</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>phi<span class="classifier">numpy.ndarray</span></dt><dd><p>Basis function phi[i, j], with i the point in space and j the unknown.</p>
+</dd>
+<dt>dphi<span class="classifier">numpy.ndarray</span></dt><dd><p>Derivative of the basis function dphi[i, j, k], with i the point in
+space, j the unknown, and k the direction in space.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_line_P0">
+<span class="sig-name descname"><span class="pre">basis_line_P0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_line_P0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_line_P1">
+<span class="sig-name descname"><span class="pre">basis_line_P1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_line_P1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_line_P2">
+<span class="sig-name descname"><span class="pre">basis_line_P2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_line_P2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_quad_P0">
+<span class="sig-name descname"><span class="pre">basis_quad_P0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_quad_P0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_quad_P1">
+<span class="sig-name descname"><span class="pre">basis_quad_P1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_quad_P1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_quad_Q1">
+<span class="sig-name descname"><span class="pre">basis_quad_Q1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_quad_Q1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_quad_Q1plus">
+<span class="sig-name descname"><span class="pre">basis_quad_Q1plus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_quad_Q1plus" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_quad_Q2">
+<span class="sig-name descname"><span class="pre">basis_quad_Q2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_quad_Q2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_triangle_P0">
+<span class="sig-name descname"><span class="pre">basis_triangle_P0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_triangle_P0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_triangle_P1">
+<span class="sig-name descname"><span class="pre">basis_triangle_P1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_triangle_P1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_triangle_P1plus">
+<span class="sig-name descname"><span class="pre">basis_triangle_P1plus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_triangle_P1plus" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_triangle_P2">
+<span class="sig-name descname"><span class="pre">basis_triangle_P2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_triangle_P2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.basis_function.basis_triangle_P2plus">
+<span class="sig-name descname"><span class="pre">basis_triangle_P2plus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.basis_function.basis_triangle_P2plus" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-eztfem.core.build_system">
+<span id="eztfem-core-build-system-module"></span><h2>eztfem.core.build_system module<a class="headerlink" href="#module-eztfem.core.build_system" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.build_system.build_system">
+<span class="sig-name descname"><span class="pre">build_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.build_system.build_system" title="Link to this definition"></a></dt>
+<dd><p>Build the system matrix and right hand side.</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh object.</p>
+</dd>
+<dt>problem<span class="classifier">Problem</span></dt><dd><p>Problem object.</p>
+</dd>
+<dt>element<span class="classifier">callable</span></dt><dd><p>Function handle to the element function routine.</p>
+</dd>
+<dt>user<span class="classifier">User</span></dt><dd><p>User object to pass parameters and data to the element routine.</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h3>Keyword arguments<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>physqrow<span class="classifier">numpy.ndarray, optional</span></dt><dd><p>Array of physical quantity numbers for the rows of the matrix
+and for the right-hand side vector. Default: all physical
+quantities.</p>
+</dd>
+<dt>physqcol<span class="classifier">numpy.ndarray, optional</span></dt><dd><p>Array of physical quantity numbers for the columns of the matrix.
+Default: all physical quantities.</p>
+</dd>
+<dt>order<span class="classifier">str, optional</span></dt><dd><p>The sequence order of the degrees of freedom on element level:
+‘ND’ : the most inner loop is over the degrees of freedom.
+‘DN’ : the most inner loop is over the nodal points.
+Default: ‘DN’.
+NOTE: the outside loop is always given by the physical quantities.</p>
+</dd>
+<dt>posvectors<span class="classifier">bool, optional</span></dt><dd><p>Supply the position of vectors to the element routine.
+Default: False.</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>A<span class="classifier">numpy.ndarray</span></dt><dd><p>The system matrix.</p>
+</dd>
+<dt>f<span class="classifier">numpy.ndarray</span></dt><dd><p>The right hand side.</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<p>To change the order:
+&gt;&gt;&gt; A, f = build_system(mesh, problem, element, user, order=’ND’)</p>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.class_mesh">
+<span id="eztfem-core-class-mesh-module"></span><h2>eztfem.core.class_mesh module<a class="headerlink" href="#module-eztfem.core.class_mesh" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="eztfem.core.class_mesh.Geometry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elshape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elnumnod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nnodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nelem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.class_mesh.Geometry" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to represent a Geometry.</p>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>elshape<span class="classifier">int</span></dt><dd><p>Shape number of the elements. Table of shapes:
+- 1 : 2-node elements.
+- 2 : 3-node elements.</p>
+</dd>
+<dt>ndim<span class="classifier">int</span></dt><dd><p>Dimension of space (ndim=2).</p>
+</dd>
+<dt>elnumnod<span class="classifier">int</span></dt><dd><p>Number of nodes in a single element.</p>
+</dd>
+<dt>nnodes<span class="classifier">int</span></dt><dd><p>Number of nodes.</p>
+</dd>
+<dt>nelem<span class="classifier">int</span></dt><dd><p>Number of elements.</p>
+</dd>
+<dt>topology<span class="classifier">np.ndarray</span></dt><dd><p>Array of size (elnumnod, nelem, 2), where topology[:, elem, 0]
+is an array of local node numbers element elem is connected to,
+and topology[:, elem, 1] is an array of global node numbers
+element elem is connected to.</p>
+</dd>
+<dt>nodes<span class="classifier">np.ndarray</span></dt><dd><p>Array of size nnodes containing the global node numbers, i.e.,
+nodes[i] is the global node number of local node i.</p>
+</dd>
+</dl>
+<p>Initializes the Geometry object with the given attributes.</p>
+</section>
+<section id="parameters-for-initialization">
+<h3>Parameters for initialization<a class="headerlink" href="#parameters-for-initialization" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>elshape<span class="classifier">int, optional</span></dt><dd><p>Shape of the elements (default is 0).</p>
+</dd>
+<dt>ndim<span class="classifier">int, optional</span></dt><dd><p>Number of dimensions (default is 0).</p>
+</dd>
+<dt>elnumnod<span class="classifier">int, optional</span></dt><dd><p>Number of nodes per element (default is 0).</p>
+</dd>
+<dt>nnodes<span class="classifier">int, optional</span></dt><dd><p>Number of nodes (default is 0).</p>
+</dd>
+<dt>nelem<span class="classifier">int, optional</span></dt><dd><p>Number of elements (default is 0).</p>
+</dd>
+<dt>topology<span class="classifier">np.ndarray, optional</span></dt><dd><p>Topology of the geometry (default is np.array([])).</p>
+</dd>
+<dt>nodes<span class="classifier">np.ndarray, optional</span></dt><dd><p>Nodes in the geometry (default is np.array([])).</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h3>Notes<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<p>The default values for the mutable arguments are set inside the
+initialization function to ensure they are re-created at every call.</p>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eztfem.core.class_mesh.Mesh">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nnodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nelem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elshape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elnumnod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncurves</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curves</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.class_mesh.Mesh" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to represent a Mesh.</p>
+<section id="id10">
+<h3>Attributes<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>ndim<span class="classifier">int</span></dt><dd><p>Dimension of space (ndim=1 or 2).</p>
+</dd>
+<dt>nnodes<span class="classifier">int</span></dt><dd><p>Number of nodes.</p>
+</dd>
+<dt>nelem<span class="classifier">int</span></dt><dd><p>Number of elements.</p>
+</dd>
+<dt>elshape<span class="classifier">int</span></dt><dd><p>Shape number of the elements. Table of shapes:
+- 1 : 2-node line elements.
+- 2 : 3-node line elements.
+- 3 : 3-node triangle.
+- 4 : 6-node triangle.
+- 5 : 4-node quadrilateral.
+- 6 : 9-node quadrilateral.
+- 7 : 7-node triangle.
+- 9 : 5-node quadrilateral.
+- 10 : 4-node triangle.</p>
+</dd>
+<dt>elnumnod<span class="classifier">int</span></dt><dd><p>Number of nodes in a single element.</p>
+</dd>
+<dt>npoints<span class="classifier">int</span></dt><dd><p>Number of points.</p>
+</dd>
+<dt>ncurves<span class="classifier">int</span></dt><dd><p>Number of curves.</p>
+</dd>
+<dt>topology<span class="classifier">np.ndarray</span></dt><dd><p>Array of size (elnumnod, nelem), where topology[:, elem] is an
+array of global node numbers element elem is connected to.</p>
+</dd>
+<dt>coor<span class="classifier">np.ndarray</span></dt><dd><p>Array of size (nnodes, ndim), where coor[i, :] are the coordinates
+of node i, with 1 &lt;= i &lt;= nnodes.</p>
+</dd>
+<dt>points<span class="classifier">np.ndarray</span></dt><dd><p>An array containing the node numbers of the points, hence points[i]
+is the node of point i, with 1 &lt;= i &lt;= npoints.</p>
+</dd>
+<dt>curves<span class="classifier">list</span></dt><dd><p>An array of objects of type Geometry</p>
+</dd>
+</dl>
+<p>Initializes the Mesh object with the given attributes.</p>
+</section>
+<section id="id11">
+<h3>Parameters for initialization<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>ndim<span class="classifier">int, optional</span></dt><dd><p>Number of dimensions (default is 0).</p>
+</dd>
+<dt>nnodes<span class="classifier">int, optional</span></dt><dd><p>Number of nodes (default is 0).</p>
+</dd>
+<dt>nelem<span class="classifier">int, optional</span></dt><dd><p>Number of elements (default is 0).</p>
+</dd>
+<dt>elshape<span class="classifier">int, optional</span></dt><dd><p>Shape of the elements (default is 0).</p>
+</dd>
+<dt>elnumnod<span class="classifier">int, optional</span></dt><dd><p>Number of nodes per element (default is 0).</p>
+</dd>
+<dt>npoints<span class="classifier">int, optional</span></dt><dd><p>Number of points (default is 0).</p>
+</dd>
+<dt>ncurves<span class="classifier">int, optional</span></dt><dd><p>Number of curves (default is 0).</p>
+</dd>
+<dt>topology<span class="classifier">np.ndarray, optional</span></dt><dd><p>Topology of the mesh (default is np.array([])).</p>
+</dd>
+<dt>coor<span class="classifier">np.ndarray, optional</span></dt><dd><p>Coordinates of the nodes (default is np.array([])).</p>
+</dd>
+<dt>points<span class="classifier">np.ndarray, optional</span></dt><dd><p>Points in the mesh (default is np.array([])).</p>
+</dd>
+<dt>curves<span class="classifier">list, optional</span></dt><dd><p>Curves in the mesh (default is []]).</p>
+</dd>
+</dl>
+</section>
+<section id="id12">
+<h3>Notes<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<p>The default values for the mutable arguments are set inside the
+initialization function to ensure they are re-created at every call.</p>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.class_problem">
+<span id="eztfem-core-class-problem-module"></span><h2>eztfem.core.class_problem module<a class="headerlink" href="#module-eztfem.core.class_problem" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="eztfem.core.class_problem.Problem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementdof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nphysq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.class_problem.Problem" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Define a problem with a given mesh and element degrees of freedom (DOF).</p>
+<section id="id13">
+<h3>Attributes<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>elementdof<span class="classifier">np.ndarray</span></dt><dd><p>A matrix of size (mesh.elnumnod, nvec), where nvec is the number of
+vectors of special structure.</p>
+</dd>
+<dt>nphysq<span class="classifier">int</span></dt><dd><p>Number of physical quantities.</p>
+</dd>
+<dt>nvec<span class="classifier">int</span></dt><dd><p>Number of vectors defined on the mesh.</p>
+</dd>
+<dt>vec_elnumdegfd<span class="classifier">np.ndarray</span></dt><dd><p>Array of size (mesh.elnumnod, nvec) giving the number of DOF in each
+node of the element for the vectors.</p>
+</dd>
+<dt>vec_nodnumdegfd<span class="classifier">np.ndarray</span></dt><dd><p>Array of size (mesh.nnodes+1, nvec) storing the number of DOF in each
+nodal point (accumulated) for vectors of special structure.</p>
+</dd>
+<dt>vec_numdegfd<span class="classifier">np.ndarray</span></dt><dd><p>Array of length nvec storing the number of DOF for each vector of
+special structure.</p>
+</dd>
+<dt>elnumdegfd<span class="classifier">np.ndarray</span></dt><dd><p>Array of size (mesh.elnumnod,) giving the number of system DOF in each
+nodal point of an element.</p>
+</dd>
+<dt>nodnumdegfd<span class="classifier">np.ndarray</span></dt><dd><p>Array of length (mesh.nnodes+1) storing the number of DOF in each nodal
+point (accumulated).</p>
+</dd>
+<dt>numdegfd<span class="classifier">int</span></dt><dd><p>Total number of system DOF.</p>
+</dd>
+<dt>maxnoddegfd<span class="classifier">int</span></dt><dd><p>Maximum number of system DOF in the nodal points.</p>
+</dd>
+<dt>maxvecnoddegfd<span class="classifier">int</span></dt><dd><p>Maximum number of vector DOF in the nodal points.</p>
+</dd>
+</dl>
+<p>Initializes the Problem object for a given mesh, elementdof and
+nphys (optional). All other attributes are filled in the initialization
+function.</p>
+</section>
+<section id="id14">
+<h3>Parameters for initialization<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh object.</p>
+</dd>
+<dt>elementdof<span class="classifier">np.ndarray</span></dt><dd><p>A matrix of size (mesh.elnumnod, nvec), where nvec is the number of
+vectors of special structure.</p>
+</dd>
+<dt>nphysq<span class="classifier">int, optional</span></dt><dd><p>Number of physical quantities. Default is the number of columns
+in elementdof.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.class_user">
+<span id="eztfem-core-class-user-module"></span><h2>eztfem.core.class_user module<a class="headerlink" href="#module-eztfem.core.class_user" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="eztfem.core.class_user.User">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">User</span></span><a class="headerlink" href="#eztfem.core.class_user.User" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Define the User class: this class is mainly a collection of parameters and
+data that should be accessible to the element routines.</p>
+<section id="id15">
+<h3>Attributes<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>wg<span class="classifier">np.ndarray</span></dt><dd><p>Weights of Gauss points.</p>
+</dd>
+<dt>xr<span class="classifier">np.ndarray</span></dt><dd><p>Location of Gauss points.</p>
+</dd>
+<dt>phi<span class="classifier">np.ndarray</span></dt><dd><p>Values of phi shape function in Gauss points.</p>
+</dd>
+<dt>dphi<span class="classifier">np.ndarray</span></dt><dd><p>Values of phi shape function derivatives in Gauss points.</p>
+</dd>
+<dt>psi<span class="classifier">np.ndarray</span></dt><dd><p>Values of psi shape function in Gauss points.</p>
+</dd>
+</dl>
+<p>Initializes the Problem object with the all attributes empty numpy
+arrays (np.array([])).</p>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.class_vector">
+<span id="eztfem-core-class-vector-module"></span><h2>eztfem.core.class_vector module<a class="headerlink" href="#module-eztfem.core.class_vector" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="eztfem.core.class_vector.Vector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.class_vector.Vector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to represent a Vector.</p>
+<section id="id16">
+<h3>Attributes<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>vec<span class="classifier">int</span></dt><dd><p>The vector value.</p>
+</dd>
+<dt>u<span class="classifier">np.ndarray</span></dt><dd><p>An array to store vector data.</p>
+</dd>
+</dl>
+<p>Initializes the Vector object with the given attributes. The stored
+vecor data (u) is initialized as an empty numpy array (np.array([])).</p>
+</section>
+<section id="id17">
+<h3>Parameters for initialization<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>vec<span class="classifier">int or float, optional</span></dt><dd><p>The vector value (default is 0).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.define_essential">
+<span id="eztfem-core-define-essential-module"></span><h2>eztfem.core.define_essential module<a class="headerlink" href="#module-eztfem.core.define_essential" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.define_essential.define_essential">
+<span class="sig-name descname"><span class="pre">define_essential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.define_essential.define_essential" title="Link to this definition"></a></dt>
+<dd><p>Get the indices of the essential degrees of freedom.</p>
+<section id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh object.</p>
+</dd>
+<dt>problem<span class="classifier">Problem</span></dt><dd><p>Problem object.</p>
+</dd>
+<dt>geometry<span class="classifier">str</span></dt><dd><p>The ‘geometry’ to put essential degrees on:
+‘nodes’ : in the nodes given by numbers.
+‘points’ : in the points given by numbers.
+‘curves’ : in the curves given by numbers.</p>
+</dd>
+<dt>numbers<span class="classifier">array_like</span></dt><dd><p>An array of ‘geometry’ numbers.</p>
+</dd>
+</dl>
+</section>
+<section id="id19">
+<h3>Keyword arguments<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>physq<span class="classifier">int, optional</span></dt><dd><p>Physical quantity number. Default is 0.</p>
+</dd>
+<dt>degfd<span class="classifier">int, optional</span></dt><dd><p>Degree of freedom within the physical quantity. Default is 0.</p>
+</dd>
+<dt>iessp<span class="classifier">int, optional</span></dt><dd><p>Index of previously defined essential degrees. Newly defined
+boundary conditions will be added. Default is 0.</p>
+</dd>
+</dl>
+</section>
+<section id="id20">
+<h3>Returns<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>iess<span class="classifier">numpy.ndarray</span></dt><dd><p>Index of defined essential degrees.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.deriv_vector">
+<span id="eztfem-core-deriv-vector-module"></span><h2>eztfem.core.deriv_vector module<a class="headerlink" href="#module-eztfem.core.deriv_vector" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.deriv_vector.deriv_vector">
+<span class="sig-name descname"><span class="pre">deriv_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.deriv_vector.deriv_vector" title="Link to this definition"></a></dt>
+<dd><p>Derive a vector of special structure.</p>
+<section id="id21">
+<h3>Parameters<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh structure.</p>
+</dd>
+<dt>problem<span class="classifier">Problem</span></dt><dd><p>Problem structure.</p>
+</dd>
+<dt>element<span class="classifier">callable</span></dt><dd><p>Function handle to the element function routine.</p>
+</dd>
+<dt>user<span class="classifier">Any</span></dt><dd><p>User object to pass parameters and data to the element routine.</p>
+</dd>
+</dl>
+</section>
+<section id="id22">
+<h3>Keyword arguments<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>vec<span class="classifier">int, optional</span></dt><dd><p>The vector number. Default is problem[‘nphysq’].</p>
+</dd>
+<dt>order<span class="classifier">str, optional</span></dt><dd><p>The sequence order of the degrees of freedom on element level.
+‘ND’ : the most inner loop is over the degrees of freedom.
+‘DN’ : the most inner loop is over the nodal points.
+Default is ‘DN’.</p>
+</dd>
+<dt>posvectors<span class="classifier">bool, optional</span></dt><dd><p>Supply the position of vectors to the element routine.
+Default: False.</p>
+</dd>
+</dl>
+</section>
+<section id="id23">
+<h3>Returns<a class="headerlink" href="#id23" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>v<span class="classifier">Vector</span></dt><dd><p>Vector object containing the derived data.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.distribute_elements">
+<span id="eztfem-core-distribute-elements-module"></span><h2>eztfem.core.distribute_elements module<a class="headerlink" href="#module-eztfem.core.distribute_elements" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.distribute_elements.distribute_elements">
+<span class="sig-name descname"><span class="pre">distribute_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nelem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.distribute_elements.distribute_elements" title="Link to this definition"></a></dt>
+<dd><p>Generate non-equidistant n elements on the interval [0, 1].</p>
+<section id="id24">
+<h3>Parameters<a class="headerlink" href="#id24" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n<span class="classifier">int</span></dt><dd><p>Number of elements.</p>
+</dd>
+<dt>ratio<span class="classifier">int</span></dt><dd><p>Determines the distribution of elements:
+0: Equidistant mesh.
+1: The size of the last element is <cite>factor</cite> times the first.
+2: The size of an element is <cite>factor</cite> times the previous one.
+3: The size of the last element is <cite>1/factor</cite> times the first.
+4: The size of an element is <cite>1/factor</cite> times the previous one.</p>
+</dd>
+<dt>factor<span class="classifier">float</span></dt><dd><p>Factor used in the distribution calculations.</p>
+</dd>
+</dl>
+</section>
+<section id="id25">
+<h3>Returns<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>Coordinates of n+1 points.</p>
+</dd>
+</dl>
+</section>
+<section id="id26">
+<h3>Notes<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<p>The interval [0, 1] is divided into n elements:</p>
+<div class="math notranslate nohighlight">
+\[dx_{i+1} = g \cdot dx_{i-1}\]</div>
+<div class="math notranslate nohighlight">
+\[1 = (1 + g + g^2 + g^3 + \ldots + g^{n-1}) \cdot dx_1 =
+\frac{1 - g^n}{1 - g} \cdot dx_1\]</div>
+<p>With <span class="math notranslate nohighlight">\(fac = 1 + g + g^2 + \ldots + g^{n-1}\)</span>, we have:</p>
+<div class="math notranslate nohighlight">
+\[dx_1 = \frac{1}{fac} = \frac{1 - g}{1 - g^n}\]</div>
+<div class="math notranslate nohighlight">
+\[dx_n = g^{n-1} \cdot dx_1\]</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.fill_system_vector">
+<span id="eztfem-core-fill-system-vector-module"></span><h2>eztfem.core.fill_system_vector module<a class="headerlink" href="#module-eztfem.core.fill_system_vector" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.fill_system_vector.fill_system_vector">
+<span class="sig-name descname"><span class="pre">fill_system_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.fill_system_vector.fill_system_vector" title="Link to this definition"></a></dt>
+<dd><p>Fill system vector.</p>
+<dl class="simple">
+<dt>NOTE: If f is present, this function modifies the input arguments <cite>f</cite></dt><dd><p>in place. If f is not present, f is returned by the function.</p>
+</dd>
+</dl>
+<section id="id27">
+<h3>Parameters<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">object</span></dt><dd><p>Mesh structure.</p>
+</dd>
+<dt>problem<span class="classifier">object</span></dt><dd><p>Problem structure.</p>
+</dd>
+<dt>geometry<span class="classifier">str</span></dt><dd><p>The ‘geometry’ to fill degrees on:
+- ‘nodes’: in the nodes given by numbers
+- ‘points’: in the points given by numbers
+- ‘curves’: in the curves given by numbers</p>
+</dd>
+<dt>numbers<span class="classifier">array_like</span></dt><dd><p>An array of ‘geometry’ numbers.</p>
+</dd>
+<dt>func<span class="classifier">callable</span></dt><dd><p>Scalar function for filling. Only argument is x, a coordinate vector.</p>
+</dd>
+</dl>
+</section>
+<section id="id28">
+<h3>Keyword arguments<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>funcnr<span class="classifier">int, optional</span></dt><dd><p>Function number for func, i.e. func(funcnr, x). Default is 1.</p>
+</dd>
+<dt>physq<span class="classifier">int, optional</span></dt><dd><p>Physical quantity number. Default is 1.</p>
+</dd>
+<dt>degfd<span class="classifier">int, optional</span></dt><dd><p>Degree of freedom within the physical quantity. Default is 1.</p>
+</dd>
+<dt>f<span class="classifier">numpy.ndarray, optional</span></dt><dd><p>An existing system vector which will be modified in-place.</p>
+</dd>
+</dl>
+</section>
+<section id="id29">
+<h3>Returns<a class="headerlink" href="#id29" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>f<span class="classifier">numpy.ndarray (optional)</span></dt><dd><p>Filled system vector. Will only be returned if f is not present in the
+function call (if it is present, f is modified in place).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.gauss_legendre">
+<span id="eztfem-core-gauss-legendre-module"></span><h2>eztfem.core.gauss_legendre module<a class="headerlink" href="#module-eztfem.core.gauss_legendre" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.dup111">
+<span class="sig-name descname"><span class="pre">dup111</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.dup111" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.dup21">
+<span class="sig-name descname"><span class="pre">dup21</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.dup21" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.dup3">
+<span class="sig-name descname"><span class="pre">dup3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.dup3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.gauss_legendre">
+<span class="sig-name descname"><span class="pre">gauss_legendre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.gauss_legendre" title="Link to this definition"></a></dt>
+<dd><p>Gauss-Legendre integration points and weights.</p>
+<section id="id30">
+<h3>Parameters<a class="headerlink" href="#id30" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>shape<span class="classifier">{‘line’, ‘quad’, ‘triangle’}</span></dt><dd><p>Shape of the domain:
+- ‘line’: interval [-1, 1]
+- ‘quad’: domain [-1, 1] x [-1, 1]
+- ‘triangle’: reference triangle, left-lower half of [0, 1] x [0, 1]</p>
+</dd>
+</dl>
+</section>
+<section id="id31">
+<h3>Keyword arguments<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n<span class="classifier">int, optional</span></dt><dd><p>The number of integration points in one direction. This only
+applies to shape=’line’ and shape=’quad’, where the number of
+integration points will be n and n^2, respectively.</p>
+</dd>
+<dt>p<span class="classifier">int, optional</span></dt><dd><p>The order of the integration rule (order polynomial integrated
+exact). This only applies to shape=’triangle’.</p>
+</dd>
+</dl>
+</section>
+<section id="id32">
+<h3>Returns<a class="headerlink" href="#id32" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>Coordinates of the integration points.</p>
+</dd>
+<dt>w<span class="classifier">numpy.ndarray</span></dt><dd><p>Weights of the integration scheme.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.gauss_legendre_line">
+<span class="sig-name descname"><span class="pre">gauss_legendre_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.gauss_legendre_line" title="Link to this definition"></a></dt>
+<dd><p>Compute Gauss-Legendre integration points and weights for a line segment.
+Gauss Legendre in 1D defined on the interval [-1,1]</p>
+<section id="id33">
+<h3>Parameters<a class="headerlink" href="#id33" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n<span class="classifier">int</span></dt><dd><p>Number of integration points.</p>
+</dd>
+</dl>
+</section>
+<section id="id34">
+<h3>Returns<a class="headerlink" href="#id34" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>Reference coordinates of the integration points.</p>
+</dd>
+<dt>w<span class="classifier">numpy.ndarray</span></dt><dd><p>Weights of the integration points.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.gauss_legendre_quad">
+<span class="sig-name descname"><span class="pre">gauss_legendre_quad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.gauss_legendre_quad" title="Link to this definition"></a></dt>
+<dd><p>Compute Gauss-Legendre integration points and weights for a quadrilateral.
+Gauss Legendre in 2D defined on the region [-1,1]x[-1,1]</p>
+<section id="id35">
+<h3>Parameters<a class="headerlink" href="#id35" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>n<span class="classifier">int</span></dt><dd><p>Number of integration points in one dimension.</p>
+</dd>
+</dl>
+</section>
+<section id="id36">
+<h3>Returns<a class="headerlink" href="#id36" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>Reference coordinates of the integration points, shape (n^2, 2).</p>
+</dd>
+<dt>w<span class="classifier">numpy.ndarray</span></dt><dd><p>Weights of the integration points, shape (n^2,).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.gauss_legendre_triangle">
+<span class="sig-name descname"><span class="pre">gauss_legendre_triangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.gauss_legendre_triangle" title="Link to this definition"></a></dt>
+<dd><p>Compute Gauss-Legendre integration points and weights for a triangle.
+Gauss Legendre in 2D defined triangle, left-lower half of [0, 1] x [0, 1]</p>
+<section id="id37">
+<h3>Parameters<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>p<span class="classifier">int</span></dt><dd><p>Order of the integration rule (order polynomial integrated exact).</p>
+</dd>
+</dl>
+</section>
+<section id="id38">
+<h3>Returns<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>Reference coordinates of the integration points, shape (ni, 2).</p>
+</dd>
+<dt>w<span class="classifier">numpy.ndarray</span></dt><dd><p>Weights of the integration points, shape (ni,).</p>
+</dd>
+</dl>
+</section>
+<section id="id39">
+<h3>Notes<a class="headerlink" href="#id39" title="Link to this heading"></a></h3>
+<p>The reference region of a triangle is defined as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    1 |\               eta ∈ [0, 1]
+    ^ |  \             xi  ∈ [0, 1]
+eta | |    \           xi + eta &lt;= 1
+      |      \
+    0 ---------
+      0  xi -&gt; 1
+</pre></div>
+</div>
+<p>The numerical values are based on:</p>
+<p>L. Zhang, T. Cui, H. Liu, “A set of symmetric quadrature rules on triangles
+and tetrahedra”, Journal of Computational Mathematics, Vol. 27, No. 1,
+2009, 89-96.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.perm111">
+<span class="sig-name descname"><span class="pre">perm111</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.perm111" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.perm21">
+<span class="sig-name descname"><span class="pre">perm21</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.perm21" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.gauss_legendre.perm3">
+<span class="sig-name descname"><span class="pre">perm3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.gauss_legendre.perm3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-eztfem.core.integrate_boundary_elements">
+<span id="eztfem-core-integrate-boundary-elements-module"></span><h2>eztfem.core.integrate_boundary_elements module<a class="headerlink" href="#module-eztfem.core.integrate_boundary_elements" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.integrate_boundary_elements.integrate_boundary_elements">
+<span class="sig-name descname"><span class="pre">integrate_boundary_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.integrate_boundary_elements.integrate_boundary_elements" title="Link to this definition"></a></dt>
+<dd><p>Integrate boundary elements.</p>
+<section id="id40">
+<h3>Parameters<a class="headerlink" href="#id40" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh object.</p>
+</dd>
+<dt>problem<span class="classifier">Problem</span></dt><dd><p>Problem object.</p>
+</dd>
+<dt>element<span class="classifier">function</span></dt><dd><p>Function handle to the element function routine.</p>
+</dd>
+<dt>user<span class="classifier">any</span></dt><dd><p>Can be used by the user for transferring data to the element routine.</p>
+</dd>
+</dl>
+</section>
+<section id="id41">
+<h3>Keyword arguments<a class="headerlink" href="#id41" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>curve<span class="classifier">int</span></dt><dd><p>Build on given curve number.</p>
+</dd>
+<dt>order<span class="classifier">{‘ND’, ‘DN’}, default=’DN’</span></dt><dd><p>The sequence order of the degrees of freedom on element level:
+- ‘ND’ : the most inner loop is over the degrees of freedom.
+- ‘DN’ : the most inner loop is over the nodal points.
+NOTE: The outside loop is always given by the physical quantities.</p>
+</dd>
+<dt>posvectors<span class="classifier">bool, default=False</span></dt><dd><p>Supply the position of vectors to the element routine.</p>
+</dd>
+</dl>
+</section>
+<section id="id42">
+<h3>Returns<a class="headerlink" href="#id42" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>resultsum<span class="classifier">float</span></dt><dd><p>The sum over all elements of the integral on elements.</p>
+</dd>
+</dl>
+</section>
+<section id="id43">
+<h3>Notes<a class="headerlink" href="#id43" title="Link to this heading"></a></h3>
+<p>Currently, ‘curve’ is the only possibility for now.</p>
+</section>
+<section id="id44">
+<h3>Examples<a class="headerlink" href="#id44" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">resultsum</span> <span class="o">=</span> <span class="n">integrate_boundary_elements</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.isoparametric_deformation">
+<span id="eztfem-core-isoparametric-deformation-module"></span><h2>eztfem.core.isoparametric_deformation module<a class="headerlink" href="#module-eztfem.core.isoparametric_deformation" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.isoparametric_deformation.isoparametric_deformation">
+<span class="sig-name descname"><span class="pre">isoparametric_deformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dphi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.isoparametric_deformation.isoparametric_deformation" title="Link to this definition"></a></dt>
+<dd><p>Isoparametric deformation of an element.</p>
+<section id="id45">
+<h3>Parameters<a class="headerlink" href="#id45" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>Coordinates of the nodes, representing the position of the unknowns
+for phi and dphi. x[i, j] with i being the point in space and j the
+direction in space.</p>
+</dd>
+<dt>dphi<span class="classifier">numpy.ndarray</span></dt><dd><p>Derivatives of the shape function with respect to the reference
+coordinates.
+dphi[i, j, k], with i being the point in space, j the unknown, and k
+the direction in space.</p>
+</dd>
+</dl>
+</section>
+<section id="id46">
+<h3>Returns<a class="headerlink" href="#id46" title="Link to this heading"></a></h3>
+<dl>
+<dt>F<span class="classifier">numpy.ndarray</span></dt><dd><p>Deformation gradient matrix between the reference element and the
+actual element.
+F[i, j, m] means that at point i, the transformation is:</p>
+<div class="math notranslate nohighlight">
+\[F[j, m] = \frac{d x_j}{d \xi_m}\]</div>
+</dd>
+<dt>Finv<span class="classifier">numpy.ndarray</span></dt><dd><p>The inverse of F.</p>
+</dd>
+<dt>detF<span class="classifier">numpy.ndarray</span></dt><dd><p>The determinant of F (Jacobian). detF[i] gives the determinant at
+point i.</p>
+</dd>
+</dl>
+</section>
+<section id="id47">
+<h3>Examples<a class="headerlink" href="#id47" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span><span class="p">,</span> <span class="n">Finv</span><span class="p">,</span> <span class="n">detF</span> <span class="o">=</span> <span class="n">isoparametric_deformation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dphi</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.isoparametric_deformation_curve">
+<span id="eztfem-core-isoparametric-deformation-curve-module"></span><h2>eztfem.core.isoparametric_deformation_curve module<a class="headerlink" href="#module-eztfem.core.isoparametric_deformation_curve" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.isoparametric_deformation_curve.isoparametric_deformation_curve">
+<span class="sig-name descname"><span class="pre">isoparametric_deformation_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dphi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.isoparametric_deformation_curve.isoparametric_deformation_curve" title="Link to this definition"></a></dt>
+<dd><p>Isoparametric deformation of curved line elements.</p>
+<section id="id48">
+<h3>Parameters<a class="headerlink" href="#id48" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>Coordinates of the nodes, representing the position of the unknowns for
+phi and dphi.
+Shape: (number of points in space, direction in space).</p>
+</dd>
+<dt>dphi<span class="classifier">numpy.ndarray</span></dt><dd><p>Derivative of the shape function with respect to the reference
+coordinate.
+Shape: (number of points in space, number of unknowns, 1).</p>
+</dd>
+</dl>
+</section>
+<section id="id49">
+<h3>Returns<a class="headerlink" href="#id49" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dxdxi<span class="classifier">numpy.ndarray</span></dt><dd><p>Derivative of the coordinates x with respect to the reference
+coordinate (tangential vector).
+Shape: (number of points in space, direction in space).</p>
+</dd>
+<dt>curvel<span class="classifier">numpy.ndarray</span></dt><dd><p>The length of the vector dxdxi.
+Shape: (number of points in space).</p>
+</dd>
+<dt>normal<span class="classifier">numpy.ndarray</span></dt><dd><p>Unit normal vector to the curve.
+Shape: (number of points in space, direction in space).</p>
+</dd>
+</dl>
+</section>
+<section id="id50">
+<h3>Examples<a class="headerlink" href="#id50" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dxdxi</span><span class="p">,</span> <span class="n">curvel</span><span class="p">,</span> <span class="n">normal</span> <span class="o">=</span> <span class="n">isoparametric_deformation_curved_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dphi</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.line_1d">
+<span id="eztfem-core-line-1d-module"></span><h2>eztfem.core.line_1d module<a class="headerlink" href="#module-eztfem.core.line_1d" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.line_1d.line1d">
+<span class="sig-name descname"><span class="pre">line1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ne</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eltype</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.line_1d.line1d" title="Link to this definition"></a></dt>
+<dd><p>Simple mesh generator for 1D lines on the interval [0, 1].</p>
+<p>Generates a simple 1D line mesh on the interval [0, 1] with optional
+translation and scaling of the region.</p>
+<section id="id51">
+<h3>Parameters<a class="headerlink" href="#id51" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>ne<span class="classifier">int</span></dt><dd><p>Number of elements.</p>
+</dd>
+<dt>eltype<span class="classifier">str</span></dt><dd><p>Shape number.
+- ‘line2’ : 2-node elements.
+- ‘line3’ : 3-node elements.</p>
+</dd>
+</dl>
+</section>
+<section id="id52">
+<h3>Keyword arguments<a class="headerlink" href="#id52" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>origin<span class="classifier">float, optional</span></dt><dd><p>Origin of the domain.</p>
+</dd>
+<dt>length<span class="classifier">float, optional</span></dt><dd><p>Length of the domain.</p>
+</dd>
+<dt>ratio<span class="classifier">int, optional, default=0</span></dt><dd><p>Mesh ratio.
+- 0 : Equidistant mesh.
+- 1 : The size of the last element is factor times the first.
+- 2 : The size of an element is factor times the previous one.
+- 3 : The size of the last element is 1/factor times the first.
+- 4 : The size of an element is 1/factor times the previous one.</p>
+</dd>
+<dt>factor<span class="classifier">float, optional, default=1</span></dt><dd><p>Factor for the mesh ratio.</p>
+</dd>
+</dl>
+</section>
+<section id="id53">
+<h3>Returns<a class="headerlink" href="#id53" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh object. See function <cite>quadrilateral2d</cite> for the components.
+Note that the components curves are not present for <cite>LINE1D</cite>.</p>
+</dd>
+</dl>
+</section>
+<section id="id54">
+<h3>Examples<a class="headerlink" href="#id54" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">line1d</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;line2&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">Creates a 10-element line mesh with 2-node elements on the domain [1, 3].</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.line_1d.line1d_2node">
+<span class="sig-name descname"><span class="pre">line1d_2node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.line_1d.line1d_2node" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1] using line elements with 2 nodes.
+The numbering is straightforward:
+For example a 4 element mesh is numbered as follows</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Nodes:</dt><dd><p>1 –  2 –  3 –  4 –  5</p>
+</dd>
+<dt>Elements:</dt><dd><dl class="simple">
+<dt>x –  x –  x –  x –  x</dt><dd><p>1     2     3     4</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>Also generated are two points and the end of the interval</p>
+<blockquote>
+<div><p>P1 ——————— P2</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.line_1d.line1d_3node">
+<span class="sig-name descname"><span class="pre">line1d_3node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.line_1d.line1d_3node" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1] using line elements with 3 nodes.
+The numbering is straightforward:
+For example a 2 element mesh is numbered as follows</p>
+<dl class="simple">
+<dt>Nodes:</dt><dd><p>1 –  2 –  3 –  4 –  5</p>
+</dd>
+<dt>Elements:</dt><dd><dl class="simple">
+<dt>x –  x –  x –  x –  x</dt><dd><p>1           2</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Also generated are two points and the end of the interval</p>
+<blockquote>
+<div><p>P1 ——————— P2</p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.mesh_merge">
+<span id="eztfem-core-mesh-merge-module"></span><h2>eztfem.core.mesh_merge module<a class="headerlink" href="#module-eztfem.core.mesh_merge" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.mesh_merge.mesh_merge">
+<span class="sig-name descname"><span class="pre">mesh_merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.mesh_merge.mesh_merge" title="Link to this definition"></a></dt>
+<dd><p>Create a new mesh by merging two other meshes.</p>
+<section id="id55">
+<h3>Parameters<a class="headerlink" href="#id55" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh1<span class="classifier">Mesh</span></dt><dd><p>The first mesh to be merged.</p>
+</dd>
+<dt>mesh2<span class="classifier">Mesh</span></dt><dd><p>The second mesh to be merged.</p>
+</dd>
+</dl>
+</section>
+<section id="id56">
+<h3>Keyword arguments<a class="headerlink" href="#id56" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>point1, point2<span class="classifier">array_like</span></dt><dd><p>Vectors of equal size giving the points in both meshes that need
+to be merged into one.
+NOTE: points2[i] corresponds to points1[i].</p>
+</dd>
+<dt>curves1, curves2<span class="classifier">array_like</span></dt><dd><p>Vectors of equal size giving the curves in both meshes that need
+to be merged into one.
+NOTE: curves2[i] corresponds to curves1[i].</p>
+</dd>
+<dt>dir_curves2<span class="classifier">array_like</span></dt><dd><p>Array with value of 1 or -1, indicating the direction in which
+curves2 is traversed. Must be present if curves2 is present, and of
+same length as curves2
+The curve number is curves2[i] and the curve is traversed in the
+opposite direction if dir_curves2[i] &lt; 0.</p>
+</dd>
+<dt>deletepoints1, deletepoints2<span class="classifier">array_like</span></dt><dd><p>Vectors to indicate which points of mesh1 and mesh2 must not be
+included in the new merged mesh.
+NOTE: all double points are removed automatically already.</p>
+</dd>
+<dt>deletecurves1, deletecurves2<span class="classifier">array_like</span></dt><dd><p>Vectors to indicate which curves of mesh1 and mesh2 must not be
+included in the new merged mesh.
+NOTE: merged curves are removed automatically already.</p>
+</dd>
+</dl>
+</section>
+<section id="id57">
+<h3>Returns<a class="headerlink" href="#id57" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>The new merged mesh structure.</p>
+</dd>
+</dl>
+</section>
+<section id="id58">
+<h3>Examples<a class="headerlink" href="#id58" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_merge</span><span class="p">(</span><span class="n">mesh1</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">,</span> <span class="n">curves1</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">curves2</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+<span class="go">Creates a mesh from two meshes where the curves 1 and 2 of mesh1 are</span>
+<span class="go">merged with curves 2 and 3 of mesh2 into two curves of the new mesh.</span>
+<span class="go">Curve 3 of mesh2 is traversed in the opposite direction.</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.pos_array">
+<span id="eztfem-core-pos-array-module"></span><h2>eztfem.core.pos_array module<a class="headerlink" href="#module-eztfem.core.pos_array" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.pos_array.pos_array">
+<span class="sig-name descname"><span class="pre">pos_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.pos_array.pos_array" title="Link to this definition"></a></dt>
+<dd><p>Get the index of the system degrees of freedom in the given nodes.</p>
+<section id="id59">
+<h3>Parameters<a class="headerlink" href="#id59" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>problem<span class="classifier">Problem</span></dt><dd><p>Problem object representing the problem structure.</p>
+</dd>
+<dt>nodes<span class="classifier">array_like</span></dt><dd><p>An array of node numbers.</p>
+</dd>
+</dl>
+</section>
+<section id="id60">
+<h3>Keyword argument<a class="headerlink" href="#id60" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>physq<span class="classifier">array_like, optional</span></dt><dd><p>Array of physical quantity numbers. Default is all physical
+quantities.</p>
+</dd>
+<dt>order<span class="classifier">str, optional</span></dt><dd><p>The sequence order of the degrees of freedom in the nodes.</p>
+</dd>
+</dl>
+</section>
+<section id="id61">
+<h3>Returns<a class="headerlink" href="#id61" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>pos<span class="classifier">list of arrays</span></dt><dd><p>List of arrays containing the positions of the degrees of freedom of
+each physical quantity.</p>
+</dd>
+<dt>ndof<span class="classifier">list of int</span></dt><dd><p>List of the number of degrees of freedom in <cite>pos</cite> of each physical
+quantity.</p>
+</dd>
+</dl>
+</section>
+<section id="id62">
+<h3>Examples<a class="headerlink" href="#id62" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pos</span><span class="p">,</span> <span class="n">ndof</span> <span class="o">=</span> <span class="n">get_dof_indices</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">physq</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;ND&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.pos_array_vec">
+<span id="eztfem-core-pos-array-vec-module"></span><h2>eztfem.core.pos_array_vec module<a class="headerlink" href="#module-eztfem.core.pos_array_vec" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.pos_array_vec.pos_array_vec">
+<span class="sig-name descname"><span class="pre">pos_array_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.pos_array_vec.pos_array_vec" title="Link to this definition"></a></dt>
+<dd><p>Get the index of the degrees of freedom of one or more vectors of special
+structure in the given nodes.</p>
+<section id="id63">
+<h3>Parameters<a class="headerlink" href="#id63" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>problem<span class="classifier">Problem</span></dt><dd><p>Problem object representing the problem structure.</p>
+</dd>
+<dt>nodes<span class="classifier">array_like</span></dt><dd><p>An array of node numbers.</p>
+</dd>
+</dl>
+</section>
+<section id="id64">
+<h3>Keyword argument<a class="headerlink" href="#id64" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>vec<span class="classifier">array_like, optional</span></dt><dd><p>Array of vector numbers. Default is all vectors.</p>
+</dd>
+<dt>order<span class="classifier">str, optional</span></dt><dd><p>The sequence order of the degrees of freedom in the nodes.</p>
+</dd>
+</dl>
+</section>
+<section id="id65">
+<h3>Returns<a class="headerlink" href="#id65" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>pos<span class="classifier">list of arrays</span></dt><dd><p>List of arrays containing the positions of the degrees of freedom of
+each vector.</p>
+</dd>
+<dt>ndof<span class="classifier">list of int</span></dt><dd><p>List of the number of degrees of freedom in <cite>pos</cite> of each vector.</p>
+</dd>
+</dl>
+</section>
+<section id="id66">
+<h3>Examples<a class="headerlink" href="#id66" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pos</span><span class="p">,</span> <span class="n">ndof</span> <span class="o">=</span> <span class="n">get_vector_dof_indices</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">vec</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="go">                                       order=&#39;ND&#39;)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.quadrilateral2d">
+<span id="eztfem-core-quadrilateral2d-module"></span><h2>eztfem.core.quadrilateral2d module<a class="headerlink" href="#module-eztfem.core.quadrilateral2d" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.quadrilateral2d.quadrilateral2d">
+<span class="sig-name descname"><span class="pre">quadrilateral2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eltype</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.quadrilateral2d.quadrilateral2d" title="Link to this definition"></a></dt>
+<dd><p>Simple mesh generator for quadrilateral 2D regions.</p>
+<p>Generates a simple 2D mesh on the region [0, 1] x [0, 1] with optional
+translation and/or scaling or deformation of the region.</p>
+<section id="id67">
+<h3>Parameters<a class="headerlink" href="#id67" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>num_el<span class="classifier">array_like</span></dt><dd><p>Number of elements in x and y direction, e.g., [nx, ny].</p>
+</dd>
+<dt>eltype<span class="classifier">str</span></dt><dd><p>Element type.
+- ‘tria3’ : 3-node triangle.
+- ‘tria4’ : 4-node triangle.
+- ‘tria6’ : 6-node triangle.
+- ‘tria7’ : 7-node triangle.
+- ‘quad4’ : 4-node quadrilateral.
+- ‘quad9’ : 9-node quadrilateral.
+- ‘quad5’ : 5-node quadrilateral.</p>
+</dd>
+</dl>
+</section>
+<section id="id68">
+<h3>Keyword arguments<a class="headerlink" href="#id68" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>origin<span class="classifier">array_like, optional, default=[0, 0]</span></dt><dd><p>Origin of the domain [ox, uy].</p>
+</dd>
+<dt>length<span class="classifier">array_like, optional, default=[1.0, 1.0]</span></dt><dd><p>Length and width of the domain [lx, ly].</p>
+</dd>
+<dt>vertices<span class="classifier">array_like, optional, default=[[0, 0], [1, 0], [1, 1], [0, 1]]</span></dt><dd><p>Four vertices of the domain in the format
+[[x1, y1], [x2, y2], [x3, y3], [x4, y4]].
+Note that origin/length arguments are ignored if vertices are
+given.</p>
+</dd>
+<dt>ratio<span class="classifier">list of int, optional, default=[0, 0, 0, 0]</span></dt><dd><p>A vector [ratio1, ratio2, ratio3, ratio4] where for each of the
+four curves the ratio is given:
+- 0 : Equidistant mesh.
+- 1 : The size of the last element is factor times the first.
+- 2 : The size of an element is factor times the previous one.
+- 3 : The size of the last element is 1/factor times the first.
+- 4 : The size of an element is 1/factor times the previous one.</p>
+</dd>
+<dt>factor<span class="classifier">array_like, optional, default=[1, 1, 1, 1]</span></dt><dd><p>A vector [factor1, factor2, factor3, factor4] where for each of
+the four curves the factor is given.</p>
+</dd>
+</dl>
+</section>
+<section id="id69">
+<h3>Returns<a class="headerlink" href="#id69" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh object</p>
+</dd>
+</dl>
+</section>
+<section id="id70">
+<h3>Examples<a class="headerlink" href="#id70" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">quadrilateral2d</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;tria3&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">Creates a 10x10 mesh of 3-node triangles, where the left lower corner of</span>
+<span class="go">the domain is (1, 2) and the size of the domain is 2 by 3.</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">quadrilateral2d</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;quad5&#39;</span><span class="p">,</span>
+<span class="go">                           vertices=[[1, 1], [3, 2], [4, 5], [-1, 4]])</span>
+<span class="go">Creates a 10x10 mesh of 4-node quadrilateral elements, where the left</span>
+<span class="go">lower corner, right lower corner, upper right corner, and upper left</span>
+<span class="go">corner of the domain are (1, 1), (3, 2), (4, 5), and (-1, 4), respectively.</span>
+<span class="go">The edges are straight.</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.quadrilateral2d.rectangle2d_quad4">
+<span class="sig-name descname"><span class="pre">rectangle2d_quad4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.quadrilateral2d.rectangle2d_quad4" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1]x[0,1] using quad elements with 4 nodes.</p>
+<p>The numbering for both nodal points and elements is row by row.
+For example a 2x2 mesh is numbered as follows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nodes</span><span class="p">:</span>
+    <span class="mi">7</span> <span class="o">-------</span> <span class="mi">8</span> <span class="o">-------</span> <span class="mi">9</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="mi">4</span> <span class="o">-------</span> <span class="mi">5</span> <span class="o">-------</span> <span class="mi">6</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="mi">1</span> <span class="o">-------</span> <span class="mi">2</span> <span class="o">-------</span> <span class="mi">3</span>
+<span class="n">Elements</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>    <span class="mi">3</span>    <span class="o">|</span>    <span class="mi">4</span>    <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>    <span class="mi">1</span>    <span class="o">|</span>    <span class="mi">2</span>    <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Also generated are four points and four curves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">&lt;-----</span>
+                 <span class="n">C3</span>
+     <span class="n">P4</span> <span class="o">---------------------</span> <span class="n">P3</span>
+      <span class="o">|</span>                       <span class="o">|</span>           <span class="n">Note</span><span class="p">:</span>   <span class="n">C1</span><span class="o">=</span><span class="n">P1</span><span class="o">-</span><span class="n">P2</span>
+      <span class="o">|</span>                       <span class="o">|</span>                   <span class="n">C2</span><span class="o">=</span><span class="n">P2</span><span class="o">-</span><span class="n">P3</span>
+ <span class="o">|</span>    <span class="o">|</span>                       <span class="o">|</span>    <span class="o">^</span>              <span class="n">C3</span><span class="o">=</span><span class="n">P3</span><span class="o">-</span><span class="n">P4</span>
+ <span class="o">|</span> <span class="n">C4</span> <span class="o">|</span>                       <span class="o">|</span> <span class="n">C2</span> <span class="o">|</span>              <span class="n">C4</span><span class="o">=</span><span class="n">P4</span><span class="o">-</span><span class="n">P1</span>
+\<span class="o">|/</span>   <span class="o">|</span>                       <span class="o">|</span>    <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+     <span class="n">P1</span> <span class="o">---------------------</span> <span class="n">P2</span>
+                 <span class="n">C1</span>
+               <span class="o">-----&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.quadrilateral2d.rectangle2d_quad5">
+<span class="sig-name descname"><span class="pre">rectangle2d_quad5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.quadrilateral2d.rectangle2d_quad5" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1]x[0,1] using quad elements with 5 nodes.</p>
+<p>The numbering for both nodal points and elements is row by row.
+For example a 2x2 mesh is numbered as follows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nodes</span><span class="p">:</span>
+    <span class="mi">11</span><span class="o">-------</span> <span class="mi">12</span><span class="o">-------</span> <span class="mi">13</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>    <span class="mi">9</span>    <span class="o">|</span>   <span class="mi">10</span>    <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="mi">6</span> <span class="o">-------</span> <span class="mi">7</span> <span class="o">-------</span> <span class="mi">8</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>    <span class="mi">4</span>    <span class="o">|</span>    <span class="mi">5</span>    <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="mi">1</span> <span class="o">-------</span> <span class="mi">2</span> <span class="o">-------</span> <span class="mi">3</span>
+
+<span class="n">Elements</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>    <span class="mi">3</span>    <span class="o">|</span>    <span class="mi">4</span>    <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="o">|</span>    <span class="mi">1</span>    <span class="o">|</span>    <span class="mi">2</span>    <span class="o">|</span>
+    <span class="o">|</span>         <span class="o">|</span>         <span class="o">|</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Also generated are four points and four curves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">&lt;-----</span>
+                 <span class="n">C3</span>
+     <span class="n">P4</span> <span class="o">---------------------</span> <span class="n">P3</span>
+      <span class="o">|</span>                       <span class="o">|</span>           <span class="n">Note</span><span class="p">:</span>   <span class="n">C1</span><span class="o">=</span><span class="n">P1</span><span class="o">-</span><span class="n">P2</span>
+      <span class="o">|</span>                       <span class="o">|</span>                   <span class="n">C2</span><span class="o">=</span><span class="n">P2</span><span class="o">-</span><span class="n">P3</span>
+ <span class="o">|</span>    <span class="o">|</span>                       <span class="o">|</span>    <span class="o">^</span>              <span class="n">C3</span><span class="o">=</span><span class="n">P3</span><span class="o">-</span><span class="n">P4</span>
+ <span class="o">|</span> <span class="n">C4</span> <span class="o">|</span>                       <span class="o">|</span> <span class="n">C2</span> <span class="o">|</span>              <span class="n">C4</span><span class="o">=</span><span class="n">P4</span><span class="o">-</span><span class="n">P1</span>
+\<span class="o">|/</span>   <span class="o">|</span>                       <span class="o">|</span>    <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+     <span class="n">P1</span> <span class="o">---------------------</span> <span class="n">P2</span>
+                 <span class="n">C1</span>
+               <span class="o">-----&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.quadrilateral2d.rectangle2d_quad9">
+<span class="sig-name descname"><span class="pre">rectangle2d_quad9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.quadrilateral2d.rectangle2d_quad9" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1]x[0,1] using quad elements with 9 nodes.</p>
+<p>The numbering for both nodal points and elements is row by row.
+For example a 2x2 mesh is numbered as follows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nodes</span>
+    <span class="mi">21</span> <span class="o">--</span> <span class="mi">22</span> <span class="o">--</span> <span class="mi">23</span> <span class="o">--</span> <span class="mi">24</span> <span class="o">--</span> <span class="mi">25</span>
+    <span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>
+    <span class="mi">16</span>    <span class="mi">17</span>    <span class="mi">18</span>    <span class="mi">19</span>    <span class="mi">20</span>
+    <span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>
+    <span class="mi">11</span> <span class="o">--</span> <span class="mi">12</span> <span class="o">--</span> <span class="mi">13</span> <span class="o">--</span> <span class="mi">14</span> <span class="o">--</span> <span class="mi">15</span>
+    <span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>
+    <span class="mi">6</span>     <span class="mi">7</span>     <span class="mi">8</span>     <span class="mi">9</span>    <span class="mi">10</span>
+    <span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>
+    <span class="mi">1</span> <span class="o">--</span>  <span class="mi">2</span> <span class="o">--</span>  <span class="mi">3</span> <span class="o">--</span>  <span class="mi">4</span> <span class="o">--</span>  <span class="mi">5</span>
+<span class="n">Elements</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+    <span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>
+    <span class="n">x</span>     <span class="mi">3</span>     <span class="n">x</span>     <span class="mi">4</span>     <span class="n">x</span>
+    <span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+    <span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>
+    <span class="n">x</span>     <span class="mi">1</span>     <span class="n">x</span>     <span class="mi">2</span>     <span class="n">x</span>
+    <span class="o">|</span>           <span class="o">|</span>           <span class="o">|</span>
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+</pre></div>
+</div>
+<p>Also generated are four points and four curves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>             <span class="o">&lt;-----</span>
+                 <span class="n">C3</span>
+     <span class="n">P4</span> <span class="o">---------------------</span> <span class="n">P3</span>
+     <span class="o">|</span>                       <span class="o">|</span>           <span class="n">Note</span><span class="p">:</span>   <span class="n">C1</span><span class="o">=</span><span class="n">P1</span><span class="o">-</span><span class="n">P2</span>
+     <span class="o">|</span>                       <span class="o">|</span>                   <span class="n">C2</span><span class="o">=</span><span class="n">P2</span><span class="o">-</span><span class="n">P3</span>
+ <span class="o">|</span>   <span class="o">|</span>                       <span class="o">|</span>    <span class="o">^</span>              <span class="n">C3</span><span class="o">=</span><span class="n">P3</span><span class="o">-</span><span class="n">P4</span>
+ <span class="o">|</span> <span class="n">C4</span><span class="o">|</span>                       <span class="o">|</span> <span class="n">C2</span> <span class="o">|</span>              <span class="n">C4</span><span class="o">=</span><span class="n">P4</span><span class="o">-</span><span class="n">P1</span>
+\<span class="o">|/</span>  <span class="o">|</span>                       <span class="o">|</span>    <span class="o">|</span>
+     <span class="o">|</span>                       <span class="o">|</span>
+     <span class="o">|</span>                       <span class="o">|</span>
+     <span class="n">P1</span> <span class="o">---------------------</span> <span class="n">P2</span>
+                 <span class="n">C1</span>
+             <span class="o">-----&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.quadrilateral2d.rectangle2d_tria3">
+<span class="sig-name descname"><span class="pre">rectangle2d_tria3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.quadrilateral2d.rectangle2d_tria3" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1]x[0,1] using triangular elements with 3
+nodes.</p>
+<p>The numbering for both nodal points and elements is row by row.
+For example a 2x2 mesh is numbered as follows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nodes</span><span class="p">:</span>
+
+    <span class="mi">7</span> <span class="o">-------</span> <span class="mi">8</span> <span class="o">-------</span> <span class="mi">9</span>
+    <span class="o">|</span>       <span class="o">/</span> <span class="o">|</span>       <span class="o">/</span> <span class="o">|</span>
+    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>
+    <span class="o">|</span> <span class="o">/</span>       <span class="o">|</span> <span class="o">/</span>       <span class="o">|</span>
+    <span class="mi">4</span> <span class="o">-------</span> <span class="mi">5</span> <span class="o">-------</span> <span class="mi">6</span>
+    <span class="o">|</span>       <span class="o">/</span> <span class="o">|</span>       <span class="o">/</span> <span class="o">|</span>
+    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>
+    <span class="o">|</span> <span class="o">/</span>       <span class="o">|</span> <span class="o">/</span>       <span class="o">|</span>
+    <span class="mi">1</span> <span class="o">-------</span> <span class="mi">2</span> <span class="o">-------</span> <span class="mi">3</span>
+
+<span class="n">Elements</span><span class="p">:</span>
+
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+    <span class="o">|</span>  <span class="mi">5</span>    <span class="o">/</span> <span class="o">|</span>  <span class="mi">7</span>    <span class="o">/</span> <span class="o">|</span>
+    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>
+    <span class="o">|</span> <span class="o">/</span>     <span class="mi">6</span> <span class="o">|</span> <span class="o">/</span>    <span class="mi">8</span>  <span class="o">|</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+    <span class="o">|</span>  <span class="mi">1</span>    <span class="o">/</span> <span class="o">|</span>  <span class="mi">3</span>    <span class="o">/</span> <span class="o">|</span>
+    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>
+    <span class="o">|</span> <span class="o">/</span>    <span class="mi">2</span>  <span class="o">|</span> <span class="o">/</span>    <span class="mi">4</span>  <span class="o">|</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Also generated are four points and four curves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">&lt;-----</span>
+                 <span class="n">C3</span>
+     <span class="n">P4</span> <span class="o">---------------------</span> <span class="n">P3</span>
+      <span class="o">|</span>                       <span class="o">|</span>           <span class="n">Note</span><span class="p">:</span>   <span class="n">C1</span><span class="o">=</span><span class="n">P1</span><span class="o">-</span><span class="n">P2</span>
+      <span class="o">|</span>                       <span class="o">|</span>                   <span class="n">C2</span><span class="o">=</span><span class="n">P2</span><span class="o">-</span><span class="n">P3</span>
+ <span class="o">|</span>    <span class="o">|</span>                       <span class="o">|</span>    <span class="o">^</span>              <span class="n">C3</span><span class="o">=</span><span class="n">P3</span><span class="o">-</span><span class="n">P4</span>
+ <span class="o">|</span> <span class="n">C4</span> <span class="o">|</span>                       <span class="o">|</span> <span class="n">C2</span> <span class="o">|</span>              <span class="n">C4</span><span class="o">=</span><span class="n">P4</span><span class="o">-</span><span class="n">P1</span>
+\<span class="o">|/</span>   <span class="o">|</span>                       <span class="o">|</span>    <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+     <span class="n">P1</span> <span class="o">---------------------</span> <span class="n">P2</span>
+                 <span class="n">C1</span>
+               <span class="o">-----&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.quadrilateral2d.rectangle2d_tria4">
+<span class="sig-name descname"><span class="pre">rectangle2d_tria4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.quadrilateral2d.rectangle2d_tria4" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1]x[0,1] using triangular elements with 4
+nodes.</p>
+<p>The numbering for both nodal points and elements is row by row.
+For example a 2x2 mesh is numbered as follows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nodes</span><span class="p">:</span>
+
+    <span class="mi">15</span><span class="o">-------</span> <span class="mi">16</span><span class="o">-------</span> <span class="mi">17</span>
+    <span class="o">|</span> <span class="mi">11</span>    <span class="o">/</span> <span class="o">|</span> <span class="mi">13</span>    <span class="o">/</span> <span class="o">|</span>
+    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>
+    <span class="o">|</span> <span class="o">/</span>    <span class="mi">12</span> <span class="o">|</span> <span class="o">/</span>    <span class="mi">14</span> <span class="o">|</span>
+    <span class="mi">8</span> <span class="o">-------</span> <span class="mi">9</span> <span class="o">-------</span> <span class="mi">10</span>
+    <span class="o">|</span>  <span class="mi">4</span>    <span class="o">/</span> <span class="o">|</span> <span class="mi">6</span>     <span class="o">/</span> <span class="o">|</span>
+    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>
+    <span class="o">|</span> <span class="o">/</span>    <span class="mi">5</span>  <span class="o">|</span> <span class="o">/</span>     <span class="mi">7</span> <span class="o">|</span>
+    <span class="mi">1</span> <span class="o">-------</span> <span class="mi">2</span> <span class="o">-------</span> <span class="mi">3</span>
+
+<span class="n">Elements</span><span class="p">:</span>
+
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+    <span class="o">|</span>  <span class="mi">5</span>    <span class="o">/</span> <span class="o">|</span>  <span class="mi">7</span>    <span class="o">/</span> <span class="o">|</span>
+    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>
+    <span class="o">|</span> <span class="o">/</span>     <span class="mi">6</span> <span class="o">|</span> <span class="o">/</span>    <span class="mi">8</span>  <span class="o">|</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+    <span class="o">|</span>  <span class="mi">1</span>    <span class="o">/</span> <span class="o">|</span>  <span class="mi">3</span>    <span class="o">/</span> <span class="o">|</span>
+    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>    <span class="o">/</span>    <span class="o">|</span>
+    <span class="o">|</span> <span class="o">/</span>    <span class="mi">2</span>  <span class="o">|</span> <span class="o">/</span>    <span class="mi">4</span>  <span class="o">|</span>
+    <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span> <span class="o">-------</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Also generated are four points and four curves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">&lt;-----</span>
+                 <span class="n">C3</span>
+     <span class="n">P4</span> <span class="o">---------------------</span> <span class="n">P3</span>
+      <span class="o">|</span>                       <span class="o">|</span>           <span class="n">Note</span><span class="p">:</span>   <span class="n">C1</span><span class="o">=</span><span class="n">P1</span><span class="o">-</span><span class="n">P2</span>
+      <span class="o">|</span>                       <span class="o">|</span>                   <span class="n">C2</span><span class="o">=</span><span class="n">P2</span><span class="o">-</span><span class="n">P3</span>
+ <span class="o">|</span>    <span class="o">|</span>                       <span class="o">|</span>    <span class="o">^</span>              <span class="n">C3</span><span class="o">=</span><span class="n">P3</span><span class="o">-</span><span class="n">P4</span>
+ <span class="o">|</span> <span class="n">C4</span> <span class="o">|</span>                       <span class="o">|</span> <span class="n">C2</span> <span class="o">|</span>              <span class="n">C4</span><span class="o">=</span><span class="n">P4</span><span class="o">-</span><span class="n">P1</span>
+\<span class="o">|/</span>   <span class="o">|</span>                       <span class="o">|</span>    <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+     <span class="n">P1</span> <span class="o">---------------------</span> <span class="n">P2</span>
+                 <span class="n">C1</span>
+               <span class="o">-----&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.quadrilateral2d.rectangle2d_tria6">
+<span class="sig-name descname"><span class="pre">rectangle2d_tria6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.quadrilateral2d.rectangle2d_tria6" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1]x[0,1] using triangular elements with 6
+nodes.</p>
+<p>The numbering for both nodal points and elements is row by row.
+For example a 2x2 mesh is numbered as follows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nodes</span><span class="p">:</span>
+
+   <span class="mi">21</span> <span class="o">--</span> <span class="mi">22</span> <span class="o">--</span> <span class="mi">23</span> <span class="o">--</span> <span class="mi">24</span> <span class="o">--</span> <span class="mi">25</span>
+    <span class="o">|</span>        <span class="o">/</span>  <span class="o">|</span>        <span class="o">/</span>  <span class="o">|</span>
+   <span class="mi">16</span>    <span class="mi">17</span>    <span class="mi">18</span>    <span class="mi">19</span>    <span class="mi">20</span>
+    <span class="o">|</span> <span class="o">/</span>         <span class="o">|</span> <span class="o">/</span>         <span class="o">|</span>
+   <span class="mi">11</span> <span class="o">--</span> <span class="mi">12</span> <span class="o">--</span> <span class="mi">13</span> <span class="o">--</span> <span class="mi">14</span> <span class="o">--</span> <span class="mi">15</span>
+    <span class="o">|</span>        <span class="o">/</span>  <span class="o">|</span>        <span class="o">/</span>  <span class="o">|</span>
+    <span class="mi">6</span>     <span class="mi">7</span>     <span class="mi">8</span>     <span class="mi">9</span>    <span class="mi">10</span>
+    <span class="o">|</span> <span class="o">/</span>         <span class="o">|</span> <span class="o">/</span>         <span class="o">|</span>
+    <span class="mi">1</span> <span class="o">--</span>  <span class="mi">2</span> <span class="o">--</span>  <span class="mi">3</span> <span class="o">--</span>  <span class="mi">4</span> <span class="o">--</span>  <span class="mi">5</span>
+
+<span class="n">Elements</span><span class="p">:</span>
+
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+    <span class="o">|</span> <span class="mi">5</span>      <span class="o">/</span>  <span class="o">|</span> <span class="mi">7</span>      <span class="o">/</span>  <span class="o">|</span>
+    <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>
+    <span class="o">|</span> <span class="o">/</span>      <span class="mi">6</span>  <span class="o">|</span> <span class="o">/</span>      <span class="mi">8</span>  <span class="o">|</span>
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+    <span class="o">|</span>  <span class="mi">1</span>     <span class="o">/</span>  <span class="o">|</span>  <span class="mi">3</span>     <span class="o">/</span>  <span class="o">|</span>
+    <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>
+    <span class="o">|</span> <span class="o">/</span>      <span class="mi">2</span>  <span class="o">|</span> <span class="o">/</span>      <span class="mi">4</span>  <span class="o">|</span>
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+</pre></div>
+</div>
+<p>Also generated are four points and four curves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">&lt;-----</span>
+                 <span class="n">C3</span>
+     <span class="n">P4</span> <span class="o">---------------------</span> <span class="n">P3</span>
+      <span class="o">|</span>                       <span class="o">|</span>           <span class="n">Note</span><span class="p">:</span>   <span class="n">C1</span><span class="o">=</span><span class="n">P1</span><span class="o">-</span><span class="n">P2</span>
+      <span class="o">|</span>                       <span class="o">|</span>                   <span class="n">C2</span><span class="o">=</span><span class="n">P2</span><span class="o">-</span><span class="n">P3</span>
+ <span class="o">|</span>    <span class="o">|</span>                       <span class="o">|</span>    <span class="o">^</span>              <span class="n">C3</span><span class="o">=</span><span class="n">P3</span><span class="o">-</span><span class="n">P4</span>
+ <span class="o">|</span> <span class="n">C4</span> <span class="o">|</span>                       <span class="o">|</span> <span class="n">C2</span> <span class="o">|</span>              <span class="n">C4</span><span class="o">=</span><span class="n">P4</span><span class="o">-</span><span class="n">P1</span>
+\<span class="o">|/</span>   <span class="o">|</span>                       <span class="o">|</span>    <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+     <span class="n">P1</span> <span class="o">---------------------</span> <span class="n">P2</span>
+                 <span class="n">C1</span>
+               <span class="o">-----&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.quadrilateral2d.rectangle2d_tria7">
+<span class="sig-name descname"><span class="pre">rectangle2d_tria7</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.quadrilateral2d.rectangle2d_tria7" title="Link to this definition"></a></dt>
+<dd><p>Generate a mesh on region [0,1]x[0,1] using triangular elements with 7
+nodes.</p>
+<p>The numbering for both nodal points and elements is row by row.
+For example a 2x2 mesh is numbered as follows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nodes</span><span class="p">:</span>
+
+   <span class="mi">29</span> <span class="o">--</span> <span class="mi">30</span> <span class="o">--</span> <span class="mi">31</span> <span class="o">--</span> <span class="mi">32</span> <span class="o">--</span> <span class="mi">25</span>
+    <span class="o">|</span> <span class="mi">20</span>     <span class="o">/</span>  <span class="o">|</span> <span class="mi">22</span>     <span class="o">/</span>  <span class="o">|</span>
+   <span class="mi">24</span>    <span class="mi">25</span>    <span class="mi">26</span>    <span class="mi">27</span>    <span class="mi">28</span>
+    <span class="o">|</span> <span class="o">/</span>     <span class="mi">21</span>  <span class="o">|</span> <span class="o">/</span>     <span class="mi">23</span>  <span class="o">|</span>
+   <span class="mi">15</span> <span class="o">--</span> <span class="mi">16</span> <span class="o">--</span> <span class="mi">17</span> <span class="o">--</span> <span class="mi">18</span> <span class="o">--</span> <span class="mi">19</span>
+    <span class="o">|</span> <span class="mi">6</span>      <span class="o">/</span>  <span class="o">|</span> <span class="mi">8</span>      <span class="o">/</span>  <span class="o">|</span>
+    <span class="mi">10</span>   <span class="mi">11</span>    <span class="mi">12</span>    <span class="mi">13</span>    <span class="mi">14</span>
+    <span class="o">|</span> <span class="o">/</span>      <span class="mi">7</span>  <span class="o">|</span> <span class="o">/</span>      <span class="mi">9</span>  <span class="o">|</span>
+    <span class="mi">1</span> <span class="o">--</span>  <span class="mi">2</span> <span class="o">--</span>  <span class="mi">3</span> <span class="o">--</span>  <span class="mi">4</span> <span class="o">--</span>  <span class="mi">5</span>
+
+<span class="n">Elements</span><span class="p">:</span>
+
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+    <span class="o">|</span> <span class="mi">5</span>      <span class="o">/</span>  <span class="o">|</span> <span class="mi">7</span>      <span class="o">/</span>  <span class="o">|</span>
+    <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>
+    <span class="o">|</span> <span class="o">/</span>      <span class="mi">6</span>  <span class="o">|</span> <span class="o">/</span>      <span class="mi">8</span>  <span class="o">|</span>
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+    <span class="o">|</span>  <span class="mi">1</span>     <span class="o">/</span>  <span class="o">|</span>  <span class="mi">3</span>     <span class="o">/</span>  <span class="o">|</span>
+    <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>     <span class="n">x</span>
+    <span class="o">|</span> <span class="o">/</span>      <span class="mi">2</span>  <span class="o">|</span> <span class="o">/</span>      <span class="mi">4</span>  <span class="o">|</span>
+    <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span> <span class="o">--</span>  <span class="n">x</span>
+</pre></div>
+</div>
+<p>Also generated are four points and four curves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">&lt;-----</span>
+                 <span class="n">C3</span>
+     <span class="n">P4</span> <span class="o">---------------------</span> <span class="n">P3</span>
+      <span class="o">|</span>                       <span class="o">|</span>           <span class="n">Note</span><span class="p">:</span>   <span class="n">C1</span><span class="o">=</span><span class="n">P1</span><span class="o">-</span><span class="n">P2</span>
+      <span class="o">|</span>                       <span class="o">|</span>                   <span class="n">C2</span><span class="o">=</span><span class="n">P2</span><span class="o">-</span><span class="n">P3</span>
+ <span class="o">|</span>    <span class="o">|</span>                       <span class="o">|</span>    <span class="o">^</span>              <span class="n">C3</span><span class="o">=</span><span class="n">P3</span><span class="o">-</span><span class="n">P4</span>
+ <span class="o">|</span> <span class="n">C4</span> <span class="o">|</span>                       <span class="o">|</span> <span class="n">C2</span> <span class="o">|</span>              <span class="n">C4</span><span class="o">=</span><span class="n">P4</span><span class="o">-</span><span class="n">P1</span>
+\<span class="o">|/</span>   <span class="o">|</span>                       <span class="o">|</span>    <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+      <span class="o">|</span>                       <span class="o">|</span>
+     <span class="n">P1</span> <span class="o">---------------------</span> <span class="n">P2</span>
+                 <span class="n">C1</span>
+               <span class="o">-----&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-eztfem.core.refcoor_nodal_points">
+<span id="eztfem-core-refcoor-nodal-points-module"></span><h2>eztfem.core.refcoor_nodal_points module<a class="headerlink" href="#module-eztfem.core.refcoor_nodal_points" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eztfem.core.refcoor_nodal_points.refcoor_nodal_points">
+<span class="sig-name descname"><span class="pre">refcoor_nodal_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eztfem.core.refcoor_nodal_points.refcoor_nodal_points" title="Link to this definition"></a></dt>
+<dd><p>Find the reference coordinates of the nodal points.</p>
+<section id="id71">
+<h3>Parameters<a class="headerlink" href="#id71" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mesh<span class="classifier">Mesh</span></dt><dd><p>Mesh object.</p>
+</dd>
+</dl>
+</section>
+<section id="id72">
+<h3>Returns<a class="headerlink" href="#id72" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>x<span class="classifier">numpy.ndarray</span></dt><dd><p>Reference coordinates of the nodal points.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eztfem.addons.plotlib.html" class="btn btn-neutral float-left" title="eztfem.addons.plotlib package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nick Jaensson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
