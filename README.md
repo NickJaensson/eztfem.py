@@ -5,6 +5,12 @@ have a filename matching "test*.py" (empty __init__.py in the test directory
 is needed for this)
 
 
+## Building documentation
+From the sphinx folder, run the following command 
+```
+sphinx-build -b html ./source PATH_TO_HTML_BUILDDIR
+```
+
 ## Steps for translating a Matlab loop:
 * Copy the Matlab code to the Python file
 * Translate to Python *as literal as possible*:
