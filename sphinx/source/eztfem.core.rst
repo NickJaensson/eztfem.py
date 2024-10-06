@@ -21,7 +21,7 @@ eztfem.core.basis\_function module
 ----------------------------------
 
 .. automodule:: eztfem.core.basis_function
-   :members:
+   :members: barycentric, basis_function
    :undoc-members:
    :show-inheritance:
 
@@ -101,7 +101,7 @@ eztfem.core.gauss\_legendre module
 ----------------------------------
 
 .. automodule:: eztfem.core.gauss_legendre
-   :members:
+   :members: gauss_legendre
    :undoc-members:
    :show-inheritance:
 
@@ -133,7 +133,7 @@ eztfem.core.line\_1d module
 ---------------------------
 
 .. automodule:: eztfem.core.line_1d
-   :members:
+   :members: line1d
    :undoc-members:
    :show-inheritance:
 
@@ -165,7 +165,7 @@ eztfem.core.quadrilateral2d module
 ----------------------------------
 
 .. automodule:: eztfem.core.quadrilateral2d
-   :members:
+   :members: quadrilateral2d
    :undoc-members:
    :show-inheritance:
 
