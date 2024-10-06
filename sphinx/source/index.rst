@@ -6,11 +6,18 @@
 eztfem.py documentation
 =======================
 
-Welcome to the eztfem.py documentation page.
+Welcome to the eztfem.py documentation page. Eztfem is a simple toolkit for 
+the finite element method (FEM) intended for use  in teaching finite elements 
+for fluid flow. It can be seen as a significantly reduced version of TFEM 
+(developed and maintained by M.A. Hulsen at the Eindhoven University of 
+Technology). Since eztfem.py consists of Python functions only, it is 
+easily accessible for students.
 
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
 
    eztfem_install
+   example_poisson1
+   example_poisson4
    modules
