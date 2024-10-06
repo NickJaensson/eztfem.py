@@ -1,14 +1,6 @@
 core subpackage
 ===============
 
-add\_boundary\_elements module
-------------------------------------------
-
-.. automodule:: eztfem.core.add_boundary_elements
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 apply\_essential module
 -----------------------------------
 
@@ -81,14 +73,6 @@ deriv\_vector module
    :undoc-members:
    :show-inheritance:
 
-distribute\_elements module
----------------------------------------
-
-.. automodule:: eztfem.core.distribute_elements
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 fill\_system\_vector module
 ---------------------------------------
 
@@ -129,14 +113,6 @@ isoparametric\_deformation\_curve module
    :undoc-members:
    :show-inheritance:
 
-line\_1d module
----------------------------
-
-.. automodule:: eztfem.core.line_1d
-   :members: line1d
-   :undoc-members:
-   :show-inheritance:
-
 mesh\_merge module
 ------------------------------
 
@@ -161,11 +137,11 @@ pos\_array\_vec module
    :undoc-members:
    :show-inheritance:
 
-quadrilateral2d module
+meshgen module
 ----------------------------------
 
-.. automodule:: eztfem.core.quadrilateral2d
-   :members: quadrilateral2d
+.. automodule:: eztfem.core.meshgen
+   :members: quadrilateral2d, line1d, distribute_elements
    :undoc-members:
    :show-inheritance:
 

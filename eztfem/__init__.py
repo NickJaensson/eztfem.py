@@ -3,20 +3,18 @@ from .core.basis_function import basis_function
 from .core.system_matrix import build_system, add_boundary_elements
 from .core.define_essential import define_essential
 from .core.deriv_vector import deriv_vector
-from .core.distribute_elements import distribute_elements
 from .core.fill_system_vector import fill_system_vector
 from .core.gauss_legendre import gauss_legendre
 from .core.integrate_boundary_elements import integrate_boundary_elements
 from .core.isoparametric_deformation_curve import \
     isoparametric_deformation_curve
 from .core.isoparametric_deformation import isoparametric_deformation
-from .core.line_1d import line1d
 from .core.class_mesh import Mesh, Geometry
 from .core.mesh_merge import mesh_merge
 from .core.pos_array_vec import pos_array_vec
 from .core.pos_array import pos_array
 from .core.class_problem import Problem
-from .core.quadrilateral2d import quadrilateral2d
+from .core.meshgen import quadrilateral2d, distribute_elements, line1d
 from .core.refcoor_nodal_points import refcoor_nodal_points
 from .core.class_user import User
 from .core.class_vector import Vector

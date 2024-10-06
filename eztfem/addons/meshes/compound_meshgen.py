@@ -1,4 +1,4 @@
-from ...core.quadrilateral2d import quadrilateral2d
+from ...core.meshgen import quadrilateral2d
 from ...core.mesh_merge import mesh_merge
 
 

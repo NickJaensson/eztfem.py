@@ -1,6 +1,273 @@
 import numpy as np
 from .class_mesh import Mesh, Geometry
-from .distribute_elements import distribute_elements
+
+
+def distribute_elements(nelem, ratio, factor):
+    """
+    Generate non-equidistant n elements on the interval [0, 1].
+
+    Parameters
+    ----------
+    n : int
+        Number of elements.
+    ratio : int
+        Determines the distribution of elements:
+        0: Equidistant mesh.
+        1: The size of the last element is `factor` times the first.
+        2: The size of an element is `factor` times the previous one.
+        3: The size of the last element is `1/factor` times the first.
+        4: The size of an element is `1/factor` times the previous one.
+    factor : float
+        Factor used in the distribution calculations.
+
+    Returns
+    -------
+    x : numpy.ndarray
+        Coordinates of n+1 points.
+
+    Notes
+    -----
+    The interval [0, 1] is divided into n elements:
+
+    .. math::
+        dx_{i+1} = g \\cdot dx_{i-1}
+
+    .. math::
+        1 = (1 + g + g^2 + g^3 + \\ldots + g^{n-1}) \\cdot dx_1 =
+        \\frac{1 - g^n}{1 - g} \\cdot dx_1
+
+    With :math:`fac = 1 + g + g^2 + \\ldots + g^{n-1}`, we have:
+
+    .. math::
+        dx_1 = \\frac{1}{fac} = \\frac{1 - g}{1 - g^n}
+
+    .. math::
+        dx_n = g^{n-1} \\cdot dx_1
+
+    """
+
+    if factor < 0:
+        raise ValueError("Negative factor")
+
+    if nelem <= 1:
+        raise ValueError("Number of elements must be at least 2")
+
+    match ratio:
+        case 0:
+            g = 1
+        case 1:
+            g = np.exp(np.log(factor) / (nelem - 1))
+        case 2:
+            g = factor
+        case 3:
+            g = np.exp(-np.log(factor) / (nelem - 1))
+        case 4:
+            g = 1 / factor
+        case _:
+            raise ValueError(f"Invalid value for ratio: {ratio}")
+
+    # generate mesh
+    fac = 1.0
+    for i in range(1, nelem):
+        fac = fac + g**i
+
+    # size of first element
+    dx_1 = 1.0 / fac
+
+    # generate all elements
+    x = np.zeros(nelem+1)
+    x[0] = 0
+    dx = dx_1
+    for i in range(1, nelem+1):
+        x[i] = x[i-1] + dx
+        dx = g * dx
+
+    # test whether x(n+1) = 1
+    if abs(x[-1] - 1) > 1e-10:
+        raise ValueError(f"End value x(n+1) != 1: {x[-1]:.5e}")
+    else:
+        x[-1] = 1.0
+
+    return x
+
+
+def line1d(ne, eltype, **kwargs):
+    """
+    Simple mesh generator for 1D lines on the interval [0, 1].
+
+    Generates a simple 1D line mesh on the interval [0, 1] with optional
+    translation and scaling of the region.
+
+    Parameters
+    ----------
+    ne : int
+        Number of elements.
+    eltype : str
+        Shape number.
+        - 'line2' : 2-node elements.
+        - 'line3' : 3-node elements.
+
+    Keyword arguments
+    -----------------
+    origin : float, optional
+        Origin of the domain.
+    length : float, optional
+        Length of the domain.
+    ratio : int, optional, default=0
+        Mesh ratio.
+        - 0 : Equidistant mesh.
+        - 1 : The size of the last element is factor times the first.
+        - 2 : The size of an element is factor times the previous one.
+        - 3 : The size of the last element is 1/factor times the first.
+        - 4 : The size of an element is 1/factor times the previous one.
+    factor : float, optional, default=1
+        Factor for the mesh ratio.
+
+    Returns
+    -------
+    mesh : Mesh
+        Mesh object. See function `quadrilateral2d` for the components.
+        Note that the components curves are not present for `LINE1D`.
+
+    Examples
+    --------
+    >>> mesh = line1d(10, 'line2', origin=1, length=2)
+    Creates a 10-element line mesh with 2-node elements on the domain [1, 3].
+
+    """
+
+    # optional arguments
+    ori = kwargs.get('origin', None)
+    length = kwargs.get('length', None)
+    ratio = kwargs.get('ratio', None)
+    factor = kwargs.get('factor', None)
+
+    # mesh
+    if eltype == 'line2':
+        mesh = line1d_2node(ne, ratio, factor)
+    elif eltype == 'line3':
+        mesh = line1d_3node(ne, ratio, factor)
+    else:
+        raise ValueError(f'Invalid eltype = {eltype}')
+
+    mesh.ncurves = 0
+
+    # translate and scale unit region
+    if length is not None:
+        mesh.coor[:, 0] *= length
+    if ori is not None:
+        mesh.coor[:, 0] += ori
+
+    return mesh
+
+
+def line1d_2node(n, ratio, factor):
+    '''
+    Generate a mesh on region [0,1] using line elements with 2 nodes.
+    The numbering is straightforward:
+    For example a 4 element mesh is numbered as follows
+
+    ..
+
+      Nodes:
+          1 --  2 --  3 --  4 --  5
+      Elements:
+          x --  x --  x --  x --  x
+             1     2     3     4
+
+    Also generated are two points and the end of the interval
+
+    ..
+
+         P1 --------------------- P2
+
+    '''
+
+    print('line1d_2node')
+
+    # create mesh object
+    mesh = Mesh(ndim=1, nnodes=n+1, elshape=1, nelem=n, elnumnod=2, npoints=2,
+                topology=np.zeros((2, n)), coor=np.zeros((n + 1, 1)),
+                points=np.zeros(2))
+
+    # topology
+    for elem in range(n):
+        mesh.topology[0, elem] = elem
+        mesh.topology[1, elem] = elem + 1
+
+    # coordinates
+    if not ratio:
+        # equidistant
+        deltax = 1 / n
+        for node in range(mesh.nnodes):
+            mesh.coor[node, 0] = node * deltax
+    else:
+        # non-equidistant
+        x = distribute_elements(n, ratio, factor)
+        mesh.coor[:, 0] = x
+
+    # points
+    mesh.points[0] = 0
+    mesh.points[1] = mesh.nnodes - 1
+
+    return mesh
+
+
+def line1d_3node(n, ratio, factor):
+    '''
+    Generate a mesh on region [0,1] using line elements with 3 nodes.
+    The numbering is straightforward:
+    For example a 2 element mesh is numbered as follows
+
+    ..
+
+    Nodes:
+        1 --  2 --  3 --  4 --  5
+    Elements:
+        x --  x --  x --  x --  x
+              1           2
+
+    Also generated are two points and the end of the interval
+
+    ..
+
+       P1 --------------------- P2
+
+    '''
+
+    print('line1d_3node')
+
+    # create mesh object
+    mesh = Mesh(ndim=1, nnodes=2*n+1, elshape=2, nelem=n, elnumnod=3,
+                npoints=2, topology=np.zeros((3, n)),
+                coor=np.zeros((2*n + 1, 1)), points=np.zeros(2))
+
+    # topology
+    for elem in range(n):
+        mesh.topology[0, elem] = 2*elem
+        mesh.topology[1, elem] = 2*elem + 1
+        mesh.topology[2, elem] = 2*elem + 2
+
+    # coordinates
+    if not ratio:
+        # equidistant
+        deltax = 0.5 / n
+        for node in range(mesh.nnodes):
+            mesh.coor[node, 0] = node * deltax
+    else:
+        # non-equidistant
+        x = distribute_elements(n, ratio, factor)
+        mesh.coor[0, 0] = x[0]
+        for elem in range(mesh.nelem):
+            k = 2 * elem
+            mesh.coor[k + 1, 0] = (x[elem+1] + x[elem]) / 2
+            mesh.coor[k + 2, 0] = x[elem + 1]
+
+    # points
+    mesh.points[0] = 0
+    mesh.points[1] = mesh.nnodes - 1
+
+    return mesh
 
 
 def quadrilateral2d(num_el, eltype, **kwargs):
