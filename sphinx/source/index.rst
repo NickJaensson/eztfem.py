@@ -6,9 +6,16 @@
 eztfem.py documentation
 =======================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+Install the eztfem package by running the following command in the eztfem.py
+root directory:
+
+.. code-block:: bash
+
+   pip install -e .
+
+Note: this will install the pacakge in `editable` mode, which means that the
+package links directly to the code (instead of copying it to the Python 
+environment), thus changes to the package will be reflected immediately.
 
 
 .. toctree::
