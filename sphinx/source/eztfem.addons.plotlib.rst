@@ -1,7 +1,7 @@
-eztfem.addons.plotlib package
+plotlib subpackage
 =============================
 
-eztfem.addons.plotlib.plotting\_functions module
+plotting\_functions module
 ------------------------------------------------
 
 .. automodule:: eztfem.addons.plotlib.plotting_functions

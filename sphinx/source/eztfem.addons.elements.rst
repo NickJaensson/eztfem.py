@@ -1,7 +1,7 @@
-eztfem.addons.elements package
+elements subpackage
 ==============================
 
-eztfem.addons.elements.poisson\_elements module
+poisson\_elements module
 -----------------------------------------------
 
 .. automodule:: eztfem.addons.elements.poisson_elements
@@ -9,7 +9,7 @@ eztfem.addons.elements.poisson\_elements module
    :undoc-members:
    :show-inheritance:
 
-eztfem.addons.elements.stokes\_elements module
+stokes\_elements module
 ----------------------------------------------
 
 .. automodule:: eztfem.addons.elements.stokes_elements
@@ -17,7 +17,7 @@ eztfem.addons.elements.stokes\_elements module
    :undoc-members:
    :show-inheritance:
 
-eztfem.addons.elements.streamfunction\_elements module
+streamfunction\_elements module
 ------------------------------------------------------
 
 .. automodule:: eztfem.addons.elements.streamfunction_elements

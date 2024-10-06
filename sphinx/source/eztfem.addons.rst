@@ -1,8 +1,5 @@
-eztfem.addons package
-=====================
-
-Subpackages
------------
+addons subpackage
+=================
 
 .. toctree::
    :maxdepth: 4

@@ -1,7 +1,7 @@
-eztfem.core package
-===================
+core subpackage
+===============
 
-eztfem.core.add\_boundary\_elements module
+add\_boundary\_elements module
 ------------------------------------------
 
 .. automodule:: eztfem.core.add_boundary_elements
@@ -9,7 +9,7 @@ eztfem.core.add\_boundary\_elements module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.apply\_essential module
+apply\_essential module
 -----------------------------------
 
 .. automodule:: eztfem.core.apply_essential
@@ -17,7 +17,7 @@ eztfem.core.apply\_essential module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.basis\_function module
+basis\_function module
 ----------------------------------
 
 .. automodule:: eztfem.core.basis_function
@@ -25,7 +25,7 @@ eztfem.core.basis\_function module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.build\_system module
+build\_system module
 --------------------------------
 
 .. automodule:: eztfem.core.build_system
@@ -33,7 +33,7 @@ eztfem.core.build\_system module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.class\_mesh module
+class\_mesh module
 ------------------------------
 
 .. automodule:: eztfem.core.class_mesh
@@ -41,7 +41,7 @@ eztfem.core.class\_mesh module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.class\_problem module
+class\_problem module
 ---------------------------------
 
 .. automodule:: eztfem.core.class_problem
@@ -49,7 +49,7 @@ eztfem.core.class\_problem module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.class\_user module
+class\_user module
 ------------------------------
 
 .. automodule:: eztfem.core.class_user
@@ -57,7 +57,7 @@ eztfem.core.class\_user module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.class\_vector module
+class\_vector module
 --------------------------------
 
 .. automodule:: eztfem.core.class_vector
@@ -65,7 +65,7 @@ eztfem.core.class\_vector module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.define\_essential module
+define\_essential module
 ------------------------------------
 
 .. automodule:: eztfem.core.define_essential
@@ -73,7 +73,7 @@ eztfem.core.define\_essential module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.deriv\_vector module
+deriv\_vector module
 --------------------------------
 
 .. automodule:: eztfem.core.deriv_vector
@@ -81,7 +81,7 @@ eztfem.core.deriv\_vector module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.distribute\_elements module
+distribute\_elements module
 ---------------------------------------
 
 .. automodule:: eztfem.core.distribute_elements
@@ -89,7 +89,7 @@ eztfem.core.distribute\_elements module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.fill\_system\_vector module
+fill\_system\_vector module
 ---------------------------------------
 
 .. automodule:: eztfem.core.fill_system_vector
@@ -97,7 +97,7 @@ eztfem.core.fill\_system\_vector module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.gauss\_legendre module
+gauss\_legendre module
 ----------------------------------
 
 .. automodule:: eztfem.core.gauss_legendre
@@ -105,7 +105,7 @@ eztfem.core.gauss\_legendre module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.integrate\_boundary\_elements module
+integrate\_boundary\_elements module
 ------------------------------------------------
 
 .. automodule:: eztfem.core.integrate_boundary_elements
@@ -113,7 +113,7 @@ eztfem.core.integrate\_boundary\_elements module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.isoparametric\_deformation module
+isoparametric\_deformation module
 ---------------------------------------------
 
 .. automodule:: eztfem.core.isoparametric_deformation
@@ -121,7 +121,7 @@ eztfem.core.isoparametric\_deformation module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.isoparametric\_deformation\_curve module
+isoparametric\_deformation\_curve module
 ----------------------------------------------------
 
 .. automodule:: eztfem.core.isoparametric_deformation_curve
@@ -129,7 +129,7 @@ eztfem.core.isoparametric\_deformation\_curve module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.line\_1d module
+line\_1d module
 ---------------------------
 
 .. automodule:: eztfem.core.line_1d
@@ -137,7 +137,7 @@ eztfem.core.line\_1d module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.mesh\_merge module
+mesh\_merge module
 ------------------------------
 
 .. automodule:: eztfem.core.mesh_merge
@@ -145,7 +145,7 @@ eztfem.core.mesh\_merge module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.pos\_array module
+pos\_array module
 -----------------------------
 
 .. automodule:: eztfem.core.pos_array
@@ -153,7 +153,7 @@ eztfem.core.pos\_array module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.pos\_array\_vec module
+pos\_array\_vec module
 ----------------------------------
 
 .. automodule:: eztfem.core.pos_array_vec
@@ -161,7 +161,7 @@ eztfem.core.pos\_array\_vec module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.quadrilateral2d module
+quadrilateral2d module
 ----------------------------------
 
 .. automodule:: eztfem.core.quadrilateral2d
@@ -169,7 +169,7 @@ eztfem.core.quadrilateral2d module
    :undoc-members:
    :show-inheritance:
 
-eztfem.core.refcoor\_nodal\_points module
+refcoor\_nodal\_points module
 -----------------------------------------
 
 .. automodule:: eztfem.core.refcoor_nodal_points

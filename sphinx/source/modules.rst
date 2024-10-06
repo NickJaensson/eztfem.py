@@ -1,5 +1,5 @@
-eztfem
-======
+eztfem package
+==============
 
 .. toctree::
    :maxdepth: 4
