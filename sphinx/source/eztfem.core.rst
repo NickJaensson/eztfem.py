@@ -17,14 +17,6 @@ system\_matrix module
    :undoc-members:
    :show-inheritance:
 
-mesh module
-------------------------------
-
-.. automodule:: eztfem.core.mesh
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 class\_problem module
 ---------------------------------
 
@@ -117,6 +109,6 @@ meshgen module
 ----------------------------------
 
 .. automodule:: eztfem.core.meshgen
-   :members: quadrilateral2d, line1d, distribute_elements
+   :members: Mesh, quadrilateral2d, line1d, distribute_elements
    :undoc-members:
    :show-inheritance:

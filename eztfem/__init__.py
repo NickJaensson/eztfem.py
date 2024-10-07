@@ -9,11 +9,11 @@ from .core.integrate_boundary_elements import integrate_boundary_elements
 from .core.isoparametric_deformation_curve import \
     isoparametric_deformation_curve
 from .core.isoparametric_deformation import isoparametric_deformation
-from .core.mesh import Mesh, Geometry
 from .core.mesh_merge import mesh_merge
 from .core.pos_array import pos_array, pos_array_vec
 from .core.class_problem import Problem
-from .core.meshgen import quadrilateral2d, distribute_elements, line1d
+from .core.meshgen import quadrilateral2d, distribute_elements, line1d, \
+    Mesh, Geometry
 from .core.user import User
 
 from .addons.meshes.compound_meshgen import l_shape2d, two_blocks2d
