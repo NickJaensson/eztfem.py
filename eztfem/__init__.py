@@ -1,12 +1,10 @@
-from .core.shapefunc import basis_function, refcoor_nodal_points
+from .core.shapefunc import basis_function, refcoor_nodal_points, \
+    isoparametric_deformation_curve, isoparametric_deformation
 from .core.system_matrix import build_system, add_boundary_elements, \
     apply_essential
 from .core.vector import Vector, deriv_vector, fill_system_vector
 from .core.gauss import gauss_legendre
 from .core.postprocessing import integrate_boundary_elements
-from .core.isoparametric_deformation_curve import \
-    isoparametric_deformation_curve
-from .core.isoparametric_deformation import isoparametric_deformation
 from .core.mesh_merge import mesh_merge
 from .core.pos_array import pos_array, pos_array_vec
 from .core.problem import Problem, define_essential

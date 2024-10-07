@@ -5,7 +5,7 @@ shapefunc module
 ----------------------------------
 
 .. automodule:: eztfem.core.shapefunc
-   :members: barycentric, basis_function, refcoor_nodal_points
+   :members: barycentric, basis_function, refcoor_nodal_points, isoparametric_deformation, isoparametric_deformation_curve
    :undoc-members:
    :show-inheritance:
 
@@ -53,22 +53,6 @@ postprocessing module
 ------------------------------------------------
 
 .. automodule:: eztfem.core.postprocessing
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-isoparametric\_deformation module
----------------------------------------------
-
-.. automodule:: eztfem.core.isoparametric_deformation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-isoparametric\_deformation\_curve module
-----------------------------------------------------
-
-.. automodule:: eztfem.core.isoparametric_deformation_curve
    :members:
    :undoc-members:
    :show-inheritance:

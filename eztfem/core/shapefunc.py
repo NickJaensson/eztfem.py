@@ -449,3 +449,125 @@ def barycentric(xr):
     dlambda[:, 2, 1] = 1
 
     return lambda_, dlambda
+
+
+def isoparametric_deformation(x, dphi):
+    """
+    Isoparametric deformation of an element.
+
+    Parameters
+    ----------
+    x : numpy.ndarray
+        Coordinates of the nodes, representing the position of the unknowns
+        for phi and dphi. x[i, j] with i being the point in space and j the
+        direction in space.
+    dphi : numpy.ndarray
+        Derivatives of the shape function with respect to the reference
+        coordinates.
+        dphi[i, j, k], with i being the point in space, j the unknown, and k
+        the direction in space.
+
+    Returns
+    -------
+    F : numpy.ndarray
+        Deformation gradient matrix between the reference element and the
+        actual element.
+        F[i, j, m] means that at point i, the transformation is:
+
+        .. math::
+            F[j, m] = \\frac{d x_j}{d \\xi_m}
+    Finv : numpy.ndarray
+        The inverse of F.
+    detF : numpy.ndarray
+        The determinant of F (Jacobian). detF[i] gives the determinant at
+        point i.
+
+    Examples
+    --------
+    >>> F, Finv, detF = isoparametric_deformation(x, dphi)
+
+    """
+
+    npts, ndim = dphi.shape[0], x.shape[1]
+
+    F = np.zeros((npts, ndim, ndim))
+    Finv = np.zeros((npts, ndim, ndim))
+    detF = np.zeros(npts)
+
+    # compute F
+    for j in range(ndim):
+        F[:, :, j] = dphi[:, :, j] @ x
+
+    # compute detF and Finv
+    if ndim == 1:
+        # 1D
+        for ip in range(npts):
+            detF[ip] = F[ip, 0, 0]
+            Finv[ip, 0, 0] = 1 / F[ip, 0, 0]
+    elif ndim == 2:
+        # 2D
+        for ip in range(npts):
+            detF[ip] = F[ip, 0, 0] * F[ip, 1, 1] - F[ip, 0, 1] * F[ip, 1, 0]
+            Finv[ip, 0, 0] = F[ip, 1, 1] / detF[ip]
+            Finv[ip, 0, 1] = -F[ip, 0, 1] / detF[ip]
+            Finv[ip, 1, 0] = -F[ip, 1, 0] / detF[ip]
+            Finv[ip, 1, 1] = F[ip, 0, 0] / detF[ip]
+
+    return F, Finv, detF
+
+
+def isoparametric_deformation_curve(x, dphi):
+    """
+    Isoparametric deformation of curved line elements.
+
+    Parameters
+    ----------
+    x : numpy.ndarray
+        Coordinates of the nodes, representing the position of the unknowns for
+        phi and dphi.
+        Shape: (number of points in space, direction in space).
+    dphi : numpy.ndarray
+        Derivative of the shape function with respect to the reference
+        coordinate.
+        Shape: (number of points in space, number of unknowns, 1).
+
+    Returns
+    -------
+    dxdxi : numpy.ndarray
+        Derivative of the coordinates x with respect to the reference
+        coordinate (tangential vector).
+        Shape: (number of points in space, direction in space).
+    curvel : numpy.ndarray
+        The length of the vector dxdxi.
+        Shape: (number of points in space).
+    normal : numpy.ndarray
+        Unit normal vector to the curve.
+        Shape: (number of points in space, direction in space).
+
+    Examples
+    --------
+    >>> dxdxi, curvel, normal = isoparametric_deformation_curved_line(x, dphi)
+
+    """
+
+    npts, ndim = dphi.shape[0], x.shape[1]
+
+    dxdxi = np.zeros((npts, ndim))
+    curvel2 = np.zeros(npts)
+
+    # Compute dxdxi and curvel2
+    for j in range(ndim):
+        dxdxi[:, j] = dphi[:, :, 0] @ x[:, j]
+        curvel2 += dxdxi[:, j]**2
+
+    curvel = np.sqrt(curvel2)
+
+    normal = np.zeros((npts, 2))
+
+    if ndim == 2:
+        normal[:, 0] = dxdxi[:, 1] / curvel
+        normal[:, 1] = -dxdxi[:, 0] / curvel
+
+    return dxdxi, curvel, normal
+
+
