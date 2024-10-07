@@ -41,10 +41,10 @@ vector module
    :undoc-members:
    :show-inheritance:
 
-gauss\_legendre module
+gauss module
 ----------------------------------
 
-.. automodule:: eztfem.core.gauss_legendre
+.. automodule:: eztfem.core.gauss
    :members: gauss_legendre
    :undoc-members:
    :show-inheritance:
