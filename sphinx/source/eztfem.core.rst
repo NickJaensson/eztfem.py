@@ -57,10 +57,10 @@ postprocessing module
    :undoc-members:
    :show-inheritance:
 
-mesh\_merge module
+meshgen_extra module
 ------------------------------
 
-.. automodule:: eztfem.core.mesh_merge
+.. automodule:: eztfem.core.meshgen_extra
    :members:
    :undoc-members:
    :show-inheritance:

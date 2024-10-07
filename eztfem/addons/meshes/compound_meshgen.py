@@ -1,5 +1,5 @@
 from ...core.meshgen import quadrilateral2d
-from ...core.mesh_merge import mesh_merge
+from ...core.meshgen_extra import mesh_merge
 
 
 def two_blocks2d(ne, eltype, **kwargs):

@@ -5,7 +5,7 @@ from .core.system_matrix import build_system, add_boundary_elements, \
 from .core.vector import Vector, deriv_vector, fill_system_vector
 from .core.gauss import gauss_legendre
 from .core.postprocessing import integrate_boundary_elements
-from .core.mesh_merge import mesh_merge
+from .core.meshgen_extra import mesh_merge
 from .core.pos_array import pos_array, pos_array_vec
 from .core.problem import Problem, define_essential
 from .core.meshgen import quadrilateral2d, distribute_elements, line1d, \
