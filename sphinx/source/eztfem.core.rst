@@ -17,10 +17,10 @@ system\_matrix module
    :undoc-members:
    :show-inheritance:
 
-class\_problem module
+problem module
 ---------------------------------
 
-.. automodule:: eztfem.core.class_problem
+.. automodule:: eztfem.core.problem
    :members:
    :undoc-members:
    :show-inheritance:
@@ -37,14 +37,6 @@ vector module
 --------------------------------
 
 .. automodule:: eztfem.core.vector
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-define\_essential module
-------------------------------------
-
-.. automodule:: eztfem.core.define_essential
    :members:
    :undoc-members:
    :show-inheritance:

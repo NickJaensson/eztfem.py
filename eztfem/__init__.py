@@ -1,7 +1,6 @@
 from .core.shapefunc import basis_function, refcoor_nodal_points
 from .core.system_matrix import build_system, add_boundary_elements, \
     apply_essential
-from .core.define_essential import define_essential
 from .core.vector import Vector, deriv_vector
 from .core.fill_system_vector import fill_system_vector
 from .core.gauss_legendre import gauss_legendre
@@ -11,7 +10,7 @@ from .core.isoparametric_deformation_curve import \
 from .core.isoparametric_deformation import isoparametric_deformation
 from .core.mesh_merge import mesh_merge
 from .core.pos_array import pos_array, pos_array_vec
-from .core.class_problem import Problem
+from .core.problem import Problem, define_essential
 from .core.meshgen import quadrilateral2d, distribute_elements, line1d, \
     Mesh, Geometry
 from .core.user import User
