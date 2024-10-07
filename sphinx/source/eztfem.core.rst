@@ -17,10 +17,10 @@ system\_matrix module
    :undoc-members:
    :show-inheritance:
 
-class\_mesh module
+mesh module
 ------------------------------
 
-.. automodule:: eztfem.core.class_mesh
+.. automodule:: eztfem.core.mesh
    :members:
    :undoc-members:
    :show-inheritance:

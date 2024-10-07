@@ -1,5 +1,5 @@
 import numpy as np
-from .class_mesh import Mesh, Geometry
+from .mesh import Mesh, Geometry
 
 
 def distribute_elements(nelem, ratio, factor):

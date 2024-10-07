@@ -9,7 +9,7 @@ from .core.integrate_boundary_elements import integrate_boundary_elements
 from .core.isoparametric_deformation_curve import \
     isoparametric_deformation_curve
 from .core.isoparametric_deformation import isoparametric_deformation
-from .core.class_mesh import Mesh, Geometry
+from .core.mesh import Mesh, Geometry
 from .core.mesh_merge import mesh_merge
 from .core.pos_array import pos_array, pos_array_vec
 from .core.class_problem import Problem
