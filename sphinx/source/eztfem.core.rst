@@ -41,14 +41,6 @@ vector module
    :undoc-members:
    :show-inheritance:
 
-fill\_system\_vector module
----------------------------------------
-
-.. automodule:: eztfem.core.fill_system_vector
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 gauss\_legendre module
 ----------------------------------
 

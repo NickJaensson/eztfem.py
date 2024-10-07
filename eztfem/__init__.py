@@ -1,8 +1,7 @@
 from .core.shapefunc import basis_function, refcoor_nodal_points
 from .core.system_matrix import build_system, add_boundary_elements, \
     apply_essential
-from .core.vector import Vector, deriv_vector
-from .core.fill_system_vector import fill_system_vector
+from .core.vector import Vector, deriv_vector, fill_system_vector
 from .core.gauss_legendre import gauss_legendre
 from .core.integrate_boundary_elements import integrate_boundary_elements
 from .core.isoparametric_deformation_curve import \
