@@ -49,10 +49,10 @@ class\_user module
    :undoc-members:
    :show-inheritance:
 
-class\_vector module
+vector module
 --------------------------------
 
-.. automodule:: eztfem.core.class_vector
+.. automodule:: eztfem.core.vector
    :members:
    :undoc-members:
    :show-inheritance:
@@ -61,14 +61,6 @@ define\_essential module
 ------------------------------------
 
 .. automodule:: eztfem.core.define_essential
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-deriv\_vector module
---------------------------------
-
-.. automodule:: eztfem.core.deriv_vector
    :members:
    :undoc-members:
    :show-inheritance:
@@ -125,14 +117,6 @@ pos\_array module
 -----------------------------
 
 .. automodule:: eztfem.core.pos_array
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pos\_array\_vec module
-----------------------------------
-
-.. automodule:: eztfem.core.pos_array_vec
    :members:
    :undoc-members:
    :show-inheritance:

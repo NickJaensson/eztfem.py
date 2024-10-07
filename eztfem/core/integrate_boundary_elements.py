@@ -1,5 +1,4 @@
-from .pos_array import pos_array
-from .pos_array_vec import pos_array_vec
+from .pos_array import pos_array, pos_array_vec
 
 
 def integrate_boundary_elements(mesh, problem, element, user, **kwargs):

@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.sparse import lil_matrix
-from .pos_array import pos_array
-from .pos_array_vec import pos_array_vec
+from .pos_array import pos_array, pos_array_vec
 
 
 def build_system(mesh, problem, element, user, **kwargs):
