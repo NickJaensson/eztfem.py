@@ -13,7 +13,7 @@ shapefunc module
 ----------------------------------
 
 .. automodule:: eztfem.core.shapefunc
-   :members: barycentric, basis_function
+   :members: barycentric, basis_function, refcoor_nodal_points
    :undoc-members:
    :show-inheritance:
 
@@ -126,13 +126,5 @@ meshgen module
 
 .. automodule:: eztfem.core.meshgen
    :members: quadrilateral2d, line1d, distribute_elements
-   :undoc-members:
-   :show-inheritance:
-
-refcoor\_nodal\_points module
------------------------------------------
-
-.. automodule:: eztfem.core.refcoor_nodal_points
-   :members:
    :undoc-members:
    :show-inheritance:

@@ -1,5 +1,5 @@
 from .core.apply_essential import apply_essential
-from .core.shapefunc import basis_function
+from .core.shapefunc import basis_function, refcoor_nodal_points
 from .core.system_matrix import build_system, add_boundary_elements
 from .core.define_essential import define_essential
 from .core.vector import Vector, deriv_vector
@@ -14,7 +14,6 @@ from .core.mesh_merge import mesh_merge
 from .core.pos_array import pos_array, pos_array_vec
 from .core.class_problem import Problem
 from .core.meshgen import quadrilateral2d, distribute_elements, line1d
-from .core.refcoor_nodal_points import refcoor_nodal_points
 from .core.class_user import User
 
 from .addons.meshes.compound_meshgen import l_shape2d, two_blocks2d
