@@ -3,7 +3,7 @@ from .core.system_matrix import build_system, add_boundary_elements, \
     apply_essential
 from .core.vector import Vector, deriv_vector, fill_system_vector
 from .core.gauss import gauss_legendre
-from .core.integrate_boundary_elements import integrate_boundary_elements
+from .core.postprocessing import integrate_boundary_elements
 from .core.isoparametric_deformation_curve import \
     isoparametric_deformation_curve
 from .core.isoparametric_deformation import isoparametric_deformation

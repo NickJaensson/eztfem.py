@@ -49,10 +49,10 @@ gauss module
    :undoc-members:
    :show-inheritance:
 
-integrate\_boundary\_elements module
+postprocessing module
 ------------------------------------------------
 
-.. automodule:: eztfem.core.integrate_boundary_elements
+.. automodule:: eztfem.core.postprocessing
    :members:
    :undoc-members:
    :show-inheritance:
