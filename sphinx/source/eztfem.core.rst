@@ -9,10 +9,10 @@ apply\_essential module
    :undoc-members:
    :show-inheritance:
 
-basis\_function module
+shapefunc module
 ----------------------------------
 
-.. automodule:: eztfem.core.basis_function
+.. automodule:: eztfem.core.shapefunc
    :members: barycentric, basis_function
    :undoc-members:
    :show-inheritance:

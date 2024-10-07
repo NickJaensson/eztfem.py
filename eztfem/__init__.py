@@ -1,5 +1,5 @@
 from .core.apply_essential import apply_essential
-from .core.basis_function import basis_function
+from .core.shapefunc import basis_function
 from .core.system_matrix import build_system, add_boundary_elements
 from .core.define_essential import define_essential
 from .core.vector import Vector, deriv_vector
