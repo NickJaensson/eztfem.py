@@ -1,14 +1,6 @@
 core subpackage
 ===============
 
-apply\_essential module
------------------------------------
-
-.. automodule:: eztfem.core.apply_essential
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 shapefunc module
 ----------------------------------
 

@@ -1,6 +1,6 @@
-from .core.apply_essential import apply_essential
 from .core.shapefunc import basis_function, refcoor_nodal_points
-from .core.system_matrix import build_system, add_boundary_elements
+from .core.system_matrix import build_system, add_boundary_elements, \
+    apply_essential
 from .core.define_essential import define_essential
 from .core.vector import Vector, deriv_vector
 from .core.fill_system_vector import fill_system_vector
