@@ -33,10 +33,10 @@ class\_problem module
    :undoc-members:
    :show-inheritance:
 
-class\_user module
+user module
 ------------------------------
 
-.. automodule:: eztfem.core.class_user
+.. automodule:: eztfem.core.user
    :members:
    :undoc-members:
    :show-inheritance:

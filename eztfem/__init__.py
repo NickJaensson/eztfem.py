@@ -14,7 +14,7 @@ from .core.mesh_merge import mesh_merge
 from .core.pos_array import pos_array, pos_array_vec
 from .core.class_problem import Problem
 from .core.meshgen import quadrilateral2d, distribute_elements, line1d
-from .core.class_user import User
+from .core.user import User
 
 from .addons.meshes.compound_meshgen import l_shape2d, two_blocks2d
 
