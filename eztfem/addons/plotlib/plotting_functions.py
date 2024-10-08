@@ -4,6 +4,75 @@ import pyvista as pv
 import matplotlib.pyplot as plt
 
 
+def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
+    """
+    Fills the point data of a mesh object with the values from a given solution
+    array based on the specified degrees of freedom.
+
+    Parameters
+    ----------
+    mesh_pv : pyvista.PolyData
+        A PyVista mesh
+
+    problem : Problem
+        Eztfem problem object
+
+    u : array_like
+        A NumPy array representing the solution values for the degrees of
+        freedom (DOFs) that will be mapped to the mesh.
+
+    physq : int
+        Physical quantity identifier, which should be an integer.
+
+    degfd : int, list, or np.ndarray
+        Degree of freedom indices to be plotted. If a single integer is
+        provided, the function maps the values for that DOF to the mesh. If a
+        list or array of two integers is provided, it maps two DOFs to the
+        mesh.
+
+    Raises
+    ------
+    ValueError
+        If `degfd` is not of length 1 or 2.
+
+    """
+
+    assert isinstance(physq, (int, np.integer))
+
+    if isinstance(degfd, (int, np.integer)):
+        degfd = [degfd]
+
+    if isinstance(degfd, np.ndarray):
+        degfd = degfd.tolist()
+
+    nnodes = mesh_pv.number_of_points
+
+    match len(degfd):
+        case 1:
+            u_plot = np.zeros(nnodes)
+
+            for node in range(nnodes):
+                posn, _ = pos_array(problem, node, physq=physq, order='DN')
+                u_plot[node] = u[posn[0][degfd[0]]]
+
+            mesh_pv.point_data['u'] = u_plot
+
+        case 2:
+            u0 = np.zeros(nnodes)
+            u1 = np.zeros(nnodes)
+
+            for node in range(nnodes):
+                posn, _ = pos_array(problem, node, physq=physq, order='DN')
+                u0[node] = u[posn[0][0]]
+                u1[node] = u[posn[0][1]]
+
+            mesh_pv.point_data['u'] = \
+                np.transpose(np.vstack((u0, u1, np.zeros_like(u0))))
+
+        case _:
+            raise ValueError("degfd must be of length 1 (int) or 2")
+
+
 def plot_mesh_pv(mesh_pv, **kwargs):
     """
     Plot a mesh.
@@ -72,16 +141,7 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
     kwargs.pop('degfd', None)
     kwargs.pop('window_size', None)
 
-    nnodes = mesh_pv.number_of_points
-
-    # Set coordinates and values
-    u_plot = np.zeros(nnodes)
-
-    for node in range(nnodes):
-        posn, _ = pos_array(problem, node, physq=physq, order='DN')
-        u_plot[node] = u[posn[0][degfd]]
-
-    mesh_pv.point_data['u'] = u_plot
+    fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
     plotter = pv.Plotter(window_size=window_size)
     plotter.add_mesh(mesh_pv, scalars="u", **kwargs)
@@ -270,6 +330,32 @@ def plot_curves(mesh, **kwargs):
 
 
 def plot_over_line(mesh_pv, points, npoints=200, plot_mesh=False):
+    """
+    Plots and samples data along a line through a mesh, optionally visualizing the
+    mesh and the line.
+
+    Parameters
+    ----------
+    mesh_pv : object
+        A PyVista mesh object containing the data to be sampled and visualized.
+
+    points : list or array_like
+        A list of two 3D points, each of shape (3,), defining the start and end
+        points of the line over which to sample.
+
+    npoints : int, optional
+        The number of points to sample along the line. Default is 200.
+
+    plot_mesh : bool, optional
+        If True, the function plots the mesh along with the line for
+        visualization. The default is False.
+
+    Returns
+    -------
+    sampled_data : object
+        A PyVista dataset containing the sampled data along the line.
+
+    """
 
     if plot_mesh:
         line = pv.Line(points[0], points[1])
@@ -315,24 +401,10 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
 
     ndf = problem.elementdof[0, physq]
 
-    print(ndf)
-
     assert (problem.elementdof[0, physq] == 2)
     assert (np.all(problem.elementdof[0, physq] == ndf))
 
-    nnodes = mesh_pv.number_of_points
-
-    # Set coordinates and values
-    u0 = np.zeros(nnodes)
-    u1 = np.zeros(nnodes)
-
-    for node in range(nnodes):
-        posn, _ = pos_array(problem, node, physq=physq, order='DN')
-        u0[node] = u[posn[0][0]]
-        u1[node] = u[posn[0][1]]
-
-    mesh_pv.point_data['u'] = \
-        np.transpose(np.vstack((u0, u1, np.zeros_like(u0))))
+    fill_mesh_pv(mesh_pv, problem, u, physq, degfd=[0, 1])
 
     glyphs = mesh_pv.glyph(orient="u", scale=True, factor=0.1)
 
