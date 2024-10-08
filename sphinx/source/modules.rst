@@ -1,7 +1,7 @@
-eztfem package
-==============
+eztfem API documentation
+========================
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    eztfem

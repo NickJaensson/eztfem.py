@@ -1,7 +1,26 @@
 Poisson problem with Dirichlet BCs
 ==================================
 
-This page gives a breakdown of the ``poisson1.py`` example.
+This page gives a breakdown of the ``poisson1.py``, which considers a 
+Poisson problem:
+
+.. math::
+
+     -\nabla^2 u = f
+
+on a unit square :math:`(x,y)\in(0,1)\times(0,1)`.
+
+Substituting the following solution for :math:`u`:
+
+.. math::
+
+     u = 1 + \cos(\pi x)\cos(\pi y)
+
+gives the corresponding :math:`f`:
+
+.. math::
+
+     f = 2\pi^2 \cos(\pi x)\cos(\pi y)
 
 Importing packages
 ------------------

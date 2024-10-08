@@ -32,6 +32,8 @@ The Python script that solves this problem is ``poisson4.py`` in the
 ``poisson`` folder of the examples folder. The main differences with respect
 to \texttt{poisson1.m} will be discussed.
 
+Applying Neumann BCs
+--------------------
 First, the essential boundary conditions need to be applied on 
 curves 1, 3 and 4. Second, the boundary integral for the natural boundary 
 condition needs be added:
