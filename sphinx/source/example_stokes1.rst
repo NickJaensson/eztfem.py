@@ -1,8 +1,6 @@
-Poisson problem with Dirichlet BCs
+Stokes problem with Dirichlet BCs
 ==================================
 
-Importing
----------
 Import the relevant packages to run this script.
 
 .. code-block:: bash
@@ -14,8 +12,8 @@ Import the relevant packages to run this script.
     from func import func
     from scipy.sparse.linalg import spsolve
 
-Mesh generation
----------------
+|
+
 The mesh is created using a 20 by 20 mesh of nine-node quadrilaterals. 
 The variable ``mesh`` is a structure having several 
 components, including the coordinates of the nodes, the topology, the points 
@@ -30,8 +28,8 @@ see the package documentation and the documentation of the function
 
     mesh = ezt.quadrilateral2d([20, 20], 'quad9')
 
-Problem definition
-------------------
+|
+
 The problem is defined. The variable ``problem`` is a structure having several 
 components. The argument ``elementdof`` of the function ``problem_definition`` 
 is a matrix where each column defines degrees of freedom in the nodes of an 
@@ -50,12 +48,10 @@ only used for postprocessing (see below).
                         [2, 2, 2, 2, 2, 2, 2, 2, 2]], dtype=int).transpose()
     problem = ezt.Problem(mesh, elementdof, nphysq=1)
 
-Fill user object
-----------------
-The user object is used to pass various data and coefficients to the element
-routines. Here, the Gauss-Legendre integration points (``xr``) and weights 
-(``wg``) are computed and added, together with the basis functions 
-:math:`\phi_k`, :math:`k=1,\dots,9`
+|
+
+The Gauss-Legendre integration points (``xr``) and weights (``wg``) are
+computed, together with the basis functions :math:`\phi_k`, :math:`k=1,\dots,9`
 and the derivatives :math:`\partial \phi_k/\partial \xi_j`,
 :math:`k=1,\dots,9`, :math:`j=1,2` in these points for a bi-quadratic
 (:math:`Q_2`) interpolation. The weights, basis functions and derivatives
@@ -70,7 +66,9 @@ are stored in the structure ``User`` for later use on element level.
     user.xr, user.wg = ezt.gauss_legendre(shape, n=3)
     user.phi, user.dphi = ezt.basis_function(shape, 'Q2', user.xr)
 
-Further information which is needed on elementlevel is added to ``user``:
+|
+
+The ``User`` structure is further filled with data needed on elementlevel:
 
 * ``coorsys`` coordinate system: 0=Cartesian, 1=axisymmetric.
 * ``alpha`` diffusion coefficient :math:`\alpha` which is 1 for the Poisson equation.
@@ -86,8 +84,8 @@ Further information which is needed on elementlevel is added to ``user``:
     user.funcnr = 4
     user.func = func
 
-Assembly
---------
+|
+
 Assemble the system matrix :math:`\boldsymbol{A}` and vector 
 :math:`\boldsymbol{f}` using the element function ``poisson_elem``.
 
@@ -97,8 +95,8 @@ Assemble the system matrix :math:`\boldsymbol{A}` and vector
 
     A, f = ezt.build_system(mesh, problem, ezt.poisson_elem, user)
 
-Boundary conditions
--------------------
+|
+
 Define and apply Dirichlet boundary conditions. First, at line 32,
 an index array ``iess`` is  
 computed to indicate that the degrees ``u(iess)`` need to prescribed. Then,
@@ -122,8 +120,8 @@ are modified to take the Dirichlet conditions into account.
 
     ezt.apply_essential(A, f, uess, iess)
 
-Solve linear system
--------------------
+|
+
 Solve the system :math:`\boldsymbol{A}\boldsymbol{u}=\boldsymbol{f}`.
 
 .. code-block:: bash
@@ -132,9 +130,9 @@ Solve the system :math:`\boldsymbol{A}\boldsymbol{u}=\boldsymbol{f}`.
 
     u = spsolve(A.tocsr(), f)
 
-Compare solution
-----------------
 Print the maximum difference in the nodes, i.e. :math:`\max|u_i-u_{i,\text{exact}}|`.
+
+|
 
 .. code-block:: bash
 
@@ -145,8 +143,8 @@ Print the maximum difference in the nodes, i.e. :math:`\max|u_i-u_{i,\text{exact
 
     maxdiff = max(abs(u-uex))
 
-Postprocessing
---------------
+|
+
 Derive a column vector (array) with :math:`\nabla u` in the nodes by averaging 
 the values in elements
 connected to the nodes. This column vector (array), ``gradu``, is defined by

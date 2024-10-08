@@ -18,6 +18,11 @@ easily accessible for students.
    :caption: Contents:
 
    eztfem_install
+   running_examples
    example_poisson1
    example_poisson4
+   example_stokes1
+   example_stokes2
+   example_streamfunction
+   plotting
    modules

@@ -30,3 +30,29 @@ calling eztfem functions.
    FUNCTION_NAME()
 
 Note that in the second option, all functions need to be imported explicitly.
+
+
+In the file browser you see the following folders in the eztfem tree:
+
+* ``src``
+* ``examples``
+
+The folder ``src`` contains the folders ``core`` and ``addons``.
+The folder ``core`` contains core functions of eztfem, whereas the folder
+``addons`` contains the add-ons, with a separate folder for each add-on. 
+The following add-ons are available: 
+
+* ``plotlib``
+* ``poisson``
+* ``stokes``
+* ``meshes``
+
+which contain plot functions, element routines for the Poisson and Stokes 
+equations and functions for more complicated meshes, respectively. 
+The folder ``examples`` contain the examples, divided into separate 
+folders. Each folder might contain several examples, but all of the same 
+kind, e.g. a problem involving the Stokes equation. The following example 
+folders are available: 
+
+* ``poisson``
+* ``stokes``

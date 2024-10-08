@@ -1,4 +1,4 @@
-Poisson problem with Neumann BCs
+Stokes problem with Neumann BCs
 ================================
 
 We consider the Poisson problem on a rectangle. The problem is similar to 
