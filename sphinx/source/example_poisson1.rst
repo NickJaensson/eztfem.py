@@ -1,8 +1,8 @@
 Poisson problem with Dirichlet BCs
 ==================================
 
-Importing
----------
+Importing packages
+------------------
 Import the relevant packages to run this script.
 
 .. code-block:: bash
@@ -86,8 +86,8 @@ Further information which is needed on elementlevel is added to ``user``:
     user.funcnr = 4
     user.func = func
 
-Assembly
---------
+System assembly
+---------------
 Assemble the system matrix :math:`\boldsymbol{A}` and vector 
 :math:`\boldsymbol{f}` using the element function ``poisson_elem``.
 
