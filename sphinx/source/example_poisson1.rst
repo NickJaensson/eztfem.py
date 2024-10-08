@@ -1,6 +1,8 @@
 Poisson problem with Dirichlet BCs
 ==================================
 
+This page gives a breakdown of the ``poisson1.py`` example.
+
 Importing packages
 ------------------
 Import the relevant packages to run this script.
@@ -132,8 +134,8 @@ Solve the system :math:`\boldsymbol{A}\boldsymbol{u}=\boldsymbol{f}`.
 
     u = spsolve(A.tocsr(), f)
 
-Compare solution
-----------------
+Verify solution
+---------------
 Print the maximum difference in the nodes, i.e. :math:`\max|u_i-u_{i,\text{exact}}|`.
 
 .. code-block:: bash
