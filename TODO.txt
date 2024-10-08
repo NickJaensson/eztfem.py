@@ -1,2 +1,7 @@
-Jupyter notebooks of examples
-addons/plotlib/
+plot_basis_function.m
+plot_gauss_legendre.m
+plot_points_curves.m
+plot_sol_contour.m
+plot_vector.m
+plot_vector_contour.m
+plot_vector_over_line.m
