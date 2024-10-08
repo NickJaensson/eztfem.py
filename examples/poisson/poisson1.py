@@ -21,9 +21,16 @@ def main():
                            [2, 2, 2, 2, 2, 2, 2, 2, 2]], dtype=int).transpose()
     problem = ezt.Problem(mesh, elementdof, nphysq=1)
 
-    # define Gauss integration and basis functions
+    # user struct for setting problem coefficients, ...
 
     user = ezt.User()
+    user.coorsys = 0
+    user.alpha = 1
+    user.funcnr = 4
+    user.func = func
+
+    # define Gauss integration and basis functions
+
     shape = 'quad'
 
     print('gauss_legendre')
@@ -31,13 +38,6 @@ def main():
 
     print('basis_function phi')
     user.phi, user.dphi = ezt.basis_function(shape, 'Q2', user.xr)
-
-    # user struct for setting problem coefficients, ...
-
-    user.coorsys = 0
-    user.alpha = 1
-    user.funcnr = 4
-    user.func = func
 
     # assemble the system matrix and vector
 
