@@ -2,6 +2,7 @@ import numpy as np
 from ...core.pos_array import pos_array
 import pyvista as pv
 import matplotlib.pyplot as plt
+import copy
 
 
 def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
@@ -35,7 +36,13 @@ def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
     ValueError
         If `degfd` is not of length 1 or 2.
 
+    Notes
+    -----
+    A deep copy of the object is made to avoid modifying the mesh_pv argument.
+
     """
+
+    mesh_pv_plot = copy.deepcopy(mesh_pv)
 
     assert isinstance(physq, (int, np.integer))
 
@@ -45,7 +52,7 @@ def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
     if isinstance(degfd, np.ndarray):
         degfd = degfd.tolist()
 
-    nnodes = mesh_pv.number_of_points
+    nnodes = mesh_pv_plot.number_of_points
 
     match len(degfd):
         case 1:
@@ -55,7 +62,7 @@ def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
                 posn, _ = pos_array(problem, node, physq=physq, order='DN')
                 u_plot[node] = u[posn[0][degfd[0]]]
 
-            mesh_pv.point_data['u'] = u_plot
+            mesh_pv_plot.point_data['u'] = u_plot
 
         case 2:
             u0 = np.zeros(nnodes)
@@ -66,11 +73,13 @@ def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
                 u0[node] = u[posn[0][0]]
                 u1[node] = u[posn[0][1]]
 
-            mesh_pv.point_data['u'] = \
+            mesh_pv_plot.point_data['u'] = \
                 np.transpose(np.vstack((u0, u1, np.zeros_like(u0))))
 
         case _:
             raise ValueError("degfd must be of length 1 (int) or 2")
+
+    return mesh_pv_plot
 
 
 def plot_mesh_pv(mesh_pv, **kwargs):
@@ -141,10 +150,10 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
     kwargs.pop('degfd', None)
     kwargs.pop('window_size', None)
 
-    fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
+    mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
     plotter = pv.Plotter(window_size=window_size)
-    plotter.add_mesh(mesh_pv, scalars="u", **kwargs)
+    plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
                      font_size=12)
@@ -329,10 +338,11 @@ def plot_curves(mesh, **kwargs):
     plt.show()
 
 
-def plot_over_line(mesh_pv, points, npoints=200, plot_mesh=False):
+def plot_over_line(mesh_pv, problem, u, points, physq=0, degfd=0, npoints=200,
+                   plot_mesh=False):
     """
-    Plots and samples data along a line through a mesh, optionally visualizing the
-    mesh and the line.
+    Plots and samples data along a line through a mesh, optionally visualizing
+    the mesh and the line.
 
     Parameters
     ----------
@@ -357,6 +367,9 @@ def plot_over_line(mesh_pv, points, npoints=200, plot_mesh=False):
 
     """
 
+    assert isinstance(physq, int)
+    assert isinstance(degfd, int)
+
     if plot_mesh:
         line = pv.Line(points[0], points[1])
         p = pv.Plotter(window_size=(800, 400))
@@ -365,10 +378,12 @@ def plot_over_line(mesh_pv, points, npoints=200, plot_mesh=False):
         p.camera_position = 'xy'
         p.show()
 
-    mesh_pv.plot_over_line(points[0], points[1], resolution=npoints)
+    mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
-    return mesh_pv.sample_over_line(points[0], points[1],
-                                    resolution=npoints)
+    mesh_pv_plot.plot_over_line(points[0], points[1], resolution=npoints)
+
+    return mesh_pv_plot.sample_over_line(points[0], points[1],
+                                         resolution=npoints)
 
 
 def plot_quiver(mesh_pv, problem, u, **kwargs):
@@ -404,14 +419,14 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
     assert (problem.elementdof[0, physq] == 2)
     assert (np.all(problem.elementdof[0, physq] == ndf))
 
-    fill_mesh_pv(mesh_pv, problem, u, physq, degfd=[0, 1])
+    mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd=[0, 1])
 
-    glyphs = mesh_pv.glyph(orient="u", scale=True, factor=0.1)
+    glyphs = mesh_pv_plot.glyph(orient="u", scale=True, factor=0.1)
 
     plotter = pv.Plotter(window_size=window_size)
     # plotter.add_mesh(glyphs, show_scalar_bar=False, lighting=False,
     #                  cmap='coolwarm')
-    plotter.add_mesh(mesh_pv, color="lightgrey")
+    plotter.add_mesh(mesh_pv_plot, color="lightgrey")
     plotter.add_mesh(glyphs, color="black")
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
