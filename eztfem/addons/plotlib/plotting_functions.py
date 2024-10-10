@@ -509,8 +509,8 @@ def plot_curves(mesh, **kwargs):
     plt.show()
 
 
-def plot_over_line(mesh_pv, problem, u, points, physq=0, degfd=0, npoints=200,
-                   plot_mesh=False):
+def plot_sol_over_line(mesh_pv, problem, u, points, physq=0, degfd=0, npoints=200,
+                       plot_mesh=False):
     """
     Plots and samples data along a line through a mesh, optionally visualizing
     the mesh and the line.
@@ -550,6 +550,53 @@ def plot_over_line(mesh_pv, problem, u, points, physq=0, degfd=0, npoints=200,
         p.show()
 
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
+
+    mesh_pv_plot.plot_over_line(points[0], points[1], resolution=npoints)
+
+    return mesh_pv_plot.sample_over_line(points[0], points[1],
+                                         resolution=npoints)
+
+
+def plot_vector_over_line(mesh_pv, problem, vector, points, degfd=0,
+                          npoints=200, plot_mesh=False):
+    """
+    Plots and samples data along a line through a mesh, optionally visualizing
+    the mesh and the line.
+
+    Parameters
+    ----------
+    mesh_pv : object
+        A PyVista mesh object containing the data to be sampled and visualized.
+
+    points : list or array_like
+        A list of two 3D points, each of shape (3,), defining the start and end
+        points of the line over which to sample.
+
+    npoints : int, optional
+        The number of points to sample along the line. Default is 200.
+
+    plot_mesh : bool, optional
+        If True, the function plots the mesh along with the line for
+        visualization. The default is False.
+
+    Returns
+    -------
+    sampled_data : object
+        A PyVista dataset containing the sampled data along the line.
+
+    """
+
+    assert isinstance(degfd, int)
+
+    if plot_mesh:
+        line = pv.Line(points[0], points[1])
+        p = pv.Plotter(window_size=(800, 400))
+        p.add_mesh(mesh_pv, color="w")
+        p.add_mesh(line, color="b")
+        p.camera_position = 'xy'
+        p.show()
+
+    mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
 
     mesh_pv_plot.plot_over_line(points[0], points[1], resolution=npoints)
 
