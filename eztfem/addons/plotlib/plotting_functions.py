@@ -202,6 +202,50 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
     plotter.show()
 
 
+def plot_sol_contour(mesh_pv, problem, u, nlevels=10, **kwargs):
+    """
+    Plots the solution of a given problem on a mesh using PyVista.
+
+    Parameters
+    ----------
+    mesh_pv : pyvista.PolyData
+        The mesh on which to plot the solution.
+    problem : Problem
+        The problem object.
+    u : numpy.ndarray
+        The solution vector.
+    nlevels : int
+        Number of contour levels to plot (default = 10)
+
+    Keyword arguments
+    -----------------
+    kwargs : dict, optional
+        Additional keyword arguments to pass to the plotter.add_mesh function.
+
+    """
+
+    # Optional arguments
+    physq = kwargs.get('physq', 0)
+    degfd = kwargs.get('degfd', 0)
+    window_size = kwargs.get('window_size', (800, 400))
+
+    kwargs.pop('physq', None)
+    kwargs.pop('degfd', None)
+    kwargs.pop('window_size', None)
+
+    mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
+
+    contours = mesh_pv_plot.contour(nlevels, scalars='u')
+
+    plotter = pv.Plotter(window_size=window_size)
+    plotter.add_mesh(mesh_pv_plot, color="lightgrey", **kwargs)
+    plotter.add_mesh(contours)  # color="black", line_width=1)
+    plotter.camera_position = 'xy'
+    plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
+                     font_size=12)
+    plotter.show()
+
+
 def plot_vector(mesh_pv, problem, vector, degfd=0, **kwargs):
     """
     Plots the solution of a given problem on a mesh using PyVista.
@@ -235,6 +279,52 @@ def plot_vector(mesh_pv, problem, vector, degfd=0, **kwargs):
 
     plotter = pv.Plotter(window_size=window_size)
     plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
+    plotter.camera_position = 'xy'
+    plotter.add_text((f'sol vec = {vector.vec:d}  degfd = {degfd:d}'),
+                     font_size=12)
+    plotter.show()
+
+
+def plot_vector_contours(mesh_pv, problem, vector, degfd=0, nlevels=10,
+                         **kwargs):
+    """
+    Plots the contours of a solution of a given problem on a mesh using
+    PyVista.
+
+    Parameters
+    ----------
+    mesh_pv : pyvista.PolyData
+        The mesh on which to plot the solution.
+    problem : Problem
+        The problem object.
+    u : Vector
+        The vector object.
+    degfd : int
+        The degree of freedom to plot (default = 0)
+    nlevels : int
+        Number of contour levels to plot (default = 10)
+
+    Keyword arguments
+    -----------------
+    kwargs : dict, optional
+        Additional keyword arguments to pass to the plotter.add_mesh function.
+
+    """
+
+    # Optional arguments
+    degfd = kwargs.get('degfd', 0)
+    window_size = kwargs.get('window_size', (800, 400))
+
+    kwargs.pop('degfd', None)
+    kwargs.pop('window_size', None)
+
+    mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
+
+    contours = mesh_pv_plot.contour(nlevels, scalars='u')
+
+    plotter = pv.Plotter(window_size=window_size)
+    plotter.add_mesh(mesh_pv_plot, color="lightgrey", **kwargs)
+    plotter.add_mesh(contours)  # color="black", line_width=1)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol vec = {vector.vec:d}  degfd = {degfd:d}'),
                      font_size=12)
