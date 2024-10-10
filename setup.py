@@ -6,7 +6,11 @@ setup(
     name="eztfem",
     version="1.0",
     packages=find_packages(),
-    install_requires=[],
+    install_requires=[
+        'numpy',
+        'scipy',
+        'pyvista'
+    ],
     author="Nick Jaensson",
     author_email="n.o.jaensson@tue.nl",
     python_requires='>=3.6',
