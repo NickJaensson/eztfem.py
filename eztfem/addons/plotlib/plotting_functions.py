@@ -1,5 +1,5 @@
 import numpy as np
-from ...core.pos_array import pos_array
+from ...core.pos_array import pos_array, pos_array_vec
 import pyvista as pv
 import matplotlib.pyplot as plt
 import copy
@@ -82,6 +82,48 @@ def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
     return mesh_pv_plot
 
 
+def fill_mesh_pv_vector(mesh_pv, problem, vector, degfd):
+    """
+    Fills the point data of a mesh object with the values from a given solution
+    array based on the specified degrees of freedom.
+
+    Parameters
+    ----------
+    mesh_pv : pyvista.PolyData
+        A PyVista mesh
+
+    problem : Problem
+        Eztfem problem object
+
+    vector : Vector
+        The derived type vector to fill.
+
+    degfd : int
+        Degree of freedom indices to be added to mesh_pv
+
+    Notes
+    -----
+    A deep copy of the object is made to avoid modifying the mesh_pv argument.
+
+    """
+
+    mesh_pv_plot = copy.deepcopy(mesh_pv)
+
+    assert isinstance(degfd, (int, np.integer))
+
+    nnodes = mesh_pv_plot.number_of_points
+
+    u_plot = np.zeros(nnodes)
+
+    for node in range(nnodes):
+        posn, _ = pos_array_vec(problem, node, vec=vector.vec, order='DN')
+        u_plot[node] = vector.u[posn[0][degfd]]
+
+    mesh_pv_plot.point_data['u'] = u_plot
+
+    return mesh_pv_plot
+
+
 def plot_mesh_pv(mesh_pv, **kwargs):
     """
     Plot a mesh.
@@ -156,6 +198,45 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
     plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
+                     font_size=12)
+    plotter.show()
+
+
+def plot_vector(mesh_pv, problem, vector, degfd=0, **kwargs):
+    """
+    Plots the solution of a given problem on a mesh using PyVista.
+
+    Parameters
+    ----------
+    mesh_pv : pyvista.PolyData
+        The mesh on which to plot the solution.
+    problem : Problem
+        The problem object.
+    u : Vector
+        The vector object.
+    degfd : int
+        The degree of freedom to plot (default = 0)
+
+    Keyword arguments
+    -----------------
+    kwargs : dict, optional
+        Additional keyword arguments to pass to the plotter.add_mesh function.
+
+    """
+
+    # Optional arguments
+    degfd = kwargs.get('degfd', 0)
+    window_size = kwargs.get('window_size', (800, 400))
+
+    kwargs.pop('degfd', None)
+    kwargs.pop('window_size', None)
+
+    mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
+
+    plotter = pv.Plotter(window_size=window_size)
+    plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
+    plotter.camera_position = 'xy'
+    plotter.add_text((f'sol vec = {vector.vec:d}  degfd = {degfd:d}'),
                      font_size=12)
     plotter.show()
 
