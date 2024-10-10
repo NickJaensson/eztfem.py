@@ -1,10 +1,25 @@
 # eztfem.py
+## Installation
+Install the eztfem package by running the following command in the eztfem.py
+root directory:
+```
+  pip install -e .
+```
+Note: this will install the pacakge in `editable` mode, which means that the
+package links directly to the code (instead of copying it to the Python 
+environment), thus changes to the package will be reflected immediately.
+
 ## Running tests
-executing "python -m unittest" runs all the tests in the "test/" folder that
+executing 
+```
+  python -m unittest
+```
+runs all the tests in the "test/" folder that
 have a filename matching "test*.py" (empty __init__.py in the test directory
 is needed for this)
 
 
+<!-- 
 ## Building documentation
 From the sphinx folder, run the following command 
 ```
@@ -51,4 +66,4 @@ function [a,b] = func()
 
 aa = func % aa will only contain the value of a
 [aa,~] = func % same as the line above (but clearer)
-
+ -->
