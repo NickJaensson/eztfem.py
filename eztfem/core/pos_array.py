@@ -53,6 +53,10 @@ def pos_array(problem, nodes, **kwargs):
     if isinstance(nodes, (int, np.integer)):
         nodes = np.array([nodes])
 
+    # Convert nodes to a numpy array if a list is supplied
+    if isinstance(nodes, list):
+        nodes = np.array(nodes)
+
     pos = [None] * len(physq)
     ndof = np.zeros(len(physq), dtype=int)
     lpos = np.zeros(problem.maxnoddegfd * nodes.shape[0], dtype=int)
