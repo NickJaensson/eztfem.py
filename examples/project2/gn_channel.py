@@ -138,7 +138,7 @@ def main():
 
     print('pressure in nodes')
     xr = ezt.refcoor_nodal_points(mesh)
-    user.psi, _ = ezt.basis_function('quad', 'P1', xr)
+    user.psi, _ = ezt.basis_function('triangle', 'P1', xr)
     user.u = u
     pressure = ezt.deriv_vector(mesh, problem, ezt.stokes_pressure, user)
 
