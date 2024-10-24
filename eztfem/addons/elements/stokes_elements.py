@@ -2,6 +2,7 @@ import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
 
+
 def stokes_elem(elem, coor, user, pos):
     """
     Element routine for the Poisson equation:
