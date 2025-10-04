@@ -1,6 +1,0 @@
-plot_basis_function.m
-plot_gauss_legendre.m
-plot_points_curves.m
-
-add type hints
-add error messages
