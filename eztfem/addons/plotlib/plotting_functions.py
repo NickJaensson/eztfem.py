@@ -511,6 +511,18 @@ def plot_curves(mesh, **kwargs):
     plt.show()
 
 
+def plot_points_curves(mesh):
+    """Plot all points and curves .
+
+    Parameters
+    ----------
+    mesh : Mesh
+        Mesh object containing the curves and points to be plotted.
+    """
+
+    plot_curves(mesh, pointnumbers=1, curvenumbers=1)
+
+
 def plot_sol_over_line(mesh_pv, problem, u, points, physq=0, degfd=0, npoints=200,
                        plot_mesh=False):
     """
