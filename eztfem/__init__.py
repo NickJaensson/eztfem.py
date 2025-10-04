@@ -23,5 +23,6 @@ from .addons.elements.streamfunction_elements import streamfunction_elem, \
 
 from .addons.plotlib.plotting_functions import plot_mesh_pv, plot_sol, \
     plot_mesh, plot_curves, plot_sol_over_line, plot_quiver, plot_vector, \
-    plot_vector_contours, plot_sol_contour, plot_vector_over_line
+    plot_vector_contours, plot_sol_contour, plot_vector_over_line, \
+    plot_basis_function
 from .addons.meshes.pyvista_meshgen import generate_pyvista_mesh

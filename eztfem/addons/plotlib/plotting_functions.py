@@ -1,6 +1,8 @@
 import numpy as np
 from ...core.pos_array import pos_array, pos_array_vec
 import pyvista as pv
+from ...core.shapefunc import basis_function
+from pyvista import CellType
 import matplotlib.pyplot as plt
 import copy
 
@@ -650,3 +652,187 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
                      font_size=12)
     plotter.show()
+
+def plot_basis_function(shape, intpol, degfd, *, n=10, plot3d=True,
+                        edges=True, axisoff=False, show=True, **kwargs):
+    """Plot a reference-element basis function using PyVista.
+
+    Parameters
+    ----------
+    shape : {'quad', 'triangle'}
+        Shape of the reference element.
+    intpol : {'P0', 'P1', 'P1+', 'P2', 'P2+', 'Q1', 'Q1+', 'Q2'}
+        Interpolation family used to compute the basis functions.
+    degfd : int
+        Degree of freedom index of the basis function to plot. Both zero-based
+        and one-based indexing are supported for convenience.
+
+    Keyword Arguments
+    -----------------
+    n : int, optional
+        Number of subdivisions in each coordinate direction. Default ``10``.
+    plot3d : bool, optional
+        Plot the basis function as a 3D surface (default) or as a coloured 2D
+        patch when set to ``False``.
+    edges : bool, optional
+        If ``True`` (default) display the sub-element edges.
+    axisoff : bool, optional
+        Hide axes and scalar bar when ``True``. Default ``False``.
+    show : bool, optional
+        If ``True`` (default) immediately render the scene. Set to ``False`` to
+        obtain the :class:`pyvista.Plotter` and mesh for further customization.
+    window_size : tuple, optional
+        Size of the PyVista rendering window. Defaults to ``(800, 400)``.
+    kwargs : dict, optional
+        Additional keyword arguments forwarded to
+        :meth:`pyvista.Plotter.add_mesh`.
+
+    Returns
+    -------
+    plotter : pyvista.Plotter
+        Plotter containing the rendered basis function.
+    mesh : pyvista.UnstructuredGrid
+        Generated mesh with point data ``'phi'`` holding the basis values.
+
+    """
+
+    if not isinstance(n, (int, np.integer)) or n <= 0:
+        raise ValueError("n must be a positive integer")
+
+    if shape not in {"quad", "triangle"}:
+        raise ValueError(f"Invalid shape: {shape}")
+
+    if not isinstance(degfd, (int, np.integer)):
+        raise TypeError("degfd must be an integer")
+
+    if shape == "quad":
+        points2d, cells, celltypes = _reference_quad_mesh(n)
+    else:
+        points2d, cells, celltypes = _reference_triangle_mesh(n)
+
+    phi, _ = basis_function(shape, intpol, points2d)
+
+    if degfd < 0:
+        raise ValueError("degfd must be non-negative")
+
+    if degfd >= phi.shape[1]:
+        if degfd == phi.shape[1]:
+            degfd_idx = degfd - 1
+        else:
+            raise ValueError(
+                f"degfd={degfd} outside valid range [0, {phi.shape[1] - 1}]"
+            )
+    else:
+        degfd_idx = int(degfd)
+
+    phi_values = phi[:, degfd_idx]
+
+    if plot3d:
+        z = phi_values
+    else:
+        z = np.zeros_like(phi_values)
+
+    points = np.column_stack((points2d, z))
+    mesh = pv.UnstructuredGrid(cells, celltypes, points)
+    mesh.point_data['phi'] = phi_values
+
+    window_size = kwargs.pop('window_size', (800, 400))
+    plotter = pv.Plotter(window_size=window_size)
+
+    mesh_kwargs = dict(scalars='phi', show_edges=edges)
+    mesh_kwargs.update(kwargs)
+
+    plotter.add_mesh(mesh, **mesh_kwargs)
+
+    if not plot3d:
+        plotter.view_xy()
+
+    title = f"phi      node = {degfd_idx + 1}   intpol = {intpol}"
+    plotter.add_title(title)
+
+    if axisoff:
+        plotter.remove_scalar_bar()
+    else:
+        plotter.show_bounds()
+
+    if show:
+        plotter.show()
+
+    return plotter, mesh
+
+
+def _reference_quad_mesh(n):
+    """Create reference coordinates and topology for a subdivided quad."""
+
+    nn1 = n + 1
+    delta = 2.0 / n
+
+    points = np.zeros((nn1 * nn1, 2))
+
+    for j in range(nn1):
+        for i in range(nn1):
+            node = j * nn1 + i
+            points[node, 0] = -1.0 + i * delta
+            points[node, 1] = -1.0 + j * delta
+
+    cells = []
+
+    for j in range(n):
+        row = j * nn1
+        next_row = (j + 1) * nn1
+        for i in range(n):
+            n0 = row + i
+            n1 = row + i + 1
+            n2 = next_row + i + 1
+            n3 = next_row + i
+            cells.extend([4, n0, n1, n2, n3])
+
+    cell_array = np.array(cells, dtype=np.int64)
+    celltypes = np.full(n * n, CellType.QUAD, dtype=np.uint8)
+
+    return points, cell_array, celltypes
+
+
+def _reference_triangle_mesh(n):
+    """Create reference coordinates and topology for a subdivided triangle."""
+
+    delta = 1.0 / n
+    nn1 = n + 1
+
+    nnodes = nn1 * (nn1 + 1) // 2
+    points = np.zeros((nnodes, 2))
+
+    node = 0
+    for j in range(nn1):
+        for i in range(nn1 - j):
+            points[node, 0] = i * delta
+            points[node, 1] = j * delta
+            node += 1
+
+    cells = []
+    celltypes = []
+
+    np_idx = 0
+    for j in range(n):
+        first_count = n - j
+        for i in range(first_count):
+            n0 = np_idx + i
+            n1 = np_idx + i + 1
+            n2 = np_idx + i + n - j + 1
+            cells.extend([3, n0, n1, n2])
+            celltypes.append(CellType.TRIANGLE)
+
+        second_count = n - j - 1
+        for i in range(second_count):
+            n0 = np_idx + i + 1
+            n1 = np_idx + i + n - j + 2
+            n2 = np_idx + i + n - j + 1
+            cells.extend([3, n0, n1, n2])
+            celltypes.append(CellType.TRIANGLE)
+
+        np_idx += n - j + 1
+
+    cell_array = np.array(cells, dtype=np.int64)
+    celltypes = np.array(celltypes, dtype=np.uint8)
+
+    return points, cell_array, celltypes
