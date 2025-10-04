@@ -3,6 +3,7 @@ from ...core.pos_array import pos_array, pos_array_vec
 import pyvista as pv
 from ...core.shapefunc import basis_function
 from pyvista import CellType
+from ...core.gauss import gauss_legendre
 import matplotlib.pyplot as plt
 import copy
 
@@ -848,3 +849,93 @@ def _reference_triangle_mesh(n):
     celltypes = np.array(celltypes, dtype=np.uint8)
 
     return points, cell_array, celltypes
+
+
+def plot_gauss_legendre(shape, **kwargs):
+    """Plot Gauss-Legendre integration points.
+
+    Parameters
+    ----------
+    shape : {'quad', 'triangle'}
+        Shape of the domain. ``'quad'`` corresponds to the square
+        :math:`[-1, 1] \times [-1, 1]` and ``'triangle'`` corresponds to the
+        reference triangle defined by the lower-left half of
+        :math:`[0, 1] \times [0, 1]`.
+
+    Keyword Arguments
+    -----------------
+    n : int, optional
+        Number of integration points per direction. Required when
+        ``shape`` is ``'quad'``.
+    p : int, optional
+        Order of the integration rule. Required when ``shape`` is
+        ``'triangle'``.
+    ax : matplotlib.axes.Axes, optional
+        Existing axes to plot on. When omitted, a new figure and axes are
+        created.
+    marker : str, optional
+        Marker used to display the integration points (default: ``'+'``).
+    color : str, optional
+        Marker color (default: ``'k'``).
+    markersize : float, optional
+        Size of the marker (default: ``8``).
+    show : bool, optional
+        Display the plot immediately (default: ``True``).
+    **kwargs
+        Additional keyword arguments forwarded to :func:`matplotlib.axes.Axes.plot`.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        Axes containing the plot of the integration points.
+    """
+
+    n = kwargs.pop('n', None)
+    p = kwargs.pop('p', None)
+    ax = kwargs.pop('ax', None)
+    marker = kwargs.pop('marker', '+')
+    color = kwargs.pop('color', 'k')
+    markersize = kwargs.pop('markersize', 8)
+    show = kwargs.pop('show', True)
+
+    if not isinstance(shape, str):
+        raise ValueError('shape must be a string')
+
+    shape = shape.lower()
+
+    if shape == 'quad':
+        if n is None:
+            raise ValueError('n must be specified for the integration rule')
+        points, _ = gauss_legendre('quad', n=n)
+        x_limits = (-1, 1)
+        y_limits = (-1, 1)
+    elif shape == 'triangle':
+        if p is None:
+            raise ValueError('p must be specified for the integration rule')
+        points, _ = gauss_legendre('triangle', p=p)
+        x_limits = (0, 1)
+        y_limits = (0, 1)
+    else:
+        raise ValueError(f'Invalid shape: {shape}')
+
+    if ax is None:
+        _, ax = plt.subplots()
+
+    plot_kwargs = kwargs
+    plot_kwargs.setdefault('linestyle', 'None')
+
+    ax.plot(points[:, 0], points[:, 1], marker=marker, color=color,
+            markersize=markersize, **plot_kwargs)
+
+    ax.set_xlim(*x_limits)
+    ax.set_ylim(*y_limits)
+
+    if shape == 'triangle':
+        ax.plot([1, 0], [0, 1], color='k')
+
+    ax.set_aspect('equal', adjustable='box')
+
+    if show:
+        plt.show()
+
+    return ax
