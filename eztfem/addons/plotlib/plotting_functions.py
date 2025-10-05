@@ -884,7 +884,7 @@ def plot_gauss_legendre(shape, **kwargs):
         Size of the marker (default: ``8``).
     show : bool, optional
         Display the plot immediately (default: ``True``).
-    **kwargs
+    kwargs
         Additional keyword arguments forwarded to :func:`matplotlib.axes.Axes.plot`.
 
     Returns
