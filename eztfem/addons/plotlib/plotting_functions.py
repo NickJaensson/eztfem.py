@@ -386,13 +386,13 @@ def plot_mesh(mesh, **kwargs):
     # Plot node numbers
     if nodenumbers:
         for node in range(mesh.nnodes):
-            plt.text(mesh.coor[node, 0], mesh.coor[node, 1], str(node + 1),
+            plt.text(mesh.coor[node, 0], mesh.coor[node, 1], str(node),
                      fontsize=8, color='b')
 
     # Plot element numbers
     if elementnumbers:
         for elem in range(mesh.nelem):
-            plt.text(np.mean(x[:, elem]), np.mean(y[:, elem]), str(elem + 1),
+            plt.text(np.mean(x[:, elem]), np.mean(y[:, elem]), str(elem),
                      fontsize=8, color='r', ha='center', va='center')
 
     plt.show()
