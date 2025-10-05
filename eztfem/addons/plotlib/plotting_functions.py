@@ -631,6 +631,8 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
         The problem object.
     u : numpy.ndarray
         The solution vector.
+    scale : float optional
+        Scaling factor for the arrows (default = 0.1)
 
     Keyword arguments
     -----------------
@@ -642,6 +644,7 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
     # Optional arguments
     physq = kwargs.get('physq', 0)
     window_size = kwargs.get('window_size', (800, 400))
+    scale = kwargs.get('scale', 0.1)
 
     kwargs.pop('physq', None)
     kwargs.pop('degfd', None)
@@ -654,7 +657,7 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
 
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd=[0, 1])
 
-    glyphs = mesh_pv_plot.glyph(orient="u", scale=True, factor=0.1)
+    glyphs = mesh_pv_plot.glyph(orient="u", scale=True, factor=scale)
 
     plotter = pv.Plotter(window_size=window_size)
     # plotter.add_mesh(glyphs, show_scalar_bar=False, lighting=False,
