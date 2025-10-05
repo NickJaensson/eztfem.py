@@ -113,7 +113,8 @@ def gn_elem(elem, coor, user, pos):
     # get velocity vector from previous iteration
 
     u = user.u[pos[0]]  # velocity
-    uvector = np.reshape(u, (ndf, ndim))
+
+    uvector = np.reshape(u, (ndf, ndim), order='F')
 
     # compute velocity gradient tensor
 
