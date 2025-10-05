@@ -39,7 +39,7 @@ line by line after the listing.
 
 .. literalinclude:: ../../examples/poisson/poisson1.py
    :language: python
-   :linenos:``
+   :linenos:
 
 Lines 12–18
     The mesh is created using a 20×20 grid of nine-node quadrilaterals. The
