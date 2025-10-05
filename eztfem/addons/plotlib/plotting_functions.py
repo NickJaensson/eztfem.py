@@ -499,7 +499,7 @@ def plot_curves(mesh, **kwargs):
             x1 = np.min(mesh.coor[mesh.curves[curve].nodes, :], axis=0)
             x2 = np.max(mesh.coor[mesh.curves[curve].nodes, :], axis=0)
             plt.text((x1[0] + x2[0]) / 2, (x1[1] + x2[1]) / 2,
-                     'C' + str(curve + 1), fontsize=8, color='r',
+                     'C' + str(curve), fontsize=8, color='r',
                      ha='center', va='center')
 
     # Plot point numbers
@@ -507,7 +507,7 @@ def plot_curves(mesh, **kwargs):
         for point in range(mesh.npoints):
             node = mesh.points[point]
             plt.text(mesh.coor[node, 0], mesh.coor[node, 1],
-                     'P' + str(point + 1), fontsize=8, color='b')
+                     'P' + str(point), fontsize=8, color='b')
 
     plt.show()
 
