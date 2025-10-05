@@ -17,10 +17,9 @@ easily accessible for students.
    :maxdepth: 1
    :caption: Contents:
 
-   1_eztfem_install
-   2_introduction
-   3_examples
-   4_plotting
-   5_data_structures
-   6_references
+   1_introduction
+   2_examples
+   3_plotting
+   4_data_structures
+   5_references
    modules

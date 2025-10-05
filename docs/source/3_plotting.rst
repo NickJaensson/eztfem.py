@@ -1,4 +1,4 @@
-Chapter 3. Plotting
+3. Plotting
 -------------------
 
 As seen in the examples above, eztfem.py ships a set of basic plotting

@@ -1,4 +1,4 @@
-Chapter 2. Examples
+2. Examples
 -------------------
 
 This chapter explains several example problems in more detail. A typical

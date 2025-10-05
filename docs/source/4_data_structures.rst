@@ -1,4 +1,4 @@
-Chapter 4. Data structures
+4. Data structures
 --------------------------
 
 4.1 ``mesh``
