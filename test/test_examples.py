@@ -13,8 +13,8 @@ sys.path.append('examples/poisson')
 sys.path.append('examples/stokes')
 sys.path.append('examples/project2')
 
-import poisson1, poisson2, poisson3, poisson4
-import stokes1, stokes2, streamfunction1, gn_channel
+import poisson1, poisson2, poisson3, poisson4  # type: ignore
+import stokes1, stokes2, streamfunction1, gn_channel  # type: ignore
 
 eps = 1e-15  # maximal difference for comparing floats
 
