@@ -16,5 +16,5 @@ setup(
     ],
     author="Nick Jaensson",
     author_email="n.o.jaensson@tue.nl",
-    python_requires='>=3.6',
+    python_requires='>=3.11',
 )
