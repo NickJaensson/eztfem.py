@@ -2,7 +2,7 @@
 -----------------------
 
 1.1 What is ``eztfem.py``?
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``eztfem.py`` is a simple toolkit for the finite element method (FEM) intended 
 for use in teaching finite elements for fluid flow. It can be seen as a
@@ -42,15 +42,15 @@ of calling ``eztfem.py`` functions.
 
 Note that in the second option, all functions need to be imported explicitly.
 
-1.3 Folder layout of eztfem.py
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1.3 Folder layout of ``eztfem.py``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 At the top level of the repository you will find, among others, the following
 folders:
 
 ``eztfem``
     The package folder containing the core implementation. Within this folder
-    the ``core`` subpackage contains the core functionality of eztfem.py,
+    the ``core`` subpackage contains the core functionality of ``eztfem.py``,
     whereas the ``addons`` subpackage contains add-ons, each in its own module.
     The following add-ons are available: ``plotlib`` (plotting helpers),
     ``poisson`` and ``stokes`` (problem-specific element routines), and
@@ -73,7 +73,7 @@ Jupyter Notebooks (``.ipynb``). For post-processing (e.g., plotting), we
 recommend using the Jupyter Notebooks, since data will remain available 
 after running functions.
 
-Using VS Code, Jupyter Notebooks can be run directly after installing the 
+If you use VS Code, Jupyter Notebooks can be run directly after installing the 
 relevant extensions. Python scripts can be run by clicking the Play button 
 above the script. This will open a terminal and run the script with the Python 
 version as defined by your VS Code setup. 

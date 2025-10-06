@@ -43,7 +43,7 @@ line by line after the listing.
    :language: python
    :linenos:
 
-Lines 12–18
+Lines 15
     The mesh is created using a 20×20 grid of nine-node quadrilaterals. The
     variable ``mesh`` is a structure with several components, including the
     coordinates of the nodes, the topology, the points and the curves. For more
@@ -51,7 +51,17 @@ Lines 12–18
     ``quadrilateral2d``. The function ``quadrilateral2d`` has several options
     to create a mesh on a quadrilateral.
 
-Lines 21–27
+.. figure:: figs/unitsquare.pdf
+   :alt: alt text
+   :align: center
+   :width: 60%
+
+   **Figure 2.2:** Points and curves defined by the mesh generator function
+   ``quadrilateral2d``. Points and curves are basically only placeholders for
+   certain nodes and element edges respectively. Note the default directions of
+   the curves.
+
+Lines 20–22
     The problem is defined. The variable ``problem`` is a structure with
     several components. The argument ``elementdof`` is a matrix where each
     column defines degrees of freedom in the nodes of an element. Note that the
@@ -59,7 +69,7 @@ Lines 21–27
     so that the first column defines the system vector of unknowns. The second
     column of ``elementdof`` is only used for post-processing (see below).
 
-Lines 30–38
+Lines 26–33
     A ``User`` instance is filled with Gauss-Legendre integration points
     (``user.xr``) and weights (``user.wg``), together with the basis functions
     :math:`\phi_k`, :math:`k=1,\ldots,9` and the derivatives
@@ -68,48 +78,68 @@ Lines 30–38
     interpolation. The weights, basis functions and derivatives are stored in
     the ``user`` structure for later use on element level.
 
-Lines 41–48
+Lines 37–40
     The ``user`` structure is filled with additional data needed at element
     level: ``coorsys`` (coordinate system: 0 = Cartesian, 1 = axisymmetric),
     ``alpha`` (diffusion coefficient :math:`\alpha`, which is 1 for the Poisson
     equation), ``funcnr`` (function selector for the right-hand side), and
     ``func`` (callable providing the forcing terms).
 
-Lines 51–55
+Lines 45
     The system matrix :math:`\boldsymbol{A}` and vector :math:`\boldsymbol{f}`
     are assembled using ``eztfem.build_system`` with the Poisson element
     routine.
 
-Lines 58–68
+Lines 50-55
     Dirichlet boundary conditions are defined on all boundary curves and the
     prescribed values are filled into ``uess`` using ``fill_system_vector``.
     ``apply_essential`` modifies :math:`\boldsymbol{A}` and :math:`\boldsymbol{f}`
     to impose the essential boundary conditions.
 
-Lines 71–78
+Lines 61
     The linear system is solved with SciPy’s ``spsolve``. The maximum
     difference between the numerical and analytical solution in the nodes is
     printed.
 
-Lines 81–90
+Lines 80-84
     The gradient :math:`(\partial u/\partial x, \partial u/\partial y)` is
     computed. The basis functions are recomputed in the nodal points and the
     solution ``u`` is supplied to the element routine via the ``user``
     structure. The gradient is returned in ``gradu``.
 
-To visualise the results you can use the plotting helpers, for example::
+To visualise the results you can use the plotting helpers, for example:
 
-   >>> ezt.plot_mesh(mesh)
-   >>> ezt.plot_sol(mesh, problem, u)
-   >>> ezt.plot_sol_over_line(mesh, problem, u, [[0.0, 0.0], [1.0, 1.0]])
-   >>> ezt.plot_vector(mesh, problem, gradu, degfd=0)
+- Plot the mesh:
+
+.. code-block:: python
+
+    ezt.plot_mesh(mesh)
+
+- Plot the solution :math:`u`:
+
+.. code-block:: python
+
+    ezt.plot_sol(mesh, problem, u)
+
+- Plot the solution :math:`u` over a line (e.g., from point [0,0] to point 
+  [1,1]):
+
+.. code-block:: python
+
+    ezt.plot_sol_over_line(mesh, problem, u, [[0.0, 0.0], [1.0, 1.0]])
+
+- Plot the first component of the gradient (:math:`\partial u / \partial x`):
+
+.. code-block:: python
+
+    ezt.plot_vector(mesh, problem, gradu, degfd=0)
+
 
 2.2 A Poisson problem on a rectangle with Dirichlet and Neumann boundary conditions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This problem is similar to ``poisson1.py`` but on the rectangular domain
-:math:`(x,y) \in (0,1.2) \times (0,1)` and with a natural boundary condition on
-one side. The exact solution is
+This problem is similar to ``poisson1.py`` but with a natural boundary 
+condition on one side. The exact solution is
 
 .. math::
 
@@ -121,8 +151,7 @@ which yields the forcing term
 
    f = 2\pi^2 \cos(\pi x)\cos(\pi y) - 6(xy^3 + x^3y)
 
-The natural boundary condition on curve ``C2`` (curve index 1 in the Python
-implementation) requires
+The natural boundary condition on curve ``C1`` (see Figure 2.2) requires
 
 .. math::
 
@@ -134,8 +163,6 @@ which must be evaluated along that curve.
 The corresponding script is ``poisson4.py``. Compared with ``poisson1.py`` the
 main differences are:
 
-* The domain dimensions are changed via ``length=np.array([1.2, 1.0])`` when
-  generating the mesh.
 * Essential boundary conditions are imposed on curves 0, 2 and 3 only (curve
   indices are zero-based in eztfem.py).
 * ``user.funcnr`` values 7 and 8 are used for the manufactured forcing term and
@@ -164,11 +191,20 @@ We consider the steady Stokes equations
 
 .. math::
 
-   -\nabla \cdot (2\boldsymbol{D}) + \nabla p = \boldsymbol{f}, \qquad
+   -\nabla \cdot (2\mu\boldsymbol{D}) + \nabla p = \boldsymbol{f}, \qquad
    \nabla \cdot \boldsymbol{u} = 0,
 
 where :math:`\boldsymbol{D} = (\nabla \boldsymbol{u} + \nabla \boldsymbol{u}^T)/2`,
-for a driven cavity problem on the unit square. On the upper boundary a
+for a driven cavity problem on the unit square. 
+
+.. figure:: figs/lid_driven.pdf
+   :alt: alt text
+   :align: center
+   :width: 60%
+
+   **Figure 2.3:** Driven cavity problem.
+
+On the upper boundary curve ``C2`` (see Figure 2.2) requires a
 horizontal velocity of 1 is imposed and on all other walls the velocity
 components are zero. In the lower-left corner the pressure value is set to zero
 (Dirichlet).
@@ -197,70 +233,127 @@ changes with respect to the Poisson example include:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This problem is similar to the driven-cavity setup but introduces traction
-boundary conditions (see ``stokes2.py``). The main differences compared with
+boundary conditions (see ``stokes2.py``) to generate a Poiseuille flow.
+
+.. figure:: figs/poiseuille.pdf
+   :alt: alt text
+   :align: center
+   :width: 60%
+
+   **Figure 2.4:** Poiseuille flow problem.
+
+The main differences compared with
 ``stokes1.py`` are:
 
-* A traction boundary condition is added on curve 3 (the fourth curve in
-  zero-based indexing) using
+* A traction boundary condition is added on curve``C3`` using
   ``ezt.add_boundary_elements`` with the Stokes boundary element routine and
   ``physqrow=[0]``.
 * ``user.func`` is switched to ``traction_func`` (with ``funcnr = 1``) to
   supply the traction data.
 * Dirichlet conditions for the velocity components are imposed using separate
   calls to ``define_essential``: :math:`u` on curves 0 and 2, and
-  :math:`v` on curves 0–3.
+  :math:`v` on curves ``C0`` to ``C3``.
 * The flow rate through curve 1 (the second curve) is computed with
   ``ezt.integrate_boundary_elements`` and the element routine
   ``stokes_flowrate_curve``. The basis functions on the curve are the same as
   those used when adding the traction contribution.
 
-2.5 Computing the streamfunction from a known velocity field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2.5 Computing the streamfunction field from a known velocity field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We compute the streamfunction :math:`\psi` from the velocity field
-:math:`\boldsymbol{u} = u\boldsymbol{e}_1 + v\boldsymbol{e}_2`. The definition
-of :math:`\psi` reads
+For plotting streamlines in 2D flows we compute the streamfunction
+:math:`\psi` from the velocity vector 
+:math:`\boldsymbol{u} = u\boldsymbol{e}_1 + v\boldsymbol{e}_2`.
+The definition of :math:`\psi` is
 
 .. math::
 
    \frac{\partial \psi}{\partial x} = -v, \qquad
    \frac{\partial \psi}{\partial y} = u,
 
-which shows that :math:`\psi(x_2) - \psi(x_1)` equals the flow rate through a
-curve connecting the two points:
+which shows that
 
 .. math::
 
-   \psi(x_2) - \psi(x_1) = \int_{x_1}^{x_2} \boldsymbol{u}\cdot\boldsymbol{n}\,ds.
+   \psi(x_2) - \psi(x_1)
+   = \int_{\Gamma_{12}} \boldsymbol{n} \cdot \boldsymbol{u} \, ds
+   \qquad
 
-Instead of integrating directly we solve the
-Poisson equation
-
-.. math::
-
-   -\nabla^2 \psi = \omega,
-
-with the vorticity :math:`\omega = \partial v/\partial x - \partial u/\partial y`
-subject to the Neumann boundary condition
+or in words: the streamfunction difference is the flow rate through a curve
+connecting two points. The equation above can be used to compute :math:`\psi` 
+in all nodal points, but the procedure is cumbersome and not straightforward.
+Therefore, we prefer a procedure that solves the Poisson equation
 
 .. math::
 
-   \frac{\partial \psi}{\partial n} = \boldsymbol{n} \cdot \nabla \psi
-   = \boldsymbol{n} \cdot (v\boldsymbol{e}_1 + u\boldsymbol{e}_2) = u_t,
+   -\nabla^2 \psi = \omega \qquad
 
-where :math:`u_t` is the tangential velocity. In axisymmetric coordinates the
-streamfunction relations adjust accordingly:
-
-.. math::
-
-   \frac{\partial \psi}{\partial z} = -2 r v, \qquad
-   \frac{\partial \psi}{\partial r} = 2 r u,
-
-which likewise lead to
+with the vorticity 
+:math:`\omega = \partial v/\partial x - \partial u/\partial y`.
+We use a Neumann boundary condition:
 
 .. math::
 
-   \psi(x_2) - \psi(x_1) = \int_{x_1}^{x_2} 2 r u_t\,ds.
+   \frac{\partial \psi}{\partial n}
+   = \boldsymbol{n} \cdot \nabla \psi
+   = \boldsymbol{n} \cdot (-v\boldsymbol{e}_1 + u\boldsymbol{e}_2)
+   = -v n_1 + u n_2 = -\boldsymbol{u} \cdot \boldsymbol{t} \qquad
+
+where :math:`\boldsymbol{t}` is the tangential vector 
+(with :math:`\boldsymbol{n}` to the ‘right’).
+
+For plotting streamlines in an axisymmetrical flow we have
+
+.. math::
+
+   \frac{\partial \psi}{\partial z} = -2\pi r v, \qquad
+   \frac{\partial \psi}{\partial r} = 2\pi r u \qquad
+
+where :math:`(z, r)` are cylindrical coordinates and :math:`u` is the velocity
+component in the axial (:math:`z`) direction and :math:`v` the velocity
+component in the radial (:math:`r`) direction
+(:math:`\boldsymbol{u} = u\boldsymbol{e}_z + v\boldsymbol{e}_r`).
+We easily find that
+
+.. math::
+
+   \psi(x_2) - \psi(x_1)
+   = \int_{\Gamma_{12}} \boldsymbol{n} \cdot \boldsymbol{v} \, 2\pi r \, ds
+
+or in words: the streamfunction difference is the flow rate through a surface
+consisting of a curve connecting two points that is expanded over the full
+circumferential (:math:`\theta`) direction. We find from the equations that
+
+.. math::
+
+   -\nabla^2_{zr} \psi
+   = -\left(
+       \frac{\partial^2 \psi}{\partial z^2}
+       + \frac{\partial^2 \psi}{\partial r^2}
+     \right)
+   = 2\pi r \left(\frac{\partial v}{\partial z} 
+     - \frac{\partial u}{\partial r}\right)
+   = 2\pi (r\omega + u)
+
+with the vorticity :math:`\omega = \partial v/\partial z - \partial u/\partial r`.
+Note that :math:`\nabla^2_{zr}` is the *planar* (:math:`z, r`) Laplace operator
+and not the real :math:`\nabla^2` expressed in a cylindrical coordinate system.
+We use a Neumann boundary condition:
+
+.. math::
+
+   \frac{\partial \psi}{\partial n}
+   = \boldsymbol{n} \cdot \nabla \psi
+   = 2\pi r \boldsymbol{n} \cdot (-v\boldsymbol{e}_z + u\boldsymbol{e}_r)
+   = 2\pi r(-v n_z + u n_r)
+   = -2\pi r \boldsymbol{u} \cdot \boldsymbol{t}
+   \qquad
+
+where :math:`\boldsymbol{t}` is the tangential vector 
+(with :math:`\boldsymbol{n}` to the ‘right’).
+Note that the Neumann condition is zero on the center line (:math:`r = 0`).
+
+
 
 See ``streamfunction1.py`` for the implementation details and remember that
 ``stokes1.py`` must be executed first to provide the velocity field.
