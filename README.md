@@ -1,4 +1,5 @@
 # eztfem.py
+[![codecov](https://codecov.io/gh/nickjaensson/eztfem.py/branch/main/graph/badge.svg)](https://codecov.io/gh/nickjaensson/eztfem.py)
 Eztfem.py is a simple toolkit for 
 the finite element method (FEM) intended for use  in teaching finite elements 
 for fluid flow. It is developed and maintained by Nick Jaensson at the Eindhoven 
