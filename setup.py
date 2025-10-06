@@ -9,7 +9,10 @@ setup(
     install_requires=[
         'numpy',
         'scipy',
-        'pyvista'
+        'pyvista',
+        'trame',
+        'trame-vtk',
+        'trame-vuetify'
     ],
     author="Nick Jaensson",
     author_email="n.o.jaensson@tue.nl",
