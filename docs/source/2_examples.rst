@@ -2,14 +2,16 @@
 -------------------
 
 This chapter explains several example problems in more detail. A typical
-Python script for a problem is structured as follows:
+eztfem.py script for a problem is structured as follows:
 
-* create a mesh,
-* define the problem,
-* assemble the system matrix and vector,
-* solve the system,
-* compute derived quantities,
-* output results.
+.. figure:: figs/script.pdf
+   :alt: alt text
+   :align: center
+   :width: 60%
+
+   **Figure 2.1:** Typical structure of an eztfem.py script for solving a 
+   problem.
+
 
 2.1 A Poisson problem on a unit square with Dirichlet boundary conditions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
