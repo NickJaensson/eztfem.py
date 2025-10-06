@@ -1,4 +1,18 @@
 # eztfem.py
+Eztfem.py is a simple toolkit for 
+the finite element method (FEM) intended for use  in teaching finite elements 
+for fluid flow. It is developed and maintained by Nick Jaensson at the Eindhoven 
+University of Technology. Since eztfem.py consists of Python functions only, 
+it is easily accessible for students.
+
+Eztfem.py can be seen as a significantly reduced version of TFEM, which is 
+developed and maintained by Martien Hulsen at the Eindhoven University of 
+Technology. 
+
+## Documentation
+The documentation of Eztfem.py can be accessed here: 
+[https://nickjaensson.github.io/eztfem.py](https://nickjaensson.github.io/eztfem.py)
+
 ## Installation
 Install the eztfem package by running the following command in the eztfem.py
 root directory:

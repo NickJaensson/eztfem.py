@@ -4,7 +4,7 @@
 1.1 What is eztfem.py?
 ~~~~~~~~~~~~~~~~~~~~~~
 
-eztfem.py is a simple toolkit for the finite element method (FEM) intended for
+Eztfem.py is a simple toolkit for the finite element method (FEM) intended for
 use in teaching finite elements for fluid flow. It can be seen as a
 significantly reduced version of TFEM [1]. Since eztfem.py consists of Python
 modules only, it is easily accessible for students.
