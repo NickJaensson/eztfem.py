@@ -1,19 +1,19 @@
 1. Introduction
 -----------------------
 
-1.1 What is eztfem.py?
+1.1 What is ``eztfem.py``?
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Eztfem.py is a simple toolkit for the finite element method (FEM) intended for
-use in teaching finite elements for fluid flow. It can be seen as a
-significantly reduced version of TFEM [1]. Since eztfem.py consists of Python
-modules only, it is easily accessible for students.
+``eztfem.py`` is a simple toolkit for the finite element method (FEM) intended 
+for use in teaching finite elements for fluid flow. It can be seen as a
+significantly reduced version of ``TFEM`` [1]. Since eztfem.py consists of 
+Python modules only, it is easily accessible for students.
 
 1.2 Installation
 ~~~~~~~~~~~~~~~~
 
-Install the eztfem package by running the following command in the eztfem.py
-root directory:
+Install the ``eztfem.py`` package by running the following command in the  
+``eztfem.py`` directory:
 
 .. code-block:: bash
 
@@ -23,8 +23,8 @@ Note: this will install the pacakge in `editable` mode, which means that the
 package links directly to the code (instead of copying it to the Python 
 environment), thus changes to the package will be reflected immediately.
 
-All functions in eztfem can be found in these docs. There are two ways of 
-calling eztfem functions. 
+All functions in ``eztfem.py`` can be found in these docs. There are two ways 
+of calling ``eztfem.py`` functions. 
 
 * The first option imports the entire package and calls functions by
 
