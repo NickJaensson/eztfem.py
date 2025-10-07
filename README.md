@@ -1,3 +1,6 @@
+[![build docs](https://github.com/NickJaensson/eztfem.py/actions/workflows/build-docs.yml/badge.svg)](https://github.com/NickJaensson/eztfem.py/actions/workflows/build-docs.yml)
+[![continuous integration](https://github.com/NickJaensson/eztfem.py/actions/workflows/ci.yml/badge.svg)](https://github.com/NickJaensson/eztfem.py/actions/workflows/ci.yml)
+
 # eztfem.py
 Eztfem.py is a simple toolkit for 
 the finite element method (FEM) intended for use  in teaching finite elements 
