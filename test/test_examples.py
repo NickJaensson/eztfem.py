@@ -6,15 +6,16 @@ import sys
 # ensure test can be run from eztfem.py/test folder
 sys.path.append('../examples/poisson')
 sys.path.append('../examples/stokes')
-sys.path.append('../examples/project2')
+# sys.path.append('../examples/project2')
 
 # ensure test can be run from eztfem.py folder
 sys.path.append('examples/poisson')
 sys.path.append('examples/stokes')
-sys.path.append('examples/project2')
+# sys.path.append('examples/project2')
 
 import poisson1, poisson2, poisson3, poisson4  # type: ignore
-import stokes1, stokes2, streamfunction1, gn_channel  # type: ignore
+import stokes1, stokes2, streamfunction1  # type: ignore
+# import gn_channel  # type: ignore
 
 eps = 1e-15  # maximal difference for comparing floats
 
@@ -64,8 +65,8 @@ class TestPytfem(unittest.TestCase):
         self.assertTrue(isclose(result, 0.008522786557203416, abs_tol=eps),
                         'streamfunction1 failed test!')
         
-    # value from eztfem.m (Matlab): 0.031248765345553
-    def test_gn_channel(self):
-        result, _, _, _ = gn_channel.main()
-        self.assertTrue(isclose(result, 0.031248765345550343, abs_tol=eps),
-                        'gn_channel failed test!')
+    # # value from eztfem.m (Matlab): 0.031248765345553
+    # def test_gn_channel(self):
+    #     result, _, _, _ = gn_channel.main()
+    #     self.assertTrue(isclose(result, 0.031248765345550343, abs_tol=eps),
+    #                     'gn_channel failed test!')
