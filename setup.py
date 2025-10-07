@@ -10,6 +10,8 @@ setup(
         'numpy',
         'scipy',
         'pyvista',
+        'ipykernel',
+        'ipywidgets',
         'trame',
         'trame-vtk',
         'trame-vuetify'
