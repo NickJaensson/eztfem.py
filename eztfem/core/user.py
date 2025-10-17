@@ -1,6 +1,7 @@
 import numpy as np
 
 
+# TODO: Typehint all possible user fields, maybe use a dataclass/attrs class.
 class User:
     """
     Define the User class: this class is mainly a collection of parameters and
@@ -33,7 +34,7 @@ class User:
         self.dphi = np.array([])
         self.psi = np.array([])
 
-    def __eq__(self, other):
+    def __eq__(self, other: "User"):  # type: ignore
         """
         Checks equivalence of two User objects (overloads == sign).
 
@@ -92,13 +93,13 @@ class User:
             check1.append(np.allclose(self.dphi, other.dphi, atol=1e-15,
                                       rtol=0))
         if 'coorsys' in attributes_self:
-            check1.append(self.coorsys == other.coorsys)
+            check1.append(self.coorsys == other.coorsys)  # type: ignore
         if 'alpha' in attributes_self:
-            check1.append(self.alpha == other.alpha)
+            check1.append(self.alpha == other.alpha)  # type: ignore
         if 'mu' in attributes_self:
-            check1.append(self.mu == other.mu)
+            check1.append(self.mu == other.mu)  # type: ignore
         if 'funcnr' in attributes_self:
-            check1.append(self.funcnr == other.funcnr)
+            check1.append(self.funcnr == other.funcnr)  # type: ignore
 
         # Print a warning when not equivalent (for debugging purposes)
         if not all(check1):
