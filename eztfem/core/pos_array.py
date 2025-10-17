@@ -1,7 +1,15 @@
+import typing
 import numpy as np
 
+if typing.TYPE_CHECKING:
+    from .problem import Problem
 
-def pos_array(problem, nodes, **kwargs):
+Array2D: typing.TypeAlias = np.ndarray[tuple[int, int]]
+ArrayLike: typing.TypeAlias = int | np.integer | typing.Sequence[int] | typing.Sequence[np.integer] | np.typing.NDArray[np.integer]
+
+
+def pos_array(problem: "Problem", nodes: ArrayLike, *,
+              physq: ArrayLike | None = None, order: typing.Literal["DN", "ND"] = "DN"):
     """
     Get the index of the system degrees of freedom in the given nodes.
 
@@ -35,26 +43,19 @@ def pos_array(problem, nodes, **kwargs):
 
     """
 
-    # Set default optional arguments
-    physq = np.arange(problem.nphysq)
-    order = 'DN'
-
-    # Override optional arguments if provided
-    if 'physq' in kwargs:
-        physq = kwargs['physq']
-    if 'order' in kwargs:
-        order = kwargs['order']
+    if physq is None:
+        physq = np.arange(problem.nphysq)
 
     # Convert physq to a list if an int is supplied
     if isinstance(physq, (int, np.integer)):
-        physq = [physq]
+        physq = typing.cast(list[int], [physq])
 
     # Convert nodes to a numpy array if an int is supplied
     if isinstance(nodes, (int, np.integer)):
         nodes = np.array([nodes])
 
     # Convert nodes to a numpy array if a list is supplied
-    if isinstance(nodes, list):
+    elif isinstance(nodes, typing.Sequence):
         nodes = np.array(nodes)
 
     pos = [None] * len(physq)
@@ -93,10 +94,13 @@ def pos_array(problem, nodes, **kwargs):
             pos[i] = lpos[:dof].tolist()
             ndof[i] = dof
 
-    return pos, ndof
+    # NOTE: Typechecker infers pos as list[None] because of the preallocation.
+    return typing.cast(list[list[int]], pos), ndof
 
 
-def pos_array_vec(problem, nodes, **kwargs):
+def pos_array_vec(problem: "Problem", nodes: ArrayLike, *,
+                  vec: ArrayLike | None = None,
+                  order: typing.Literal["DN", "ND"] = "DN"):
     """
     Get the index of the degrees of freedom of one or more vectors of special
     structure in the given nodes.
@@ -130,23 +134,24 @@ def pos_array_vec(problem, nodes, **kwargs):
 
     """
 
-    # Set default optional arguments
-    vec = np.arange(problem.nvec)
-    order = 'DN'
-
-    # Override optional arguments if provided
-    if 'vec' in kwargs:
-        vec = kwargs['vec']
-    if 'order' in kwargs:
-        order = kwargs['order']
+    if vec is None:
+        vec = np.arange(problem.nvec)
 
     # Convert vec to a numpy array if an int is supplied
     if isinstance(vec, (int, np.integer)):
         vec = np.array([vec])
 
+    # Convert vec to a numpy array if a list is supplied
+    elif isinstance(vec, typing.Sequence):
+        vec = np.array(vec)
+
     # Convert nodes to a numpy array if an int is supplied
     if isinstance(nodes, (int, np.integer)):
         nodes = np.array([nodes])
+
+    # Convert nodes to a numpy array if a list is supplied
+    elif isinstance(nodes, typing.Sequence):
+        nodes = np.array(nodes)
 
     pos = [None] * vec.shape[0]
     ndof = np.zeros(vec.shape[0], dtype=int)
@@ -180,4 +185,5 @@ def pos_array_vec(problem, nodes, **kwargs):
             pos[i] = lpos[:dof].tolist()
             ndof[i] = dof
 
-    return pos, ndof
+    # NOTE: Typechecker infers pos as list[None] because of the preallocation.
+    return typing.cast(list[list[int]], pos), ndof
