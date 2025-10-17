@@ -1,5 +1,13 @@
+import typing
 import numpy as np
 from .pos_array import pos_array, pos_array_vec
+
+if typing.TYPE_CHECKING:
+    from .meshgen import Mesh
+    from .problem import Problem
+    from .user import User
+
+ArrayLike: typing.TypeAlias = int | np.integer | typing.Sequence[int] | typing.Sequence[np.integer] | np.typing.NDArray[np.integer]
 
 
 class Vector:
@@ -15,7 +23,7 @@ class Vector:
 
     """
 
-    def __init__(self, vec=0):
+    def __init__(self, vec: int = 0):
         """
         Initializes the Vector object with the given attributes. The stored
         vecor data (u) is initialized as an empty numpy array (np.array([])).
@@ -29,7 +37,7 @@ class Vector:
         self.vec = vec
         self.u = np.array([])
 
-    def __eq__(self, other):
+    def __eq__(self, other: "Vector"):  # type: ignore
         """
         Checks equivalence of two Vector objects (overloads == sign).
 
@@ -53,7 +61,12 @@ class Vector:
         return all(check)
 
 
-def deriv_vector(mesh, problem, element, user, **kwargs):
+# TODO: Narrow down element type
+def deriv_vector(mesh: "Mesh", problem: "Problem",
+                 element: typing.Callable[..., typing.Any], user: "User", *,
+                 vec: int | None = None,
+                 order: typing.Literal["DN", "ND"] = "DN",
+                 posvectors: bool = False):
     """
     Derive a vector of special structure.
 
@@ -90,13 +103,8 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
 
     # Set default optional arguments
     # NOTE: default vec is first vec after nphysq (starting at zero)
-    vec = kwargs.get('vec', problem.nphysq)
-    order = kwargs.get('order', 'DN')
-    posvectors = kwargs.get('posvectors', 0)
-
-    for kwarg in kwargs:
-        if kwarg not in ['vec', 'order', 'posvectors']:
-            raise ValueError(f'Invalid argument: {kwarg}')
+    if vec is None:
+        vec = problem.nphysq
 
     v = Vector(vec=vec)
     n = problem.vec_numdegfd[vec]
@@ -129,7 +137,14 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
     return v
 
 
-def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
+# TODO: Narrow down func type
+# FIXME: defaults in code are 0; docstring says 1.
+def fill_system_vector(mesh: "Mesh", problem: "Problem",
+                       geometry: typing.Literal["nodes", "points", "curves"],
+                       numbers: ArrayLike,
+                       func: typing.Callable[..., typing.Any], *,
+                       funcnr: int = 0, physq: int = 0, degfd: int = 0,
+                       f: np.ndarray | None = None) -> np.ndarray | None:
     """
     Fill system vector.
 
@@ -171,19 +186,14 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
 
     """
 
-    funcnr = kwargs.get('funcnr', 0)
-    physq = kwargs.get('physq', 0)
-    degfd = kwargs.get('degfd', 0)
-    f = kwargs.get('f', None)
-
     f_present = f is not None
 
     if not f_present:
-        f = np.zeros(problem.numdegfd)
+        f = np.zeros(problem.numdegfd)  # type: ignore
 
     # Convert numbers to a list if an int is supplied
     if isinstance(numbers, (int, np.integer)):
-        numbers = [numbers]
+        numbers = typing.cast(list[int], [numbers])
 
     # Define geometry
     if geometry == 'nodes':
@@ -205,7 +215,7 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
         if degfd > ndof[0]:
             continue
 
-        f[posn[0][degfd]] = func(funcnr, mesh.coor[node])
+        f[posn[0][degfd]] = func(funcnr, mesh.coor[node])  # type: ignore
 
     if not f_present:
-        return f
+        return f  # type: ignore
