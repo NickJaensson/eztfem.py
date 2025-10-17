@@ -1,7 +1,9 @@
+import typing
 import numpy as np
 
 
-def gauss_legendre(shape, **kwargs):
+def gauss_legendre(shape: typing.Literal["line", "quad", "triangle"], *,
+                   n: int = -1, p: int = -1):
     """
     Gauss-Legendre integration points and weights.
 
@@ -32,9 +34,6 @@ def gauss_legendre(shape, **kwargs):
 
     """
 
-    n = kwargs.get('n', -1)
-    p = kwargs.get('p', -1)
-
     if shape == 'line':
         if n < 0:
             raise ValueError('n must be specified for the integration rule')
@@ -57,7 +56,7 @@ def gauss_legendre(shape, **kwargs):
     return x, w
 
 
-def gauss_legendre_line(n):
+def gauss_legendre_line(n: int):
     """
     Compute Gauss-Legendre integration points and weights for a line segment.
     Gauss Legendre in 1D defined on the interval [-1,1]
@@ -416,7 +415,7 @@ def gauss_legendre_line(n):
     return x, w
 
 
-def gauss_legendre_quad(n):
+def gauss_legendre_quad(n: int):
     """
     Compute Gauss-Legendre integration points and weights for a quadrilateral.
     Gauss Legendre in 2D defined on the region [-1,1]x[-1,1]
@@ -451,7 +450,7 @@ def gauss_legendre_quad(n):
     return x, w
 
 
-def gauss_legendre_triangle(p):
+def gauss_legendre_triangle(p: int):
     """
     Compute Gauss-Legendre integration points and weights for a triangle.
     Gauss Legendre in 2D defined triangle, left-lower half of [0, 1] x [0, 1]
@@ -1037,27 +1036,27 @@ def gauss_legendre_triangle(p):
     return x, w
 
 
-def dup3(a):
+def dup3(a: float):
     return np.array([a / 2])
 
 
-def dup21(a):
-    return np.array([a/2 for i in range(3)])
+def dup21(a: float):
+    return np.array([a/2 for _ in range(3)])
 
 
-def dup111(a):
-    return np.array([a/2 for i in range(6)])
+def dup111(a: float):
+    return np.array([a/2 for _ in range(6)])
 
 
-def perm3(a):
+def perm3(a: float):
     return np.array([a, a])
 
 
-def perm21(a):
+def perm21(a: float):
     b = 1 - 2 * a
     return np.array([a, a, a, b, b, a])
 
 
-def perm111(a, b):
+def perm111(a: float, b: float):
     c = 1 - a - b
     return np.array([a, b, c, a, b, c, b, a, c, b, a, c])
