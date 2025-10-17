@@ -1,6 +1,12 @@
+import typing
 import numpy as np
 from .pos_array import pos_array
 
+if typing.TYPE_CHECKING:
+    from .meshgen import Mesh
+
+Array2D: typing.TypeAlias = np.ndarray[tuple[int, int]]
+ArrayLike: typing.TypeAlias = int | np.integer | typing.Sequence[int] | typing.Sequence[np.integer] | np.typing.NDArray[np.integer]
 
 class Problem:
     """
@@ -39,7 +45,8 @@ class Problem:
 
     """
 
-    def __init__(self, mesh, elementdof, nphysq=None):
+    def __init__(self, mesh: "Mesh", elementdof: Array2D,
+                 nphysq: int | None = None):
         """
         Initializes the Problem object for a given mesh, elementdof and
         nphys (optional). All other attributes are filled in the initialization
@@ -116,7 +123,8 @@ class Problem:
         self.maxnoddegfd = np.max(self.elnumdegfd)
         self.maxvecnoddegfd = np.max(self.vec_elnumdegfd)
 
-    def __eq__(self, other):
+    # TODO: type other as object, start implementation with isinstance check.
+    def __eq__(self, other: "Problem"):  # type: ignore
         """
         Check equivalence with another Problem instance.
 
@@ -135,7 +143,7 @@ class Problem:
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
 
         """
-        check = [
+        check: list[bool] = [
             self.nphysq == other.nphysq,
             self.nvec == other.nvec,
             (np.squeeze(self.vec_elnumdegfd) == other.vec_elnumdegfd).all(),
@@ -154,8 +162,11 @@ class Problem:
 
         return all(check)
 
-
-def define_essential(mesh, problem, geometry, numbers, **kwargs):
+# TODO: check if np.int_ is lenient enough, probably support uint too?
+def define_essential(mesh: "Mesh", problem: "Problem",
+                     geometry: typing.Literal["nodes", "points", "curves"],
+                     numbers: ArrayLike, *, physq: int = 0,
+                     degfd: int = 0, iessp: ArrayLike | None = None):
     """
     Get the indices of the essential degrees of freedom.
 
@@ -190,15 +201,12 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
 
     """
 
-    # Optional arguments
-    physq = kwargs.get('physq', 0)
-    degfd = kwargs.get('degfd', 0)
-    iessp = kwargs.get('iessp', 0)
-    add = 'iessp' in kwargs
-
     # Convert numbers to a list if an int is supplied
     if isinstance(numbers, (int, np.integer)):
-        numbers = [numbers]
+        # NOTE: type system doesn't like indexing ndarray with
+        #       `list[int | np.integer]`, which this block would narrow the
+        #       type down to, so we act as if it's just a list[int].
+        numbers = typing.cast(list[int], [numbers])
 
     # Define geometry
     if geometry == 'nodes':
@@ -229,7 +237,7 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         ipos += 1
 
     # Output iess
-    if add:
+    if iessp is not None:
         # Convert iessp to a numpy array if an int is supplied
         if isinstance(iessp, (int, np.integer)):
             iessp = np.array([iessp])
