@@ -1,8 +1,17 @@
 import numpy as np
 from .meshgen import Mesh
 
+ArrayLike = list[int] | np.ndarray[tuple[int]]
 
-def mesh_merge(mesh1, mesh2, **kwargs):
+# FIXME: Docstring example is invalid; curves2 is present but dir_curves2 isn't.
+def mesh_merge(mesh1: Mesh, mesh2: Mesh, *,
+               points1: ArrayLike | None = None, points2: ArrayLike | None = None,
+               curves1: ArrayLike | None = None, curves2: ArrayLike | None = None,
+               dir_curves2: ArrayLike | None = None,
+               deletepoints1: ArrayLike | None = None,
+               deletepoints2: ArrayLike | None = None,
+               deletecurves1: ArrayLike | None = None,
+               deletecurves2: ArrayLike | None = None):
     """
     Create a new mesh by merging two other meshes.
 
@@ -62,16 +71,6 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     if mesh1.elshape != mesh2.elshape:
         raise ValueError('elshape different in mesh1 and mesh2')
 
-    points1 = kwargs.get('points1', None)
-    points2 = kwargs.get('points2', None)
-    curves1 = kwargs.get('curves1', None)
-    curves2 = kwargs.get('curves2', None)
-    dir_curves2 = kwargs.get('dir_curves2', None)
-    deletepoints1 = kwargs.get('deletepoints1', None)
-    deletepoints2 = kwargs.get('deletepoints2', None)
-    deletecurves1 = kwargs.get('deletecurves1', None)
-    deletecurves2 = kwargs.get('deletecurves2', None)
-
     # booleans to indicate if the optional argument was present
     pnts1_present = points1 is not None
     pnts2_present = points2 is not None
@@ -82,12 +81,6 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     delpnts2_present = deletepoints2 is not None
     delcrvs1_present = deletecurves1 is not None
     delcrvs2_present = deletecurves2 is not None
-
-    for option in kwargs:
-        if option not in ['points1', 'points2', 'curves1', 'curves2',
-                          'dir_curves2', 'deletepoints1', 'deletepoints2',
-                          'deletecurves1', 'deletecurves2']:
-            raise ValueError(f'Invalid option: {option}')
 
     if pnts1_present and pnts2_present:
         if len(points1) != len(points2):
@@ -155,13 +148,19 @@ def mesh_merge(mesh1, mesh2, **kwargs):
 
     # curves
     if crvs:
-        delcurves2[np.abs(curves2)] = 1  # always delete curves in curves2
+        # NOTE: type checkers are not smart enough to understand that this
+        #       condition implies curves1/curves2/dir_curves2 must exist.
+        #
+        # TODO: If we care about typesafe code, either replace `if crvs` with
+        #       `if curves1 is not None and ...` or use assertions here.
+
+        delcurves2[np.abs(curves2)] = 1  # type: ignore # always delete curves in curves2
 
         # nodes on curve2 can be removed == nodes on curve1
-        for crv in range(len(curves2)):
-            crv1 = curves1[crv]
-            crv2 = curves2[crv]
-            dir2 = dir_curves2[crv]
+        for crv in range(len(curves2)):  # type: ignore
+            crv1 = curves1[crv]  # type: ignore
+            crv2 = curves2[crv]  # type: ignore
+            dir2 = dir_curves2[crv]  # type: ignore
             if dir2 > 0:
                 work[mesh2.curves[crv2].nodes] = mesh1.curves[crv1].nodes
             else:
