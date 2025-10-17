@@ -1,7 +1,13 @@
+import typing
 import numpy as np
 
+if typing.TYPE_CHECKING:
+    from .meshgen import Mesh
 
-def refcoor_nodal_points(mesh):
+BasisFunction: typing.TypeAlias = np.ndarray[tuple[int, int], np.dtype[np.float64]]
+BasisFunctionDerivative: typing.TypeAlias = np.ndarray[tuple[int, int, int], np.dtype[np.float64]]
+
+def refcoor_nodal_points(mesh: "Mesh"):
     """
     Find the reference coordinates of the nodal points.
 
@@ -27,26 +33,50 @@ def refcoor_nodal_points(mesh):
         case 3:  # three-node triangular element
             x = np.array([[0, 1, 0], [0, 0, 1]]).T
         case 4:  # six-node triangular element
-            x = np.array([[0, 0.5, 1, 0.5, 0, 0], [0, 0, 0, 0.5, 1, 0.5]]).T
+            x = np.array([[0.0, 0.5, 1.0, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.5, 1.0, 0.5]]).T
         case 5:  # four-node quadrilateral
             x = np.array([[-1, 1, 1, -1], [-1, -1, 1, 1]]).T
         case 6:  # nine-node quadrilateral
             x = np.array([[-1, 0, 1, 1, 1, 0, -1, -1, 0],
                           [-1, -1, -1, 0, 1, 1, 1, 0, 0]]).T
         case 7:  # seven-node triangular element
-            x = np.array([[0, 0.5, 1, 0.5, 0, 0, 1/3],
-                          [0, 0, 0, 0.5, 1, 0.5, 1/3]]).T
+            x = np.array([[0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 1/3],
+                          [0.0, 0.0, 0.0, 0.5, 1.0, 0.5, 1/3]]).T
         case 9:  # five-node quadrilateral
             x = np.array([[-1, 1, 1, -1, 0], [-1, -1, 1, 1, 0]]).T
         case 10:  # four-node triangular element
-            x = np.array([[0, 1, 0, 1/3], [0, 0, 1, 1/3]]).T
+            x = np.array([[0.0, 1.0, 0.0, 1/3], [0.0, 0.0, 1.0, 1/3]]).T
         case _:
             raise ValueError(f"Invalid elshape = {elshape}")
 
     return x
 
 
-def basis_function(shape, intpol, xr):
+@typing.overload
+def basis_function(
+    shape: typing.Literal["line"],
+    intpol: typing.Literal["P0", "P1", "P2"],
+    xr: np.ndarray) -> tuple[BasisFunction, BasisFunctionDerivative]:
+    ...
+
+@typing.overload
+def basis_function(
+    shape: typing.Literal["quad"],
+    intpol: typing.Literal["P0", "P1", "Q1", "Q1+", "Q2"],
+    xr: np.ndarray) -> tuple[BasisFunction, BasisFunctionDerivative]:
+    ...
+
+@typing.overload
+def basis_function(
+    shape: typing.Literal["triangle"],
+    intpol: typing.Literal["P0", "P1", "P1+", "P2", "P2+"],
+    xr: np.ndarray) -> tuple[BasisFunction, BasisFunctionDerivative]:
+    ...
+
+def basis_function(
+    shape: typing.Literal["line", "quad", "triangle"],
+    intpol: typing.Literal["P0", "P1", "P1+", "P2", "P2+", "Q1", "Q1+", "Q2"],
+    xr: np.ndarray) -> tuple[BasisFunction, BasisFunctionDerivative]:
     """
     Compute the basis function and its derivative at reference coordinates.
 
@@ -123,7 +153,7 @@ def basis_function(shape, intpol, xr):
     return phi, dphi
 
 
-def basis_triangle_P0(xr):
+def basis_triangle_P0(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 1
     phi = np.zeros((ni, nn))
@@ -135,12 +165,12 @@ def basis_triangle_P0(xr):
     return phi, dphi
 
 
-def basis_triangle_P1(xr):
+def basis_triangle_P1(xr: np.ndarray):
     phi, dphi = barycentric(xr)
     return phi, dphi
 
 
-def basis_triangle_P1plus(xr):
+def basis_triangle_P1plus(xr: np.ndarray):
 
     ni, _ = xr.shape
     nn = 4
@@ -170,7 +200,7 @@ def basis_triangle_P1plus(xr):
     return phi, dphi
 
 
-def basis_triangle_P2(xr):
+def basis_triangle_P2(xr: np.ndarray):
     ni, _ = xr.shape
     nn = 6
     phi = np.zeros((ni, nn))
@@ -199,7 +229,7 @@ def basis_triangle_P2(xr):
     return phi, dphi
 
 
-def basis_triangle_P2plus(xr):
+def basis_triangle_P2plus(xr: np.ndarray):
     ni, _ = xr.shape
     nn = 7
     phi = np.zeros((ni, nn))
@@ -244,7 +274,7 @@ def basis_triangle_P2plus(xr):
     return phi, dphi
 
 
-def basis_line_P0(xr):
+def basis_line_P0(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 1
     phi = np.zeros((ni, nn))
@@ -256,7 +286,7 @@ def basis_line_P0(xr):
     return phi, dphi
 
 
-def basis_line_P1(xr):
+def basis_line_P1(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 2
     phi = np.zeros((ni, nn))
@@ -271,7 +301,7 @@ def basis_line_P1(xr):
     return phi, dphi
 
 
-def basis_line_P2(xr):
+def basis_line_P2(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 3
     phi = np.zeros((ni, nn))
@@ -288,7 +318,7 @@ def basis_line_P2(xr):
     return phi, dphi
 
 
-def basis_quad_P0(xr):
+def basis_quad_P0(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 1
     phi = np.zeros((ni, nn))
@@ -300,7 +330,7 @@ def basis_quad_P0(xr):
     return phi, dphi
 
 
-def basis_quad_P1(xr):
+def basis_quad_P1(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 3
     phi = np.zeros((ni, nn))
@@ -319,7 +349,7 @@ def basis_quad_P1(xr):
     return phi, dphi
 
 
-def basis_quad_Q1(xr):
+def basis_quad_Q1(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 4
     phi = np.zeros((ni, nn))
@@ -338,7 +368,7 @@ def basis_quad_Q1(xr):
     return phi, dphi
 
 
-def basis_quad_Q1plus(xr):
+def basis_quad_Q1plus(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 5
     phi = np.zeros((ni, nn))
@@ -366,7 +396,7 @@ def basis_quad_Q1plus(xr):
     return phi, dphi
 
 
-def basis_quad_Q2(xr):
+def basis_quad_Q2(xr: np.ndarray):
     ni = xr.shape[0]
     nn = 9
     phi = np.zeros((ni, nn))
@@ -385,7 +415,7 @@ def basis_quad_Q2(xr):
     return phi, dphi
 
 
-def barycentric(xr):
+def barycentric(xr: np.ndarray):
     """
     Compute the barycentric coordinates and their derivatives for a triangular
     element at reference coordinates.
@@ -451,7 +481,7 @@ def barycentric(xr):
     return lambda_, dlambda
 
 
-def isoparametric_deformation(x, dphi):
+def isoparametric_deformation(x: np.ndarray, dphi: np.ndarray):
     """
     Isoparametric deformation of an element.
 
@@ -516,7 +546,7 @@ def isoparametric_deformation(x, dphi):
     return F, Finv, detF
 
 
-def isoparametric_deformation_curve(x, dphi):
+def isoparametric_deformation_curve(x: np.ndarray, dphi: np.ndarray):
     """
     Isoparametric deformation of curved line elements.
 
