@@ -1,5 +1,6 @@
 import typing
 from .pos_array import pos_array, pos_array_vec
+from .tp import Order
 
 if typing.TYPE_CHECKING:
     import numpy as np
@@ -12,7 +13,7 @@ if typing.TYPE_CHECKING:
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
                                 element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], float],
                                 user: "User", *, curve: int = 0,
-                                order: typing.Literal["DN", "ND"] = "DN",
+                                order: Order = "DN",
                                 posvectors: typing.Literal[True]) -> float:
     ...
 
@@ -20,14 +21,14 @@ def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
                                 element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], float],
                                 user: "User", *, curve: int = 0,
-                                order: typing.Literal["DN", "ND"] = "DN",
+                                order: Order = "DN",
                                 posvectors: typing.Literal[False] = False) -> float:
     ...
 
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
                                 element: typing.Callable[..., float],
                                 user: "User", *, curve: int = 0,
-                                order: typing.Literal["DN", "ND"] = "DN",
+                                order: Order = "DN",
                                 posvectors: bool = False) -> float:
     """
     Integrate boundary elements.

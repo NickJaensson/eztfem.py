@@ -2,6 +2,7 @@ import typing
 import numpy as np
 from scipy.sparse import lil_matrix, eye
 from .pos_array import pos_array, pos_array_vec
+from .tp import Order
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
@@ -15,7 +16,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
                  user: "User", *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
-                 order: typing.Literal["DN", "ND"] = "DN",
+                 order: Order = "DN",
                  posvectors: typing.Literal[True],
                  ) -> tuple[lil_matrix, np.ndarray]:
     ...
@@ -26,7 +27,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
                  user: "User", *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
-                 order: typing.Literal["DN", "ND"] = "DN",
+                 order: Order = "DN",
                  posvectors: typing.Literal[False] = False,
                  ) -> tuple[lil_matrix, np.ndarray]:
     ...
@@ -36,7 +37,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
                  user: "User", *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
-                 order: typing.Literal["DN", "ND"] = "DN",
+                 order: Order = "DN",
                  posvectors: bool = False,
                  ) -> tuple[lil_matrix, np.ndarray]:
     """
@@ -135,7 +136,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           user: "User", curve: int, *, A: np.ndarray | None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
-                          order: typing.Literal["DN", "ND"] = "DN",
+                          order: Order = "DN",
                           posvectors: typing.Literal[True]) -> None:
     ...
 
@@ -145,7 +146,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           user: "User", curve: int, *, A: np.ndarray | None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
-                          order: typing.Literal["DN", "ND"] = "DN",
+                          order: Order = "DN",
                           posvectors: typing.Literal[False] = False) -> None:
     ...
 
@@ -154,7 +155,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           user: "User", curve: int, *, A: np.ndarray | None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
-                          order: typing.Literal["DN", "ND"] = "DN",
+                          order: Order = "DN",
                           posvectors: bool = False) -> None:
     """
     Add boundary elements to the system vector and optionally to the system

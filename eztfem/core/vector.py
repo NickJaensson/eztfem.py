@@ -1,13 +1,13 @@
 import typing
 import numpy as np
+
 from .pos_array import pos_array, pos_array_vec
+from .tp import ArrayLike, Order
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
     from .problem import Problem
     from .user import User
-
-ArrayLike: typing.TypeAlias = int | np.integer | typing.Sequence[int] | typing.Sequence[np.integer] | np.typing.NDArray[np.integer]
 
 
 class Vector:
@@ -65,7 +65,7 @@ class Vector:
 def deriv_vector(mesh: "Mesh", problem: "Problem",
                  element: typing.Callable[[int, np.ndarray, "User", list[list[int]], list[list[int]]], np.ndarray],
                  user: "User", *, vec: int | None = None,
-                 order: typing.Literal["DN", "ND"] = "DN",
+                 order: Order = "DN",
                  posvectors: typing.Literal[True]) -> Vector:
     ...
 
@@ -73,14 +73,14 @@ def deriv_vector(mesh: "Mesh", problem: "Problem",
 def deriv_vector(mesh: "Mesh", problem: "Problem",
                  element: typing.Callable[[int, np.ndarray, "User", list[list[int]]], np.ndarray],
                  user: "User", *, vec: int | None = None,
-                 order: typing.Literal["DN", "ND"] = "DN",
+                 order: Order = "DN",
                  posvectors: typing.Literal[False] = False) -> Vector:
     ...
 
 def deriv_vector(mesh: "Mesh", problem: "Problem",
                  element: typing.Callable[..., typing.Any], user: "User", *,
                  vec: int | None = None,
-                 order: typing.Literal["DN", "ND"] = "DN",
+                 order: Order = "DN",
                  posvectors: bool = False):
     """
     Derive a vector of special structure.
@@ -155,7 +155,7 @@ def deriv_vector(mesh: "Mesh", problem: "Problem",
 @typing.overload
 def fill_system_vector(mesh: "Mesh", problem: "Problem",
                        geometry: typing.Literal["nodes", "points", "curves"],
-                       numbers: ArrayLike,
+                       numbers: ArrayLike[int, np.integer],
                        func: typing.Callable[[int, np.ndarray], float], *,
                        funcnr: int = 0, physq: int = 0, degfd: int = 0,
                        f: np.ndarray) -> None:
@@ -165,7 +165,7 @@ def fill_system_vector(mesh: "Mesh", problem: "Problem",
 @typing.overload
 def fill_system_vector(mesh: "Mesh", problem: "Problem",
                        geometry: typing.Literal["nodes", "points", "curves"],
-                       numbers: ArrayLike,
+                       numbers: ArrayLike[int, np.integer],
                        func: typing.Callable[[int, np.ndarray], float], *,
                        funcnr: int = 0, physq: int = 0, degfd: int = 0,
                        f: None = None) -> np.ndarray:
@@ -176,7 +176,7 @@ def fill_system_vector(mesh: "Mesh", problem: "Problem",
 #        only takes a coordinate vector but it also takes funcnr.
 def fill_system_vector(mesh: "Mesh", problem: "Problem",
                        geometry: typing.Literal["nodes", "points", "curves"],
-                       numbers: ArrayLike,
+                       numbers: ArrayLike[int, np.integer],
                        func: typing.Callable[[int, np.ndarray], float], *,
                        funcnr: int = 0, physq: int = 0, degfd: int = 0,
                        f: np.ndarray | None = None) -> np.ndarray | None:

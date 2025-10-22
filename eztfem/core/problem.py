@@ -1,12 +1,11 @@
 import typing
 import numpy as np
 from .pos_array import pos_array
+from .tp import Array2D, ArrayLike
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
 
-Array2D: typing.TypeAlias = np.ndarray[tuple[int, int]]
-ArrayLike: typing.TypeAlias = int | np.integer | typing.Sequence[int] | typing.Sequence[np.integer] | np.typing.NDArray[np.integer]
 
 class Problem:
     """
@@ -162,11 +161,10 @@ class Problem:
 
         return all(check)
 
-# TODO: check if np.int_ is lenient enough, probably support uint too?
 def define_essential(mesh: "Mesh", problem: "Problem",
                      geometry: typing.Literal["nodes", "points", "curves"],
-                     numbers: ArrayLike, *, physq: int = 0,
-                     degfd: int = 0, iessp: ArrayLike | None = None):
+                     numbers: ArrayLike[int, np.integer], *, physq: int = 0,
+                     degfd: int = 0, iessp: ArrayLike[int, np.integer] | None = None):
     """
     Get the indices of the essential degrees of freedom.
 

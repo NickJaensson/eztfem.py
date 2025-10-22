@@ -1,15 +1,14 @@
 import typing
 import numpy as np
+from .tp import ArrayLike, Order
 
 if typing.TYPE_CHECKING:
     from .problem import Problem
 
-Array2D: typing.TypeAlias = np.ndarray[tuple[int, int]]
-ArrayLike: typing.TypeAlias = int | np.integer | typing.Sequence[int] | typing.Sequence[np.integer] | np.typing.NDArray[np.integer]
 
-
-def pos_array(problem: "Problem", nodes: ArrayLike, *,
-              physq: ArrayLike | None = None, order: typing.Literal["DN", "ND"] = "DN"):
+def pos_array(problem: "Problem", nodes: ArrayLike[int, np.integer], *,
+              physq: ArrayLike[int, np.integer] | None = None,
+              order: Order = "DN"):
     """
     Get the index of the system degrees of freedom in the given nodes.
 
@@ -98,9 +97,9 @@ def pos_array(problem: "Problem", nodes: ArrayLike, *,
     return typing.cast(list[list[int]], pos), ndof
 
 
-def pos_array_vec(problem: "Problem", nodes: ArrayLike, *,
-                  vec: ArrayLike | None = None,
-                  order: typing.Literal["DN", "ND"] = "DN"):
+def pos_array_vec(problem: "Problem", nodes: ArrayLike[int, np.integer], *,
+                  vec: ArrayLike[int, np.integer] | None = None,
+                  order: Order = "DN"):
     """
     Get the index of the degrees of freedom of one or more vectors of special
     structure in the given nodes.

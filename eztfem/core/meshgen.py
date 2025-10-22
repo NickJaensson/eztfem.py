@@ -1,9 +1,7 @@
 import typing
 import numpy as np
 
-
-Array2D: typing.TypeAlias = np.ndarray[tuple[int, int]]
-Ratio: typing.TypeAlias = typing.Literal[0, 1, 2, 3, 4]
+from .tp import Ratio
 
 class Mesh:
     """
