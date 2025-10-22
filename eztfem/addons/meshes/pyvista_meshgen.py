@@ -1,8 +1,13 @@
+import typing
 import pyvista as pv
 import numpy as np
 
+if typing.TYPE_CHECKING:
+    from ...core.meshgen import Mesh
 
-def find_elshape_vtk(elshape):
+
+# TODO: Make a self-documenting int-enum for elshape
+def find_elshape_vtk(elshape: int):
     """
     Find the VTK element shape and index mapping for a given element shape.
 
@@ -58,7 +63,7 @@ def find_elshape_vtk(elshape):
     return elshape_vtk, index_vtk
 
 
-def generate_pyvista_mesh(mesh):
+def generate_pyvista_mesh(mesh: "Mesh"):
     """
     Generate a PyVista mesh from a given mesh object.
 

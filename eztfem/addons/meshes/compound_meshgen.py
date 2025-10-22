@@ -1,8 +1,16 @@
+import typing
+
 from ...core.meshgen import quadrilateral2d
 from ...core.meshgen_extra import mesh_merge
 
 
-def two_blocks2d(ne, eltype, **kwargs):
+# TODO: make ne a tuple[int, int, int], origin a tuple[float, float],
+#       length a tuple[float, float, float], factor a tuple[float, float, float]
+def two_blocks2d(ne: list[int],
+                 eltype: typing.Literal["tria3", "tria4", "tria6", "tria7", "quad4", "quad9", "quad5"],
+                 *, origin: list[float] | None = None,
+                 length: list[float] | None = None,
+                 factor: list[float] | None = None):
     """
     Generate mesh for two rectangles side by side.
 
@@ -44,14 +52,10 @@ def two_blocks2d(ne, eltype, **kwargs):
     """
 
     # Optional arguments
-    oo = kwargs.get('origin', [0, 0])
-    ll = kwargs.get('length', [1, 1, 1])
-    ff = kwargs.get('factor', [1, 1, 1])
-
     n1, n2, n3 = ne
-    o1, o2 = oo
-    l1, l2, l3 = ll
-    f1, f2, f3 = ff
+    o1, o2 = origin or [0, 0]
+    l1, l2, l3 = length or [1, 1, 1]
+    f1, f2, f3 = factor or [1, 1, 1]
 
     mesh1 = quadrilateral2d([n1, n3], eltype, origin=[o1-l1, o2],
                             length=[l1, l3], ratio=[3, 3, 1, 1],
@@ -67,7 +71,11 @@ def two_blocks2d(ne, eltype, **kwargs):
     return mesh
 
 
-def l_shape2d(ne, eltype, **kwargs):
+def l_shape2d(ne: list[int],
+              eltype: typing.Literal["tria3", "tria4", "tria6", "tria7", "quad4", "quad9", "quad5"],
+              *, origin: list[float] | None = None,
+              length: list[float] | None = None,
+              factor: list[float] | None = None):
     """
     Generate mesh for an L-shape region (three rectangles).
 
@@ -93,14 +101,10 @@ def l_shape2d(ne, eltype, **kwargs):
     """
 
     # optional arguments
-    oo = kwargs.get('origin', [0, 0])
-    ll = kwargs.get('length', [1, 1, 1, 1])
-    ff = kwargs.get('factor', [1, 1, 1, 1])
-
     n1, n2, n3, n4 = ne
-    o1, o2 = oo
-    l1, l2, l3, l4 = ll
-    f1, f2, f3, f4 = ff
+    o1, o2 = origin or [0, 0]
+    l1, l2, l3, l4 = length or [1, 1, 1, 1]
+    f1, f2, f3, f4 = factor or [1, 1, 1, 1]
 
     mesh1 = quadrilateral2d([n1, n3], eltype, origin=(o1-l1, o2),
                             length=[l1, l3], ratio=[3, 1, 1, 3],
