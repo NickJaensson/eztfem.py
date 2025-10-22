@@ -1,7 +1,34 @@
+import typing
 from .pos_array import pos_array, pos_array_vec
 
+if typing.TYPE_CHECKING:
+    import numpy as np
+    from .meshgen import Mesh
+    from .problem import Problem
+    from .user import User
 
-def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
+
+@typing.overload
+def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
+                                element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], float],
+                                user: "User", *, curve: int = 0,
+                                order: typing.Literal["DN", "ND"] = "DN",
+                                posvectors: typing.Literal[True]) -> float:
+    ...
+
+@typing.overload
+def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
+                                element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], float],
+                                user: "User", *, curve: int = 0,
+                                order: typing.Literal["DN", "ND"] = "DN",
+                                posvectors: typing.Literal[False] = False) -> float:
+    ...
+
+def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
+                                element: typing.Callable[..., float],
+                                user: "User", *, curve: int = 0,
+                                order: typing.Literal["DN", "ND"] = "DN",
+                                posvectors: bool = False) -> float:
     """
     Integrate boundary elements.
 
@@ -42,11 +69,6 @@ def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
     >>> resultsum = integrate_boundary_elements(mesh, problem, element, user)
 
     """
-
-    # Optional arguments
-    curve = kwargs.get('curve', 0)
-    order = kwargs.get('order', 'DN')
-    posvectors = kwargs.get('posvectors', False)
 
     if curve == 0:
         raise ValueError('Argument curve is missing.')
