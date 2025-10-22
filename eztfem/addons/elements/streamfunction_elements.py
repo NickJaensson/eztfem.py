@@ -1,9 +1,16 @@
+import typing
+
 import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
 
 
-def streamfunction_elem(elem, coor, user, pos, posvec):
+if typing.TYPE_CHECKING:
+    from ...core.user import User
+
+
+def streamfunction_elem(elem: int, coor: np.ndarray, user: "User",
+                        pos: list[list[int]], posvec: list[list[int]]):
     """
     Compute the element matrix and vector for the streamfunction equation:
     - nabla^2 psi = omega, where omega is derived from the velocity vector.
@@ -40,7 +47,7 @@ def streamfunction_elem(elem, coor, user, pos, posvec):
     ndim = coor.shape[1]  # dimension of space
 
     # compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _F, Finv, detF = isoparametric_deformation(coor, user.dphi)
 
     # Position of the integration points
     xg = user.phi @ coor
@@ -86,7 +93,8 @@ def streamfunction_elem(elem, coor, user, pos, posvec):
     return elemmat, elemvec
 
 
-def streamfunction_natboun_curve(elem, coor, user, pos, posvec):
+def streamfunction_natboun_curve(elem: int, coor: np.ndarray, user: "User",
+                                 pos: list[list[int]], posvec: list[list[int]]):
     """
     Compute the boundary element for a natural boundary on a curve for the
     streamfunction equation (Poisson equation): dpsidn = -v * nx + u * ny
@@ -124,7 +132,7 @@ def streamfunction_natboun_curve(elem, coor, user, pos, posvec):
     ndim = coor.shape[1]  # Dimension of space
 
     # Compute mapping of reference to real element
-    dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
+    _dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
 
     # Position of the integration points
     xg = user.phi @ coor

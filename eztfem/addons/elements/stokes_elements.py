@@ -1,9 +1,16 @@
+import typing
+
 import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
 
+if typing.TYPE_CHECKING:
+    from ...core.user import User
 
-def stokes_elem(elem, coor, user, pos):
+
+# FIXME: Docstring suggests pos is a list[ndarray], internal typing all the way
+#        down to pos_array.py suggests these should take list[list[int]].
+def stokes_elem(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
     """
     Element routine for the Poisson equation:
     - nabla.( mu (nabla u+nabla u^T) ) + nabla p = f and nabla.u = 0
@@ -39,7 +46,7 @@ def stokes_elem(elem, coor, user, pos):
     ndfp = user.psi.shape[1]  # number of degrees of freedom of the pressure
 
     # compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _F, Finv, detF = isoparametric_deformation(coor, user.dphi)
 
     # position of the integration points
     xg = user.phi @ coor
@@ -129,7 +136,7 @@ def stokes_elem(elem, coor, user, pos):
     return elemmat, elemvec
 
 
-def stokes_deriv(elem, coor, user, pos):
+def stokes_deriv(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
     """
     Compute the derivative of the velocity field for post-processing.
 
@@ -161,7 +168,7 @@ def stokes_deriv(elem, coor, user, pos):
     ndf = user.phi.shape[1]
 
     # Compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _F, Finv, _detF = isoparametric_deformation(coor, user.dphi)
 
     # Compute derivative of the basis functions with respect to the real
     # coordinates
@@ -222,7 +229,7 @@ def stokes_deriv(elem, coor, user, pos):
     return elemvec
 
 
-def stokes_natboun_curve(elem, coor, user, pos):
+def stokes_natboun_curve(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
     """
     Compute the boundary element for a natural boundary on a curve for the
     Stokes equation.
@@ -258,7 +265,7 @@ def stokes_natboun_curve(elem, coor, user, pos):
     ndim = coor.shape[1]  # dimension of space
 
     # compute mapping of reference to real element
-    dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
+    _dxdxi, curvel, _normal = isoparametric_deformation_curve(coor, user.dphi)
 
     # position of the integration points
     xg = np.dot(user.phi, coor)
@@ -288,7 +295,7 @@ def stokes_natboun_curve(elem, coor, user, pos):
     return elemvec
 
 
-def stokes_flowrate_curve(elem, coor, user, pos):
+def stokes_flowrate_curve(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
     """
     Compute the flowrate through a curve for boundary elements.
 
@@ -315,16 +322,13 @@ def stokes_flowrate_curve(elem, coor, user, pos):
 
     """
 
-    # Function implementation goes here
-    pass
-
     # Set some values
     ninti = user.phi.shape[0]  # Number of integration points
     ndf = user.phi.shape[1]    # Number of velocity dofs per spatial direction
     ndim = coor.shape[1]  # Dimension of space
 
     # Compute mapping of reference to real element
-    dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
+    _dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
 
     # Position of the integration points
     xg = np.dot(user.phi, coor)
@@ -349,7 +353,7 @@ def stokes_flowrate_curve(elem, coor, user, pos):
     return flowrate
 
 
-def stokes_pressure(elem, coor, user, pos):
+def stokes_pressure(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
     """
     Compute the pressure for post-processing in Stokes flow.
 

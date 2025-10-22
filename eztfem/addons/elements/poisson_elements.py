@@ -1,9 +1,16 @@
+import typing
+
 import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
 
+if typing.TYPE_CHECKING:
+    from ...core.user import User
 
-def poisson_elem(elem, coor, user, pos):
+
+# FIXME: Docstring suggests pos is a list[ndarray], internal typing all the way
+#        down to pos_array.py suggests these should take list[list[int]].
+def poisson_elem(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
     """
     Element routine for the Poisson equation: - alpha nabla^2 u = f
 
@@ -37,7 +44,7 @@ def poisson_elem(elem, coor, user, pos):
     ndim = coor.shape[1]       # dimension of space
 
     # Compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _F, Finv, detF = isoparametric_deformation(coor, user.dphi)
 
     # Position of the integration points
     xg = np.dot(user.phi, coor)
@@ -82,7 +89,7 @@ def poisson_elem(elem, coor, user, pos):
     return elemmat, elemvec
 
 
-def poisson_deriv(elem, coor, user, pos):
+def poisson_deriv(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
     """
     Compute the gradient of the velocity field for a given element.
 
@@ -107,6 +114,7 @@ def poisson_deriv(elem, coor, user, pos):
     This function is intended for use with `deriv_vector` or `plot_sol`.
 
     """
+    print(pos)
 
     # Set some values
     ndim = coor.shape[1]
@@ -114,7 +122,7 @@ def poisson_deriv(elem, coor, user, pos):
     ndf = user.phi.shape[1]
 
     # Compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _F, Finv, _detF = isoparametric_deformation(coor, user.dphi)
 
     # Compute derivative of the basis functions with respect to the real
     # coordinates
@@ -132,7 +140,7 @@ def poisson_deriv(elem, coor, user, pos):
     return elemvec
 
 
-def poisson_natboun_curve(elem, coor, user, pos):
+def poisson_natboun_curve(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
     """
     Boundary element for a natural boundary on a curve for the
     Poisson/diffusion equation: alpha * dudn = h
@@ -166,7 +174,7 @@ def poisson_natboun_curve(elem, coor, user, pos):
     ndf = user.phi.shape[1]    # Number of degrees of freedom
 
     # Compute mapping of reference to real element
-    dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
+    _dxdxi, curvel, _normal = isoparametric_deformation_curve(coor, user.dphi)
 
     # Position of the integration points
     xg = user.phi @ coor
