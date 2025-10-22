@@ -61,7 +61,22 @@ class Vector:
         return all(check)
 
 
-# TODO: Narrow down element type
+@typing.overload
+def deriv_vector(mesh: "Mesh", problem: "Problem",
+                 element: typing.Callable[[int, np.ndarray, "User", list[list[int]], list[list[int]]], np.ndarray],
+                 user: "User", *, vec: int | None = None,
+                 order: typing.Literal["DN", "ND"] = "DN",
+                 posvectors: typing.Literal[True]) -> Vector:
+    ...
+
+@typing.overload
+def deriv_vector(mesh: "Mesh", problem: "Problem",
+                 element: typing.Callable[[int, np.ndarray, "User", list[list[int]]], np.ndarray],
+                 user: "User", *, vec: int | None = None,
+                 order: typing.Literal["DN", "ND"] = "DN",
+                 posvectors: typing.Literal[False] = False) -> Vector:
+    ...
+
 def deriv_vector(mesh: "Mesh", problem: "Problem",
                  element: typing.Callable[..., typing.Any], user: "User", *,
                  vec: int | None = None,
@@ -137,12 +152,32 @@ def deriv_vector(mesh: "Mesh", problem: "Problem",
     return v
 
 
-# TODO: Narrow down func type
-# FIXME: defaults in code are 0; docstring says 1.
+@typing.overload
 def fill_system_vector(mesh: "Mesh", problem: "Problem",
                        geometry: typing.Literal["nodes", "points", "curves"],
                        numbers: ArrayLike,
-                       func: typing.Callable[..., typing.Any], *,
+                       func: typing.Callable[[int, np.ndarray], float], *,
+                       funcnr: int = 0, physq: int = 0, degfd: int = 0,
+                       f: np.ndarray) -> None:
+    ...
+
+
+@typing.overload
+def fill_system_vector(mesh: "Mesh", problem: "Problem",
+                       geometry: typing.Literal["nodes", "points", "curves"],
+                       numbers: ArrayLike,
+                       func: typing.Callable[[int, np.ndarray], float], *,
+                       funcnr: int = 0, physq: int = 0, degfd: int = 0,
+                       f: None = None) -> np.ndarray:
+    ...
+
+
+# FIXME: defaults in code are 0; docstring says 1. Also, docstring says func
+#        only takes a coordinate vector but it also takes funcnr.
+def fill_system_vector(mesh: "Mesh", problem: "Problem",
+                       geometry: typing.Literal["nodes", "points", "curves"],
+                       numbers: ArrayLike,
+                       func: typing.Callable[[int, np.ndarray], float], *,
                        funcnr: int = 0, physq: int = 0, degfd: int = 0,
                        f: np.ndarray | None = None) -> np.ndarray | None:
     """
