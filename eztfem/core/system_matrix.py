@@ -1,9 +1,22 @@
+import typing
 import numpy as np
 from scipy.sparse import lil_matrix, eye
 from .pos_array import pos_array, pos_array_vec
 
+if typing.TYPE_CHECKING:
+    from .meshgen import Mesh
+    from .problem import Problem
+    from .user import User
 
-def build_system(mesh, problem, element, user, **kwargs):
+
+# TODO: Narrow down type for element routine
+def build_system(mesh: "Mesh", problem: "Problem",
+                 element: typing.Callable[..., typing.Any], user: "User", *,
+                 physqrow: np.typing.NDArray[np.integer] | None = None,
+                 physqcol: np.typing.NDArray[np.integer] | None = None,
+                 order: typing.Literal["DN", "ND"] = "DN",
+                 posvectors: bool = False
+                 ):
     """
     Build the system matrix and right hand side.
 
@@ -52,10 +65,10 @@ def build_system(mesh, problem, element, user, **kwargs):
     """
 
     # Set default optional arguments
-    physqrow = kwargs.get('physqrow', np.arange(problem.nphysq, dtype=int))
-    physqcol = kwargs.get('physqcol', np.arange(problem.nphysq, dtype=int))
-    order = kwargs.get('order', 'DN')
-    posvectors = kwargs.get('posvectors', False)
+    if physqrow is None:
+        physqrow = np.arange(problem.nphysq, dtype=int)
+    if physqcol is None:
+        physqcol = np.arange(problem.nphysq, dtype=int)
 
     rowcolequal = np.array_equal(physqrow, physqcol)
 
@@ -71,7 +84,7 @@ def build_system(mesh, problem, element, user, **kwargs):
         posrow, _ = pos_array(problem, nodes, order=order)
 
         # indexing a list using another list
-        posr = np.hstack([posrow[i] for i in physqrow])
+        posr = np.hstack([posrow[i] for i in physqrow], dtype=int)  # type: ignore
 
         if rowcolequal:
             posc = posr
@@ -94,7 +107,13 @@ def build_system(mesh, problem, element, user, **kwargs):
     return A, f
 
 
-def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
+def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
+                          element: typing.Callable[..., typing.Any], user: "User",
+                          curve: int, *, A: np.ndarray | None = None,
+                          physqrow: np.ndarray | None = None,
+                          physqcol: np.ndarray | None = None,
+                          order: typing.Literal["DN", "ND"] = "DN",
+                          posvectors: bool = False):
     """
     Add boundary elements to the system vector and optionally to the system
     matrix.
@@ -139,11 +158,10 @@ def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
     """
 
     # Default optional arguments
-    A = kwargs.get('A', None)
-    physqrow = kwargs.get('physqrow', np.arange(problem.nphysq, dtype=int))
-    physqcol = kwargs.get('physqcol', np.arange(problem.nphysq, dtype=int))
-    order = kwargs.get('order', 'DN')
-    posvectors = kwargs.get('posvectors', False)
+    if physqrow is None:
+        physqrow = np.arange(problem.nphysq, dtype=int)
+    if physqcol is None:
+        physqcol = np.arange(problem.nphysq, dtype=int)
 
     mat_present = A is not None
 
@@ -157,7 +175,7 @@ def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
         posrow, _ = pos_array(problem, nodes, order=order)
 
         # indexing a list using another list
-        posr = np.hstack([posrow[i] for i in physqrow])
+        posr = np.hstack([posrow[i] for i in physqrow], dtype=int)  # type: ignore
 
         if mat_present:
             if rowcolequal:
@@ -176,20 +194,23 @@ def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
             posvec, _ = pos_array_vec(problem, nodes, order=order)
             if mat_present:
                 elemvec, elemmat = element(elem, coor, user, posrow, posvec)
-                A[posr[:, None], posc] += elemmat
+                A[posr[:, None], posc] += elemmat  # type: ignore  # Incorrectly inferred as possibly unbound
             else:
                 elemvec = element(elem, coor, user, posrow, posvec)
         else:
             if mat_present:
                 elemvec, elemmat = element(elem, coor, user, posrow)
-                A[posr[:, None], posc] += elemmat
+                A[posr[:, None], posc] += elemmat # type: ignore
             else:
                 elemvec = element(elem, coor, user, posrow)
 
         f[posr] += elemvec
 
 
-def apply_essential(A, f, uess, iess, **kwargs):
+# FIXME: Docstring parameters names Ain and fin do not reflect the in-code
+#        names A and f.
+def apply_essential(A: lil_matrix, f: np.ndarray, uess: np.ndarray,
+                    iess: np.ndarray, *, return_Aup: bool = False):
     """
     Add effect of essential boundary conditions to right-hand side.
 
@@ -219,8 +240,6 @@ def apply_essential(A, f, uess, iess, **kwargs):
 
     assert (uess is not None)
 
-    return_Aup = kwargs.get('return_Aup', False)
-
     # initialize some parameters
     nd = f.shape[0]
     npp = iess.shape[0]
@@ -235,9 +254,9 @@ def apply_essential(A, f, uess, iess, **kwargs):
     Aup = A[iu, :][:, iess]
 
     # modify A
-    A[iu[:, None], iess] = lil_matrix((nu, npp))
-    A[iess[:, None], iu] = lil_matrix((npp, nu))
-    A[iess[:, None], iess] = eye(npp)
+    A[iu[:, None], iess] = lil_matrix((nu, npp))  # type: ignore
+    A[iess[:, None], iu] = lil_matrix((npp, nu))  # type: ignore
+    A[iess[:, None], iess] = eye(npp)  # type: ignore
 
     # modify f
     f[iu] -= Aup.dot(uess[iess])
