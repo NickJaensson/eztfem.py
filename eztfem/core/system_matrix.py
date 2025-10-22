@@ -9,14 +9,36 @@ if typing.TYPE_CHECKING:
     from .user import User
 
 
-# TODO: Narrow down type for element routine
+@typing.overload
 def build_system(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[..., typing.Any], user: "User", *,
+                 element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], tuple[np.ndarray, np.ndarray]],
+                 user: "User", *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
                  order: typing.Literal["DN", "ND"] = "DN",
-                 posvectors: bool = False
-                 ):
+                 posvectors: typing.Literal[True],
+                 ) -> tuple[lil_matrix, np.ndarray]:
+    ...
+
+@typing.overload
+def build_system(mesh: "Mesh", problem: "Problem",
+                 element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], tuple[np.ndarray, np.ndarray]],
+                 user: "User", *,
+                 physqrow: np.typing.NDArray[np.integer] | None = None,
+                 physqcol: np.typing.NDArray[np.integer] | None = None,
+                 order: typing.Literal["DN", "ND"] = "DN",
+                 posvectors: typing.Literal[False] = False,
+                 ) -> tuple[lil_matrix, np.ndarray]:
+    ...
+
+def build_system(mesh: "Mesh", problem: "Problem",
+                 element: typing.Callable[..., tuple[np.ndarray, np.ndarray]],
+                 user: "User", *,
+                 physqrow: np.typing.NDArray[np.integer] | None = None,
+                 physqcol: np.typing.NDArray[np.integer] | None = None,
+                 order: typing.Literal["DN", "ND"] = "DN",
+                 posvectors: bool = False,
+                 ) -> tuple[lil_matrix, np.ndarray]:
     """
     Build the system matrix and right hand side.
 
@@ -107,13 +129,33 @@ def build_system(mesh: "Mesh", problem: "Problem",
     return A, f
 
 
+@typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: typing.Callable[..., typing.Any], user: "User",
-                          curve: int, *, A: np.ndarray | None = None,
+                          element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], tuple[np.ndarray, np.ndarray]],
+                          user: "User", curve: int, *, A: np.ndarray | None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: typing.Literal["DN", "ND"] = "DN",
-                          posvectors: bool = False):
+                          posvectors: typing.Literal[True]) -> None:
+    ...
+
+@typing.overload
+def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
+                          element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], tuple[np.ndarray, np.ndarray]],
+                          user: "User", curve: int, *, A: np.ndarray | None = None,
+                          physqrow: np.ndarray | None = None,
+                          physqcol: np.ndarray | None = None,
+                          order: typing.Literal["DN", "ND"] = "DN",
+                          posvectors: typing.Literal[False] = False) -> None:
+    ...
+
+def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
+                          element: typing.Callable[..., tuple[np.ndarray, np.ndarray]],
+                          user: "User", curve: int, *, A: np.ndarray | None = None,
+                          physqrow: np.ndarray | None = None,
+                          physqcol: np.ndarray | None = None,
+                          order: typing.Literal["DN", "ND"] = "DN",
+                          posvectors: bool = False) -> None:
     """
     Add boundary elements to the system vector and optionally to the system
     matrix.
