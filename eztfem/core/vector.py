@@ -63,7 +63,7 @@ class Vector:
 
 @typing.overload
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[[int, np.ndarray, "User", list[list[int]], list[list[int]]], np.ndarray],
+                 element: typing.Callable[[int, np.ndarray, "User", typing.Sequence[typing.Sequence[int]], typing.Sequence[typing.Sequence[int]]], np.ndarray],
                  user: "User", *, vec: int | None = None,
                  order: Order = "DN",
                  posvectors: typing.Literal[True]) -> Vector:
@@ -71,7 +71,7 @@ def deriv_vector(mesh: "Mesh", problem: "Problem",
 
 @typing.overload
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[[int, np.ndarray, "User", list[list[int]]], np.ndarray],
+                 element: typing.Callable[[int, np.ndarray, "User", typing.Sequence[typing.Sequence[int]]], np.ndarray],
                  user: "User", *, vec: int | None = None,
                  order: Order = "DN",
                  posvectors: typing.Literal[False] = False) -> Vector:

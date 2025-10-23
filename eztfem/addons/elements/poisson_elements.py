@@ -1,3 +1,5 @@
+import typing
+
 import numpy as np
 
 from ...core.shapefunc import isoparametric_deformation, \
@@ -8,7 +10,8 @@ from .tp import NatbounCurveUser, PoissonElemUser, VelocityAwareUser
 
 # FIXME: Docstring suggests pos is a list[ndarray], internal typing all the way
 #        down to pos_array.py suggests these should take list[list[int]].
-def poisson_elem(elem: int, coor: np.ndarray, user: PoissonElemUser, pos: list[list[int]]):
+def poisson_elem(elem: int, coor: np.ndarray, user: PoissonElemUser,
+                 pos: typing.Sequence[typing.Sequence[int]]):
     """
     Element routine for the Poisson equation: - alpha nabla^2 u = f
 
@@ -88,7 +91,7 @@ def poisson_elem(elem: int, coor: np.ndarray, user: PoissonElemUser, pos: list[l
 
 
 def poisson_deriv(elem: int, coor: np.ndarray, user: VelocityAwareUser,
-                  pos: list[list[int]]):
+                  pos: typing.Sequence[typing.Sequence[int]]):
     """
     Compute the gradient of the velocity field for a given element.
 
@@ -139,7 +142,8 @@ def poisson_deriv(elem: int, coor: np.ndarray, user: VelocityAwareUser,
     return elemvec
 
 
-def poisson_natboun_curve(elem: int, coor: np.ndarray, user: NatbounCurveUser, pos: list[list[int]]):
+def poisson_natboun_curve(elem: int, coor: np.ndarray, user: NatbounCurveUser,
+                          pos: typing.Sequence[typing.Sequence[int]]):
     """
     Boundary element for a natural boundary on a curve for the
     Poisson/diffusion equation: alpha * dudn = h

@@ -11,7 +11,7 @@ if typing.TYPE_CHECKING:
 
 @typing.overload
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
-                                element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], float],
+                                element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]], typing.Sequence[typing.Sequence[int]]], float],
                                 user: "User", *, curve: int = 0,
                                 order: Order = "DN",
                                 posvectors: typing.Literal[True]) -> float:
@@ -19,7 +19,7 @@ def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
 
 @typing.overload
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
-                                element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], float],
+                                element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]]], float],
                                 user: "User", *, curve: int = 0,
                                 order: Order = "DN",
                                 posvectors: typing.Literal[False] = False) -> float:

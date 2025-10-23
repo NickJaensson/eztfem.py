@@ -12,7 +12,7 @@ if typing.TYPE_CHECKING:
 
 @typing.overload
 def build_system(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], tuple[np.ndarray, np.ndarray]],
+                 element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]], typing.Sequence[typing.Sequence[int]]], tuple[np.ndarray, np.ndarray]],
                  user: "User", *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
@@ -23,7 +23,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
 
 @typing.overload
 def build_system(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], tuple[np.ndarray, np.ndarray]],
+                 element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]]], tuple[np.ndarray, np.ndarray]],
                  user: "User", *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
@@ -133,7 +133,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
 # A provided, posvectors True -> element takes two lists and returns both elemmat and elemvec
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], tuple[np.ndarray, np.ndarray]],
+                          element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]], typing.Sequence[typing.Sequence[int]]], tuple[np.ndarray, np.ndarray]],
                           user: "User", curve: int, *, A: np.ndarray,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
@@ -144,7 +144,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 # A provided, posvectors False -> element takes one list and returns both elemmat and elemvec
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], tuple[np.ndarray, np.ndarray]],
+                          element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]]], tuple[np.ndarray, np.ndarray]],
                           user: "User", curve: int, *, A: np.ndarray,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
@@ -155,7 +155,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 # A not provided, posvectors True -> element takes two lists and returns only elemvec
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], np.ndarray],
+                          element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]], typing.Sequence[typing.Sequence[int]]], np.ndarray],
                           user: "User", curve: int, *, A: None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
@@ -166,7 +166,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 # A not provided, posvectors False -> element takes one list and returns only elemvec 
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], np.ndarray],
+                          element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]]], np.ndarray],
                           user: "User", curve: int, *, A: None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
