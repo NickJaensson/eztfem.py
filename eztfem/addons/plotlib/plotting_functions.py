@@ -18,7 +18,7 @@ if typing.TYPE_CHECKING:
     from ...core.meshgen import Mesh
 
 
-def fill_mesh_pv(mesh_pv: pv.PolyData, problem: "Problem",
+def fill_mesh_pv(mesh_pv: pv.DataSet, problem: "Problem",
                  u: np.ndarray, physq: int, degfd: ArrayLike[int, np.integer]):
     """
     Fills the point data of a mesh object with the values from a given solution
@@ -96,7 +96,7 @@ def fill_mesh_pv(mesh_pv: pv.PolyData, problem: "Problem",
     return mesh_pv_plot
 
 
-def fill_mesh_pv_vector(mesh_pv: pv.PolyData, problem: "Problem",
+def fill_mesh_pv_vector(mesh_pv: pv.DataSet, problem: "Problem",
                         vector: "Vector", degfd: int):
     """
     Fills the point data of a mesh object with the values from a given solution
@@ -139,7 +139,7 @@ def fill_mesh_pv_vector(mesh_pv: pv.PolyData, problem: "Problem",
     return mesh_pv_plot
 
 
-def plot_mesh_pv(mesh_pv: pv.PolyData,
+def plot_mesh_pv(mesh_pv: pv.DataSet,
                  window_size: tuple[int, int] = (800, 400), **kwargs: typing.Any):
     """
     Plot a mesh.
@@ -177,7 +177,7 @@ def plot_mesh_pv(mesh_pv: pv.PolyData,
     plotter.show()
 
 
-def plot_sol(mesh_pv: pv.PolyData, problem: "Problem", u: np.ndarray,
+def plot_sol(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
              *, physq: int = 0, degfd: int = 0,
              window_size: tuple[int, int] = (800, 400), **kwargs: typing.Any):
     """
@@ -216,7 +216,7 @@ def plot_sol(mesh_pv: pv.PolyData, problem: "Problem", u: np.ndarray,
     plotter.show()
 
 
-def plot_sol_contour(mesh_pv: pv.PolyData, problem: "Problem", u: np.ndarray,
+def plot_sol_contour(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
                      nlevels=10, physq: int = 0, degfd: int = 0,
                      window_size: tuple[int, int] = (800, 400),
                      **kwargs: typing.Any):
@@ -261,7 +261,7 @@ def plot_sol_contour(mesh_pv: pv.PolyData, problem: "Problem", u: np.ndarray,
     plotter.show()
 
 
-def plot_vector(mesh_pv: pv.PolyData, problem: "Problem", vector: "Vector",
+def plot_vector(mesh_pv: pv.DataSet, problem: "Problem", vector: "Vector",
                 *, degfd: int = 0, window_size: tuple[int, int] = (800, 400),
                 **kwargs: typing.Any):
     """
@@ -298,7 +298,7 @@ def plot_vector(mesh_pv: pv.PolyData, problem: "Problem", vector: "Vector",
     plotter.show()
 
 
-def plot_vector_contours(mesh_pv: pv.PolyData, problem: "Problem",
+def plot_vector_contours(mesh_pv: pv.DataSet, problem: "Problem",
                          vector: "Vector", nlevels: int = 10, *, degfd: int = 0,
                          window_size: tuple[int, int] = (800, 400),
                          **kwargs: typing.Any):
@@ -514,7 +514,7 @@ def plot_points_curves(mesh: "Mesh"):
 
 # FIXME: Arguments are missing in docstring.
 # TODO: `u` could be tuple[tuple[float, float, float], tuple[float, float, float]]
-def plot_sol_over_line(mesh_pv: pv.PolyData, problem: "Problem", u: np.ndarray,
+def plot_sol_over_line(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
                        points: list[list[float]], physq: int = 0,
                        degfd: int = 0, npoints: int = 200,
                        plot_mesh: bool = False):
@@ -564,7 +564,7 @@ def plot_sol_over_line(mesh_pv: pv.PolyData, problem: "Problem", u: np.ndarray,
                                          resolution=npoints)
 
 
-def plot_vector_over_line(mesh_pv: pv.PolyData, problem: "Problem",
+def plot_vector_over_line(mesh_pv: pv.DataSet, problem: "Problem",
                           vector: "Vector", points: list[list[float]],
                           degfd: int = 0, npoints: int = 200,
                           plot_mesh: bool = False):
@@ -613,7 +613,7 @@ def plot_vector_over_line(mesh_pv: pv.PolyData, problem: "Problem",
                                          resolution=npoints)
 
 
-def plot_quiver(mesh_pv: pv.PolyData, problem: "Problem", u: np.ndarray, *,
+def plot_quiver(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray, *,
                 physq: int = 0, window_size: tuple[int, int] = (800, 400),
                 scale: float = 0.1, **kwargs: typing.Any):
     """
@@ -875,14 +875,14 @@ def _reference_triangle_mesh(n: int):
 def plot_gauss_legendre(shape: typing.Literal["quad"], *, n: int,
                         ax: Axes, marker: str = "+", color: str = "k",
                         markersize: float = 8, show: bool = True,
-                        **kwargs: typing.Any):
+                        **kwargs: typing.Any) -> Axes:
     ...
 
 @typing.overload
 def plot_gauss_legendre(shape: typing.Literal["quad", "triangle"], *, p: int,
                         ax: Axes, marker: str = "+", color: str = "k",
                         markersize: float = 8, show: bool = True,
-                        **kwargs: typing.Any):
+                        **kwargs: typing.Any) -> Axes:
     ...
 
 def plot_gauss_legendre(shape: typing.Literal["quad", "triangle"], *,
