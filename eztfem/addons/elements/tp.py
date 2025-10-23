@@ -2,19 +2,19 @@ import typing
 
 import numpy as np
 
-from ...core.tp import UserProtocol
+from ...core.tp import User
 
 P = typing.ParamSpec("P")
 T = typing.TypeVar("T")
 
 
-class CoorsysAwareUser(UserProtocol, typing.Protocol):
+class CoorsysAwareUser(User, typing.Protocol):
     """User protocol that is aware of its coordinate system."""
 
     coorsys: int
 
 
-class FuncAwareUser(UserProtocol, typing.Protocol[P, T]):
+class FuncAwareUser(User, typing.Protocol[P, T]):
     """User protocol that can provide user functions to element routines."""
 
     funcnr: int
@@ -22,26 +22,26 @@ class FuncAwareUser(UserProtocol, typing.Protocol[P, T]):
 
 
 # XXX: streamfunction_elements.py expects user.v
-class SFVelocityAwareUser(UserProtocol, typing.Protocol):
+class SFVelocityAwareUser(User, typing.Protocol):
     """User protocol that is aware of its stream velocity."""
 
     v: np.ndarray
 
 
 # XXX: stokes_elements.py and poisson_elements.py expect user.u
-class VelocityAwareUser(UserProtocol, typing.Protocol):
+class VelocityAwareUser(User, typing.Protocol):
     """User protocol that is aware of its stream velocity."""
 
     u: np.ndarray
 
 
-class DynamicViscosityAwareUser(UserProtocol, typing.Protocol):
+class DynamicViscosityAwareUser(User, typing.Protocol):
     """User protocol that is aware of its stream dynamic viscosity."""
 
     mu: float
 
 
-class AlphaAwareUser(UserProtocol, typing.Protocol):
+class AlphaAwareUser(User, typing.Protocol):
     """User protocol that is aware of a Poisson flow alpha constant."""
 
     alpha: float

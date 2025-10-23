@@ -2,12 +2,11 @@ import typing
 import numpy as np
 
 from .pos_array import pos_array, pos_array_vec
-from .tp import ArrayLike, Order, ElementRoutine, PosvecElementRoutine
+from .tp import ArrayLike, Order, User, ElementRoutine, PosvecElementRoutine
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
     from .problem import Problem
-    from .user import User
 
 
 class Vector:
@@ -63,20 +62,20 @@ class Vector:
 
 @typing.overload
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: PosvecElementRoutine[np.ndarray], user: "User", *,
+                 element: PosvecElementRoutine[np.ndarray], user: User, *,
                  vec: int | None = None, order: Order = "DN",
                  posvectors: typing.Literal[True]) -> Vector:
     ...
 
 @typing.overload
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: ElementRoutine[np.ndarray], user: "User", *,
+                 element: ElementRoutine[np.ndarray], user: User, *,
                  vec: int | None = None, order: Order = "DN",
                  posvectors: typing.Literal[False] = False) -> Vector:
     ...
 
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[..., typing.Any], user: "User", *,
+                 element: typing.Callable[..., typing.Any], user: User, *,
                  vec: int | None = None, order: Order = "DN",
                  posvectors: bool = False):
     """

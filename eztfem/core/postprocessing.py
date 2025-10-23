@@ -1,31 +1,30 @@
 import typing
 from .pos_array import pos_array, pos_array_vec
-from .tp import Order, ElementRoutine, PosvecElementRoutine
+from .tp import Order, User, ElementRoutine, PosvecElementRoutine
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
     from .problem import Problem
-    from .user import User
 
 
 @typing.overload
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
                                 element: PosvecElementRoutine[float],
-                                user: "User", *, curve: int = 0,
+                                user: User, *, curve: int = 0,
                                 order: Order = "DN",
                                 posvectors: typing.Literal[True]) -> float:
     ...
 
 @typing.overload
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
-                                element: ElementRoutine[float], user: "User",
+                                element: ElementRoutine[float], user: User,
                                 *, curve: int = 0, order: Order = "DN",
                                 posvectors: typing.Literal[False] = False) -> float:
     ...
 
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
                                 element: typing.Callable[..., float],
-                                user: "User", *, curve: int = 0,
+                                user: User, *, curve: int = 0,
                                 order: Order = "DN",
                                 posvectors: bool = False) -> float:
     """

@@ -2,18 +2,17 @@ import typing
 import numpy as np
 from scipy.sparse import lil_matrix, eye
 from .pos_array import pos_array, pos_array_vec
-from .tp import Order, ElementRoutine, PosvecElementRoutine
+from .tp import Order, ElementRoutine, User, PosvecElementRoutine
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
     from .problem import Problem
-    from .user import User
 
 
 @typing.overload
 def build_system(mesh: "Mesh", problem: "Problem",
                  element: PosvecElementRoutine[tuple[np.ndarray, np.ndarray]],
-                 user: "User", *,
+                 user: User, *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
                  order: Order = "DN",
@@ -24,7 +23,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
 @typing.overload
 def build_system(mesh: "Mesh", problem: "Problem",
                  element: ElementRoutine[tuple[np.ndarray, np.ndarray]],
-                 user: "User", *,
+                 user: User, *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
                  order: Order = "DN",
@@ -34,7 +33,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
 
 def build_system(mesh: "Mesh", problem: "Problem",
                  element: typing.Callable[..., tuple[np.ndarray, np.ndarray]],
-                 user: "User", *,
+                 user: User, *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
                  order: Order = "DN",
@@ -134,7 +133,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           element: PosvecElementRoutine[tuple[np.ndarray, np.ndarray]],
-                          user: "User", curve: int, *, A: np.ndarray,
+                          user: User, curve: int, *, A: np.ndarray,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
@@ -145,7 +144,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           element: ElementRoutine[tuple[np.ndarray, np.ndarray]],
-                          user: "User", curve: int, *, A: np.ndarray,
+                          user: User, curve: int, *, A: np.ndarray,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
@@ -156,7 +155,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           element: PosvecElementRoutine[np.ndarray],
-                          user: "User", curve: int, *, A: None = None,
+                          user: User, curve: int, *, A: None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
@@ -167,7 +166,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           element: ElementRoutine[np.ndarray],
-                          user: "User", curve: int, *, A: None = None,
+                          user: User, curve: int, *, A: None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
@@ -176,7 +175,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           element: typing.Callable[..., typing.Any],
-                          user: "User", curve: int, *, A: np.ndarray | None = None,
+                          user: User, curve: int, *, A: np.ndarray | None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
