@@ -42,9 +42,8 @@ class DynamicViscosityAwareUser(UserProtocol, typing.Protocol):
 
 
 class AlphaAwareUser(UserProtocol, typing.Protocol):
-    """User protocol that is aware of an alpha parameter."""
+    """User protocol that is aware of a Poisson flow alpha constant."""
 
-    # TODO: Not entirely sure what this parameter is.
     alpha: float
 
 
