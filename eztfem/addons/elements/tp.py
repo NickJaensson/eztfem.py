@@ -83,8 +83,8 @@ class StokesDerivUser(CoorsysAwareUser, VelocityAwareUser,
 
 
 class NatbounCurveUser(CoorsysAwareUser,
-                             FuncAwareUser[[int, np.ndarray], np.ndarray],
-                             typing.Protocol):
+                       FuncAwareUser[[int, np.ndarray], np.ndarray],
+                       typing.Protocol):
     """User protocol that provides the fields required for
     :func:`poisson_natboun_curve` and :func:`stokes_natboun_curve`."""
     pass
@@ -98,7 +98,7 @@ class StokesFlowrateCurveUser(CoorsysAwareUser, VelocityAwareUser,
 
 
 class StreamfunctionUser(CoorsysAwareUser, SFVelocityAwareUser,
-                          typing.Protocol):
+                         typing.Protocol):
     """User protocol that provides the fields required for
     :func:`streamfunction_elem` and :func:`streamfunction_natboun_curve`."""
     pass
