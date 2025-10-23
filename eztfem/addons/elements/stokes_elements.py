@@ -1,16 +1,24 @@
+# pyright: reportConstantRedefinition=false
+
+# NOTE: Pyright considers any fully uppercase variable name to be a constant.
+#       This implementation uses e.g. N as the name for a loop variable, which
+#       means every iteraton writes a new value to a "constant". Since this is
+#       not a desirable diagnostic, this rule is disabled for this file.
+
 import typing
 
 import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
 
-if typing.TYPE_CHECKING:
-    from ...core.user import User
+from .tp import StokesDerivUser, StokesElemUser, StokesFlowrateCurveUser, \
+    NatbounCurveUser, VelocityAwareUser
 
 
 # FIXME: Docstring suggests pos is a list[ndarray], internal typing all the way
 #        down to pos_array.py suggests these should take list[list[int]].
-def stokes_elem(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
+def stokes_elem(elem: int, coor: np.ndarray, user: StokesElemUser,
+                pos: list[list[int]]):
     """
     Element routine for the Poisson equation:
     - nabla.( mu (nabla u+nabla u^T) ) + nabla p = f and nabla.u = 0
@@ -136,7 +144,8 @@ def stokes_elem(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]])
     return elemmat, elemvec
 
 
-def stokes_deriv(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
+def stokes_deriv(elem: int, coor: np.ndarray, user: StokesDerivUser,
+                 pos: list[list[int]]):
     """
     Compute the derivative of the velocity field for post-processing.
 
@@ -229,7 +238,8 @@ def stokes_deriv(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]
     return elemvec
 
 
-def stokes_natboun_curve(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
+def stokes_natboun_curve(elem: int, coor: np.ndarray,
+                         user: NatbounCurveUser, pos: list[list[int]]):
     """
     Compute the boundary element for a natural boundary on a curve for the
     Stokes equation.
@@ -290,12 +300,15 @@ def stokes_natboun_curve(elem: int, coor: np.ndarray, user: "User", pos: list[li
                 tmp[N, j] = np.sum(fg[:, j] * user.phi[:, N] * curvel
                                    * user.wg)
 
-        elemvec = tmp.reshape(ndim * ndf, order='F')
+        elemvec = typing.cast(np.ndarray, tmp.reshape(ndim * ndf, order='F'))
 
     return elemvec
 
 
-def stokes_flowrate_curve(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
+
+
+def stokes_flowrate_curve(elem: int, coor: np.ndarray,
+                          user: StokesFlowrateCurveUser, pos: list[list[int]]):
     """
     Compute the flowrate through a curve for boundary elements.
 
@@ -353,7 +366,8 @@ def stokes_flowrate_curve(elem: int, coor: np.ndarray, user: "User", pos: list[l
     return flowrate
 
 
-def stokes_pressure(elem: int, coor: np.ndarray, user: "User", pos: list[list[int]]):
+def stokes_pressure(elem: int, coor: np.ndarray, user: VelocityAwareUser,
+                    pos: list[list[int]]):
     """
     Compute the pressure for post-processing in Stokes flow.
 

@@ -1,15 +1,10 @@
-import typing
-
 import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
+from .tp import StreamfunctionUser
 
 
-if typing.TYPE_CHECKING:
-    from ...core.user import User
-
-
-def streamfunction_elem(elem: int, coor: np.ndarray, user: "User",
+def streamfunction_elem(elem: int, coor: np.ndarray, user: StreamfunctionUser,
                         pos: list[list[int]], posvec: list[list[int]]):
     """
     Compute the element matrix and vector for the streamfunction equation:
@@ -93,7 +88,7 @@ def streamfunction_elem(elem: int, coor: np.ndarray, user: "User",
     return elemmat, elemvec
 
 
-def streamfunction_natboun_curve(elem: int, coor: np.ndarray, user: "User",
+def streamfunction_natboun_curve(elem: int, coor: np.ndarray, user: StreamfunctionUser,
                                  pos: list[list[int]], posvec: list[list[int]]):
     """
     Compute the boundary element for a natural boundary on a curve for the
