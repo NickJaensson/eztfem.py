@@ -35,14 +35,15 @@ class User(typing.Protocol):
     psi: np.ndarray
 
 
-RoutineReturnT = typing.TypeVar("RoutineReturnT")
+UserT = typing_extensions.TypeVar("UserT", bound=User, default=User)
+RoutineReturnT = typing_extensions.TypeVar("RoutineReturnT", default=typing.Any)
 
 ElementRoutine: typing.TypeAlias = typing.Callable[  # A function that takes
-    [int, np.ndarray, User, NestedSequence[int]],  # elem, coor, user, pos 
+    [int, np.ndarray, UserT, NestedSequence[int]],  # elem, coor, user, pos 
     RoutineReturnT,  # and returns a yet-to-be-specified type
 ]
 
 PosvecElementRoutine: typing.TypeAlias = typing.Callable[
-    [int, np.ndarray, User, NestedSequence[int], NestedSequence[int]],  # elem, coor, user, pos, posvec
+    [int, np.ndarray, UserT, NestedSequence[int], NestedSequence[int]],  # elem, coor, user, pos, posvec
     RoutineReturnT,
 ]

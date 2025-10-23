@@ -2,7 +2,7 @@ import typing
 import numpy as np
 
 from .pos_array import pos_array, pos_array_vec
-from .tp import ArrayLike, Order, User, ElementRoutine, PosvecElementRoutine
+from .tp import ArrayLike, Order, UserT, ElementRoutine, PosvecElementRoutine
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
@@ -62,20 +62,20 @@ class Vector:
 
 @typing.overload
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: PosvecElementRoutine[np.ndarray], user: User, *,
-                 vec: int | None = None, order: Order = "DN",
+                 element: PosvecElementRoutine[UserT, np.ndarray], user: UserT,
+                 *, vec: int | None = None, order: Order = "DN",
                  posvectors: typing.Literal[True]) -> Vector:
     ...
 
 @typing.overload
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: ElementRoutine[np.ndarray], user: User, *,
+                 element: ElementRoutine[UserT, np.ndarray], user: UserT, *,
                  vec: int | None = None, order: Order = "DN",
                  posvectors: typing.Literal[False] = False) -> Vector:
     ...
 
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[..., typing.Any], user: User, *,
+                 element: typing.Callable[..., typing.Any], user: UserT, *,
                  vec: int | None = None, order: Order = "DN",
                  posvectors: bool = False):
     """
@@ -90,7 +90,7 @@ def deriv_vector(mesh: "Mesh", problem: "Problem",
     element : callable
         Function handle to the element function routine.
     user : Any
-        User object to pass parameters and data to the element routine.
+        UserT object to pass parameters and data to the element routine.
 
     Keyword arguments
     -----------------

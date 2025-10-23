@@ -2,7 +2,7 @@ import typing
 import numpy as np
 from scipy.sparse import lil_matrix, eye
 from .pos_array import pos_array, pos_array_vec
-from .tp import Order, ElementRoutine, User, PosvecElementRoutine
+from .tp import Order, ElementRoutine, User, UserT, PosvecElementRoutine
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
@@ -11,8 +11,8 @@ if typing.TYPE_CHECKING:
 
 @typing.overload
 def build_system(mesh: "Mesh", problem: "Problem",
-                 element: PosvecElementRoutine[tuple[np.ndarray, np.ndarray]],
-                 user: User, *,
+                 element: PosvecElementRoutine[UserT, tuple[np.ndarray, np.ndarray]],
+                 user: UserT, *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
                  order: Order = "DN",
@@ -22,8 +22,8 @@ def build_system(mesh: "Mesh", problem: "Problem",
 
 @typing.overload
 def build_system(mesh: "Mesh", problem: "Problem",
-                 element: ElementRoutine[tuple[np.ndarray, np.ndarray]],
-                 user: User, *,
+                 element: ElementRoutine[UserT, tuple[np.ndarray, np.ndarray]],
+                 user: UserT, *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
                  order: Order = "DN",
@@ -33,7 +33,7 @@ def build_system(mesh: "Mesh", problem: "Problem",
 
 def build_system(mesh: "Mesh", problem: "Problem",
                  element: typing.Callable[..., tuple[np.ndarray, np.ndarray]],
-                 user: User, *,
+                 user: UserT, *,
                  physqrow: np.typing.NDArray[np.integer] | None = None,
                  physqcol: np.typing.NDArray[np.integer] | None = None,
                  order: Order = "DN",
@@ -50,8 +50,8 @@ def build_system(mesh: "Mesh", problem: "Problem",
         Problem object.
     element : callable
         Function handle to the element function routine.
-    user : User
-        User object to pass parameters and data to the element routine.
+    user : UserT
+        UserT object to pass parameters and data to the element routine.
 
     Keyword arguments
     -----------------
@@ -132,8 +132,8 @@ def build_system(mesh: "Mesh", problem: "Problem",
 # A provided, posvectors True -> element takes two lists and returns both elemmat and elemvec
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: PosvecElementRoutine[tuple[np.ndarray, np.ndarray]],
-                          user: User, curve: int, *, A: np.ndarray,
+                          element: PosvecElementRoutine[UserT, tuple[np.ndarray, np.ndarray]],
+                          user: UserT, curve: int, *, A: np.ndarray,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
@@ -143,8 +143,8 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 # A provided, posvectors False -> element takes one list and returns both elemmat and elemvec
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: ElementRoutine[tuple[np.ndarray, np.ndarray]],
-                          user: User, curve: int, *, A: np.ndarray,
+                          element: ElementRoutine[UserT, tuple[np.ndarray, np.ndarray]],
+                          user: UserT, curve: int, *, A: np.ndarray,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
@@ -154,8 +154,8 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 # A not provided, posvectors True -> element takes two lists and returns only elemvec
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: PosvecElementRoutine[np.ndarray],
-                          user: User, curve: int, *, A: None = None,
+                          element: PosvecElementRoutine[UserT, np.ndarray],
+                          user: UserT, curve: int, *, A: None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
@@ -165,8 +165,8 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 # A not provided, posvectors False -> element takes one list and returns only elemvec 
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: ElementRoutine[np.ndarray],
-                          user: User, curve: int, *, A: None = None,
+                          element: ElementRoutine[UserT, np.ndarray],
+                          user: UserT, curve: int, *, A: None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
