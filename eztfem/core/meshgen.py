@@ -352,7 +352,7 @@ def distribute_elements(nelem: int, ratio: Ratio,
 # TODO: enum for eltype, ratio
 def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
            origin: float | None = None, length: float | None = None,
-           ratio: Ratio, factor: float = 1):
+           ratio: Ratio | None = None, factor: float = 1):
     """
     Simple mesh generator for 1D lines on the interval [0, 1].
 
@@ -416,7 +416,7 @@ def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
     return mesh
 
 
-def line1d_2node(n: int, ratio: Ratio, factor: float):
+def line1d_2node(n: int, ratio: Ratio | None, factor: float):
     '''
     Generate a mesh on region [0,1] using line elements with 2 nodes.
     The numbering is straightforward:
@@ -468,7 +468,7 @@ def line1d_2node(n: int, ratio: Ratio, factor: float):
     return mesh
 
 
-def line1d_3node(n: int, ratio: Ratio, factor: float):
+def line1d_3node(n: int, ratio: Ratio | None, factor: float):
     '''
     Generate a mesh on region [0,1] using line elements with 3 nodes.
     The numbering is straightforward:

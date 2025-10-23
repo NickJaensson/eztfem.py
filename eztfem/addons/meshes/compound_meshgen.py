@@ -102,9 +102,9 @@ def l_shape2d(ne: list[int],
 
     # optional arguments
     n1, n2, n3, n4 = ne
-    o1, o2 = origin or [0, 0]
-    l1, l2, l3, l4 = length or [1, 1, 1, 1]
-    f1, f2, f3, f4 = factor or [1, 1, 1, 1]
+    o1, o2 = [0, 0] if origin is None else origin
+    l1, l2, l3, l4 = [1, 1, 1, 1] if length is None else length
+    f1, f2, f3, f4 = [1, 1, 1, 1] if factor is None else factor
 
     mesh1 = quadrilateral2d([n1, n3], eltype, origin=(o1-l1, o2),
                             length=[l1, l3], ratio=[3, 1, 1, 3],
