@@ -1,15 +1,13 @@
-import typing
-
 import numpy as np
 
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
+from ...core.tp import NestedSequence
 from .tp import StreamfunctionUser
 
 
 def streamfunction_elem(elem: int, coor: np.ndarray, user: StreamfunctionUser,
-                        pos: typing.Sequence[typing.Sequence[int]],
-                        posvec: typing.Sequence[typing.Sequence[int]]):
+                        pos: NestedSequence[int], posvec: NestedSequence[int]):
     """
     Compute the element matrix and vector for the streamfunction equation:
     - nabla^2 psi = omega, where omega is derived from the velocity vector.
@@ -92,9 +90,10 @@ def streamfunction_elem(elem: int, coor: np.ndarray, user: StreamfunctionUser,
     return elemmat, elemvec
 
 
-def streamfunction_natboun_curve(elem: int, coor: np.ndarray, user: StreamfunctionUser,
-                                 pos: typing.Sequence[typing.Sequence[int]],
-                                 posvec: typing.Sequence[typing.Sequence[int]]):
+def streamfunction_natboun_curve(elem: int, coor: np.ndarray,
+                                 user: StreamfunctionUser,
+                                 pos: NestedSequence[int],
+                                 posvec: NestedSequence[int]):
     """
     Compute the boundary element for a natural boundary on a curve for the
     streamfunction equation (Poisson equation): dpsidn = -v * nx + u * ny

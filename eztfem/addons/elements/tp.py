@@ -2,7 +2,7 @@ import typing
 
 import numpy as np
 
-from ...core.user import UserProtocol
+from ...core.tp import UserProtocol
 
 P = typing.ParamSpec("P")
 T = typing.TypeVar("T")

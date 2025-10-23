@@ -1,16 +1,4 @@
-import typing
-
 import numpy as np
-
-
-class UserProtocol(typing.Protocol):
-    """Protocol class describing a minimal User class."""
-
-    wg: np.ndarray
-    xr: np.ndarray
-    phi: np.ndarray
-    dphi: np.ndarray
-    psi: np.ndarray
 
 
 # TODO: Typehint all possible user fields, maybe use a dataclass/attrs class.

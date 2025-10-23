@@ -2,7 +2,7 @@ import typing
 import numpy as np
 
 from .pos_array import pos_array, pos_array_vec
-from .tp import ArrayLike, Order
+from .tp import ArrayLike, Order, ElementRoutine, PosvecElementRoutine
 
 if typing.TYPE_CHECKING:
     from .meshgen import Mesh
@@ -63,24 +63,21 @@ class Vector:
 
 @typing.overload
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[[int, np.ndarray, "User", typing.Sequence[typing.Sequence[int]], typing.Sequence[typing.Sequence[int]]], np.ndarray],
-                 user: "User", *, vec: int | None = None,
-                 order: Order = "DN",
+                 element: PosvecElementRoutine[np.ndarray], user: "User", *,
+                 vec: int | None = None, order: Order = "DN",
                  posvectors: typing.Literal[True]) -> Vector:
     ...
 
 @typing.overload
 def deriv_vector(mesh: "Mesh", problem: "Problem",
-                 element: typing.Callable[[int, np.ndarray, "User", typing.Sequence[typing.Sequence[int]]], np.ndarray],
-                 user: "User", *, vec: int | None = None,
-                 order: Order = "DN",
+                 element: ElementRoutine[np.ndarray], user: "User", *,
+                 vec: int | None = None, order: Order = "DN",
                  posvectors: typing.Literal[False] = False) -> Vector:
     ...
 
 def deriv_vector(mesh: "Mesh", problem: "Problem",
                  element: typing.Callable[..., typing.Any], user: "User", *,
-                 vec: int | None = None,
-                 order: Order = "DN",
+                 vec: int | None = None, order: Order = "DN",
                  posvectors: bool = False):
     """
     Derive a vector of special structure.

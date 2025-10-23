@@ -8,9 +8,10 @@
 import typing
 
 import numpy as np
+
+from ...core.tp import NestedSequence
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
-
 from .tp import StokesDerivUser, StokesElemUser, StokesFlowrateCurveUser, \
     NatbounCurveUser, VelocityAwareUser
 
@@ -18,7 +19,7 @@ from .tp import StokesDerivUser, StokesElemUser, StokesFlowrateCurveUser, \
 # FIXME: Docstring suggests pos is a list[ndarray], internal typing all the way
 #        down to pos_array.py suggests these should take list[list[int]].
 def stokes_elem(elem: int, coor: np.ndarray, user: StokesElemUser,
-                pos: typing.Sequence[typing.Sequence[int]]):
+                pos: NestedSequence[int]):
     """
     Element routine for the Poisson equation:
     - nabla.( mu (nabla u+nabla u^T) ) + nabla p = f and nabla.u = 0
@@ -145,7 +146,7 @@ def stokes_elem(elem: int, coor: np.ndarray, user: StokesElemUser,
 
 
 def stokes_deriv(elem: int, coor: np.ndarray, user: StokesDerivUser,
-                 pos: typing.Sequence[typing.Sequence[int]]):
+                 pos: NestedSequence[int]):
     """
     Compute the derivative of the velocity field for post-processing.
 
@@ -239,7 +240,7 @@ def stokes_deriv(elem: int, coor: np.ndarray, user: StokesDerivUser,
 
 
 def stokes_natboun_curve(elem: int, coor: np.ndarray,
-                         user: NatbounCurveUser, pos: typing.Sequence[typing.Sequence[int]]):
+                         user: NatbounCurveUser, pos: NestedSequence[int]):
     """
     Compute the boundary element for a natural boundary on a curve for the
     Stokes equation.
@@ -309,7 +310,7 @@ def stokes_natboun_curve(elem: int, coor: np.ndarray,
 
 def stokes_flowrate_curve(elem: int, coor: np.ndarray,
                           user: StokesFlowrateCurveUser,
-                          pos: typing.Sequence[typing.Sequence[int]]):
+                          pos: NestedSequence[int]):
     """
     Compute the flowrate through a curve for boundary elements.
 
@@ -368,7 +369,7 @@ def stokes_flowrate_curve(elem: int, coor: np.ndarray,
 
 
 def stokes_pressure(elem: int, coor: np.ndarray, user: VelocityAwareUser,
-                    pos: typing.Sequence[typing.Sequence[int]]):
+                    pos: NestedSequence[int]):
     """
     Compute the pressure for post-processing in Stokes flow.
 

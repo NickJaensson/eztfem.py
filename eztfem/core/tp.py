@@ -21,3 +21,26 @@ IntArrayLike: typing.TypeAlias = ArrayLike[int, np.integer]
 
 Order: typing.TypeAlias = typing.Literal["DN", "ND"]
 Ratio: typing.TypeAlias = typing.Literal[0, 1, 2, 3, 4]
+
+NestedSequence: typing.TypeAlias = typing.Sequence[typing.Sequence[py_dtypeT]]
+
+RoutineReturnT = typing.TypeVar("RoutineReturnT")
+
+class UserProtocol(typing.Protocol):
+    """Protocol class describing a minimal User class."""
+
+    wg: np.ndarray
+    xr: np.ndarray
+    phi: np.ndarray
+    dphi: np.ndarray
+    psi: np.ndarray
+
+ElementRoutine: typing.TypeAlias = typing.Callable[  # A function that takes
+    [int, np.ndarray, UserProtocol, NestedSequence[int]],  # elem, coor, user, pos 
+    RoutineReturnT,  # and returns a yet-to-be-specified type
+]
+
+PosvecElementRoutine: typing.TypeAlias = typing.Callable[
+    [int, np.ndarray, UserProtocol, NestedSequence[int], NestedSequence[int]],  # elem, coor, user, pos, posvec
+    RoutineReturnT,
+]

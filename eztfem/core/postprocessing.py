@@ -1,9 +1,8 @@
 import typing
 from .pos_array import pos_array, pos_array_vec
-from .tp import Order
+from .tp import Order, ElementRoutine, PosvecElementRoutine
 
 if typing.TYPE_CHECKING:
-    import numpy as np
     from .meshgen import Mesh
     from .problem import Problem
     from .user import User
@@ -11,7 +10,7 @@ if typing.TYPE_CHECKING:
 
 @typing.overload
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
-                                element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]], typing.Sequence[typing.Sequence[int]]], float],
+                                element: PosvecElementRoutine[float],
                                 user: "User", *, curve: int = 0,
                                 order: Order = "DN",
                                 posvectors: typing.Literal[True]) -> float:
@@ -19,9 +18,8 @@ def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
 
 @typing.overload
 def integrate_boundary_elements(mesh: "Mesh", problem: "Problem",
-                                element: typing.Callable[[int, "np.ndarray", "User", typing.Sequence[typing.Sequence[int]]], float],
-                                user: "User", *, curve: int = 0,
-                                order: Order = "DN",
+                                element: ElementRoutine[float], user: "User",
+                                *, curve: int = 0, order: Order = "DN",
                                 posvectors: typing.Literal[False] = False) -> float:
     ...
 
