@@ -115,7 +115,6 @@ def poisson_deriv(elem: int, coor: np.ndarray, user: VelocityAwareUser,
     This function is intended for use with `deriv_vector` or `plot_sol`.
 
     """
-    print(pos)
 
     # Set some values
     ndim = coor.shape[1]
