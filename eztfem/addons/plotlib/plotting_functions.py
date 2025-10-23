@@ -1,3 +1,9 @@
+# pyright: reportUnknownMemberType=false
+
+# NOTE: There's a lot of these errors (>100) caused by incomplete typehints in
+#       matplotlib and pyvista. Instead of adding a pyright-ignore comment to
+#       every individual line, this turns them from off for this entire file.
+
 import typing
 from matplotlib.axes import Axes
 import numpy as np
@@ -170,7 +176,7 @@ def plot_mesh_pv(mesh_pv: pv.DataSet,
     surface = mesh_pv.separate_cells().extract_surface(nonlinear_subdivision=4)
     edges = surface.extract_feature_edges()
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=typing.cast(list[int], window_size))
     plotter.add_mesh(surface)
     plotter.add_mesh(edges, style=style, color=color, **kwargs)
     plotter.camera_position = 'xy'
@@ -208,7 +214,7 @@ def plot_sol(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
 
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=typing.cast(list[int], window_size))
     plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
@@ -217,7 +223,7 @@ def plot_sol(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
 
 
 def plot_sol_contour(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
-                     nlevels=10, physq: int = 0, degfd: int = 0,
+                     nlevels: int = 10, physq: int = 0, degfd: int = 0,
                      window_size: tuple[int, int] = (800, 400),
                      **kwargs: typing.Any):
     """
@@ -250,11 +256,11 @@ def plot_sol_contour(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
 
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
-    contours = mesh_pv_plot.contour(nlevels, scalars='u')
+    contours = typing.cast(pv.PolyData, mesh_pv_plot.contour(nlevels, scalars='u'))
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=typing.cast(list[int], window_size))
     plotter.add_mesh(mesh_pv_plot, color="lightgrey", **kwargs)
-    plotter.add_mesh(contours)  # color="black", line_width=1)
+    plotter.add_mesh(contours) # color="black", line_width=1)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
                      font_size=12)
@@ -290,7 +296,7 @@ def plot_vector(mesh_pv: pv.DataSet, problem: "Problem", vector: "Vector",
 
     mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=typing.cast(list[int], window_size))
     plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol vec = {vector.vec:d}  degfd = {degfd:d}'),
@@ -328,9 +334,9 @@ def plot_vector_contours(mesh_pv: pv.DataSet, problem: "Problem",
 
     mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
 
-    contours = mesh_pv_plot.contour(nlevels, scalars='u')
+    contours = typing.cast(pv.PolyData, mesh_pv_plot.contour(nlevels, scalars='u'))
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=typing.cast(list[int], window_size))
     plotter.add_mesh(mesh_pv_plot, color="lightgrey", **kwargs)
     plotter.add_mesh(contours)  # color="black", line_width=1)
     plotter.camera_position = 'xy'
@@ -394,7 +400,8 @@ def plot_mesh(mesh: "Mesh", *, nodemarks: int = 0, nodenumbers: int = 0,
     # Plot element numbers
     if elementnumbers:
         for elem in range(mesh.nelem):
-            plt.text(np.mean(x[:, elem]), np.mean(y[:, elem]), str(elem),
+            # NOTE: Pyplot expects python floats but numpy floats work.
+            plt.text(np.mean(x[:, elem]), np.mean(y[:, elem]), str(elem),  # pyright: ignore
                      fontsize=8, color='r', ha='center', va='center')
 
     plt.show()
@@ -404,7 +411,7 @@ def plot_mesh(mesh: "Mesh", *, nodemarks: int = 0, nodenumbers: int = 0,
 def plot_curves(mesh: "Mesh", *, curves: typing.Sequence[int] | None = None,
                 nodemarks: int = 0, nodenumbers: int = 0,
                 elementnumbers: int = 0, curvenumbers: int = 0,
-                pointnumbers: int = 0, **kwargs: typing.Any):
+                pointnumbers: int = 0):
     """
     Plot curves (and optionally points) of the mesh.
 
@@ -477,7 +484,7 @@ def plot_curves(mesh: "Mesh", *, curves: typing.Sequence[int] | None = None,
         for curve in curves:
             for elem in range(mesh.curves[curve].nelem):
                 el += 1
-                plt.text(np.mean(x[:, el-1]), np.mean(y[:, el-1]),
+                plt.text(np.mean(x[:, el-1]), np.mean(y[:, el-1]),  # pyright: ignore
                          str(elem + 1), fontsize=8, color='r', ha='center',
                          va='center')
 
@@ -514,8 +521,9 @@ def plot_points_curves(mesh: "Mesh"):
 
 # FIXME: Arguments are missing in docstring.
 # TODO: `u` could be tuple[tuple[float, float, float], tuple[float, float, float]]
+# TODO: Add window_size argument?
 def plot_sol_over_line(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
-                       points: list[list[float]], physq: int = 0,
+                       points: typing.Sequence[typing.Sequence[float]], physq: int = 0,
                        degfd: int = 0, npoints: int = 200,
                        plot_mesh: bool = False):
     """
@@ -550,7 +558,7 @@ def plot_sol_over_line(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
 
     if plot_mesh:
         line = pv.Line(points[0], points[1])
-        p = pv.Plotter(window_size=(800, 400))
+        p = pv.Plotter(window_size=typing.cast(list[int], (800, 400)))
         p.add_mesh(mesh_pv, color="w")
         p.add_mesh(line, color="b")
         p.camera_position = 'xy'
@@ -564,10 +572,12 @@ def plot_sol_over_line(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray,
                                          resolution=npoints)
 
 
+# TODO: points could be tuple[tuple[float, float, float], tuple[float, float, float]]
+# TODO: Add window_size argument?
 def plot_vector_over_line(mesh_pv: pv.DataSet, problem: "Problem",
-                          vector: "Vector", points: list[list[float]],
-                          degfd: int = 0, npoints: int = 200,
-                          plot_mesh: bool = False):
+                          vector: "Vector",
+                          points: typing.Sequence[typing.Sequence[float]], degfd: int = 0,
+                          npoints: int = 200, plot_mesh: bool = False):
     """
     Plots and samples data along a line through a mesh, optionally visualizing
     the mesh and the line.
@@ -599,7 +609,7 @@ def plot_vector_over_line(mesh_pv: pv.DataSet, problem: "Problem",
 
     if plot_mesh:
         line = pv.Line(points[0], points[1])
-        p = pv.Plotter(window_size=(800, 400))
+        p = pv.Plotter(window_size=typing.cast(list[int], (800, 400)))
         p.add_mesh(mesh_pv, color="w")
         p.add_mesh(line, color="b")
         p.camera_position = 'xy'
@@ -649,9 +659,9 @@ def plot_quiver(mesh_pv: pv.DataSet, problem: "Problem", u: np.ndarray, *,
 
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd=[0, 1])
 
-    glyphs = mesh_pv_plot.glyph(orient="u", scale=True, factor=scale)
+    glyphs = typing.cast(pv.PolyData, mesh_pv_plot.glyph(orient="u", scale=True, factor=scale))
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=typing.cast(list[int], window_size))
     # plotter.add_mesh(glyphs, show_scalar_bar=False, lighting=False,
     #                  cmap='coolwarm')
     plotter.add_mesh(mesh_pv_plot, color="lightgrey")
@@ -770,23 +780,23 @@ def plot_basis_function(shape: typing.Literal["quad", "triangle"],
     mesh.point_data['phi'] = phi_values
 
     window_size = kwargs.pop('window_size', (800, 400))
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=typing.cast(list[int], window_size))
 
-    mesh_kwargs = dict(scalars='phi', show_edges=edges)
+    mesh_kwargs: dict[str, typing.Any] = dict(scalars='phi', show_edges=edges)
     mesh_kwargs.update(kwargs)
 
     plotter.add_mesh(mesh, **mesh_kwargs)
 
     if not plot3d:
-        plotter.view_xy()
+        plotter.view_xy()  # pyright: ignore[reportCallIssue]
 
     title = f"phi      node = {degfd_idx + 1}   intpol = {intpol}"
     plotter.add_title(title)
 
     if axisoff:
-        plotter.remove_scalar_bar()
+        plotter.remove_scalar_bar()  # pyright: ignore[reportCallIssue]
     else:
-        plotter.show_bounds()
+        plotter.show_bounds()  # pyright: ignore[reportCallIssue]
 
     if show:
         plotter.show()
@@ -873,23 +883,23 @@ def _reference_triangle_mesh(n: int):
 
 @typing.overload
 def plot_gauss_legendre(shape: typing.Literal["quad"], *, n: int,
-                        ax: Axes, marker: str = "+", color: str = "k",
-                        markersize: float = 8, show: bool = True,
-                        **kwargs: typing.Any) -> Axes:
+                        ax: Axes | None = None, marker: str = "+",
+                        color: str = "k", markersize: float = 8,
+                        show: bool = True, **kwargs: typing.Any) -> Axes:
     ...
 
 @typing.overload
 def plot_gauss_legendre(shape: typing.Literal["quad", "triangle"], *, p: int,
-                        ax: Axes, marker: str = "+", color: str = "k",
-                        markersize: float = 8, show: bool = True,
-                        **kwargs: typing.Any) -> Axes:
+                        ax: Axes | None = None, marker: str = "+",
+                        color: str = "k", markersize: float = 8,
+                        show: bool = True, **kwargs: typing.Any) -> Axes:
     ...
 
 def plot_gauss_legendre(shape: typing.Literal["quad", "triangle"], *,
-                        n: int | None = None, p: int | None = None, ax: Axes,
-                        marker: str = "+", color: str = "k",
-                        markersize: float = 8, show: bool = True,
-                        **kwargs: typing.Any):
+                        n: int | None = None, p: int | None = None,
+                        ax: Axes | None = None, marker: str = "+",
+                        color: str = "k", markersize: float = 8,
+                        show: bool = True, **kwargs: typing.Any):
     """Plot Gauss-Legendre integration points.
 
     Parameters
