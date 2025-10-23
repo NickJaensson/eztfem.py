@@ -130,20 +130,44 @@ def build_system(mesh: "Mesh", problem: "Problem",
     return A, f
 
 
+# A provided, posvectors True -> element takes two lists and returns both elemmat and elemvec
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], tuple[np.ndarray, np.ndarray]],
-                          user: "User", curve: int, *, A: np.ndarray | None = None,
+                          user: "User", curve: int, *, A: np.ndarray,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
                           posvectors: typing.Literal[True]) -> None:
     ...
 
+# A provided, posvectors False -> element takes one list and returns both elemmat and elemvec
 @typing.overload
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
                           element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], tuple[np.ndarray, np.ndarray]],
-                          user: "User", curve: int, *, A: np.ndarray | None = None,
+                          user: "User", curve: int, *, A: np.ndarray,
+                          physqrow: np.ndarray | None = None,
+                          physqcol: np.ndarray | None = None,
+                          order: Order = "DN",
+                          posvectors: typing.Literal[False] = False) -> None:
+    ...
+
+# A not provided, posvectors True -> element takes two lists and returns only elemvec
+@typing.overload
+def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
+                          element: typing.Callable[[int, "np.ndarray", "User", list[list[int]], list[list[int]]], np.ndarray],
+                          user: "User", curve: int, *, A: None = None,
+                          physqrow: np.ndarray | None = None,
+                          physqcol: np.ndarray | None = None,
+                          order: Order = "DN",
+                          posvectors: typing.Literal[True]) -> None:
+    ...
+
+# A not provided, posvectors False -> element takes one list and returns only elemvec 
+@typing.overload
+def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
+                          element: typing.Callable[[int, "np.ndarray", "User", list[list[int]]], np.ndarray],
+                          user: "User", curve: int, *, A: None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
                           order: Order = "DN",
@@ -151,7 +175,7 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
     ...
 
 def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
-                          element: typing.Callable[..., tuple[np.ndarray, np.ndarray]],
+                          element: typing.Callable[..., typing.Any],
                           user: "User", curve: int, *, A: np.ndarray | None = None,
                           physqrow: np.ndarray | None = None,
                           physqcol: np.ndarray | None = None,
@@ -252,8 +276,21 @@ def add_boundary_elements(mesh: "Mesh", problem: "Problem", f: np.ndarray,
 
 # FIXME: Docstring parameters names Ain and fin do not reflect the in-code
 #        names A and f.
+@typing.overload
 def apply_essential(A: lil_matrix, f: np.ndarray, uess: np.ndarray,
-                    iess: np.ndarray, *, return_Aup: bool = False):
+                    iess: np.ndarray, *,
+                    return_Aup: typing.Literal[True]) -> lil_matrix:
+    ...
+
+@typing.overload
+def apply_essential(A: lil_matrix, f: np.ndarray, uess: np.ndarray,
+                    iess: np.ndarray, *,
+                    return_Aup: typing.Literal[False] = False) -> None:
+    ...
+
+def apply_essential(A: lil_matrix, f: np.ndarray, uess: np.ndarray,
+                    iess: np.ndarray, *,
+                    return_Aup: bool = False) -> lil_matrix | None:
     """
     Add effect of essential boundary conditions to right-hand side.
 
@@ -294,7 +331,7 @@ def apply_essential(A: lil_matrix, f: np.ndarray, uess: np.ndarray,
     iu = np.where(tmp == 0)[0]
 
     # extract Aup
-    Aup = A[iu, :][:, iess]
+    Aup: lil_matrix = A[iu, :][:, iess]
 
     # modify A
     A[iu[:, None], iess] = lil_matrix((nu, npp))  # type: ignore
