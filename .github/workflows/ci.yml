@@ -13,14 +13,26 @@ jobs:
         python-version: ["3.11"]
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e .
+          pip install pylint flake8
+
       - name: Run test suite
         run: |
           python -m unittest
+
+      - name: Lint examples with pylint
+        run: |
+          pylint examples/**/*.py
+
+      - name: Lint examples with flake8
+        run: |
+          flake8 examples/**/*.py
