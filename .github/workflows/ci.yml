@@ -32,6 +32,12 @@ jobs:
       - name: Lint examples with pylint
         run: |
           pylint --disable=duplicate-code examples/**/*.py
+          pylint --max-statements=200 --max-module-lines=2000 \
+            --max-branches=60 --max-locals=100 \
+            --disable=too-few-public-methods --max-attributes=25 \
+            --max-args=20 --disable=too-many-positional-arguments \
+            --disable=duplicate-code \
+            eztfem/core/**/*.py
 
       - name: Lint examples with flake8
         run: |

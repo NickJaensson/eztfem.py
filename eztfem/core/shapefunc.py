@@ -1,3 +1,6 @@
+'''
+Module to compute values of basis functions in elements of various shapes.
+'''
 import numpy as np
 
 
@@ -80,39 +83,39 @@ def basis_function(shape, intpol, xr):
 
     if shape == 'line':
         if intpol == 'P0':
-            phi, dphi = basis_line_P0(xr)
+            phi, dphi = basis_line_p0(xr)
         elif intpol == 'P1':
-            phi, dphi = basis_line_P1(xr)
+            phi, dphi = basis_line_p1(xr)
         elif intpol == 'P2':
-            phi, dphi = basis_line_P2(xr)
+            phi, dphi = basis_line_p2(xr)
         else:
             raise ValueError(f"Invalid intpol for shape = 'line' : {intpol}")
 
     elif shape == 'quad':
         if intpol == 'P0':
-            phi, dphi = basis_quad_P0(xr)
+            phi, dphi = basis_quad_p0(xr)
         elif intpol == 'P1':
-            phi, dphi = basis_quad_P1(xr)
+            phi, dphi = basis_quad_p1(xr)
         elif intpol == 'Q1':
-            phi, dphi = basis_quad_Q1(xr)
+            phi, dphi = basis_quad_q1(xr)
         elif intpol == 'Q1+':
-            phi, dphi = basis_quad_Q1plus(xr)
+            phi, dphi = basis_quad_q1plus(xr)
         elif intpol == 'Q2':
-            phi, dphi = basis_quad_Q2(xr)
+            phi, dphi = basis_quad_q2(xr)
         else:
             raise ValueError(f"Invalid intpol for shape = 'quad': {intpol}")
 
     elif shape == 'triangle':
         if intpol == 'P0':
-            phi, dphi = basis_triangle_P0(xr)
+            phi, dphi = basis_triangle_p0(xr)
         elif intpol == 'P1':
-            phi, dphi = basis_triangle_P1(xr)
+            phi, dphi = basis_triangle_p1(xr)
         elif intpol == 'P1+':
-            phi, dphi = basis_triangle_P1plus(xr)
+            phi, dphi = basis_triangle_p1plus(xr)
         elif intpol == 'P2':
-            phi, dphi = basis_triangle_P2(xr)
+            phi, dphi = basis_triangle_p2(xr)
         elif intpol == 'P2+':
-            phi, dphi = basis_triangle_P2plus(xr)
+            phi, dphi = basis_triangle_p2plus(xr)
         else:
             raise ValueError(f"Invalid intpol for shape = 'triangle': \
                              {intpol}")
@@ -123,7 +126,8 @@ def basis_function(shape, intpol, xr):
     return phi, dphi
 
 
-def basis_triangle_P0(xr):
+def basis_triangle_p0(xr):
+    "Compute phi and dphi for a P0 triangular element."
     ni = xr.shape[0]
     nn = 1
     phi = np.zeros((ni, nn))
@@ -135,13 +139,14 @@ def basis_triangle_P0(xr):
     return phi, dphi
 
 
-def basis_triangle_P1(xr):
+def basis_triangle_p1(xr):
+    "Compute phi and dphi for a P1 triangular element."
     phi, dphi = barycentric(xr)
     return phi, dphi
 
 
-def basis_triangle_P1plus(xr):
-
+def basis_triangle_p1plus(xr):
+    "Compute phi and dphi for a P1+ triangular element."
     ni, _ = xr.shape
     nn = 4
     phi = np.zeros((ni, nn))
@@ -170,7 +175,8 @@ def basis_triangle_P1plus(xr):
     return phi, dphi
 
 
-def basis_triangle_P2(xr):
+def basis_triangle_p2(xr):
+    "Compute phi and dphi for a P2 triangular element."
     ni, _ = xr.shape
     nn = 6
     phi = np.zeros((ni, nn))
@@ -199,7 +205,8 @@ def basis_triangle_P2(xr):
     return phi, dphi
 
 
-def basis_triangle_P2plus(xr):
+def basis_triangle_p2plus(xr):
+    "Compute phi and dphi for a P2+ triangular element."
     ni, _ = xr.shape
     nn = 7
     phi = np.zeros((ni, nn))
@@ -244,7 +251,8 @@ def basis_triangle_P2plus(xr):
     return phi, dphi
 
 
-def basis_line_P0(xr):
+def basis_line_p0(xr):
+    "Compute phi and dphi for a P0 line element."
     ni = xr.shape[0]
     nn = 1
     phi = np.zeros((ni, nn))
@@ -256,7 +264,8 @@ def basis_line_P0(xr):
     return phi, dphi
 
 
-def basis_line_P1(xr):
+def basis_line_p1(xr):
+    "Compute phi and dphi for a P1 line element."
     ni = xr.shape[0]
     nn = 2
     phi = np.zeros((ni, nn))
@@ -271,7 +280,8 @@ def basis_line_P1(xr):
     return phi, dphi
 
 
-def basis_line_P2(xr):
+def basis_line_p2(xr):
+    "Compute phi and dphi for a P2 line element."
     ni = xr.shape[0]
     nn = 3
     phi = np.zeros((ni, nn))
@@ -288,7 +298,8 @@ def basis_line_P2(xr):
     return phi, dphi
 
 
-def basis_quad_P0(xr):
+def basis_quad_p0(xr):
+    "Compute phi and dphi for a P0 quadrilateral element."
     ni = xr.shape[0]
     nn = 1
     phi = np.zeros((ni, nn))
@@ -300,7 +311,8 @@ def basis_quad_P0(xr):
     return phi, dphi
 
 
-def basis_quad_P1(xr):
+def basis_quad_p1(xr):
+    "Compute phi and dphi for a P1 quadrilateral element."
     ni = xr.shape[0]
     nn = 3
     phi = np.zeros((ni, nn))
@@ -319,15 +331,16 @@ def basis_quad_P1(xr):
     return phi, dphi
 
 
-def basis_quad_Q1(xr):
+def basis_quad_q1(xr):
+    "Compute phi and dphi for a Q1 quadrilateral element."
     ni = xr.shape[0]
     nn = 4
     phi = np.zeros((ni, nn))
     dphi = np.zeros((ni, nn, 2))
     p = np.array([[0, 1], [3, 2]]).T
 
-    phi1, dphi1 = basis_line_P1(xr[:, 0])
-    phi2, dphi2 = basis_line_P1(xr[:, 1])
+    phi1, dphi1 = basis_line_p1(xr[:, 0])
+    phi2, dphi2 = basis_line_p1(xr[:, 1])
 
     for i in range(2):
         for j in range(2):
@@ -338,43 +351,45 @@ def basis_quad_Q1(xr):
     return phi, dphi
 
 
-def basis_quad_Q1plus(xr):
+def basis_quad_q1plus(xr):
+    "Compute phi and dphi for a Q1+ quadrilateral element."
     ni = xr.shape[0]
     nn = 5
     phi = np.zeros((ni, nn))
     dphi = np.zeros((ni, nn, 2))
     dbubble = np.zeros((ni, 2))
 
-    phiQ1, dphiQ1 = basis_quad_Q1(xr)
+    phiq1, dphiq1 = basis_quad_q1(xr)
 
-    bubble = phiQ1[:, 0] * phiQ1[:, 2]
+    bubble = phiq1[:, 0] * phiq1[:, 2]
 
-    phi[:, 0:4] = phiQ1[:, 0:4] - 4 * bubble[:, np.newaxis]
+    phi[:, 0:4] = phiq1[:, 0:4] - 4 * bubble[:, np.newaxis]
     phi[:, 4] = 16 * bubble
 
     for dm in range(2):
-        dbubble[:, dm] = (dphiQ1[:, 0, dm] * phiQ1[:, 2] +
-                          phiQ1[:, 0] * dphiQ1[:, 2, dm])
+        dbubble[:, dm] = (dphiq1[:, 0, dm] * phiq1[:, 2] +
+                          phiq1[:, 0] * dphiq1[:, 2, dm])
 
-    dphi[:, 0, :] = dphiQ1[:, 0, :] - 4 * dbubble
-    dphi[:, 1, :] = dphiQ1[:, 1, :] - 4 * dbubble
-    dphi[:, 2, :] = dphiQ1[:, 2, :] - 4 * dbubble
-    dphi[:, 3, :] = dphiQ1[:, 3, :] - 4 * dbubble
+    dphi[:, 0, :] = dphiq1[:, 0, :] - 4 * dbubble
+    dphi[:, 1, :] = dphiq1[:, 1, :] - 4 * dbubble
+    dphi[:, 2, :] = dphiq1[:, 2, :] - 4 * dbubble
+    dphi[:, 3, :] = dphiq1[:, 3, :] - 4 * dbubble
 
     dphi[:, 4, :] = 16 * dbubble
 
     return phi, dphi
 
 
-def basis_quad_Q2(xr):
+def basis_quad_q2(xr):
+    "Compute phi and dphi for a Q2 quadrilateral element."
     ni = xr.shape[0]
     nn = 9
     phi = np.zeros((ni, nn))
     dphi = np.zeros((ni, nn, 2))
     p = np.array([[0, 1, 2], [7, 8, 3], [6, 5, 4]]).T
 
-    phi1, dphi1 = basis_line_P2(xr[:, 0])
-    phi2, dphi2 = basis_line_P2(xr[:, 1])
+    phi1, dphi1 = basis_line_p2(xr[:, 0])
+    phi2, dphi2 = basis_line_p2(xr[:, 1])
 
     for i in range(3):
         for j in range(3):
@@ -418,8 +433,8 @@ def barycentric(xr):
                   |      \\
                 0 ---------
                   0  xi -> 1
-        The reference coordinates xr = (xi, eta) are in the lower triangle of the
-        region [0,1] x [0,1] (xi + eta <= 1).
+        The reference coordinates xr = (xi, eta) are in the lower triangle of
+        the region [0,1] x [0,1] (xi + eta <= 1).
         The three barycentric coordinates are:
         - lambda1 = 1 - xi - eta
         - lambda2 = xi
@@ -490,30 +505,31 @@ def isoparametric_deformation(x, dphi):
 
     npts, ndim = dphi.shape[0], x.shape[1]
 
-    F = np.zeros((npts, ndim, ndim))
-    Finv = np.zeros((npts, ndim, ndim))
-    detF = np.zeros(npts)
+    fmat = np.zeros((npts, ndim, ndim))
+    fmat_inv = np.zeros((npts, ndim, ndim))
+    det_fmat = np.zeros(npts)
 
     # compute F
     for j in range(ndim):
-        F[:, :, j] = dphi[:, :, j] @ x
+        fmat[:, :, j] = dphi[:, :, j] @ x
 
     # compute detF and Finv
     if ndim == 1:
         # 1D
         for ip in range(npts):
-            detF[ip] = F[ip, 0, 0]
-            Finv[ip, 0, 0] = 1 / F[ip, 0, 0]
+            det_fmat[ip] = fmat[ip, 0, 0]
+            fmat_inv[ip, 0, 0] = 1 / fmat[ip, 0, 0]
     elif ndim == 2:
         # 2D
         for ip in range(npts):
-            detF[ip] = F[ip, 0, 0] * F[ip, 1, 1] - F[ip, 0, 1] * F[ip, 1, 0]
-            Finv[ip, 0, 0] = F[ip, 1, 1] / detF[ip]
-            Finv[ip, 0, 1] = -F[ip, 0, 1] / detF[ip]
-            Finv[ip, 1, 0] = -F[ip, 1, 0] / detF[ip]
-            Finv[ip, 1, 1] = F[ip, 0, 0] / detF[ip]
+            det_fmat[ip] = (fmat[ip, 0, 0] * fmat[ip, 1, 1] -
+                            fmat[ip, 0, 1] * fmat[ip, 1, 0])
+            fmat_inv[ip, 0, 0] = fmat[ip, 1, 1] / det_fmat[ip]
+            fmat_inv[ip, 0, 1] = -fmat[ip, 0, 1] / det_fmat[ip]
+            fmat_inv[ip, 1, 0] = -fmat[ip, 1, 0] / det_fmat[ip]
+            fmat_inv[ip, 1, 1] = fmat[ip, 0, 0] / det_fmat[ip]
 
-    return F, Finv, detF
+    return fmat, fmat_inv, det_fmat
 
 
 def isoparametric_deformation_curve(x, dphi):
@@ -569,5 +585,3 @@ def isoparametric_deformation_curve(x, dphi):
         normal[:, 1] = -dxdxi[:, 0] / curvel
 
     return dxdxi, curvel, normal
-
-

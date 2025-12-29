@@ -1,9 +1,12 @@
+'''
+Module to compute Gauss-Legendre integration points and weights.
+'''
 import numpy as np
 
 
 def gauss_legendre(shape, **kwargs):
     """
-    Gauss-Legendre integration points and weights.
+    Determine Gauss-Legendre integration points and weights in elements.
 
     Parameters
     ----------
@@ -25,9 +28,10 @@ def gauss_legendre(shape, **kwargs):
 
     Returns
     -------
-    x : numpy.ndarray
-        Coordinates of the integration points.
-    w : numpy.ndarray
+    x : numpy.ndarray of shape (nint,ndim)
+        Coordinates of the integration points, where ndim is the spatial
+        dimension and ninti is the number of integration points.
+    w : numpy.ndarray of shape (ninti,)
         Weights of the integration scheme.
 
     """
@@ -1038,26 +1042,32 @@ def gauss_legendre_triangle(p):
 
 
 def dup3(a):
+    """Return duplicated coefficient for P3 symmetry."""
     return np.array([a / 2])
 
 
 def dup21(a):
-    return np.array([a/2 for i in range(3)])
+    """Return duplicated coefficients for 2–1 symmetry."""
+    return np.array([a / 2 for i in range(3)])
 
 
 def dup111(a):
-    return np.array([a/2 for i in range(6)])
+    """Return duplicated coefficients for 1–1–1 symmetry."""
+    return np.array([a / 2 for i in range(6)])
 
 
 def perm3(a):
+    """Return permuted coefficients for P3 symmetry."""
     return np.array([a, a])
 
 
 def perm21(a):
+    """Return permuted coefficients for 2–1 symmetry."""
     b = 1 - 2 * a
     return np.array([a, a, a, b, b, a])
 
 
 def perm111(a, b):
+    """Return permuted coefficients for 1–1–1 symmetry."""
     c = 1 - a - b
     return np.array([a, b, c, a, b, c, b, a, c, b, a, c])
