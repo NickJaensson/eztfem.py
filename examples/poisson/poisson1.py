@@ -22,7 +22,7 @@ def main():
     u : numpy.ndarray
         Nodal values of solution u.
     derivs : dict
-        Dictionary of derived fields.
+        Dictionary of derived fields (Vector instances).
     """
 
     # create mesh

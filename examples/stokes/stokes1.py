@@ -19,10 +19,10 @@ def main():
         Finite element mesh.
     problem : Problem
         Stokes problem definition.
-    u : ndarray
+    u : numpy.ndarray
         Nodal values of solution (velocity and pressure).
     derivs : dict
-        Dictionary of derived fields.
+        Dictionary of derived fields (Vector instances).
     """
 
     # create mesh

@@ -10,9 +10,9 @@ def func(nr, x):
 
     Parameters
     ----------
-    nr : int1
+    nr : int
         Function selector.
-    x : numpy.ndarray of shape (ndim,)
+    x : array_like of shape (ndim,)
         Spatial coordinates, where ndim is the spatial dimension.
 
     Returns
