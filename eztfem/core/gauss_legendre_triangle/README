@@ -1,0 +1,19 @@
+These files contain the integration points for triangles and were generated
+using generate_gauss_triangle_csv.py
+
+The reference region of a triangle is defined as:
+
+::
+
+        1 |\\               eta ∈ [0, 1]
+        ^ |  \\             xi  ∈ [0, 1]
+    eta | |    \\           xi + eta <= 1
+            |      \\
+        0 ---------
+            0  xi -> 1
+
+The numerical values are based on:
+
+L. Zhang, T. Cui, H. Liu, "A set of symmetric quadrature rules on triangles
+and tetrahedra", Journal of Computational Mathematics, Vol. 27, No. 1,
+2009, 89-96.
