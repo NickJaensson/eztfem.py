@@ -1,5 +1,5 @@
 '''
-Streamfunction from the velocity field.
+Compute streamfunction from a velocity field.
 '''
 
 import numpy as np
