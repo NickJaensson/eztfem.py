@@ -1,3 +1,6 @@
+'''
+Element routines for the Stokes equation.
+'''
 import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
@@ -39,21 +42,21 @@ def stokes_elem(elem, coor, user, pos):
     ndfp = user.psi.shape[1]  # number of degrees of freedom of the pressure
 
     # compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _, fmat_inv, det_fmat = isoparametric_deformation(coor, user.dphi)
 
     # position of the integration points
     xg = user.phi @ coor
 
     if user.coorsys == 1:
         # axisymmetric
-        detF = 2 * np.pi * xg[:, 1] * detF
+        det_fmat = 2 * np.pi * xg[:, 1] * det_fmat
 
     # compute derivative of the basis functions with respect to the real
     # coordinates
     dphidx = np.zeros((ninti, ndf, ndim))
 
     for ip in range(ninti):
-        dphidx[ip, :, :] = user.dphi[ip, :, :] @ Finv[ip, :, :]
+        dphidx[ip, :, :] = user.dphi[ip, :, :] @ fmat_inv[ip, :, :]
 
     # pointers in unknowns
     i1 = ndf
@@ -61,56 +64,57 @@ def stokes_elem(elem, coor, user, pos):
     i3 = 2*ndf + ndfp
 
     # compute element matrix
-    Suu = np.zeros((ndf, ndf))
-    Svv = np.zeros((ndf, ndf))
-    Suv = np.zeros((ndf, ndf))
-    Lu = np.zeros((ndfp, ndf))
-    Lv = np.zeros((ndfp, ndf))
+    smat_uu = np.zeros((ndf, ndf))
+    smat_vv = np.zeros((ndf, ndf))
+    smat_uv = np.zeros((ndf, ndf))
+    lmat_u = np.zeros((ndfp, ndf))
+    lmat_v = np.zeros((ndfp, ndf))
     work = np.zeros(ninti)
 
     # diagonal blocks
-    for N in range(ndf):
-        for M in range(N, ndf):
+    for idf in range(ndf):
+        for jdf in range(idf, ndf):
             work[:] = 0
             for ip in range(ninti):
                 for k in range(ndim):
-                    work[ip] += dphidx[ip, N, k] * dphidx[ip, M, k]
-            work1 = work + dphidx[:, N, 0] * dphidx[:, M, 0]
-            Suu[N, M] = user.mu * np.sum(work1 * detF * user.wg)
-            Suu[M, N] = Suu[N, M]  # symmetry
-            work1 = work + dphidx[:, N, 1] * dphidx[:, M, 1]
+                    work[ip] += dphidx[ip, idf, k] * dphidx[ip, jdf, k]
+            work1 = work + dphidx[:, idf, 0] * dphidx[:, jdf, 0]
+            smat_uu[idf, jdf] = user.mu * np.sum(work1 * det_fmat * user.wg)
+            smat_uu[jdf, idf] = smat_uu[idf, jdf]  # symmetry
+            work1 = work + dphidx[:, idf, 1] * dphidx[:, jdf, 1]
             if user.coorsys == 1:
-                work1 += 2 * user.phi[:, N] * user.phi[:, M] / xg[:, 1]**2
-            Svv[N, M] = user.mu * np.sum(work1 * detF * user.wg)
-            Svv[M, N] = Svv[N, M]  # symmetry
+                work1 += 2 * user.phi[:, idf] * user.phi[:, jdf] / xg[:, 1]**2
+            smat_vv[idf, jdf] = user.mu * np.sum(work1 * det_fmat * user.wg)
+            smat_vv[jdf, idf] = smat_vv[idf, jdf]  # symmetry
 
     # off-diagonal blocks
-    for N in range(ndf):
-        for M in range(ndf):
-            work = dphidx[:, N, 1] * dphidx[:, M, 0]
-            Suv[N, M] = user.mu * np.sum(work * detF * user.wg)
+    for idf in range(ndf):
+        for jdf in range(ndf):
+            work = dphidx[:, idf, 1] * dphidx[:, jdf, 0]
+            smat_uv[idf, jdf] = user.mu * np.sum(work * det_fmat * user.wg)
 
     # velocity pressure blocks
-    for N in range(ndfp):
-        for M in range(ndf):
-            Lu[N, M] = np.sum(user.psi[:, N] * dphidx[:, M, 0] * detF
-                              * user.wg)
+    for idf in range(ndfp):
+        for jdf in range(ndf):
+            lmat_u[idf, jdf] = np.sum(user.psi[:, idf] * dphidx[:, jdf, 0]
+                                      * det_fmat * user.wg)
             if user.coorsys == 1:
-                work = dphidx[:, M, 1] + user.phi[:, M] / xg[:, 1]
-                Lv[N, M] = np.sum(user.psi[:, N] * work * detF * user.wg)
+                work = dphidx[:, jdf, 1] + user.phi[:, jdf] / xg[:, 1]
+                lmat_v[idf, jdf] = np.sum(user.psi[:, idf] * work * det_fmat
+                                          * user.wg)
             else:
-                Lv[N, M] = np.sum(user.psi[:, N] * dphidx[:, M, 1] * detF
-                                  * user.wg)
+                lmat_v[idf, jdf] = np.sum(user.psi[:, idf] * dphidx[:, jdf, 1]
+                                          * det_fmat * user.wg)
 
     elemmat = np.zeros((2*ndf + ndfp, 2*ndf + ndfp))
-    elemmat[0:i1, 0:i1] = Suu
-    elemmat[0:i1, i1:i2] = Suv
-    elemmat[i1:i2, 0:i1] = Suv.T
-    elemmat[i1:i2, i1:i2] = Svv
-    elemmat[i2:i3, 0:i1] = -Lu
-    elemmat[i2:i3, i1:i2] = -Lv
-    elemmat[0:i1, i2:i3] = -Lu.T
-    elemmat[i1:i2, i2:i3] = -Lv.T
+    elemmat[0:i1, 0:i1] = smat_uu
+    elemmat[0:i1, i1:i2] = smat_uv
+    elemmat[i1:i2, 0:i1] = smat_uv.T
+    elemmat[i1:i2, i1:i2] = smat_vv
+    elemmat[i2:i3, 0:i1] = -lmat_u
+    elemmat[i2:i3, i1:i2] = -lmat_v
+    elemmat[0:i1, i2:i3] = -lmat_u.T
+    elemmat[i1:i2, i2:i3] = -lmat_v.T
     elemmat[i2:i3, i2:i3] = 0
 
     # compute element vector
@@ -122,8 +126,9 @@ def stokes_elem(elem, coor, user, pos):
             fg[ip, :] = user.func(user.funcnr, xg[ip, :])
         tmp = np.zeros((ninti, ndim))
         for j in range(ndim):
-            for N in range(ndf):
-                tmp[N, j] = np.sum(fg[:, j] * user.phi[:, N] * detF * user.wg)
+            for idf in range(ndf):
+                tmp[idf, j] = np.sum(fg[:, j] * user.phi[:, idf] * det_fmat
+                                     * user.wg)
         elemvec[0:i2] = tmp.reshape(ndim*ndf)
 
     return elemmat, elemvec
@@ -161,14 +166,14 @@ def stokes_deriv(elem, coor, user, pos):
     ndf = user.phi.shape[1]
 
     # Compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _, fmat_inv, _ = isoparametric_deformation(coor, user.dphi)
 
     # Compute derivative of the basis functions with respect to the real
     # coordinates
     dphidx = np.zeros((nodalp, ndf, ndim))
 
     for ip in range(nodalp):
-        dphidx[ip, :, :] = user.dphi[ip, :, :].dot(Finv[ip, :, :])
+        dphidx[ip, :, :] = user.dphi[ip, :, :].dot(fmat_inv[ip, :, :])
 
     # Get velocity vector
     u = user.u[pos[0]]
@@ -258,7 +263,7 @@ def stokes_natboun_curve(elem, coor, user, pos):
     ndim = coor.shape[1]  # dimension of space
 
     # compute mapping of reference to real element
-    dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
+    _, curvel, _ = isoparametric_deformation_curve(coor, user.dphi)
 
     # position of the integration points
     xg = np.dot(user.phi, coor)
@@ -279,9 +284,9 @@ def stokes_natboun_curve(elem, coor, user, pos):
         tmp = np.zeros((ndf, ndim))
 
         for j in range(ndim):
-            for N in range(ndf):
-                tmp[N, j] = np.sum(fg[:, j] * user.phi[:, N] * curvel
-                                   * user.wg)
+            for idf in range(ndf):
+                tmp[idf, j] = np.sum(fg[:, j] * user.phi[:, idf] * curvel
+                                     * user.wg)
 
         elemvec = tmp.reshape(ndim * ndf, order='F')
 
@@ -315,16 +320,13 @@ def stokes_flowrate_curve(elem, coor, user, pos):
 
     """
 
-    # Function implementation goes here
-    pass
-
     # Set some values
     ninti = user.phi.shape[0]  # Number of integration points
     ndf = user.phi.shape[1]    # Number of velocity dofs per spatial direction
     ndim = coor.shape[1]  # Dimension of space
 
     # Compute mapping of reference to real element
-    dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
+    _, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
 
     # Position of the integration points
     xg = np.dot(user.phi, coor)

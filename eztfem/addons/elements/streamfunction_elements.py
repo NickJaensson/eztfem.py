@@ -1,3 +1,6 @@
+'''
+Element routines for the streamfunction equation.
+'''
 import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
@@ -40,21 +43,21 @@ def streamfunction_elem(elem, coor, user, pos, posvec):
     ndim = coor.shape[1]  # dimension of space
 
     # compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _, fmat_inv, det_fmat = isoparametric_deformation(coor, user.dphi)
 
     # Position of the integration points
     xg = user.phi @ coor
 
     if user.coorsys == 1:
         # Axisymmetric
-        detF = 2 * np.pi * xg[:, 1] * detF
+        det_fmat = 2 * np.pi * xg[:, 1] * det_fmat
 
     # compute derivative of the basis functions with respect to the real
     # coordinates
     dphidx = np.zeros((ninti, ndf, ndim))
 
     for ip in range(ninti):
-        dphidx[ip, :, :] = user.dphi[ip, :, :] @ Finv[ip, :, :]
+        dphidx[ip, :, :] = user.dphi[ip, :, :] @ fmat_inv[ip, :, :]
 
     # Compute element matrix
     elemmat = np.zeros((ndf, ndf))
@@ -66,7 +69,7 @@ def streamfunction_elem(elem, coor, user, pos, posvec):
             for ip in range(ninti):
                 for k in range(ndim):
                     work[ip] += dphidx[ip, i, k] * dphidx[ip, j, k]
-            elemmat[i, j] = np.sum(work * detF * user.wg)
+            elemmat[i, j] = np.sum(work * det_fmat * user.wg)
             elemmat[j, i] = elemmat[i, j]  # Symmetry
 
     # Compute element vector
@@ -79,9 +82,9 @@ def streamfunction_elem(elem, coor, user, pos, posvec):
     if user.coorsys == 1:
         work = np.dot(user.phi, u[:ndf])
         elemvec = 2 * np.pi * np.dot(user.phi.T, (xg[:, 1] * (dvdx - dudy)
-                                                  - work) * detF * user.wg)
+                                                  - work) * det_fmat * user.wg)
     else:
-        elemvec = np.dot(user.phi.T, (dvdx - dudy) * detF * user.wg)
+        elemvec = np.dot(user.phi.T, (dvdx - dudy) * det_fmat * user.wg)
 
     return elemmat, elemvec
 
@@ -124,7 +127,7 @@ def streamfunction_natboun_curve(elem, coor, user, pos, posvec):
     ndim = coor.shape[1]  # Dimension of space
 
     # Compute mapping of reference to real element
-    dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
+    _, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
 
     # Position of the integration points
     xg = user.phi @ coor

@@ -1,3 +1,6 @@
+'''
+Module for compound 2D mesh generation.
+'''
 from ...core.meshgen import quadrilateral2d
 from ...core.meshgen_extra import mesh_merge
 

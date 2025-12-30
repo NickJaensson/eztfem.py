@@ -1,11 +1,14 @@
-import numpy as np
-from ...core.pos_array import pos_array, pos_array_vec
-import pyvista as pv
-from ...core.shapefunc import basis_function
-from pyvista import CellType
-from ...core.gauss import gauss_legendre
-import matplotlib.pyplot as plt
+'''
+Module for plotting functions using PyVista.
+'''
 import copy
+import matplotlib.pyplot as plt
+import numpy as np
+import pyvista as pv
+from pyvista import CellType
+from ...core.pos_array import pos_array, pos_array_vec
+from ...core.shapefunc import basis_function
+from ...core.gauss import gauss_legendre
 
 
 def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
@@ -334,7 +337,7 @@ def plot_vector_contours(mesh_pv, problem, vector, degfd=0, nlevels=10,
     plotter.show()
 
 
-def plot_mesh(mesh, **kwargs):
+def plot_mesh_plt(mesh, **kwargs):
     """
     Plot mesh structure.
 
@@ -425,18 +428,12 @@ def plot_curves(mesh, **kwargs):
     pointnumbers = 0
 
     # Update options based on kwargs
-    if 'curves' in kwargs:
-        curves = kwargs['curves']
-    if 'nodemarks' in kwargs:
-        nodemarks = kwargs['nodemarks']
-    if 'nodenumbers' in kwargs:
-        nodenumbers = kwargs['nodenumbers']
-    if 'elementnumbers' in kwargs:
-        elementnumbers = kwargs['elementnumbers']
-    if 'curvenumbers' in kwargs:
-        curvenumbers = kwargs['curvenumbers']
-    if 'pointnumbers' in kwargs:
-        pointnumbers = kwargs['pointnumbers']
+    curves = kwargs.get('curves', curves)
+    nodemarks = kwargs.get('nodemarks', nodemarks)
+    nodenumbers = kwargs.get('nodenumbers', nodenumbers)
+    elementnumbers = kwargs.get('elementnumbers', elementnumbers)
+    curvenumbers = kwargs.get('curvenumbers', curvenumbers)
+    pointnumbers = kwargs.get('pointnumbers', pointnumbers)
 
     # Set coordinates (all curves must have the same element type)
     elnumnod = mesh.curves[0].elnumnod
@@ -524,8 +521,8 @@ def plot_points_curves(mesh):
     plot_curves(mesh, pointnumbers=1, curvenumbers=1)
 
 
-def plot_sol_over_line(mesh_pv, problem, u, points, physq=0, degfd=0, npoints=200,
-                       plot_mesh=False):
+def plot_sol_over_line(mesh_pv, problem, u, points, physq=0, degfd=0,
+                       npoints=200, plot_mesh=False):
     """
     Plots and samples data along a line through a mesh, optionally visualizing
     the mesh and the line.
@@ -653,7 +650,7 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
     ndf = problem.elementdof[0, physq]
 
     assert (problem.elementdof[0, physq] == 2)
-    assert (np.all(problem.elementdof[0, physq] == ndf))
+    assert np.all(problem.elementdof[0, physq] == ndf)
 
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd=[0, 1])
 
@@ -668,6 +665,7 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
                      font_size=12)
     plotter.show()
+
 
 def plot_basis_function(shape, intpol, degfd, *, n=10, plot3d=True,
                         edges=True, axisoff=False, show=True, **kwargs):
@@ -755,7 +753,10 @@ def plot_basis_function(shape, intpol, degfd, *, n=10, plot3d=True,
     window_size = kwargs.pop('window_size', (800, 400))
     plotter = pv.Plotter(window_size=window_size)
 
-    mesh_kwargs = dict(scalars='phi', show_edges=edges)
+    mesh_kwargs = {
+        'scalars': 'phi',
+        'show_edges': edges,
+    }
     mesh_kwargs.update(kwargs)
 
     plotter.add_mesh(mesh, **mesh_kwargs)
@@ -885,7 +886,8 @@ def plot_gauss_legendre(shape, **kwargs):
     show : bool, optional
         Display the plot immediately (default: ``True``).
     kwargs
-        Additional keyword arguments forwarded to :func:`matplotlib.axes.Axes.plot`.
+        Additional keyword arguments forwarded
+        to :func:`matplotlib.axes.Axes.plot`.
 
     Returns
     -------

@@ -50,7 +50,7 @@ from .addons.elements.streamfunction_elements import (
 from .addons.plotlib.plotting_functions import (
     plot_mesh_pv,
     plot_sol,
-    plot_mesh,
+    plot_mesh_plt,
     plot_curves,
     plot_sol_over_line,
     plot_quiver,
@@ -102,7 +102,7 @@ __all__ = [
     "streamfunction_natboun_curve",
     "plot_mesh_pv",
     "plot_sol",
-    "plot_mesh",
+    "plot_mesh_plt",
     "plot_curves",
     "plot_sol_over_line",
     "plot_quiver",

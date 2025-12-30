@@ -1,3 +1,6 @@
+'''
+Element routines for the Poisson equation.
+'''
 import numpy as np
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
@@ -37,22 +40,23 @@ def poisson_elem(elem, coor, user, pos):
     ndim = coor.shape[1]       # dimension of space
 
     # Compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _, fmat_inv, det_fmat = isoparametric_deformation(coor, user.dphi)
 
     # Position of the integration points
     xg = np.dot(user.phi, coor)
 
     if user.coorsys == 1:
         # axisymmetric
-        detF = 2 * np.pi * xg[:, 1] * detF
+        det_fmat = 2 * np.pi * xg[:, 1] * det_fmat
 
     # Compute derivative of the basis functions wrt real coordinates
     dphidx = np.zeros((ninti, ndf, ndim))
-    ndr = Finv.shape[1]
+    ndr = fmat_inv.shape[1]
 
     for ip in range(ninti):
         dphidx[ip] = np.reshape(user.dphi[ip],
-                                (ndf, ndr)) @ np.reshape(Finv[ip], (ndr, ndim))
+                                (ndf, ndr)) @ np.reshape(fmat_inv[ip],
+                                                         (ndr, ndim))
 
     # Compute element matrix
     elemmat = np.zeros((ndf, ndf))
@@ -64,7 +68,7 @@ def poisson_elem(elem, coor, user, pos):
             for ip in range(ninti):
                 for k in range(ndim):
                     work[ip] += dphidx[ip, i, k] * dphidx[ip, j, k]
-            elemmat[i, j] = user.alpha * np.sum(work * detF * user.wg)
+            elemmat[i, j] = user.alpha * np.sum(work * det_fmat * user.wg)
             elemmat[j, i] = elemmat[i, j]  # symmetry
 
     # Compute element vector
@@ -77,7 +81,7 @@ def poisson_elem(elem, coor, user, pos):
             fg[ip] = user.func(user.funcnr, xg[ip])
 
         for i in range(ndf):
-            elemvec[i] = np.sum(fg * user.phi[:, i] * detF * user.wg)
+            elemvec[i] = np.sum(fg * user.phi[:, i] * det_fmat * user.wg)
 
     return elemmat, elemvec
 
@@ -114,13 +118,13 @@ def poisson_deriv(elem, coor, user, pos):
     ndf = user.phi.shape[1]
 
     # Compute mapping of reference to real element
-    F, Finv, detF = isoparametric_deformation(coor, user.dphi)
+    _, fmat_inv, _ = isoparametric_deformation(coor, user.dphi)
 
     # Compute derivative of the basis functions with respect to the real
     # coordinates
     dphidx = np.zeros((nodalp, ndf, ndim))
     for ip in range(nodalp):
-        dphidx[ip, :, :] = user.dphi[ip, :, :].dot(Finv[ip, :, :])
+        dphidx[ip, :, :] = user.dphi[ip, :, :].dot(fmat_inv[ip, :, :])
 
     # Compute gradient vector
     gradu = np.zeros((nodalp, ndim))
@@ -166,7 +170,7 @@ def poisson_natboun_curve(elem, coor, user, pos):
     ndf = user.phi.shape[1]    # Number of degrees of freedom
 
     # Compute mapping of reference to real element
-    dxdxi, curvel, normal = isoparametric_deformation_curve(coor, user.dphi)
+    _, curvel, _ = isoparametric_deformation_curve(coor, user.dphi)
 
     # Position of the integration points
     xg = user.phi @ coor
