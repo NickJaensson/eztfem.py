@@ -1,3 +1,6 @@
+'''
+Module for getting the positions of degrees of freedom in nodes.
+'''
 import numpy as np
 
 
@@ -40,10 +43,8 @@ def pos_array(problem, nodes, **kwargs):
     order = 'DN'
 
     # Override optional arguments if provided
-    if 'physq' in kwargs:
-        physq = kwargs['physq']
-    if 'order' in kwargs:
-        order = kwargs['order']
+    physq = kwargs.get('physq', physq)
+    order = kwargs.get('order', order)
 
     # Convert physq to a list if an int is supplied
     if isinstance(physq, (int, np.integer)):
@@ -135,10 +136,8 @@ def pos_array_vec(problem, nodes, **kwargs):
     order = 'DN'
 
     # Override optional arguments if provided
-    if 'vec' in kwargs:
-        vec = kwargs['vec']
-    if 'order' in kwargs:
-        order = kwargs['order']
+    vec = kwargs.get('vec', vec)
+    order = kwargs.get('order', order)
 
     # Convert vec to a numpy array if an int is supplied
     if isinstance(vec, (int, np.integer)):

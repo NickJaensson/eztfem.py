@@ -1,3 +1,6 @@
+'''
+Module for defining problems and essential degrees of freedom.
+'''
 import numpy as np
 from .pos_array import pos_array
 
@@ -74,7 +77,7 @@ class Problem:
         # Number of vectors of special structure
         self.nvec = self.elementdof.shape[1]
 
-        # Number of degrees of freedom in each node of the element for each 
+        # Number of degrees of freedom in each node of the element for each
         # vector of special structure
         self.vec_elnumdegfd = self.elementdof
 
@@ -208,7 +211,7 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         nodes = mesh.points[numbers]
         nnodes = len(numbers)
     elif geometry == 'curves':
-        nnodes = sum([mesh.curves[curve].nnodes for curve in numbers])
+        nnodes = sum(mesh.curves[curve].nnodes for curve in numbers)
         nodes = np.array([], dtype=int)
         for curve in numbers:
             nodes = np.append(nodes, mesh.curves[curve].nodes)

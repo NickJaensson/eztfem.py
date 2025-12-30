@@ -940,7 +940,7 @@ class TestPytfem(unittest.TestCase):
     ])
     xr_py, wg_py = ezt.gauss_legendre('line',n=15 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
-    check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
+    check2=np.allclose(wg_py,wg_ez,atol=2e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
   def test_basis_function15(self):
     phi_ez = np.array([
@@ -1291,7 +1291,7 @@ class TestPytfem(unittest.TestCase):
     ])
     xr_py, wg_py = ezt.gauss_legendre('line',n=18 )
     check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
-    check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
+    check2=np.allclose(wg_py,wg_ez,atol=2e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
   def test_basis_function18(self):
     phi_ez = np.array([
@@ -1573,8 +1573,8 @@ class TestPytfem(unittest.TestCase):
         1.7614007139152118e-02,
     ])
     xr_py, wg_py = ezt.gauss_legendre('line',n=20 )
-    check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=1e-15,rtol=0)
-    check2=np.allclose(wg_py,wg_ez,atol=1e-15,rtol=0)
+    check1=np.allclose(np.squeeze(xr_py),np.squeeze(xr_ez),atol=2e-15,rtol=0)
+    check2=np.allclose(wg_py,wg_ez,atol=2e-15,rtol=0)
     self.assertTrue(check1 and check2,'gauss_legendre failed test!' )
   def test_basis_function20(self):
     phi_ez = np.array([

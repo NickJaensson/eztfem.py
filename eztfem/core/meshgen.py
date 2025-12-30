@@ -1,3 +1,6 @@
+'''
+Module with functions for mesh generation.
+'''
 import numpy as np
 
 
@@ -30,13 +33,13 @@ class Mesh:
         Number of points.
     ncurves : int
         Number of curves.
-    topology : np.ndarray
+    topology : numpy.ndarray
         Array of size (elnumnod, nelem), where topology[:, elem] is an
         array of global node numbers element elem is connected to.
-    coor : np.ndarray
+    coor : numpy.ndarray
         Array of size (nnodes, ndim), where coor[i, :] are the coordinates
         of node i, with 1 <= i <= nnodes.
-    points : np.ndarray
+    points : numpy.ndarray
         An array containing the node numbers of the points, hence points[i]
         is the node of point i, with 1 <= i <= npoints.
     curves : list
@@ -66,12 +69,12 @@ class Mesh:
             Number of points (default is 0).
         ncurves : int, optional
             Number of curves (default is 0).
-        topology : np.ndarray, optional
-            Topology of the mesh (default is np.array([])).
-        coor : np.ndarray, optional
-            Coordinates of the nodes (default is np.array([])).
-        points : np.ndarray, optional
-            Points in the mesh (default is np.array([])).
+        topology : numpy.ndarray, optional
+            Topology of the mesh (default is numpy.array([])).
+        coor : numpy.ndarray, optional
+            Coordinates of the nodes (default is numpy.array([])).
+        points : numpy.ndarray, optional
+            Points in the mesh (default is numpy.array([])).
         curves : list, optional
             Curves in the mesh (default is []]).
 
@@ -119,7 +122,7 @@ class Mesh:
 
         Notes
         -----
-        NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
+        NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
         check = [self.ndim == other.ndim,
@@ -162,12 +165,12 @@ class Geometry:
         Number of nodes.
     nelem : int
         Number of elements.
-    topology : np.ndarray
+    topology : numpy.ndarray
         Array of size (elnumnod, nelem, 2), where topology[:, elem, 0]
         is an array of local node numbers element elem is connected to,
         and topology[:, elem, 1] is an array of global node numbers
         element elem is connected to.
-    nodes : np.ndarray
+    nodes : numpy.ndarray
         Array of size nnodes containing the global node numbers, i.e.,
         nodes[i] is the global node number of local node i.
 
@@ -190,9 +193,9 @@ class Geometry:
             Number of nodes (default is 0).
         nelem : int, optional
             Number of elements (default is 0).
-        topology : np.ndarray, optional
+        topology : numpy.ndarray, optional
             Topology of the geometry (default is np.array([])).
-        nodes : np.ndarray, optional
+        nodes : numpy.ndarray, optional
             Nodes in the geometry (default is np.array([])).
 
         Notes
@@ -230,7 +233,7 @@ class Geometry:
 
         Notes
         -----
-        NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
+        NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
         check = [self.ndim == other.ndim,
@@ -331,8 +334,7 @@ def distribute_elements(nelem, ratio, factor):
     # test whether x(n+1) = 1
     if abs(x[-1] - 1) > 1e-10:
         raise ValueError(f"End value x(n+1) != 1: {x[-1]:.5e}")
-    else:
-        x[-1] = 1.0
+    x[-1] = 1.0
 
     return x
 
@@ -722,7 +724,7 @@ def rectangle2d_tria3(num_el, ratio, factor):
                 mesh.coor[node] = [i * deltax, j * deltay]
     else:
         # non-equidistant
-        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row)
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
@@ -737,9 +739,9 @@ def rectangle2d_tria3(num_el, ratio, factor):
         for i in range(nn1row):
             for j in range(nn1col):
                 node = i + j*nn1row
-                D = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
-                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / D
-                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / D
+                dd = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
+                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / dd
+                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / dd
 
     # points
     mesh.points = np.array([0, nn1row-1,
@@ -882,7 +884,7 @@ def rectangle2d_tria4(num_el, ratio, factor):
                 mesh.coor[node, 1] = j * deltay + deltay/3
     else:
         # non-equidistant
-        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row)
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
@@ -896,9 +898,9 @@ def rectangle2d_tria4(num_el, ratio, factor):
         for i in range(nn1row):
             for j in range(nn1col):
                 node = i + j*(nn1row+2*n_x)
-                D = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
-                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / D
-                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / D
+                dd = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
+                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / dd
+                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / dd
 
         for i in range(n_x):
             for j in range(n_y):
@@ -1048,7 +1050,7 @@ def rectangle2d_tria6(num_el, ratio, factor):
                 mesh.coor[node] = [i * deltax, j * deltay]
     else:
         # non-equidistant
-        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row)
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
@@ -1073,9 +1075,9 @@ def rectangle2d_tria6(num_el, ratio, factor):
         for i in range(nn1row):
             for j in range(nn1col):
                 node = i + j*nn1row
-                D = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
-                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / D
-                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / D
+                dd = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
+                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / dd
+                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / dd
 
     # points
     mesh.points = np.array([0, nn1row-1,
@@ -1228,7 +1230,7 @@ def rectangle2d_tria7(num_el, ratio, factor):
                 mesh.coor[node, 1] = j * deltay + deltay/2
     else:
         # non-equidistant
-        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row)
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
@@ -1256,9 +1258,9 @@ def rectangle2d_tria7(num_el, ratio, factor):
                     node = i + j*nn1row + (j+1)*n_x
                 else:  # odd row
                     node = i + j*(nn1row+n_x)
-                D = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
-                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / D
-                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / D
+                dd = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
+                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / dd
+                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / dd
 
         for i in range(n_x):
             for j in range(n_y):
@@ -1413,7 +1415,7 @@ def rectangle2d_quad4(num_el, ratio, factor):
                 mesh.coor[node] = [i * deltax, j * deltay]
     else:
         # non-equidistant
-        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row)
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
@@ -1427,9 +1429,9 @@ def rectangle2d_quad4(num_el, ratio, factor):
         for i in range(nn1row):
             for j in range(nn1col):
                 node = i + j*nn1row
-                D = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
-                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / D
-                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / D
+                dd = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
+                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / dd
+                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / dd
 
     # points
     mesh.points = np.array([0, nn1row-1,
@@ -1562,7 +1564,7 @@ def rectangle2d_quad5(num_el, ratio, factor):
                                    j * deltay + deltay/2]
     else:
         # non-equidistant
-        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row)
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
@@ -1576,9 +1578,9 @@ def rectangle2d_quad5(num_el, ratio, factor):
         for i in range(nn1row):
             for j in range(nn1col):
                 node = i + j*(nn1row+n_x)
-                D = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
-                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / D
-                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / D
+                dd = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
+                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / dd
+                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / dd
         for i in range(n_x):
             for j in range(n_y):
                 node = i + j*(nn1row+n_x) + nn1row
@@ -1717,7 +1719,7 @@ def rectangle2d_quad9(num_el, ratio, factor):
                 mesh.coor[node] = [i * deltax, j * deltay]
     else:
         # non-equidistant
-        x1, x3 = np.zeros(nn1row), np.zeros(nn1row),
+        x1, x3 = np.zeros(nn1row), np.zeros(nn1row)
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
@@ -1742,9 +1744,9 @@ def rectangle2d_quad9(num_el, ratio, factor):
         for i in range(nn1row):
             for j in range(nn1col):
                 node = i + j*nn1row
-                D = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
-                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / D
-                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / D
+                dd = (x1[i] - x3[i]) * (x4[j] - x2[j]) - 1
+                mesh.coor[node, 0] = (x4[j] * (x1[i] - x3[i]) - x1[i]) / dd
+                mesh.coor[node, 1] = (x1[i] * (x4[j] - x2[j]) - x4[j]) / dd
 
     # points
     mesh.points = np.array([0, nn1row-1,

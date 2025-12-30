@@ -1,3 +1,6 @@
+'''
+Module for PyVista mesh generation (used in visualization).
+'''
 import pyvista as pv
 import numpy as np
 

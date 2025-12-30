@@ -1,3 +1,6 @@
+'''
+Module to build system matrices and apply boundary conditions.
+'''
 import numpy as np
 from scipy.sparse import lil_matrix, eye
 from .pos_array import pos_array, pos_array_vec
@@ -60,7 +63,7 @@ def build_system(mesh, problem, element, user, **kwargs):
     rowcolequal = np.array_equal(physqrow, physqcol)
 
     n = problem.numdegfd
-    A = lil_matrix((n, n))
+    system_matrix = lil_matrix((n, n))
     f = np.zeros(n)
 
     # Start assembly loop over elements
@@ -88,10 +91,10 @@ def build_system(mesh, problem, element, user, **kwargs):
             elemmat, elemvec = element(elem, coor, user, posrow)
 
         # [:,None] needed for proper broadcasting by adding an axis of dim 1
-        A[posr[:, None], posc] += elemmat
+        system_matrix[posr[:, None], posc] += elemmat
         f[posr] += elemvec
 
-    return A, f
+    return system_matrix, f
 
 
 def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
@@ -139,13 +142,13 @@ def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
     """
 
     # Default optional arguments
-    A = kwargs.get('A', None)
+    system_matrix = kwargs.get('A', None)
     physqrow = kwargs.get('physqrow', np.arange(problem.nphysq, dtype=int))
     physqcol = kwargs.get('physqcol', np.arange(problem.nphysq, dtype=int))
     order = kwargs.get('order', 'DN')
     posvectors = kwargs.get('posvectors', False)
 
-    mat_present = A is not None
+    mat_present = system_matrix is not None
 
     rowcolequal = np.array_equal(physqrow, physqcol)
 
@@ -176,20 +179,20 @@ def add_boundary_elements(mesh, problem, f, element, user, curve, **kwargs):
             posvec, _ = pos_array_vec(problem, nodes, order=order)
             if mat_present:
                 elemvec, elemmat = element(elem, coor, user, posrow, posvec)
-                A[posr[:, None], posc] += elemmat
+                system_matrix[posr[:, None], posc] += elemmat
             else:
                 elemvec = element(elem, coor, user, posrow, posvec)
         else:
             if mat_present:
                 elemvec, elemmat = element(elem, coor, user, posrow)
-                A[posr[:, None], posc] += elemmat
+                system_matrix[posr[:, None], posc] += elemmat
             else:
                 elemvec = element(elem, coor, user, posrow)
 
         f[posr] += elemvec
 
 
-def apply_essential(A, f, uess, iess, **kwargs):
+def apply_essential(system_matrix, f, uess, iess, **kwargs):
     """
     Add effect of essential boundary conditions to right-hand side.
 
@@ -217,9 +220,9 @@ def apply_essential(A, f, uess, iess, **kwargs):
         Matrix partition of unknown rows and prescribed columns.
     """
 
-    assert (uess is not None)
+    assert uess is not None
 
-    return_Aup = kwargs.get('return_Aup', False)
+    return_amat_up = kwargs.get('return_Aup', False)
 
     # initialize some parameters
     nd = f.shape[0]
@@ -232,16 +235,17 @@ def apply_essential(A, f, uess, iess, **kwargs):
     iu = np.where(tmp == 0)[0]
 
     # extract Aup
-    Aup = A[iu, :][:, iess]
+    amat_up = system_matrix[iu, :][:, iess]
 
     # modify A
-    A[iu[:, None], iess] = lil_matrix((nu, npp))
-    A[iess[:, None], iu] = lil_matrix((npp, nu))
-    A[iess[:, None], iess] = eye(npp)
+    system_matrix[iu[:, None], iess] = lil_matrix((nu, npp))
+    system_matrix[iess[:, None], iu] = lil_matrix((npp, nu))
+    system_matrix[iess[:, None], iess] = eye(npp)
 
     # modify f
-    f[iu] -= Aup.dot(uess[iess])
+    f[iu] -= amat_up.dot(uess[iess])
     f[iess] = uess[iess]
 
-    if return_Aup:
-        return Aup
+    if return_amat_up:
+        return amat_up
+    return None

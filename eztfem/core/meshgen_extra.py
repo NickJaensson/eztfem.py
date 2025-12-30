@@ -1,3 +1,7 @@
+'''
+Module with additional functions for meshes.
+'''
+
 import numpy as np
 from .meshgen import Mesh
 
@@ -103,7 +107,7 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         if len(curves1) != len(curves2):
             raise ValueError('curves1 and curves2 need to be of the same \
                              length')
-        for i in range(len(curves1)):
+        for i, _ in enumerate(curves1):
             if (mesh1.curves[curves1[i]].nnodes
                != mesh2.curves[abs(curves2[i])].nnodes):
                 raise ValueError('number of nodes different for curves1 and \
@@ -116,7 +120,7 @@ def mesh_merge(mesh1, mesh2, **kwargs):
 
     if crvs2_present and not dir_crvs2_present:
         raise ValueError('curves2 and dir_curves2 must be both present')
-    elif crvs2_present and dir_crvs2_present:
+    if crvs2_present and dir_crvs2_present:
         if len(curves2) != len(dir_curves2):
             raise ValueError('curves2 and dir_curves2 need to be of the same \
                              length')
@@ -158,7 +162,7 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         delcurves2[np.abs(curves2)] = 1  # always delete curves in curves2
 
         # nodes on curve2 can be removed == nodes on curve1
-        for crv in range(len(curves2)):
+        for crv, _ in enumerate(curves2):
             crv1 = curves1[crv]
             crv2 = curves2[crv]
             dir2 = dir_curves2[crv]

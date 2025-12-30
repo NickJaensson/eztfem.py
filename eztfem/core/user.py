@@ -1,3 +1,6 @@
+'''
+Module to define the User class
+'''
 import numpy as np
 
 
@@ -54,8 +57,8 @@ class User:
 
         """
         # Get list of names of attributes
-        attributes_self = [attr for attr in self.__dict__.keys()]
-        attributes_other = [attr for attr in other.__dict__.keys()]
+        attributes_self = list(self.__dict__)
+        attributes_other = list(other.__dict__)
 
         # Check if attributes exist in both Users
         check0 = [

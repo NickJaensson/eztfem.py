@@ -1,3 +1,6 @@
+'''
+Module to define the Vector class
+'''
 import numpy as np
 from .pos_array import pos_array, pos_array_vec
 
@@ -209,3 +212,4 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
 
     if not f_present:
         return f
+    return None

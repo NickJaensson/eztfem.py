@@ -1,23 +1,35 @@
-# Poisson problem on a square [-1,1]x[-1,1] with Dirichlet boundary conditions
-# This problem solves Example 1.1.1 of the book of Elman et al.
+'''
+Poisson problem on a square [-1,1]x[-1,1] with Dirichlet boundary conditions
+This problem solves Example 1.1.1 of the book of Elman et al.
+'''
 
 import numpy as np
-import eztfem as ezt
-from func import func
 from scipy.sparse.linalg import spsolve
+from func import func
+import eztfem as ezt
 
 
 def main():
+    """
+    Returns
+    -------
+    max_u : float
+        Maximum solution value.
+    mesh : Mesh
+        Finite element mesh.
+    problem : Problem
+        Stokes problem definition.
+    u : numpy.ndarray
+        Nodal values of u (solution vector).
+    """
 
     # create mesh
 
-    print('mesh')
     mesh = ezt.quadrilateral2d([40, 40], 'quad4', origin=np.array([-1, -1]),
                                length=np.array([2, 2]))
 
     # define the problem
 
-    print('problem_definition')
     elementdof = np.array([[1, 1, 1, 1],
                            [2, 2, 2, 2]], dtype=int).transpose()
     problem = ezt.Problem(mesh, elementdof, nphysq=1)
@@ -27,10 +39,7 @@ def main():
     user = ezt.User()
     shape = 'quad'
 
-    print('gauss_legendre')
     user.xr, user.wg = ezt.gauss_legendre(shape, n=2)
-
-    print('basis_function phi')
     user.phi, user.dphi = ezt.basis_function(shape, 'Q1', user.xr)
 
     # user struct for setting problem coefficients, ...
@@ -42,35 +51,28 @@ def main():
 
     # assemble the system matrix and vector
 
-    print('build_system')
-    A, f = ezt.build_system(mesh, problem, ezt.poisson_elem, user)
+    system_matrix, rhs = ezt.build_system(mesh, problem, ezt.poisson_elem,
+                                          user)
 
     # define essential boundary conditions (Dirichlet)
 
-    print('define_essential')
     iess = ezt.define_essential(mesh, problem, 'curves', [0, 1, 2, 3])
 
     # fill values for the essential boundary conditions
 
-    print('fill_system_vector')
     uess = np.zeros([problem.numdegfd])
 
     # apply essential boundary conditions to the system
 
-    print('apply_essential')
-    ezt.apply_essential(A, f, uess, iess)
+    ezt.apply_essential(system_matrix, rhs, uess, iess)
 
     # solve the system
 
-    print('solve')
-    u = spsolve(A.tocsr(), f)
+    u = spsolve(system_matrix.tocsr(), rhs)
 
-    # maximum value
-
-    print('Maximum value ', max(u))
-
-    return max(u)
+    return max(u), mesh, problem, u
 
 
 if __name__ == '__main__':
-    main()
+    results = main()
+    print('max u = ', results[0])

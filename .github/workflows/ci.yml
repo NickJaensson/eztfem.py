@@ -2,7 +2,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
 
 jobs:
@@ -13,14 +13,32 @@ jobs:
         python-version: ["3.11"]
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e .
+          pip install pylint flake8
+
       - name: Run test suite
         run: |
           python -m unittest
+
+      - name: Lint examples with pylint
+        run: |
+          pylint --disable=duplicate-code examples/**/*.py
+          pylint --max-statements=200 --max-module-lines=2000 \
+            --max-branches=60 --max-locals=100 \
+            --disable=too-few-public-methods --max-attributes=25 \
+            --max-args=20 --disable=too-many-positional-arguments \
+            --disable=duplicate-code --disable=unused-argument \
+            eztfem/**/*.py
+
+      - name: Lint examples with flake8
+        run: |
+          flake8 examples/**/*.py
