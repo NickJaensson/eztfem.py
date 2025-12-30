@@ -33,13 +33,13 @@ class Mesh:
         Number of points.
     ncurves : int
         Number of curves.
-    topology : np.ndarray
+    topology : numpy.ndarray
         Array of size (elnumnod, nelem), where topology[:, elem] is an
         array of global node numbers element elem is connected to.
-    coor : np.ndarray
+    coor : numpy.ndarray
         Array of size (nnodes, ndim), where coor[i, :] are the coordinates
         of node i, with 1 <= i <= nnodes.
-    points : np.ndarray
+    points : numpy.ndarray
         An array containing the node numbers of the points, hence points[i]
         is the node of point i, with 1 <= i <= npoints.
     curves : list
@@ -69,12 +69,12 @@ class Mesh:
             Number of points (default is 0).
         ncurves : int, optional
             Number of curves (default is 0).
-        topology : np.ndarray, optional
-            Topology of the mesh (default is np.array([])).
-        coor : np.ndarray, optional
-            Coordinates of the nodes (default is np.array([])).
-        points : np.ndarray, optional
-            Points in the mesh (default is np.array([])).
+        topology : numpy.ndarray, optional
+            Topology of the mesh (default is numpy.array([])).
+        coor : numpy.ndarray, optional
+            Coordinates of the nodes (default is numpy.array([])).
+        points : numpy.ndarray, optional
+            Points in the mesh (default is numpy.array([])).
         curves : list, optional
             Curves in the mesh (default is []]).
 
@@ -122,7 +122,7 @@ class Mesh:
 
         Notes
         -----
-        NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
+        NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
         check = [self.ndim == other.ndim,
@@ -165,12 +165,12 @@ class Geometry:
         Number of nodes.
     nelem : int
         Number of elements.
-    topology : np.ndarray
+    topology : numpy.ndarray
         Array of size (elnumnod, nelem, 2), where topology[:, elem, 0]
         is an array of local node numbers element elem is connected to,
         and topology[:, elem, 1] is an array of global node numbers
         element elem is connected to.
-    nodes : np.ndarray
+    nodes : numpy.ndarray
         Array of size nnodes containing the global node numbers, i.e.,
         nodes[i] is the global node number of local node i.
 
@@ -193,9 +193,9 @@ class Geometry:
             Number of nodes (default is 0).
         nelem : int, optional
             Number of elements (default is 0).
-        topology : np.ndarray, optional
+        topology : numpy.ndarray, optional
             Topology of the geometry (default is np.array([])).
-        nodes : np.ndarray, optional
+        nodes : numpy.ndarray, optional
             Nodes in the geometry (default is np.array([])).
 
         Notes
@@ -233,7 +233,7 @@ class Geometry:
 
         Notes
         -----
-        NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
+        NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
         check = [self.ndim == other.ndim,
