@@ -22,7 +22,7 @@ def main():
     problem : Problem
         Stokes problem definition.
     u : numpy.ndarray
-        Nodal values of solution (velocity and pressure).
+        Nodal values of velocity and pressure (solution vector).
     derivs : dict
         Dictionary of derived fields (Vector instances).
     """
