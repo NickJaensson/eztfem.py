@@ -1,7 +1,13 @@
 '''
 Module with functions for mesh generation.
 '''
+import typing
 import numpy as np
+import numpy.typing as npt
+
+
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
 
 
 class Mesh:
@@ -47,9 +53,12 @@ class Mesh:
 
     """
 
-    def __init__(self, ndim=0, nnodes=0, nelem=0, elshape=0, elnumnod=0,
-                 npoints=0, ncurves=0, topology=None, coor=None, points=None,
-                 curves=None):
+    def __init__(self, ndim: int = 0, nnodes: int = 0, nelem: int = 0,
+                 elshape: int = 0, elnumnod: int = 0, npoints: int = 0,
+                 ncurves: int = 0, topology: IntArray | None = None,
+                 coor: FloatArray | None = None,
+                 points: IntArray | None = None,
+                 curves: list["Geometry"] | None = None):
         """
         Initializes the Mesh object with the given attributes.
 
@@ -106,7 +115,7 @@ class Mesh:
         self.points = points
         self.curves = curves
 
-    def __eq__(self, other):
+    def __eq__(self, other: "Mesh") -> bool:
         """
         Checks equivalence of two Mesh objects (overloads == sign).
 
@@ -125,7 +134,7 @@ class Mesh:
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
-        check = [self.ndim == other.ndim,
+        check: list[bool] = [self.ndim == other.ndim,
                  self.nnodes == other.nnodes,
                  np.allclose(np.squeeze(self.coor), other.coor,
                              atol=1e-15, rtol=0.0),
