@@ -472,7 +472,8 @@ def line1d_2node(n: int, ratio: typing.Literal[0, 1, 2, 3, 4],
     return mesh
 
 
-def line1d_3node(n, ratio, factor):
+def line1d_3node(n: int, ratio: typing.Literal[0, 1, 2, 3, 4],
+                 factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 3 nodes.
     The numbering is straightforward:
