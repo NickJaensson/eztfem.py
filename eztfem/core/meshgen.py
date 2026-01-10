@@ -499,8 +499,9 @@ def line1d_3node(n: int, ratio: typing.Literal[0, 1, 2, 3, 4],
 
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=2*n+1, elshape=2, nelem=n, elnumnod=3,
-                npoints=2, topology=np.zeros((3, n)),
-                coor=np.zeros((2*n + 1, 1)), points=np.zeros(2))
+                npoints=2, topology=np.zeros((3, n), np.integer),
+                coor=np.zeros((2*n + 1, 1), np.floating),
+                points=np.zeros(2, np.integer))
 
     # topology
     for elem in range(n):
