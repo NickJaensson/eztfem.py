@@ -1484,7 +1484,8 @@ def rectangle2d_quad4(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_quad5(num_el, ratio, factor):
+def rectangle2d_quad5(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 5 nodes.
 
