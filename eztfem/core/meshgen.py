@@ -528,8 +528,13 @@ def line1d_3node(n: int, ratio: Ratio, factor: float) -> Mesh:
     return mesh
 
 
-def quadrilateral2d(num_el, eltype, *, origin = None, length = None,
-                    vertices = None, ratio = None, factor = None):
+def quadrilateral2d(num_el: typing.Iterable[int],
+                    eltype: typing.Literal["tria3", "tria4", "tria6", "tria7", "quad4", "quad9", "quad5"],
+                    *, origin: FloatArray | None = None,
+                    length: FloatArray | None = None,
+                    vertices: FloatArray | None = None,
+                    ratio: list[Ratio] | None = None,
+                    factor: list[float] | None = None) -> Mesh:
     """
     Simple mesh generator for quadrilateral 2D regions.
 
