@@ -8,6 +8,7 @@ import numpy.typing as npt
 
 IntArray: typing.TypeAlias = npt.NDArray[np.integer]
 FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+Ratio: typing.TypeAlias = typing.Literal[0, 1, 2, 3, 4]
 
 
 class Mesh:
@@ -262,8 +263,7 @@ class Geometry:
         return all(check)
 
 
-def distribute_elements(nelem: int, ratio: typing.Literal[0, 1, 2, 3, 4],
-                        factor: float) -> FloatArray:
+def distribute_elements(nelem: int, ratio: Ratio, factor: float) -> FloatArray:
     """
     Generate non-equidistant n elements on the interval [0, 1].
 
@@ -353,8 +353,7 @@ def distribute_elements(nelem: int, ratio: typing.Literal[0, 1, 2, 3, 4],
 
 def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
            origin: float | None = None, length: float | None = None,
-           ratio: typing.Literal[0, 1, 2, 3, 4] = 0,
-           factor: float = 1.0) -> Mesh:
+           ratio: Ratio = 0, factor: float = 1.0) -> Mesh:
     """
     Simple mesh generator for 1D lines on the interval [0, 1].
 
@@ -418,8 +417,7 @@ def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
     return mesh
 
 
-def line1d_2node(n: int, ratio: typing.Literal[0, 1, 2, 3, 4],
-                 factor: float) -> Mesh:
+def line1d_2node(n: int, ratio: Ratio, factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 2 nodes.
     The numbering is straightforward:
@@ -472,8 +470,7 @@ def line1d_2node(n: int, ratio: typing.Literal[0, 1, 2, 3, 4],
     return mesh
 
 
-def line1d_3node(n: int, ratio: typing.Literal[0, 1, 2, 3, 4],
-                 factor: float) -> Mesh:
+def line1d_3node(n: int, ratio: Ratio, factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 3 nodes.
     The numbering is straightforward:
