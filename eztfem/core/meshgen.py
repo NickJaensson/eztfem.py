@@ -351,8 +351,10 @@ def distribute_elements(nelem: int, ratio: typing.Literal[0, 1, 2, 3, 4],
     return x
 
 
-def line1d(ne, eltype, *, origin = None, length = None, ratio = None,
-           factor = 1.0):
+def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
+           origin: float | None = None, length: float | None = None,
+           ratio: typing.Literal[0, 1, 2, 3, 4] = 0,
+           factor: float = 1.0) -> Mesh:
     """
     Simple mesh generator for 1D lines on the interval [0, 1].
 
