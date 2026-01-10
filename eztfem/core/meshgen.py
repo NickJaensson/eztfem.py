@@ -185,8 +185,10 @@ class Geometry:
 
     """
 
-    def __init__(self, elshape=0, ndim=0, elnumnod=0, nnodes=0, nelem=0,
-                 topology=None, nodes=None):
+    def __init__(self, elshape: int = 0, ndim: int = 0, elnumnod: int = 0,
+                 nnodes: int = 0, nelem: int = 0,
+                 topology: IntArray | None = None,
+                 nodes: IntArray | None = None) -> None:
         """
         Initializes the Geometry object with the given attributes.
 
@@ -226,7 +228,7 @@ class Geometry:
         self.topology = topology
         self.nodes = nodes
 
-    def __eq__(self, other):
+    def __eq__(self, other: "Geometry") -> bool:
         """
         Checks equivalence of two Geometry objects (overloads == sign).
 
@@ -245,7 +247,7 @@ class Geometry:
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
-        check = [self.ndim == other.ndim,
+        check: list[bool] = [self.ndim == other.ndim,
                  self.elshape == other.elshape,
                  self.elnumnod == other.elnumnod,
                  self.nnodes == other.nnodes,
