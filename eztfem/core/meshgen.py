@@ -513,7 +513,8 @@ def line1d_3node(n, ratio, factor):
     return mesh
 
 
-def quadrilateral2d(num_el, eltype, **kwargs):
+def quadrilateral2d(num_el, eltype, *, origin = None, length = None,
+                    vertices = None, ratio = None, factor = None):
     """
     Simple mesh generator for quadrilateral 2D regions.
 
@@ -576,13 +577,8 @@ def quadrilateral2d(num_el, eltype, **kwargs):
     The edges are straight.
 
     """
-
-    # optional arguments
-    ori = kwargs.get('origin', None)
-    length = kwargs.get('length', None)
-    def_verts = kwargs.get('vertices', None)
-    ratio = kwargs.get('ratio', None)
-    factor = kwargs.get('factor', None)
+    if factor is None:
+        factor = [1, 1, 1, 1]
 
     # mesh
     if eltype == 'tria3':  # 3 node triangle
@@ -603,7 +599,7 @@ def quadrilateral2d(num_el, eltype, **kwargs):
         raise ValueError(f"Invalid eltype = {eltype}")
 
     # translate, scale or deform unit region
-    if def_verts is not None:
+    if vertices is not None:
         # x = [ x1 * (1-xi) + x2 * xi ] (1 - eta) +
         #     [ x4 * (1-xi) + x3 * xi ] eta
         # with xi = mesh.coor(1), eta = mesh.coor(2) \in [0,1] from rectangle2d
@@ -613,16 +609,16 @@ def quadrilateral2d(num_el, eltype, **kwargs):
         x_weights_2 = x_coor[:, np.newaxis]
         y_weights_1 = (1 - y_coor)[:, np.newaxis]
         y_weights_2 = y_coor[:, np.newaxis]
-        coor_x_1 = x_weights_1 * def_verts[0, :] \
-            + x_weights_2 * def_verts[1, :]
-        coor_x_2 = x_weights_1 * def_verts[3, :] \
-            + x_weights_2 * def_verts[2, :]
+        coor_x_1 = x_weights_1 * vertices[0, :] \
+            + x_weights_2 * vertices[1, :]
+        coor_x_2 = x_weights_1 * vertices[3, :] \
+            + x_weights_2 * vertices[2, :]
         mesh.coor = y_weights_1 * coor_x_1 + y_weights_2 * coor_x_2
     else:
         if length is not None:
             mesh.coor *= length
-        if ori is not None:
-            mesh.coor += ori
+        if origin is not None:
+            mesh.coor += origin
 
     return mesh
 
