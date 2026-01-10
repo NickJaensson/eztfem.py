@@ -643,7 +643,8 @@ def quadrilateral2d(num_el: typing.Iterable[int],
     return mesh
 
 
-def rectangle2d_tria3(num_el, ratio, factor):
+def rectangle2d_tria3(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 3
     nodes.
