@@ -339,7 +339,8 @@ def distribute_elements(nelem, ratio, factor):
     return x
 
 
-def line1d(ne, eltype, **kwargs):
+def line1d(ne, eltype, *, origin = None, length = None, ratio = None,
+           factor = 1.0):
     """
     Simple mesh generator for 1D lines on the interval [0, 1].
 
@@ -384,12 +385,6 @@ def line1d(ne, eltype, **kwargs):
 
     """
 
-    # optional arguments
-    ori = kwargs.get('origin', None)
-    length = kwargs.get('length', None)
-    ratio = kwargs.get('ratio', None)
-    factor = kwargs.get('factor', None)
-
     # mesh
     if eltype == 'line2':
         mesh = line1d_2node(ne, ratio, factor)
@@ -403,8 +398,8 @@ def line1d(ne, eltype, **kwargs):
     # translate and scale unit region
     if length is not None:
         mesh.coor[:, 0] *= length
-    if ori is not None:
-        mesh.coor[:, 0] += ori
+    if origin is not None:
+        mesh.coor[:, 0] += origin
 
     return mesh
 
