@@ -449,9 +449,9 @@ def line1d_2node(n: int, ratio: Ratio, factor: float) -> Mesh:
 
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=n+1, elshape=1, nelem=n, elnumnod=2, npoints=2,
-                topology=np.zeros((2, n), np.integer),
-                coor=np.zeros((n + 1, 1), np.floating),
-                points=np.zeros(2, np.integer))
+                topology=np.zeros((2, n), dtype=int),
+                coor=np.zeros((n + 1, 1), dtype=float),
+                points=np.zeros(2, dtype=int))
 
     # topology
     for elem in range(n):
@@ -502,9 +502,9 @@ def line1d_3node(n: int, ratio: Ratio, factor: float) -> Mesh:
 
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=2*n+1, elshape=2, nelem=n, elnumnod=3,
-                npoints=2, topology=np.zeros((3, n), np.integer),
-                coor=np.zeros((2*n + 1, 1), np.floating),
-                points=np.zeros(2, np.integer))
+                npoints=2, topology=np.zeros((3, n), dtype=int),
+                coor=np.zeros((2*n + 1, 1), dtype=float),
+                points=np.zeros(2, dtype=int))
 
     # topology
     for elem in range(n):
