@@ -965,7 +965,8 @@ def rectangle2d_tria4(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_tria6(num_el, ratio, factor):
+def rectangle2d_tria6(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 6
     nodes.
