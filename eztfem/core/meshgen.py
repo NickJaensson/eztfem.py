@@ -116,7 +116,7 @@ class Mesh:
         self.points = points
         self.curves = curves
 
-    def __eq__(self, other: "Mesh") -> bool:
+    def __eq__(self, other: object) -> bool:
         """
         Checks equivalence of two Mesh objects (overloads == sign).
 
@@ -135,6 +135,9 @@ class Mesh:
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
+        if not isinstance(other, Mesh):
+            return False
+
         check: list[bool] = [self.ndim == other.ndim,
                  self.nnodes == other.nnodes,
                  np.allclose(np.squeeze(self.coor), other.coor,
@@ -229,7 +232,7 @@ class Geometry:
         self.topology = topology
         self.nodes = nodes
 
-    def __eq__(self, other: "Geometry") -> bool:
+    def __eq__(self, other: object) -> bool:
         """
         Checks equivalence of two Geometry objects (overloads == sign).
 
@@ -248,6 +251,9 @@ class Geometry:
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
+        if not isinstance(other, Geometry):
+            return False
+
         check: list[bool] = [self.ndim == other.ndim,
                  self.elshape == other.elshape,
                  self.elnumnod == other.elnumnod,
