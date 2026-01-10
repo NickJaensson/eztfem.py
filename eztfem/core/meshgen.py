@@ -262,7 +262,8 @@ class Geometry:
         return all(check)
 
 
-def distribute_elements(nelem, ratio, factor):
+def distribute_elements(nelem: int, ratio: typing.Literal[0, 1, 2, 3, 4],
+                        factor: float) -> FloatArray:
     """
     Generate non-equidistant n elements on the interval [0, 1].
 
