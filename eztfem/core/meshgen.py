@@ -535,7 +535,8 @@ def line1d_3node(n: int, ratio: Ratio, factor: float) -> Mesh:
 
 
 def quadrilateral2d(num_el: typing.Iterable[int],
-                    eltype: typing.Literal["tria3", "tria4", "tria6", "tria7", "quad4", "quad9", "quad5"],
+                    eltype: typing.Literal["tria3", "tria4", "tria6", "tria7",
+                                           "quad4", "quad9", "quad5"],
                     *, origin: FloatArray | None = None,
                     length: FloatArray | None = None,
                     vertices: FloatArray | None = None,
