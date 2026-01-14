@@ -315,7 +315,7 @@ def stokes_flowrate_curve(elem, coor, user, pos):
 
     Notes
     -----
-    This function must be called in `integrate_boundary_curve` using 
+    This function must be called in `integrate_boundary_curve` using
     `posvectors=0` (default).
 
     """
