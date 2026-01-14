@@ -8,7 +8,6 @@ import numpy.typing as npt
 
 IntArray: typing.TypeAlias = npt.NDArray[np.integer]
 FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
-Ratio: typing.TypeAlias = typing.Literal[0, 1, 2, 3, 4]
 
 
 class Mesh:
@@ -270,7 +269,7 @@ class Geometry:
         return all(check)
 
 
-def distribute_elements(nelem: int, ratio: Ratio, factor: float) -> FloatArray:
+def distribute_elements(nelem: int, ratio: int, factor: float) -> FloatArray:
     """
     Generate non-equidistant n elements on the interval [0, 1].
 
@@ -360,7 +359,7 @@ def distribute_elements(nelem: int, ratio: Ratio, factor: float) -> FloatArray:
 
 def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
            origin: float | None = None, length: float | None = None,
-           ratio: Ratio = 0, factor: float = 1.0) -> Mesh:
+           ratio: int = 0, factor: float = 1.0) -> Mesh:
     """
     Simple mesh generator for 1D lines on the interval [0, 1].
 
@@ -424,7 +423,7 @@ def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
     return mesh
 
 
-def line1d_2node(n: int, ratio: Ratio, factor: float) -> Mesh:
+def line1d_2node(n: int, ratio: int, factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 2 nodes.
     The numbering is straightforward:
@@ -477,7 +476,7 @@ def line1d_2node(n: int, ratio: Ratio, factor: float) -> Mesh:
     return mesh
 
 
-def line1d_3node(n: int, ratio: Ratio, factor: float) -> Mesh:
+def line1d_3node(n: int, ratio: int, factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 3 nodes.
     The numbering is straightforward:
@@ -541,7 +540,7 @@ def quadrilateral2d(num_el: typing.Sequence[int],
                     *, origin: FloatArray | None = None,
                     length: FloatArray | None = None,
                     vertices: FloatArray | None = None,
-                    ratio: list[Ratio] | None = None,
+                    ratio: list[int] | None = None,
                     factor: list[float] | None = None) -> Mesh:
     """
     Simple mesh generator for quadrilateral 2D regions.
@@ -651,7 +650,7 @@ def quadrilateral2d(num_el: typing.Sequence[int],
     return mesh
 
 
-def rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
+def rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[int] | None,
                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 3
@@ -798,7 +797,7 @@ def rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
+def rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 4
@@ -973,7 +972,7 @@ def rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
+def rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[int] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 6
@@ -1136,7 +1135,7 @@ def rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
+def rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[int] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 7
@@ -1351,7 +1350,7 @@ def rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
+def rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[int] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 4 nodes.
@@ -1492,7 +1491,7 @@ def rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
+def rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[int] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 5 nodes.
@@ -1653,7 +1652,7 @@ def rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_quad9(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
+def rectangle2d_quad9(num_el: typing.Sequence[int], ratio: list[int] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 9 nodes.
