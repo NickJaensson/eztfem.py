@@ -1,7 +1,14 @@
 '''
 Module with functions for mesh generation.
 '''
+import typing
 import numpy as np
+import numpy.typing as npt
+
+
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+Ratio: typing.TypeAlias = typing.Literal[0, 1, 2, 3, 4]
 
 
 class Mesh:
@@ -47,9 +54,12 @@ class Mesh:
 
     """
 
-    def __init__(self, ndim=0, nnodes=0, nelem=0, elshape=0, elnumnod=0,
-                 npoints=0, ncurves=0, topology=None, coor=None, points=None,
-                 curves=None):
+    def __init__(self, ndim: int = 0, nnodes: int = 0, nelem: int = 0,
+                 elshape: int = 0, elnumnod: int = 0, npoints: int = 0,
+                 ncurves: int = 0, topology: IntArray | None = None,
+                 coor: FloatArray | None = None,
+                 points: IntArray | None = None,
+                 curves: list["Geometry"] | None = None):
         """
         Initializes the Mesh object with the given attributes.
 
@@ -106,7 +116,7 @@ class Mesh:
         self.points = points
         self.curves = curves
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """
         Checks equivalence of two Mesh objects (overloads == sign).
 
@@ -125,7 +135,10 @@ class Mesh:
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
-        check = [self.ndim == other.ndim,
+        if not isinstance(other, Mesh):
+            return False
+
+        check: list[bool] = [self.ndim == other.ndim,
                  self.nnodes == other.nnodes,
                  np.allclose(np.squeeze(self.coor), other.coor,
                              atol=1e-15, rtol=0.0),
@@ -176,8 +189,10 @@ class Geometry:
 
     """
 
-    def __init__(self, elshape=0, ndim=0, elnumnod=0, nnodes=0, nelem=0,
-                 topology=None, nodes=None):
+    def __init__(self, elshape: int = 0, ndim: int = 0, elnumnod: int = 0,
+                 nnodes: int = 0, nelem: int = 0,
+                 topology: IntArray | None = None,
+                 nodes: IntArray | None = None) -> None:
         """
         Initializes the Geometry object with the given attributes.
 
@@ -217,7 +232,7 @@ class Geometry:
         self.topology = topology
         self.nodes = nodes
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """
         Checks equivalence of two Geometry objects (overloads == sign).
 
@@ -236,7 +251,10 @@ class Geometry:
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of numpy.squeeze
 
         """
-        check = [self.ndim == other.ndim,
+        if not isinstance(other, Geometry):
+            return False
+
+        check: list[bool] = [self.ndim == other.ndim,
                  self.elshape == other.elshape,
                  self.elnumnod == other.elnumnod,
                  self.nnodes == other.nnodes,
@@ -251,7 +269,7 @@ class Geometry:
         return all(check)
 
 
-def distribute_elements(nelem, ratio, factor):
+def distribute_elements(nelem: int, ratio: Ratio, factor: float) -> FloatArray:
     """
     Generate non-equidistant n elements on the interval [0, 1].
 
@@ -339,7 +357,9 @@ def distribute_elements(nelem, ratio, factor):
     return x
 
 
-def line1d(ne, eltype, **kwargs):
+def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
+           origin: float | None = None, length: float | None = None,
+           ratio: Ratio = 0, factor: float = 1.0) -> Mesh:
     """
     Simple mesh generator for 1D lines on the interval [0, 1].
 
@@ -384,12 +404,6 @@ def line1d(ne, eltype, **kwargs):
 
     """
 
-    # optional arguments
-    ori = kwargs.get('origin', None)
-    length = kwargs.get('length', None)
-    ratio = kwargs.get('ratio', None)
-    factor = kwargs.get('factor', None)
-
     # mesh
     if eltype == 'line2':
         mesh = line1d_2node(ne, ratio, factor)
@@ -403,13 +417,13 @@ def line1d(ne, eltype, **kwargs):
     # translate and scale unit region
     if length is not None:
         mesh.coor[:, 0] *= length
-    if ori is not None:
-        mesh.coor[:, 0] += ori
+    if origin is not None:
+        mesh.coor[:, 0] += origin
 
     return mesh
 
 
-def line1d_2node(n, ratio, factor):
+def line1d_2node(n: int, ratio: Ratio, factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 2 nodes.
     The numbering is straightforward:
@@ -435,8 +449,9 @@ def line1d_2node(n, ratio, factor):
 
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=n+1, elshape=1, nelem=n, elnumnod=2, npoints=2,
-                topology=np.zeros((2, n)), coor=np.zeros((n + 1, 1)),
-                points=np.zeros(2))
+                topology=np.zeros((2, n), dtype=int),
+                coor=np.zeros((n + 1, 1), dtype=float),
+                points=np.zeros(2, dtype=int))
 
     # topology
     for elem in range(n):
@@ -461,7 +476,7 @@ def line1d_2node(n, ratio, factor):
     return mesh
 
 
-def line1d_3node(n, ratio, factor):
+def line1d_3node(n: int, ratio: Ratio, factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 3 nodes.
     The numbering is straightforward:
@@ -487,8 +502,9 @@ def line1d_3node(n, ratio, factor):
 
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=2*n+1, elshape=2, nelem=n, elnumnod=3,
-                npoints=2, topology=np.zeros((3, n)),
-                coor=np.zeros((2*n + 1, 1)), points=np.zeros(2))
+                npoints=2, topology=np.zeros((3, n), dtype=int),
+                coor=np.zeros((2*n + 1, 1), dtype=float),
+                points=np.zeros(2, dtype=int))
 
     # topology
     for elem in range(n):
@@ -518,7 +534,14 @@ def line1d_3node(n, ratio, factor):
     return mesh
 
 
-def quadrilateral2d(num_el, eltype, **kwargs):
+def quadrilateral2d(num_el: typing.Iterable[int],
+                    eltype: typing.Literal["tria3", "tria4", "tria6", "tria7",
+                                           "quad4", "quad9", "quad5"],
+                    *, origin: FloatArray | None = None,
+                    length: FloatArray | None = None,
+                    vertices: FloatArray | None = None,
+                    ratio: list[Ratio] | None = None,
+                    factor: list[float] | None = None) -> Mesh:
     """
     Simple mesh generator for quadrilateral 2D regions.
 
@@ -581,13 +604,8 @@ def quadrilateral2d(num_el, eltype, **kwargs):
     The edges are straight.
 
     """
-
-    # optional arguments
-    ori = kwargs.get('origin', None)
-    length = kwargs.get('length', None)
-    def_verts = kwargs.get('vertices', None)
-    ratio = kwargs.get('ratio', None)
-    factor = kwargs.get('factor', None)
+    if factor is None:
+        factor = [1, 1, 1, 1]
 
     # mesh
     if eltype == 'tria3':  # 3 node triangle
@@ -608,7 +626,7 @@ def quadrilateral2d(num_el, eltype, **kwargs):
         raise ValueError(f"Invalid eltype = {eltype}")
 
     # translate, scale or deform unit region
-    if def_verts is not None:
+    if vertices is not None:
         # x = [ x1 * (1-xi) + x2 * xi ] (1 - eta) +
         #     [ x4 * (1-xi) + x3 * xi ] eta
         # with xi = mesh.coor(1), eta = mesh.coor(2) \in [0,1] from rectangle2d
@@ -618,21 +636,22 @@ def quadrilateral2d(num_el, eltype, **kwargs):
         x_weights_2 = x_coor[:, np.newaxis]
         y_weights_1 = (1 - y_coor)[:, np.newaxis]
         y_weights_2 = y_coor[:, np.newaxis]
-        coor_x_1 = x_weights_1 * def_verts[0, :] \
-            + x_weights_2 * def_verts[1, :]
-        coor_x_2 = x_weights_1 * def_verts[3, :] \
-            + x_weights_2 * def_verts[2, :]
+        coor_x_1 = x_weights_1 * vertices[0, :] \
+            + x_weights_2 * vertices[1, :]
+        coor_x_2 = x_weights_1 * vertices[3, :] \
+            + x_weights_2 * vertices[2, :]
         mesh.coor = y_weights_1 * coor_x_1 + y_weights_2 * coor_x_2
     else:
         if length is not None:
             mesh.coor *= length
-        if ori is not None:
-            mesh.coor += ori
+        if origin is not None:
+            mesh.coor += origin
 
     return mesh
 
 
-def rectangle2d_tria3(num_el, ratio, factor):
+def rectangle2d_tria3(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 3
     nodes.
@@ -778,7 +797,8 @@ def rectangle2d_tria3(num_el, ratio, factor):
     return mesh
 
 
-def rectangle2d_tria4(num_el, ratio, factor):
+def rectangle2d_tria4(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 4
     nodes.
@@ -952,7 +972,8 @@ def rectangle2d_tria4(num_el, ratio, factor):
     return mesh
 
 
-def rectangle2d_tria6(num_el, ratio, factor):
+def rectangle2d_tria6(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 6
     nodes.
@@ -1114,7 +1135,8 @@ def rectangle2d_tria6(num_el, ratio, factor):
     return mesh
 
 
-def rectangle2d_tria7(num_el, ratio, factor):
+def rectangle2d_tria7(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 7
     nodes.
@@ -1328,7 +1350,8 @@ def rectangle2d_tria7(num_el, ratio, factor):
     return mesh
 
 
-def rectangle2d_quad4(num_el, ratio, factor):
+def rectangle2d_quad4(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 4 nodes.
 
@@ -1468,7 +1491,8 @@ def rectangle2d_quad4(num_el, ratio, factor):
     return mesh
 
 
-def rectangle2d_quad5(num_el, ratio, factor):
+def rectangle2d_quad5(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 5 nodes.
 
@@ -1628,7 +1652,8 @@ def rectangle2d_quad5(num_el, ratio, factor):
     return mesh
 
 
-def rectangle2d_quad9(num_el, ratio, factor):
+def rectangle2d_quad9(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+                      factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 9 nodes.
 
