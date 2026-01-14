@@ -139,16 +139,17 @@ class Mesh:
             return False
 
         check: list[bool] = [self.ndim == other.ndim,
-                 self.nnodes == other.nnodes,
-                 np.allclose(np.squeeze(self.coor), other.coor,
-                             atol=1e-15, rtol=0.0),
-                 self.nelem == other.nelem,
-                 self.elshape == other.elshape,
-                 self.elnumnod == other.elnumnod,
-                 (np.squeeze(self.topology) == other.topology).all(),
-                 self.npoints == other.npoints,
-                 (self.points == other.points).all(),
-                 self.ncurves == other.ncurves]
+                             self.nnodes == other.nnodes,
+                             np.allclose(np.squeeze(self.coor), other.coor,
+                                         atol=1e-15, rtol=0.0),
+                             self.nelem == other.nelem,
+                             self.elshape == other.elshape,
+                             self.elnumnod == other.elnumnod,
+                             (np.squeeze(self.topology) ==
+                              other.topology).all(),
+                             self.npoints == other.npoints,
+                             (self.points == other.points).all(),
+                             self.ncurves == other.ncurves]
         check2 = [self.curves[i] == other.curves[i]
                   for i in range(self.ncurves)]
 
@@ -255,12 +256,12 @@ class Geometry:
             return False
 
         check: list[bool] = [self.ndim == other.ndim,
-                 self.elshape == other.elshape,
-                 self.elnumnod == other.elnumnod,
-                 self.nnodes == other.nnodes,
-                 self.nelem == other.nelem,
-                 (self.topology == other.topology).all(),
-                 (self.nodes == other.nodes).all()]
+                             self.elshape == other.elshape,
+                             self.elnumnod == other.elnumnod,
+                             self.nnodes == other.nnodes,
+                             self.nelem == other.nelem,
+                             (self.topology == other.topology).all(),
+                             (self.nodes == other.nodes).all()]
 
         if not all(check):
             print("WARNING: Geometries not equivalent:")
