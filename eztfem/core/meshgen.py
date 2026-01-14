@@ -535,7 +535,7 @@ def line1d_3node(n: int, ratio: Ratio, factor: float) -> Mesh:
     return mesh
 
 
-def quadrilateral2d(num_el: typing.Iterable[int],
+def quadrilateral2d(num_el: typing.Sequence[int],
                     eltype: typing.Literal["tria3", "tria4", "tria6", "tria7",
                                            "quad4", "quad9", "quad5"],
                     *, origin: FloatArray | None = None,
@@ -651,7 +651,7 @@ def quadrilateral2d(num_el: typing.Iterable[int],
     return mesh
 
 
-def rectangle2d_tria3(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+def rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 3
@@ -798,7 +798,7 @@ def rectangle2d_tria3(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_tria4(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+def rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 4
@@ -973,7 +973,7 @@ def rectangle2d_tria4(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_tria6(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+def rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 6
@@ -1136,7 +1136,7 @@ def rectangle2d_tria6(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_tria7(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+def rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 7
@@ -1351,7 +1351,7 @@ def rectangle2d_tria7(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_quad4(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+def rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 4 nodes.
@@ -1492,7 +1492,7 @@ def rectangle2d_quad4(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_quad5(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+def rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 5 nodes.
@@ -1653,7 +1653,7 @@ def rectangle2d_quad5(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
     return mesh
 
 
-def rectangle2d_quad9(num_el: typing.Iterable[int], ratio: list[Ratio] | None,
+def rectangle2d_quad9(num_el: typing.Sequence[int], ratio: list[Ratio] | None,
                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 9 nodes.
