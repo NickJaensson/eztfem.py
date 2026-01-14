@@ -29,7 +29,7 @@ jobs:
         run: |
           python -m unittest
 
-      - name: Lint examples with pylint
+      - name: Lint with pylint
         run: |
           pylint --disable=duplicate-code examples/**/*.py
           pylint --max-statements=200 --max-module-lines=2000 \
@@ -39,6 +39,7 @@ jobs:
             --disable=duplicate-code --disable=unused-argument \
             eztfem/**/*.py
 
-      - name: Lint examples with flake8
+      - name: Lint with flake8
         run: |
           flake8 examples/**/*.py
+          flake8 eztfem/**/*.py
