@@ -100,6 +100,30 @@ def _gmsh_detect_element_type(element_type: str | None) -> str:
     )
 
 
+def _gmsh_physical_point_tags() -> list[int]:
+    return [tag for _, tag in gmsh.model.getPhysicalGroups(dim=0)]
+
+
+def _gmsh_points_from_physical_groups(
+    node_tag_to_index: dict[int, int],
+) -> np.ndarray:
+    """
+    Collect unique mesh node indices belonging to any physical point group (dim=0).
+    Returns an array of global node indices (into mesh.coor).
+    """
+    point_node_indices: set[int] = set()
+
+    for physical_tag in _gmsh_physical_point_tags():
+        entities = gmsh.model.getEntitiesForPhysicalGroup(0, physical_tag)
+        for entity_tag in entities:
+            node_tags, _, _ = gmsh.model.mesh.getNodes(dim=0, tag=entity_tag)
+            for nt in node_tags:
+                # nt is a Gmsh node tag -> map to your 0..nnodes-1 index
+                point_node_indices.add(node_tag_to_index[int(nt)])
+
+    return np.array(sorted(point_node_indices), dtype=int)
+
+
 def _gmsh_physical_curve_tags() -> list[int]:
     return [tag for _, tag in gmsh.model.getPhysicalGroups(dim=1)]
 
@@ -212,6 +236,8 @@ def gmsh_mesh2d(
             node_tag_to_index, resolved_type
         )
 
+        points = _gmsh_points_from_physical_groups(node_tag_to_index)
+
         mesh = Mesh(
             ndim=2,
             nnodes=coor.shape[0],
@@ -220,8 +246,8 @@ def gmsh_mesh2d(
             elnumnod=elnumnod,
             topology=topology,
             coor=coor,
-            npoints=0,
-            points=np.array([], dtype=int),
+            npoints=int(points.size),
+            points=points,
             curves=[],
         )
 

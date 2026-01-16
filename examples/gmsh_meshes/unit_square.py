@@ -2,12 +2,10 @@ import gmsh
 
 def build_unit_square(open_gui: bool = True) -> None:
 
-    gmsh.initialize()
- 
-    gmsh.model.add("unit_square")
+    if not gmsh.isInitialized():
+        gmsh.initialize()
 
-    width  = 2.0          # rectangle width
-    height = 1.2          # rectangle height
+    width, height = 1.0, 1.0  # rectangle width and height
 
     # Create rectangle surface
     gmsh.model.occ.addRectangle(0.0, 0.0, 0.0, width, height)
@@ -15,11 +13,14 @@ def build_unit_square(open_gui: bool = True) -> None:
     # Synchronize CAD kernel with the model
     gmsh.model.occ.synchronize()
 
-    # Open the GUI when running this example with Python
-    if open_gui: 
-        gmsh.fltk.run()
+    # Add physical points and curves
+    for num in [1, 2, 3, 4]:
+        gmsh.model.addPhysicalGroup(0, [num])  # add points
+        gmsh.model.addPhysicalGroup(1, [num])  # add curves
 
-    # gmsh.finalize()
+    # Open the GUI when running this example with Python
+    if open_gui:
+        gmsh.fltk.run()
 
 if __name__ == "__main__":
     build_unit_square()
