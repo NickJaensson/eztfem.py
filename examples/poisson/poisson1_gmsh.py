@@ -8,15 +8,8 @@ import numpy as np
 from scipy.sparse.linalg import spsolve
 from func import func
 import gmsh
+from unit_square import build_unit_square
 import eztfem as ezt
-
-
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path(__file__).resolve().parents[1]))
-
-from gmsh_meshes import unit_square
 
 
 def main():
@@ -44,7 +37,7 @@ def main():
 
     # create mesh
 
-    mesh = ezt.gmsh_mesh2d(model_builder=unit_square.build_unit_square)
+    mesh = ezt.gmsh_mesh2d(model_builder=build_unit_square)
 
     # define the problem
 

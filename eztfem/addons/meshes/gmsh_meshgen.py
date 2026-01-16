@@ -36,18 +36,21 @@ def gmsh_inv_index(gmsh_type: int) -> np.ndarray | None:
 def _gmsh_element_info(element_type: str) -> dict[str, int]:
     if element_type not in _GMSH_ELEMENT_MAP:
         valid = ", ".join(sorted(_GMSH_ELEMENT_MAP))
-        raise ValueError(f"Unsupported element_type '{element_type}'. Options: {valid}.")
+        raise ValueError(f"Unsupported element_type '{element_type}'."
+                         f"Options: {valid}.")
     return _GMSH_ELEMENT_MAP[element_type]
 
 
 def _gmsh_line_element_info(element_type: int) -> tuple[int, int]:
-    name, _, _, num_nodes, _, _ = gmsh.model.mesh.getElementProperties(element_type)
+    name, _, _, num_nodes, _, _ = (
+        gmsh.model.mesh.getElementProperties(element_type)
+    )
     if num_nodes == 2:
         return 1, 2
     if num_nodes == 3:
         return 2, 3
     raise ValueError(
-        "Only 2-node and 3-node line elements are supported for boundary curves."
+        "Only 2-node and 3-node line elements supported for boundary curves."
         f" Got '{name}' with {num_nodes} nodes."
     )
 
@@ -73,7 +76,9 @@ def _gmsh_elements_to_topology(
     element_types = np.array(element_types, dtype=int)
     matches = np.where(element_types == gmsh_type)[0]
     if matches.size == 0:
-        raise ValueError(f"Gmsh mesh does not contain element type '{element_type}'.")
+        raise ValueError(f"Gmsh mesh does not contain element type "
+                         f"'{element_type}'.")
+
     idx = int(matches[0])
 
     nodes = np.array(element_node_tags[idx], dtype=int).reshape(-1, elnumnod)
@@ -123,7 +128,7 @@ def _gmsh_points_from_physical_groups(
     node_tag_to_index: dict[int, int],
 ) -> np.ndarray:
     """
-    Collect unique mesh node indices belonging to any physical point group (dim=0).
+    Collect unique mesh node indices belonging to physical point group (dim=0).
     Returns an array of global node indices (into mesh.coor).
     """
     point_node_indices: set[int] = set()
@@ -166,7 +171,7 @@ def _gmsh_curve_geometry(
                 line_elshape = elshape
                 line_elnumnod = elnumnod
             elif line_elnumnod != elnumnod:
-                raise ValueError("Mixed line element orders are not supported.")
+                raise ValueError("Mixed line element orders not supported.")
 
             nodes = np.array(node_tags, dtype=int).reshape(-1, elnumnod)
 
@@ -192,7 +197,8 @@ def _gmsh_curve_geometry(
     curve_nodes_arr = np.array(curve_nodes, dtype=int)
     local_topology_arr = np.array(local_topology, dtype=int).T
 
-    topology = np.zeros((line_elnumnod, local_topology_arr.shape[1], 2), dtype=int)
+    topology = np.zeros((line_elnumnod, local_topology_arr.shape[1], 2),
+                        dtype=int)
     topology[:, :, 0] = local_topology_arr
     topology[:, :, 1] = curve_nodes_arr[local_topology_arr]
 
