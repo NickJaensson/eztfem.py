@@ -21,6 +21,18 @@ _GMSH_TYPE_TO_ELEMENT = {
 }
 
 
+def gmsh_inv_index(gmsh_type: int) -> np.ndarray | None:
+    """
+    Return 0-based permutation mapping Gmsh local node ordering
+    to internal FEM ordering.
+    """
+    return {
+        2:  np.array([0, 2, 1], dtype=int),          # 3-node line
+        9:  np.array([0, 3, 1, 4, 2, 5], dtype=int),  # 6-node triangle
+        10: np.array([0, 4, 1, 5, 2, 6, 3, 7, 8], dtype=int),  # 9-node quad
+    }.get(gmsh_type)
+
+
 def _gmsh_element_info(element_type: str) -> dict[str, int]:
     if element_type not in _GMSH_ELEMENT_MAP:
         valid = ", ".join(sorted(_GMSH_ELEMENT_MAP))
@@ -65,6 +77,11 @@ def _gmsh_elements_to_topology(
     idx = int(matches[0])
 
     nodes = np.array(element_node_tags[idx], dtype=int).reshape(-1, elnumnod)
+
+    perm = gmsh_inv_index(gmsh_type)
+    if perm is not None:
+        nodes = nodes[:, perm]
+
     topology = np.vectorize(node_tag_to_index.get)(nodes).T
     return topology, elshape, elnumnod
 
@@ -152,6 +169,11 @@ def _gmsh_curve_geometry(
                 raise ValueError("Mixed line element orders are not supported.")
 
             nodes = np.array(node_tags, dtype=int).reshape(-1, elnumnod)
+
+            perm = gmsh_inv_index(int(elem_type))
+            if perm is not None:
+                nodes = nodes[:, perm]
+
             for element_nodes in nodes:
                 local_nodes: list[int] = []
                 for node_tag in element_nodes:
