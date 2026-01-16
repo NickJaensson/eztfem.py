@@ -14,7 +14,8 @@ setup(
         'ipywidgets',
         'trame',
         'trame-vtk',
-        'trame-vuetify'
+        'trame-vuetify',
+        'gmsh'
     ],
     author="Nick Jaensson",
     author_email="n.o.jaensson@tue.nl",
