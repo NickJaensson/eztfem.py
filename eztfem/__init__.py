@@ -63,6 +63,7 @@ from .addons.plotlib.plotting_functions import (
     plot_gauss_legendre,
 )
 from .addons.meshes.pyvista_meshgen import generate_pyvista_mesh
+from .addons.meshes.gmsh_meshgen import gmsh_mesh2d
 
 __all__ = [
     "basis_function",
@@ -114,4 +115,5 @@ __all__ = [
     "plot_points_curves",
     "plot_gauss_legendre",
     "generate_pyvista_mesh",
+    "gmsh_mesh2d",
 ]
