@@ -8,8 +8,7 @@ from ...core.shapefunc import isoparametric_deformation, \
 
 def stokes_elem(elem, coor, user, pos):
     """
-    Element routine for the Poisson equation:
-    - nabla.( mu (nabla u+nabla u^T) ) + nabla p = f and nabla.u = 0
+    Element routine for the Stokes equation.
 
     Parameters
     ----------
