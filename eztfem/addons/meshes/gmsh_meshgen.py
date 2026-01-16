@@ -1,6 +1,6 @@
-'''
+"""
 Module for Gmsh mesh generation.
-'''
+"""
 from __future__ import annotations
 
 import typing
@@ -29,9 +29,7 @@ def _gmsh_element_info(element_type: str) -> dict[str, int]:
 
 
 def _gmsh_line_element_info(element_type: int) -> tuple[int, int]:
-    name, _, _, num_nodes, _, _ = gmsh.model.mesh.getElementProperties(
-        element_type
-    )
+    name, _, _, num_nodes, _, _ = gmsh.model.mesh.getElementProperties(element_type)
     if num_nodes == 2:
         return 1, 2
     if num_nodes == 3:
@@ -46,7 +44,7 @@ def _gmsh_nodes_to_mesh() -> tuple[np.ndarray, dict[int, int]]:
     node_tags, coords, _ = gmsh.model.mesh.getNodes()
     coords = np.array(coords, dtype=float).reshape(-1, 3)
     coor = coords[:, :2]
-    node_tag_to_index = {tag: idx for idx, tag in enumerate(node_tags)}
+    node_tag_to_index = {int(tag): idx for idx, tag in enumerate(node_tags)}
     return coor, node_tag_to_index
 
 
@@ -63,9 +61,7 @@ def _gmsh_elements_to_topology(
     element_types = np.array(element_types, dtype=int)
     matches = np.where(element_types == gmsh_type)[0]
     if matches.size == 0:
-        raise ValueError(
-            f"Gmsh mesh does not contain element type '{element_type}'."
-        )
+        raise ValueError(f"Gmsh mesh does not contain element type '{element_type}'.")
     idx = int(matches[0])
 
     nodes = np.array(element_node_tags[idx], dtype=int).reshape(-1, elnumnod)
@@ -73,35 +69,37 @@ def _gmsh_elements_to_topology(
     return topology, elshape, elnumnod
 
 
-def _gmsh_detect_element_type(element_type: str | None) -> str:
+def _gmsh_infer_element_type_or_raise() -> str:
+    """
+    Infer the unique supported 2D element type present in the mesh.
+
+    Raises if:
+    - no supported 2D element types are present, or
+    - more than one supported 2D element type is present.
+    """
     element_types, _, _ = gmsh.model.mesh.getElements(dim=2)
-    element_types = np.array(element_types, dtype=int)
-    supported = [gmsh_type for gmsh_type in element_types
-                 if gmsh_type in _GMSH_TYPE_TO_ELEMENT]
+    present = sorted(set(int(t) for t in element_types))
+    supported_present = [t for t in present if t in _GMSH_TYPE_TO_ELEMENT]
 
-    if element_type is not None:
-        gmsh_type = _gmsh_element_info(element_type)["gmsh_type"]
-        if gmsh_type not in element_types:
-            raise ValueError(
-                f"Gmsh mesh does not contain element type '{element_type}'."
-            )
-        return element_type
+    if not supported_present:
+        raise ValueError(
+            "No supported 2D elements found in the Gmsh mesh. "
+            f"Present gmsh types: {present}"
+        )
 
-    unique_types = sorted(set(supported))
-    if len(unique_types) == 1:
-        return _GMSH_TYPE_TO_ELEMENT[unique_types[0]]
-    if not unique_types:
-        raise ValueError("No supported 2D elements found in the Gmsh mesh.")
-    available = ", ".join(_GMSH_TYPE_TO_ELEMENT[gmsh_type]
-                           for gmsh_type in unique_types)
+    if len(supported_present) == 1:
+        return _GMSH_TYPE_TO_ELEMENT[supported_present[0]]
+
+    names = ", ".join(_GMSH_TYPE_TO_ELEMENT[t] for t in supported_present)
     raise ValueError(
-        "Multiple supported 2D element types found; specify element_type. "
-        f"Found: {available}."
+        "Multiple supported 2D element types found in the Gmsh mesh; "
+        "this converter expects a single type. "
+        f"Found: {names} (gmsh types: {supported_present})."
     )
 
 
 def _gmsh_physical_point_tags() -> list[int]:
-    return [tag for _, tag in gmsh.model.getPhysicalGroups(dim=0)]
+    return [int(tag) for _, tag in gmsh.model.getPhysicalGroups(dim=0)]
 
 
 def _gmsh_points_from_physical_groups(
@@ -118,14 +116,13 @@ def _gmsh_points_from_physical_groups(
         for entity_tag in entities:
             node_tags, _, _ = gmsh.model.mesh.getNodes(dim=0, tag=entity_tag)
             for nt in node_tags:
-                # nt is a Gmsh node tag -> map to your 0..nnodes-1 index
                 point_node_indices.add(node_tag_to_index[int(nt)])
 
     return np.array(sorted(point_node_indices), dtype=int)
 
 
 def _gmsh_physical_curve_tags() -> list[int]:
-    return [tag for _, tag in gmsh.model.getPhysicalGroups(dim=1)]
+    return [int(tag) for _, tag in gmsh.model.getPhysicalGroups(dim=1)]
 
 
 def _gmsh_curve_geometry(
@@ -147,7 +144,7 @@ def _gmsh_curve_geometry(
             dim=1, tag=entity_tag
         )
         for elem_type, node_tags in zip(element_types, element_node_tags):
-            elshape, elnumnod = _gmsh_line_element_info(elem_type)
+            elshape, elnumnod = _gmsh_line_element_info(int(elem_type))
             if line_elnumnod is None:
                 line_elshape = elshape
                 line_elnumnod = elnumnod
@@ -158,7 +155,7 @@ def _gmsh_curve_geometry(
             for element_nodes in nodes:
                 local_nodes: list[int] = []
                 for node_tag in element_nodes:
-                    global_index = node_tag_to_index[node_tag]
+                    global_index = node_tag_to_index[int(node_tag)]
                     local_index = curve_node_lookup.get(global_index)
                     if local_index is None:
                         local_index = len(curve_nodes)
@@ -172,6 +169,7 @@ def _gmsh_curve_geometry(
 
     curve_nodes_arr = np.array(curve_nodes, dtype=int)
     local_topology_arr = np.array(local_topology, dtype=int).T
+
     topology = np.zeros((line_elnumnod, local_topology_arr.shape[1], 2), dtype=int)
     topology[:, :, 0] = local_topology_arr
     topology[:, :, 1] = curve_nodes_arr[local_topology_arr]
@@ -189,48 +187,38 @@ def _gmsh_curve_geometry(
 
 
 def gmsh_mesh2d(
-    *,
-    element_type: str | None = None,
-    msh_file: str | None = None,
-    model_builder: typing.Callable[[typing.Any], None] | None = None,
-    generate: bool = True,
+    model_builder: typing.Callable[[typing.Any], None],
 ) -> Mesh:
     """
-    Load or build a 2D mesh in Gmsh and convert it to an eztfem Mesh.
+    Build a 2D mesh in Gmsh and convert it to an eztfem Mesh.
+
+    - Calls `model_builder(open_gui=False)` to define the geometry/model.
+    - Generates a 2D mesh.
+    - Infers the unique supported 2D element type present in the mesh.
+    - Raises if multiple supported 2D element types are present.
 
     Parameters
     ----------
-    element_type : {'tri3', 'tri6', 'quad4', 'quad9'}, optional
-        Requested 2D element type. If None, the type is inferred when possible.
-    msh_file : str, optional
-        Path to a .msh file to load.
-    model_builder : callable, optional
-        Function that receives the gmsh module and defines the model.
-    generate : bool, optional
-        Whether to run gmsh.model.mesh.generate(2) after building the model.
+    model_builder : callable
+        Function that receives the gmsh module (or compatible signature) and
+        defines the model. Must accept open_gui keyword.
 
     Returns
     -------
     mesh : Mesh
         The generated mesh in eztfem format.
     """
-    if (msh_file is None) == (model_builder is None):
-        raise ValueError("Specify exactly one of msh_file or model_builder.")
-
     should_finalize = False
     if not gmsh.isInitialized():
         gmsh.initialize()
         should_finalize = True
 
     try:
-        if msh_file is not None:
-            gmsh.open(msh_file)
-        else:
-            model_builder(open_gui=False)
-            if generate:
-                gmsh.model.mesh.generate(2)
+        model_builder(open_gui=False)
+        gmsh.model.mesh.generate(dim=2)
 
-        resolved_type = _gmsh_detect_element_type(element_type)
+        resolved_type = _gmsh_infer_element_type_or_raise()
+
         coor, node_tag_to_index = _gmsh_nodes_to_mesh()
         topology, elshape, elnumnod = _gmsh_elements_to_topology(
             node_tag_to_index, resolved_type
