@@ -28,7 +28,7 @@ def _gmsh_element_info(element_type: str) -> dict[str, int]:
     return _GMSH_ELEMENT_MAP[element_type]
 
 
-def _gmsh_line_element_info(gmsh, element_type: int) -> tuple[int, int]:
+def _gmsh_line_element_info(element_type: int) -> tuple[int, int]:
     name, _, _, num_nodes, _, _ = gmsh.model.mesh.getElementProperties(
         element_type
     )
@@ -42,7 +42,7 @@ def _gmsh_line_element_info(gmsh, element_type: int) -> tuple[int, int]:
     )
 
 
-def _gmsh_nodes_to_mesh(gmsh) -> tuple[np.ndarray, dict[int, int]]:
+def _gmsh_nodes_to_mesh() -> tuple[np.ndarray, dict[int, int]]:
     node_tags, coords, _ = gmsh.model.mesh.getNodes()
     coords = np.array(coords, dtype=float).reshape(-1, 3)
     coor = coords[:, :2]
@@ -51,7 +51,6 @@ def _gmsh_nodes_to_mesh(gmsh) -> tuple[np.ndarray, dict[int, int]]:
 
 
 def _gmsh_elements_to_topology(
-    gmsh,
     node_tag_to_index: dict[int, int],
     element_type: str,
 ) -> tuple[np.ndarray, int, int]:
@@ -74,7 +73,7 @@ def _gmsh_elements_to_topology(
     return topology, elshape, elnumnod
 
 
-def _gmsh_detect_element_type(gmsh, element_type: str | None) -> str:
+def _gmsh_detect_element_type(element_type: str | None) -> str:
     element_types, _, _ = gmsh.model.mesh.getElements(dim=2)
     element_types = np.array(element_types, dtype=int)
     supported = [gmsh_type for gmsh_type in element_types
@@ -101,12 +100,11 @@ def _gmsh_detect_element_type(gmsh, element_type: str | None) -> str:
     )
 
 
-def _gmsh_physical_curve_tags(gmsh) -> list[int]:
+def _gmsh_physical_curve_tags() -> list[int]:
     return [tag for _, tag in gmsh.model.getPhysicalGroups(dim=1)]
 
 
 def _gmsh_curve_geometry(
-    gmsh,
     node_tag_to_index: dict[int, int],
     physical_tag: int,
 ) -> Geometry | None:
@@ -125,7 +123,7 @@ def _gmsh_curve_geometry(
             dim=1, tag=entity_tag
         )
         for elem_type, node_tags in zip(element_types, element_node_tags):
-            elshape, elnumnod = _gmsh_line_element_info(gmsh, elem_type)
+            elshape, elnumnod = _gmsh_line_element_info(elem_type)
             if line_elnumnod is None:
                 line_elshape = elshape
                 line_elnumnod = elnumnod
@@ -204,14 +202,14 @@ def gmsh_mesh2d(
         if msh_file is not None:
             gmsh.open(msh_file)
         else:
-            model_builder(gmsh)
+            model_builder(open_gui=False)
             if generate:
                 gmsh.model.mesh.generate(2)
 
-        resolved_type = _gmsh_detect_element_type(gmsh, element_type)
-        coor, node_tag_to_index = _gmsh_nodes_to_mesh(gmsh)
+        resolved_type = _gmsh_detect_element_type(element_type)
+        coor, node_tag_to_index = _gmsh_nodes_to_mesh()
         topology, elshape, elnumnod = _gmsh_elements_to_topology(
-            gmsh, node_tag_to_index, resolved_type
+            node_tag_to_index, resolved_type
         )
 
         mesh = Mesh(
@@ -228,8 +226,8 @@ def gmsh_mesh2d(
         )
 
         curves: list[Geometry] = []
-        for physical_tag in _gmsh_physical_curve_tags(gmsh):
-            curve = _gmsh_curve_geometry(gmsh, node_tag_to_index, physical_tag)
+        for physical_tag in _gmsh_physical_curve_tags():
+            curve = _gmsh_curve_geometry(node_tag_to_index, physical_tag)
             if curve is not None:
                 curves.append(curve)
 

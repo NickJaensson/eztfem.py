@@ -1,10 +1,10 @@
-# import gmsh
+import gmsh
 
-def main(gmsh):
+def build_unit_square(open_gui: bool = True) -> None:
 
-    # gmsh.initialize()
+    gmsh.initialize()
  
-    gmsh.model.add("rect_with_hole")
+    gmsh.model.add("unit_square")
 
     width  = 2.0          # rectangle width
     height = 1.2          # rectangle height
@@ -16,9 +16,10 @@ def main(gmsh):
     gmsh.model.occ.synchronize()
 
     # Open the GUI when running this example with Python
-    # gmsh.fltk.run()
+    if open_gui: 
+        gmsh.fltk.run()
 
     # gmsh.finalize()
 
 if __name__ == "__main__":
-    main()
+    build_unit_square()
