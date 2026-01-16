@@ -216,6 +216,7 @@ def _gmsh_curve_geometry(
 
 def gmsh_mesh2d(
     model_builder: typing.Callable[[typing.Any], None],
+    gmsh_options: dict[str, float] | None = None
 ) -> Mesh:
     """
     Build a 2D mesh in Gmsh and convert it to an eztfem Mesh.
@@ -240,6 +241,10 @@ def gmsh_mesh2d(
     if not gmsh.isInitialized():
         gmsh.initialize()
         should_finalize = True
+
+    if gmsh_options:
+        for k, v in gmsh_options.items():
+            gmsh.option.setNumber(k, v)
 
     try:
         model_builder(open_gui=False)

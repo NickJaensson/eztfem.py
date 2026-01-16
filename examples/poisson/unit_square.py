@@ -9,7 +9,10 @@ and visualize the geometry.
 import gmsh
 
 
-def build_unit_square(open_gui: bool = True) -> None:
+def build_unit_square(
+    open_gui: bool = True,
+    element_size: float | None = None,
+) -> None:
     """
     Create a unit square geometry in Gmsh and optionally open the GUI.
     """
@@ -24,6 +27,10 @@ def build_unit_square(open_gui: bool = True) -> None:
 
     # Synchronize CAD kernel with the model
     gmsh.model.occ.synchronize()
+
+    if element_size is not None:
+        for index, value in enumerate(element_size, start=1):
+            gmsh.model.mesh.setSize([(0, index)], value)
 
     # Add physical points and curves
     for num in [1, 2, 3, 4]:

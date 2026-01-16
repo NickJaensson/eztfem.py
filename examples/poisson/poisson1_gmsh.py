@@ -4,10 +4,10 @@ Manufactured solution.
 Mesh generated with Gmsh (triangular elements of order 2).
 '''
 
+import functools
 import numpy as np
 from scipy.sparse.linalg import spsolve
 from func import func
-import gmsh
 from unit_square import build_unit_square
 import eztfem as ezt
 
@@ -28,16 +28,16 @@ def main():
         Dictionary of derived fields (Vector instances).
     """
 
-    # set global Gmsh options
-
-    gmsh.initialize()
-    gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.08)
-    gmsh.option.setNumber("Mesh.ElementOrder", 2)
-    gmsh.option.setNumber("Mesh.HighOrderOptimize", 1)
-
     # create mesh
 
-    mesh = ezt.gmsh_mesh2d(model_builder=build_unit_square)
+    mesh = ezt.gmsh_mesh2d(
+        model_builder=functools.partial(build_unit_square,
+                                        element_size=[0.1, 0.1, 0.04, 0.04]),
+        gmsh_options={
+            "Mesh.ElementOrder": 2,
+            "Mesh.HighOrderOptimize": 1,
+        },
+    )
 
     # define the problem
 
