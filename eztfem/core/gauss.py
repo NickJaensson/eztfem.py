@@ -19,13 +19,18 @@ def gauss_legendre(shape, **kwargs):
 
     Keyword arguments
     -----------------
-    n : int, optional
+    num_int_points : int, optional
         The number of integration points in one direction. This only
         applies to shape='line' and shape='quad', where the number of
-        integration points will be n and n^2, respectively.
-    p : int, optional
+        integration points will be num_int_points and num_int_points^2,
+        respectively.
+    integration_order : int, optional
         The order of the integration rule (order polynomial integrated
         exact). This only applies to shape='triangle'.
+    n : int, optional
+        Deprecated. Use num_int_points instead.
+    p : int, optional
+        Deprecated. Use integration_order instead.
 
     Returns
     -------
@@ -37,9 +42,9 @@ def gauss_legendre(shape, **kwargs):
 
     """
     shape_handlers = {
-        'line': ('n', _gauss_legendre_line),
-        'quad': ('n', _gauss_legendre_quad),
-        'triangle': ('p', _gauss_legendre_triangle),
+        'line': ('num_int_points', _gauss_legendre_line),
+        'quad': ('num_int_points', _gauss_legendre_quad),
+        'triangle': ('integration_order', _gauss_legendre_triangle),
     }
 
     if shape not in shape_handlers:
@@ -49,90 +54,102 @@ def gauss_legendre(shape, **kwargs):
         )
 
     param_name, handler = shape_handlers[shape]
-    param_value = kwargs.get(param_name, -1)
+
+    # Support both new and old parameter names for backward compatibility
+    new_param_name = param_name
+    old_param_map = {'num_int_points': 'n', 'integration_order': 'p'}
+    old_param_name = old_param_map.get(param_name)
+
+    param_value = kwargs.get(new_param_name, -1)
+    if param_value < 0 and old_param_name:
+        param_value = kwargs.get(old_param_name, -1)
 
     if param_value < 0:
-        msg = f"{param_name} must be specified for the integration rule"
+        msg = f"{new_param_name} must be specified for the integration rule"
         raise ValueError(msg)
 
     return handler(param_value)
 
 
-def _gauss_legendre_line(n):
+def _gauss_legendre_line(num_int_points):
     """
     Compute Gauss-Legendre integration points and weights for a line segment.
     Gauss Legendre in 1D defined on the interval [-1,1]
 
     Parameters
     ----------
-    n : int
+    num_int_points : int
         Number of integration points.
 
     Returns
     -------
-    x : numpy.ndarray
+    coords : numpy.ndarray
         Coordinates of integration points in [-1, 1].
-    w : numpy.ndarray
+    weights : numpy.ndarray
         Weights of the integration points.
 
     """
-    if not isinstance(n, (int, np.integer)):
-        raise TypeError(f"n must be an integer, got {type(n).__name__}")
-    if n < 1:
-        raise ValueError(f"n must be >= 1, got {n}")
+    if not isinstance(num_int_points, (int, np.integer)):
+        raise TypeError(
+            f"num_int_points must be an integer, got "
+            f"{type(num_int_points).__name__}"
+        )
+    if num_int_points < 1:
+        raise ValueError(f"num_int_points must be >= 1, got {num_int_points}")
 
-    x, w = np.polynomial.legendre.leggauss(n)
+    coords_1d, weights = np.polynomial.legendre.leggauss(num_int_points)
 
-    return x, w
+    return coords_1d, weights
 
 
-def _gauss_legendre_quad(n):
+def _gauss_legendre_quad(num_int_points):
     """
     Compute Gauss-Legendre integration points and weights for a quadrilateral.
     Gauss Legendre in 2D defined on the region [-1,1]x[-1,1]
 
     Parameters
     ----------
-    n : int
+    num_int_points : int
         Number of integration points in one dimension.
 
     Returns
     -------
-    x : numpy.ndarray
-        Reference coordinates of the integration points, shape (n^2, 2).
-    w : numpy.ndarray
-        Weights of the integration points, shape (n^2,).
+    coords_2d : numpy.ndarray
+        Reference coordinates of the integration points,
+        shape (num_int_points^2, 2).
+    weights_2d : numpy.ndarray
+        Weights of the integration points, shape (num_int_points^2,).
 
     """
-    x1, w1 = _gauss_legendre_line(n)
+    line_points, line_weights = _gauss_legendre_line(num_int_points)
 
     # Create meshgrid of integration points with C-order (row-major)
-    xi, eta = np.meshgrid(x1, x1, indexing='xy')
-    x = np.column_stack([xi.ravel(), eta.ravel()])
+    xi, eta = np.meshgrid(line_points, line_points, indexing='xy')
+    coords_2d = np.column_stack([xi.ravel(), eta.ravel()])
 
     # Compute tensor product of weights
-    w_2d = np.outer(w1, w1)
-    w = w_2d.ravel()
+    weights_grid = np.outer(line_weights, line_weights)
+    weights_2d = weights_grid.ravel()
 
-    return x, w
+    return coords_2d, weights_2d
 
 
-def _gauss_legendre_triangle(p):
+def _gauss_legendre_triangle(integration_order):
     """
     Compute Gauss-Legendre integration points and weights for a triangle.
     Gauss Legendre in 2D defined triangle, left-lower half of [0, 1] x [0, 1]
 
     Parameters
     ----------
-    p : int
+    integration_order : int
         Order of the integration rule (order polynomial integrated exact).
         Must be in the range [1, 21].
 
     Returns
     -------
-    x : numpy.ndarray
+    coords_tri : numpy.ndarray
         Reference coordinates of the integration points, shape (ni, 2).
-    w : numpy.ndarray
+    weights_tri : numpy.ndarray
         Weights of the integration points, shape (ni,).
 
     Notes
@@ -166,17 +183,26 @@ def _gauss_legendre_triangle(p):
     'gauss_legendre_triangle' folder.
 
     """
-    if 1 <= p <= 21:
-        data_dir = Path(__file__).resolve().parent / "gauss_legendre_triangle"
-        csv_path = data_dir / f"gauss_legendre_triangle_p{p:02d}.csv"
-
-        if not csv_path.exists():
-            raise FileNotFoundError(f"Missing quadrature file: {csv_path}")
-
-        data = np.loadtxt(
-            csv_path, delimiter=",", ndmin=2, skiprows=1, dtype=float
+    if 1 <= integration_order <= 21:
+        quadrature_dir = (
+            Path(__file__).resolve().parent / "gauss_legendre_triangle"
+        )
+        quadrature_file = (
+            quadrature_dir /
+            f"gauss_legendre_triangle_p{integration_order:02d}.csv"
         )
 
-        return data[:, :2], data[:, 2]
+        if not quadrature_file.exists():
+            raise FileNotFoundError(
+                f"Missing quadrature file: {quadrature_file}"
+            )
 
-    raise ValueError('p must be in the range [1, 21]')
+        quadrature_data = np.loadtxt(
+            quadrature_file, delimiter=",", ndmin=2, skiprows=1, dtype=float
+        )
+
+        coords_tri = quadrature_data[:, :2]
+        weights_tri = quadrature_data[:, 2]
+        return coords_tri, weights_tri
+
+    raise ValueError('order must be in the range [1, 21]')
