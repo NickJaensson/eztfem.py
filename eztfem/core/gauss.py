@@ -36,30 +36,26 @@ def gauss_legendre(shape, **kwargs):
         Weights of the integration scheme.
 
     """
+    shape_handlers = {
+        'line': ('n', _gauss_legendre_line),
+        'quad': ('n', _gauss_legendre_quad),
+        'triangle': ('p', _gauss_legendre_triangle),
+    }
 
-    n = kwargs.get('n', -1)
-    p = kwargs.get('p', -1)
+    if shape not in shape_handlers:
+        valid_shapes = list(shape_handlers.keys())
+        raise ValueError(
+            f"Invalid shape: '{shape}'. Must be one of {valid_shapes}"
+        )
 
-    if shape == 'line':
-        if n < 0:
-            raise ValueError('n must be specified for the integration rule')
-        x, w = _gauss_legendre_line(n)
-    elif shape == 'quad':
-        if n < 0:
-            raise ValueError('n must be specified for the integration rule')
-        x, w = _gauss_legendre_quad(n)
-    elif shape == 'triangle':
-        if p < 0:
-            raise ValueError('p must be specified for the integration rule')
-        x, w = _gauss_legendre_triangle(p)
-    else:
-        if isinstance(shape, str):
-            ch = f'Invalid shape: {shape}'
-        else:
-            ch = 'shape must be a string'
-        raise ValueError(ch)
+    param_name, handler = shape_handlers[shape]
+    param_value = kwargs.get(param_name, -1)
 
-    return x, w
+    if param_value < 0:
+        msg = f"{param_name} must be specified for the integration rule"
+        raise ValueError(msg)
+
+    return handler(param_value)
 
 
 def _gauss_legendre_line(n):
@@ -108,19 +104,15 @@ def _gauss_legendre_quad(n):
         Weights of the integration points, shape (n^2,).
 
     """
-
     x1, w1 = _gauss_legendre_line(n)
 
-    m = n**2
-    x = np.zeros((m, 2))
-    w = np.zeros(m)
+    # Create meshgrid of integration points with C-order (row-major)
+    xi, eta = np.meshgrid(x1, x1, indexing='xy')
+    x = np.column_stack([xi.ravel(), eta.ravel()])
 
-    for i in range(n):
-        for j in range(n):
-            ip = i + n * (j)
-            x[ip, 0] = x1[i]
-            x[ip, 1] = x1[j]
-            w[ip] = w1[i] * w1[j]
+    # Compute tensor product of weights
+    w_2d = np.outer(w1, w1)
+    w = w_2d.ravel()
 
     return x, w
 
@@ -134,6 +126,7 @@ def _gauss_legendre_triangle(p):
     ----------
     p : int
         Order of the integration rule (order polynomial integrated exact).
+        Must be in the range [1, 21].
 
     Returns
     -------
@@ -144,6 +137,14 @@ def _gauss_legendre_triangle(p):
 
     Notes
     -----
+    Number of integration points for each order (p=order, ni=nr of points)
+    p   ni     p  ni     p  ni     p  ni     p  ni
+    01  01     06 12     11 28     16 55     21 91
+    02  03     07 15     12 33     17 61
+    03  06     08 16     13 37     18 72
+    04  06     09 19     14 46     19 73
+    05  07     10 25     15 52     20 88
+
     The reference region of a triangle is defined as:
 
     ::
@@ -165,26 +166,17 @@ def _gauss_legendre_triangle(p):
     'gauss_legendre_triangle' folder.
 
     """
+    if 1 <= p <= 21:
+        data_dir = Path(__file__).resolve().parent / "gauss_legendre_triangle"
+        csv_path = data_dir / f"gauss_legendre_triangle_p{p:02d}.csv"
 
-    # number of integration points
-    ni = np.array([1,  3,  6,  6,  7, 12, 15, 16, 19, 25,
-                  28, 33, 37, 46, 52, 55, 61, 72, 73, 88, 91])
+        if not csv_path.exists():
+            raise FileNotFoundError(f"Missing quadrature file: {csv_path}")
 
-    x = np.zeros((ni[p-1], 2))
-    w = np.zeros(ni[p-1])
+        data = np.loadtxt(
+            csv_path, delimiter=",", ndmin=2, skiprows=1, dtype=float
+        )
 
-    if p < 1 or p > 21:
-        raise ValueError('p must be in the range [1, 21]')
+        return data[:, :2], data[:, 2]
 
-    data_dir = Path(__file__).resolve().parent / "gauss_legendre_triangle"
-    csv_path = data_dir / f"gauss_legendre_triangle_p{p:02d}.csv"
-    data = np.loadtxt(csv_path, delimiter=",", ndmin=2, skiprows=1,
-                      dtype=float)
-
-    if not csv_path.exists():
-        raise FileNotFoundError(f"Missing quadrature file: {csv_path}")
-
-    x = data[:, :2]
-    w = data[:, 2]
-
-    return x, w
+    raise ValueError('p must be in the range [1, 21]')
