@@ -114,3 +114,28 @@ of freedom. This is implemented in ``apply_essential``. Although the resulting
 system is slightly larger, it is straightforward to implement. Be aware that
 this approach adds eigenvalues equal to 1 with multiplicity equal to the number
 of prescribed degrees of freedom.
+
+4.4 Working with degrees of freedom
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In `eztfem` the full system vector and vectors are stored in *NPD* ordering, 
+i.e., nodes are in the outer loop, physical quantities in the 
+middle loop and degrees of freedom in the inner loop. For example, if the
+velocity is the first physical quantity (with degrees of freedom :math:`u` and 
+:math:`v` and pressure is the second physical quantity (with degree of freedom 
+:math:`p`), the system vector would be stored as
+
+.. math::
+
+   [u_1, v_1, p_1, u_2, v_2, p_2, u_3, v_3, p_3]
+
+When building the system matrix, it has some advantages to use a different 
+ordering on element level. In `eztfem`, the default in `build_system` assumes
+that elements are written in *PDN* ordering, which is given by
+
+.. math::
+
+    [u_1, u_2, u_3, v_1, v_2, v_3, p_1, p_2, p_3]
+
+Note, that this only applies to how the element routines are written, i.e.,
+it does not change the ordering of the full system vector itself 
+(which is always in *NPD* ordering).
