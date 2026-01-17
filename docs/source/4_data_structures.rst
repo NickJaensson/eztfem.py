@@ -121,7 +121,7 @@ In `eztfem` the full system vector and vectors are stored in *NPD* ordering,
 i.e., nodes are in the outer loop, physical quantities in the 
 middle loop and degrees of freedom in the inner loop. For example, if the
 velocity is the first physical quantity (with degrees of freedom :math:`u` and 
-:math:`v` and pressure is the second physical quantity (with degree of freedom 
+:math:`v` m) and pressure is the second physical quantity (with degree of freedom 
 :math:`p`), the system vector would be stored as
 
 .. math::
