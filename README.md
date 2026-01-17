@@ -35,6 +35,15 @@ runs all the tests in the "test/" folder that
 have a filename matching "test*.py" (empty __init__.py in the test directory
 is needed for this)
 
+## Plotting results
+Both [matplotlib](https://matplotlib.org) and 
+[pyvista](https://docs.pyvista.org) are used to plot the results. In case the
+interactive rendering of pyvista fails, set the rendering to static by adding
+this to your scripts
+```
+import pyvista as pv
+pv.set_jupyter_backend("static")
+```
 
 <!-- 
 ## Building documentation
