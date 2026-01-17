@@ -269,7 +269,189 @@ class Geometry:
         return all(check)
 
 
-def distribute_elements(nelem: int, ratio: int, factor: float) -> FloatArray:
+def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
+           origin: float | None = None, length: float | None = None,
+           ratio: int = 0, factor: float = 1.0) -> Mesh:
+    """
+    Simple mesh generator for 1D lines on the interval [0, 1].
+
+    Generates a simple 1D line mesh on the interval [0, 1] with optional
+    translation and scaling of the region.
+
+    Parameters
+    ----------
+    ne : int
+        Number of elements.
+    eltype : str
+        Shape number.
+        - 'line2' : 2-node elements.
+        - 'line3' : 3-node elements.
+
+    Keyword arguments
+    -----------------
+    origin : float, optional
+        Origin of the domain.
+    length : float, optional
+        Length of the domain.
+    ratio : int, optional, default=0
+        Mesh ratio.
+        - 0 : Equidistant mesh.
+        - 1 : The size of the last element is factor times the first.
+        - 2 : The size of an element is factor times the previous one.
+        - 3 : The size of the last element is 1/factor times the first.
+        - 4 : The size of an element is 1/factor times the previous one.
+    factor : float, optional, default=1
+        Factor for the mesh ratio.
+
+    Returns
+    -------
+    mesh : Mesh
+        Mesh object. See function `quadrilateral2d` for the components.
+        Note that the components curves are not present for `LINE1D`.
+
+    Examples
+    --------
+    >>> mesh = line1d(10, 'line2', origin=1, length=2)
+    Creates a 10-element line mesh with 2-node elements on the domain [1, 3].
+
+    """
+
+    # mesh
+    if eltype == 'line2':
+        mesh = _line1d_2node(ne, ratio, factor)
+    elif eltype == 'line3':
+        mesh = _line1d_3node(ne, ratio, factor)
+    else:
+        raise ValueError(f'Invalid eltype = {eltype}')
+
+    mesh.ncurves = 0
+
+    # translate and scale unit region
+    if length is not None:
+        mesh.coor[:, 0] *= length
+    if origin is not None:
+        mesh.coor[:, 0] += origin
+
+    return mesh
+
+
+def quadrilateral2d(num_el: typing.Sequence[int],
+                    eltype: typing.Literal["tria3", "tria4", "tria6", "tria7",
+                                           "quad4", "quad9", "quad5"],
+                    *, origin: FloatArray | None = None,
+                    length: FloatArray | None = None,
+                    vertices: FloatArray | None = None,
+                    ratio: list[int] | None = None,
+                    factor: list[float] | None = None) -> Mesh:
+    """
+    Simple mesh generator for quadrilateral 2D regions.
+
+    Generates a simple 2D mesh on the region [0, 1] x [0, 1] with optional
+    translation and/or scaling or deformation of the region.
+
+    Parameters
+    ----------
+    num_el : array_like
+        Number of elements in x and y direction, e.g., [nx, ny].
+    eltype : str
+        Element type.
+        - 'tria3' : 3-node triangle.
+        - 'tria4' : 4-node triangle.
+        - 'tria6' : 6-node triangle.
+        - 'tria7' : 7-node triangle.
+        - 'quad4' : 4-node quadrilateral.
+        - 'quad9' : 9-node quadrilateral.
+        - 'quad5' : 5-node quadrilateral.
+
+    Keyword arguments
+    -----------------
+    origin : array_like, optional, default=[0, 0]
+        Origin of the domain [ox, uy].
+    length : array_like, optional, default=[1.0, 1.0]
+        Length and width of the domain [lx, ly].
+    vertices : array_like, optional, default=[[0, 0], [1, 0], [1, 1], [0, 1]]
+        Four vertices of the domain in the format
+        [[x1, y1], [x2, y2], [x3, y3], [x4, y4]].
+        Note that origin/length arguments are ignored if vertices are
+        given.
+    ratio : list of int, optional, default=[0, 0, 0, 0]
+        A vector [ratio1, ratio2, ratio3, ratio4] where for each of the
+        four curves the ratio is given:
+        - 0 : Equidistant mesh.
+        - 1 : The size of the last element is factor times the first.
+        - 2 : The size of an element is factor times the previous one.
+        - 3 : The size of the last element is 1/factor times the first.
+        - 4 : The size of an element is 1/factor times the previous one.
+    factor : array_like, optional, default=[1, 1, 1, 1]
+        A vector [factor1, factor2, factor3, factor4] where for each of
+        the four curves the factor is given.
+
+    Returns
+    -------
+    mesh : Mesh
+        Mesh object
+
+    Examples
+    --------
+    >>> mesh = quadrilateral2d([10, 10], 'tria3', origin=[1, 2], length=[2, 3])
+    Creates a 10x10 mesh of 3-node triangles, where the left lower corner of
+    the domain is (1, 2) and the size of the domain is 2 by 3.
+
+    >>> mesh = quadrilateral2d([10, 10], 'quad5',
+                               vertices=[[1, 1], [3, 2], [4, 5], [-1, 4]])
+    Creates a 10x10 mesh of 4-node quadrilateral elements, where the left
+    lower corner, right lower corner, upper right corner, and upper left
+    corner of the domain are (1, 1), (3, 2), (4, 5), and (-1, 4), respectively.
+    The edges are straight.
+
+    """
+    if factor is None:
+        factor = [1, 1, 1, 1]
+
+    # mesh
+    if eltype == 'tria3':  # 3 node triangle
+        mesh = _rectangle2d_tria3(num_el, ratio, factor)
+    elif eltype == 'tria4':  # 4 node triangle
+        mesh = _rectangle2d_tria4(num_el, ratio, factor)
+    elif eltype == 'tria6':  # 6 node triangle
+        mesh = _rectangle2d_tria6(num_el, ratio, factor)
+    elif eltype == 'tria7':  # 7 node triangle
+        mesh = _rectangle2d_tria7(num_el, ratio, factor)
+    elif eltype == 'quad4':  # 4 node quadrilateral
+        mesh = _rectangle2d_quad4(num_el, ratio, factor)
+    elif eltype == 'quad5':  # 5 node quadrilateral
+        mesh = _rectangle2d_quad5(num_el, ratio, factor)
+    elif eltype == 'quad9':  # 9 node quadrilateral
+        mesh = _rectangle2d_quad9(num_el, ratio, factor)
+    else:
+        raise ValueError(f"Invalid eltype = {eltype}")
+
+    # translate, scale or deform unit region
+    if vertices is not None:
+        # x = [ x1 * (1-xi) + x2 * xi ] (1 - eta) +
+        #     [ x4 * (1-xi) + x3 * xi ] eta
+        # with xi = mesh.coor(1), eta = mesh.coor(2) \in [0,1] from rectangle2d
+        x_coor = mesh.coor[:, 0]
+        y_coor = mesh.coor[:, 1]
+        x_weights_1 = (1 - x_coor)[:, np.newaxis]
+        x_weights_2 = x_coor[:, np.newaxis]
+        y_weights_1 = (1 - y_coor)[:, np.newaxis]
+        y_weights_2 = y_coor[:, np.newaxis]
+        coor_x_1 = x_weights_1 * vertices[0, :] \
+            + x_weights_2 * vertices[1, :]
+        coor_x_2 = x_weights_1 * vertices[3, :] \
+            + x_weights_2 * vertices[2, :]
+        mesh.coor = y_weights_1 * coor_x_1 + y_weights_2 * coor_x_2
+    else:
+        if length is not None:
+            mesh.coor *= length
+        if origin is not None:
+            mesh.coor += origin
+
+    return mesh
+
+
+def _distribute_elements(nelem: int, ratio: int, factor: float) -> FloatArray:
     """
     Generate non-equidistant n elements on the interval [0, 1].
 
@@ -357,73 +539,7 @@ def distribute_elements(nelem: int, ratio: int, factor: float) -> FloatArray:
     return x
 
 
-def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
-           origin: float | None = None, length: float | None = None,
-           ratio: int = 0, factor: float = 1.0) -> Mesh:
-    """
-    Simple mesh generator for 1D lines on the interval [0, 1].
-
-    Generates a simple 1D line mesh on the interval [0, 1] with optional
-    translation and scaling of the region.
-
-    Parameters
-    ----------
-    ne : int
-        Number of elements.
-    eltype : str
-        Shape number.
-        - 'line2' : 2-node elements.
-        - 'line3' : 3-node elements.
-
-    Keyword arguments
-    -----------------
-    origin : float, optional
-        Origin of the domain.
-    length : float, optional
-        Length of the domain.
-    ratio : int, optional, default=0
-        Mesh ratio.
-        - 0 : Equidistant mesh.
-        - 1 : The size of the last element is factor times the first.
-        - 2 : The size of an element is factor times the previous one.
-        - 3 : The size of the last element is 1/factor times the first.
-        - 4 : The size of an element is 1/factor times the previous one.
-    factor : float, optional, default=1
-        Factor for the mesh ratio.
-
-    Returns
-    -------
-    mesh : Mesh
-        Mesh object. See function `quadrilateral2d` for the components.
-        Note that the components curves are not present for `LINE1D`.
-
-    Examples
-    --------
-    >>> mesh = line1d(10, 'line2', origin=1, length=2)
-    Creates a 10-element line mesh with 2-node elements on the domain [1, 3].
-
-    """
-
-    # mesh
-    if eltype == 'line2':
-        mesh = line1d_2node(ne, ratio, factor)
-    elif eltype == 'line3':
-        mesh = line1d_3node(ne, ratio, factor)
-    else:
-        raise ValueError(f'Invalid eltype = {eltype}')
-
-    mesh.ncurves = 0
-
-    # translate and scale unit region
-    if length is not None:
-        mesh.coor[:, 0] *= length
-    if origin is not None:
-        mesh.coor[:, 0] += origin
-
-    return mesh
-
-
-def line1d_2node(n: int, ratio: int, factor: float) -> Mesh:
+def _line1d_2node(n: int, ratio: int, factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 2 nodes.
     The numbering is straightforward:
@@ -445,7 +561,7 @@ def line1d_2node(n: int, ratio: int, factor: float) -> Mesh:
 
     '''
 
-    print('line1d_2node')
+    print('_line1d_2node')
 
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=n+1, elshape=1, nelem=n, elnumnod=2, npoints=2,
@@ -466,7 +582,7 @@ def line1d_2node(n: int, ratio: int, factor: float) -> Mesh:
             mesh.coor[node, 0] = node * deltax
     else:
         # non-equidistant
-        x = distribute_elements(n, ratio, factor)
+        x = _distribute_elements(n, ratio, factor)
         mesh.coor[:, 0] = x
 
     # points
@@ -476,7 +592,7 @@ def line1d_2node(n: int, ratio: int, factor: float) -> Mesh:
     return mesh
 
 
-def line1d_3node(n: int, ratio: int, factor: float) -> Mesh:
+def _line1d_3node(n: int, ratio: int, factor: float) -> Mesh:
     '''
     Generate a mesh on region [0,1] using line elements with 3 nodes.
     The numbering is straightforward:
@@ -498,7 +614,7 @@ def line1d_3node(n: int, ratio: int, factor: float) -> Mesh:
 
     '''
 
-    print('line1d_3node')
+    print('_line1d_3node')
 
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=2*n+1, elshape=2, nelem=n, elnumnod=3,
@@ -520,7 +636,7 @@ def line1d_3node(n: int, ratio: int, factor: float) -> Mesh:
             mesh.coor[node, 0] = node * deltax
     else:
         # non-equidistant
-        x = distribute_elements(n, ratio, factor)
+        x = _distribute_elements(n, ratio, factor)
         mesh.coor[0, 0] = x[0]
         for elem in range(mesh.nelem):
             k = 2 * elem
@@ -534,124 +650,8 @@ def line1d_3node(n: int, ratio: int, factor: float) -> Mesh:
     return mesh
 
 
-def quadrilateral2d(num_el: typing.Sequence[int],
-                    eltype: typing.Literal["tria3", "tria4", "tria6", "tria7",
-                                           "quad4", "quad9", "quad5"],
-                    *, origin: FloatArray | None = None,
-                    length: FloatArray | None = None,
-                    vertices: FloatArray | None = None,
-                    ratio: list[int] | None = None,
-                    factor: list[float] | None = None) -> Mesh:
-    """
-    Simple mesh generator for quadrilateral 2D regions.
-
-    Generates a simple 2D mesh on the region [0, 1] x [0, 1] with optional
-    translation and/or scaling or deformation of the region.
-
-    Parameters
-    ----------
-    num_el : array_like
-        Number of elements in x and y direction, e.g., [nx, ny].
-    eltype : str
-        Element type.
-        - 'tria3' : 3-node triangle.
-        - 'tria4' : 4-node triangle.
-        - 'tria6' : 6-node triangle.
-        - 'tria7' : 7-node triangle.
-        - 'quad4' : 4-node quadrilateral.
-        - 'quad9' : 9-node quadrilateral.
-        - 'quad5' : 5-node quadrilateral.
-
-    Keyword arguments
-    -----------------
-    origin : array_like, optional, default=[0, 0]
-        Origin of the domain [ox, uy].
-    length : array_like, optional, default=[1.0, 1.0]
-        Length and width of the domain [lx, ly].
-    vertices : array_like, optional, default=[[0, 0], [1, 0], [1, 1], [0, 1]]
-        Four vertices of the domain in the format
-        [[x1, y1], [x2, y2], [x3, y3], [x4, y4]].
-        Note that origin/length arguments are ignored if vertices are
-        given.
-    ratio : list of int, optional, default=[0, 0, 0, 0]
-        A vector [ratio1, ratio2, ratio3, ratio4] where for each of the
-        four curves the ratio is given:
-        - 0 : Equidistant mesh.
-        - 1 : The size of the last element is factor times the first.
-        - 2 : The size of an element is factor times the previous one.
-        - 3 : The size of the last element is 1/factor times the first.
-        - 4 : The size of an element is 1/factor times the previous one.
-    factor : array_like, optional, default=[1, 1, 1, 1]
-        A vector [factor1, factor2, factor3, factor4] where for each of
-        the four curves the factor is given.
-
-    Returns
-    -------
-    mesh : Mesh
-        Mesh object
-
-    Examples
-    --------
-    >>> mesh = quadrilateral2d([10, 10], 'tria3', origin=[1, 2], length=[2, 3])
-    Creates a 10x10 mesh of 3-node triangles, where the left lower corner of
-    the domain is (1, 2) and the size of the domain is 2 by 3.
-
-    >>> mesh = quadrilateral2d([10, 10], 'quad5',
-                               vertices=[[1, 1], [3, 2], [4, 5], [-1, 4]])
-    Creates a 10x10 mesh of 4-node quadrilateral elements, where the left
-    lower corner, right lower corner, upper right corner, and upper left
-    corner of the domain are (1, 1), (3, 2), (4, 5), and (-1, 4), respectively.
-    The edges are straight.
-
-    """
-    if factor is None:
-        factor = [1, 1, 1, 1]
-
-    # mesh
-    if eltype == 'tria3':  # 3 node triangle
-        mesh = rectangle2d_tria3(num_el, ratio, factor)
-    elif eltype == 'tria4':  # 4 node triangle
-        mesh = rectangle2d_tria4(num_el, ratio, factor)
-    elif eltype == 'tria6':  # 6 node triangle
-        mesh = rectangle2d_tria6(num_el, ratio, factor)
-    elif eltype == 'tria7':  # 7 node triangle
-        mesh = rectangle2d_tria7(num_el, ratio, factor)
-    elif eltype == 'quad4':  # 4 node quadrilateral
-        mesh = rectangle2d_quad4(num_el, ratio, factor)
-    elif eltype == 'quad5':  # 5 node quadrilateral
-        mesh = rectangle2d_quad5(num_el, ratio, factor)
-    elif eltype == 'quad9':  # 9 node quadrilateral
-        mesh = rectangle2d_quad9(num_el, ratio, factor)
-    else:
-        raise ValueError(f"Invalid eltype = {eltype}")
-
-    # translate, scale or deform unit region
-    if vertices is not None:
-        # x = [ x1 * (1-xi) + x2 * xi ] (1 - eta) +
-        #     [ x4 * (1-xi) + x3 * xi ] eta
-        # with xi = mesh.coor(1), eta = mesh.coor(2) \in [0,1] from rectangle2d
-        x_coor = mesh.coor[:, 0]
-        y_coor = mesh.coor[:, 1]
-        x_weights_1 = (1 - x_coor)[:, np.newaxis]
-        x_weights_2 = x_coor[:, np.newaxis]
-        y_weights_1 = (1 - y_coor)[:, np.newaxis]
-        y_weights_2 = y_coor[:, np.newaxis]
-        coor_x_1 = x_weights_1 * vertices[0, :] \
-            + x_weights_2 * vertices[1, :]
-        coor_x_2 = x_weights_1 * vertices[3, :] \
-            + x_weights_2 * vertices[2, :]
-        mesh.coor = y_weights_1 * coor_x_1 + y_weights_2 * coor_x_2
-    else:
-        if length is not None:
-            mesh.coor *= length
-        if origin is not None:
-            mesh.coor += origin
-
-    return mesh
-
-
-def rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[int] | None,
-                      factor: list[float]) -> Mesh:
+def _rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[int] | None,
+                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 3
     nodes.
@@ -705,7 +705,7 @@ def rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[int] | None,
 
     """
 
-    print('rectangle2d_tria3')
+    print('_rectangle2d_tria3')
 
     n_x, n_y = num_el
 
@@ -747,9 +747,9 @@ def rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[int] | None,
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
-            array[:] = distribute_elements(n_x
-                                           if idx % 2 == 0
-                                           else n_y, ratio[idx], factor[idx])
+            array[:] = _distribute_elements(n_x
+                                            if idx % 2 == 0
+                                            else n_y, ratio[idx], factor[idx])
 
         x3 = 1 - x3[::-1]
         x4 = 1 - x4[::-1]
@@ -797,8 +797,8 @@ def rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[int] | None,
     return mesh
 
 
-def rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
-                      factor: list[float]):
+def _rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
+                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 4
     nodes.
@@ -852,7 +852,7 @@ def rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
 
     """
 
-    print('rectangle2d_tria4')
+    print('_rectangle2d_tria4')
 
     n_x, n_y = num_el
 
@@ -908,8 +908,8 @@ def rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
-            array[:] = distribute_elements(n_x if idx % 2 == 0
-                                           else n_y, ratio[idx], factor[idx])
+            array[:] = _distribute_elements(n_x if idx % 2 == 0
+                                            else n_y, ratio[idx], factor[idx])
 
         x3 = 1 - x3[::-1]
         x4 = 1 - x4[::-1]
@@ -972,8 +972,8 @@ def rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
     return mesh
 
 
-def rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[int] | None,
-                      factor: list[float]):
+def _rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[int] | None,
+                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 6
     nodes.
@@ -1075,8 +1075,8 @@ def rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[int] | None,
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
-            array[::2] = distribute_elements(n_x if idx % 2 == 0
-                                             else n_y, ratio[idx], factor[idx])
+            array[::2] = _distribute_elements(n_x if idx % 2 == 0 else
+                                              n_y, ratio[idx], factor[idx])
 
         # mid-side nodes
         for elem in range(n_x):
@@ -1135,8 +1135,8 @@ def rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[int] | None,
     return mesh
 
 
-def rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[int] | None,
-                      factor: list[float]):
+def _rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[int] | None,
+                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 7
     nodes.
@@ -1256,8 +1256,8 @@ def rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[int] | None,
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
-            array[::2] = distribute_elements(n_x if idx % 2 == 0
-                                             else n_y, ratio[idx], factor[idx])
+            array[::2] = _distribute_elements(n_x if idx % 2 == 0 else
+                                              n_y, ratio[idx], factor[idx])
 
         # mid-side nodes
         for elem in range(n_x):
@@ -1350,8 +1350,8 @@ def rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[int] | None,
     return mesh
 
 
-def rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[int] | None,
-                      factor: list[float]):
+def _rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[int] | None,
+                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 4 nodes.
 
@@ -1442,8 +1442,8 @@ def rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[int] | None,
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
-            array[:] = distribute_elements(n_x if idx % 2 == 0
-                                           else n_y, ratio[idx], factor[idx])
+            array[:] = _distribute_elements(n_x if idx % 2 == 0
+                                            else n_y, ratio[idx], factor[idx])
 
         x3 = 1 - x3[::-1]
         x4 = 1 - x4[::-1]
@@ -1491,8 +1491,8 @@ def rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[int] | None,
     return mesh
 
 
-def rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[int] | None,
-                      factor: list[float]):
+def _rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[int] | None,
+                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 5 nodes.
 
@@ -1592,8 +1592,8 @@ def rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[int] | None,
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
-            array[:] = distribute_elements(n_x if idx % 2 == 0
-                                           else n_y, ratio[idx], factor[idx])
+            array[:] = _distribute_elements(n_x if idx % 2 == 0
+                                            else n_y, ratio[idx], factor[idx])
 
         x3 = 1 - x3[::-1]
         x4 = 1 - x4[::-1]
@@ -1652,8 +1652,8 @@ def rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[int] | None,
     return mesh
 
 
-def rectangle2d_quad9(num_el: typing.Sequence[int], ratio: list[int] | None,
-                      factor: list[float]):
+def _rectangle2d_quad9(num_el: typing.Sequence[int], ratio: list[int] | None,
+                       factor: list[float]):
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 9 nodes.
 
@@ -1748,8 +1748,8 @@ def rectangle2d_quad9(num_el: typing.Sequence[int], ratio: list[int] | None,
         x2, x4 = np.zeros(nn1col), np.zeros(nn1col)
         arrays = [x1, x2, x3, x4]
         for idx, array in enumerate(arrays):
-            array[::2] = distribute_elements(n_x if idx % 2 == 0
-                                             else n_y, ratio[idx], factor[idx])
+            array[::2] = _distribute_elements(n_x if idx % 2 == 0 else
+                                              n_y, ratio[idx], factor[idx])
 
         # mid-side nodes
         for elem in range(n_x):
