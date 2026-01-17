@@ -87,48 +87,55 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     delcrvs1_present = deletecurves1 is not None
     delcrvs2_present = deletecurves2 is not None
 
-    for option in kwargs:
-        if option not in ['points1', 'points2', 'curves1', 'curves2',
-                          'dir_curves2', 'deletepoints1', 'deletepoints2',
-                          'deletecurves1', 'deletecurves2']:
-            raise ValueError(f'Invalid option: {option}')
+    valid_keys = {
+        'points1', 'points2', 'curves1', 'curves2', 'dir_curves2',
+        'deletepoints1', 'deletepoints2', 'deletecurves1', 'deletecurves2'
+    }
+    invalid_keys = set(kwargs.keys()) - valid_keys
+    if invalid_keys:
+        raise ValueError(f'Invalid options: {invalid_keys}')
 
+    # Validate points parameters
+    if ((pnts1_present and not pnts2_present) or
+            (pnts2_present and not pnts1_present)):
+        raise ValueError('both points1 and points2 need to be present')
     if pnts1_present and pnts2_present:
         if len(points1) != len(points2):
-            raise ValueError('points1 and points2 need to be of the same \
-                             length')
+            raise ValueError('points1 and points2 need to be of the same '
+                             'length')
         pnts = 1
-    elif pnts1_present or pnts2_present:
-        raise ValueError('both points1 and points2 need to be present')
     else:
         pnts = 0
 
+    # Validate curves parameters
+    if ((crvs1_present and not crvs2_present) or
+            (crvs2_present and not crvs1_present)):
+        raise ValueError('both curves1 and curves2 need to be present')
     if crvs1_present and crvs2_present:
         if len(curves1) != len(curves2):
-            raise ValueError('curves1 and curves2 need to be of the same \
-                             length')
-        for i, _ in enumerate(curves1):
-            if (mesh1.curves[curves1[i]].nnodes
-               != mesh2.curves[abs(curves2[i])].nnodes):
-                raise ValueError('number of nodes different for curves1 and \
-                                 curves2')
+            raise ValueError('curves1 and curves2 need to be of the same '
+                             'length')
+        for crv1, crv2 in zip(curves1, curves2):
+            if (mesh1.curves[crv1].nnodes !=
+                    mesh2.curves[abs(crv2)].nnodes):
+                raise ValueError('number of nodes different for curves1 and '
+                                 'curves2')
         crvs = 1
-    elif crvs1_present or crvs2_present:
-        raise ValueError('both curves1 and curves2 need to be present')
     else:
         crvs = 0
 
+    # Validate curves2 and dir_curves2 parameters
     if crvs2_present and not dir_crvs2_present:
         raise ValueError('curves2 and dir_curves2 must be both present')
     if crvs2_present and dir_crvs2_present:
         if len(curves2) != len(dir_curves2):
-            raise ValueError('curves2 and dir_curves2 need to be of the same \
-                             length')
-        for ii, val in enumerate(curves2):
-            if val < 0:
+            raise ValueError('curves2 and dir_curves2 need to be of the same '
+                             'length')
+        for crv, direction in zip(curves2, dir_curves2):
+            if crv < 0:
                 raise ValueError('curves2 must be a non-negative curve number')
-            if dir_curves2[ii] not in [1, -1]:
-                raise ValueError('curves2_dir must be 1 or -1')
+            if direction not in (1, -1):
+                raise ValueError('dir_curves2 must be 1 or -1')
 
     # work storage for new numbering of new nodes for mesh2
     # NOTE: -1 indicates that a node has not been assigned yet
@@ -162,16 +169,13 @@ def mesh_merge(mesh1, mesh2, **kwargs):
         delcurves2[np.abs(curves2)] = 1  # always delete curves in curves2
 
         # nodes on curve2 can be removed == nodes on curve1
-        for crv, _ in enumerate(curves2):
-            crv1 = curves1[crv]
-            crv2 = curves2[crv]
-            dir2 = dir_curves2[crv]
-            if dir2 > 0:
+        for crv1, crv2, direction in zip(curves1, curves2, dir_curves2):
+            if direction > 0:
                 work[mesh2.curves[crv2].nodes] = mesh1.curves[crv1].nodes
             else:
                 nnodes_crv2 = mesh2.curves[crv2].nnodes
-                work[mesh2.curves[crv2].nodes[nnodes_crv2 - 1::-1]] \
-                    = mesh1.curves[crv1].nodes
+                work[mesh2.curves[crv2].nodes[nnodes_crv2 - 1::-1]] = \
+                    mesh1.curves[crv1].nodes
 
     # delete curves
     if delcrvs1_present:
@@ -208,19 +212,14 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     # fill points
 
     # remove all double points
-    numdelp2_added = 0
     for pnt2 in range(mesh2.npoints):
-        if delpoints2[pnt2] == 1:
-            continue  # already deleted
-        if mesh2.points[pnt2] == -1:
-            continue  # point not connected
-
+        if delpoints2[pnt2] == 1 or mesh2.points[pnt2] == -1:
+            continue
         # remove double points
         if work[mesh2.points[pnt2]] in mesh1.points:
             delpoints2[pnt2] = 1
-            numdelp2_added += 1
 
-    numdelp2 += numdelp2_added
+    numdelp2 += np.sum(delpoints2) - numdelp2
     mesh.npoints = mesh1.npoints + mesh2.npoints - numdelp1 - numdelp2
     sp = mesh1.npoints - numdelp1
 
@@ -249,27 +248,18 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     sp = mesh1.ncurves - numdelc1
 
     # copy curves mesh1
-    # crv = 0
-
     for curve in range(mesh1.ncurves):
-        if delcurves1[curve] == 1:
-            continue  # no copy of curve
-
-        mesh.curves.append(mesh1.curves[curve])
-        # crv += 1
+        if delcurves1[curve] != 1:
+            mesh.curves.append(mesh1.curves[curve])
 
     # copy curves mesh2
-
     for curve in range(mesh2.ncurves):
-        if delcurves2[curve] == 1:
-            continue  # no copy of curve
-
-        mesh.curves.append(mesh2.curves[curve])
-        mesh.curves[-1].nodes = work[mesh2.curves[curve].nodes]
-        # Assuming mesh.curves[sp+crv].topology is a 2D numpy array
-        mesh.curves[-1].topology[:, :, 1] \
-            = work[mesh2.curves[curve].topology[:, :, 1]]
-        # crv += 1
+        if delcurves2[curve] != 1:
+            mesh.curves.append(mesh2.curves[curve])
+            mesh.curves[-1].nodes = work[mesh2.curves[curve].nodes]
+            # Assuming mesh.curves[-1].topology is a 2D numpy array
+            mesh.curves[-1].topology[:, :, 1] = \
+                work[mesh2.curves[curve].topology[:, :, 1]]
 
     # coordinates
 
