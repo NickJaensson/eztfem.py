@@ -69,6 +69,10 @@ def pos_array(problem, nodes, **kwargs):
     if isinstance(nodes, list):
         nodes = np.array(nodes)
 
+    # Validate order parameter
+    if order not in ['ND', 'DN']:
+        raise ValueError(f"Invalid order '{order}'. Must be 'ND' or 'DN'.")
+
     pos = [None] * len(physq)
     ndof = np.zeros(len(physq), dtype=int)
     lpos = np.zeros(problem.maxnoddegfd * nodes.shape[0], dtype=int)
@@ -167,6 +171,10 @@ def pos_array_vec(problem, nodes, **kwargs):
     # Convert nodes to a numpy array if an int is supplied
     if isinstance(nodes, (int, np.integer)):
         nodes = np.array([nodes])
+
+    # Validate order parameter
+    if order not in ['ND', 'DN']:
+        raise ValueError(f"Invalid order '{order}'. Must be 'ND' or 'DN'.")
 
     pos = [None] * vec.shape[0]
     ndof = np.zeros(vec.shape[0], dtype=int)
