@@ -23,7 +23,7 @@ Technology.
    1_introduction
    2_examples
    3_plotting
-   4_data_structures
+   4_classes
    5_ordering
-   5_references
+   6_references
    modules

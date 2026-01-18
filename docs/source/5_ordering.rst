@@ -61,4 +61,6 @@ where :math:`I` is the identity matrix corresponding to the prescribed degrees
 of freedom. This is implemented in ``apply_essential``. Although the resulting
 system is slightly larger, it is straightforward to implement. Be aware that
 this approach adds eigenvalues equal to 1 with multiplicity equal to the number
-of prescribed degrees of freedom.
+of prescribed degrees of freedom. Note, that in practice, the system matrix is
+not reordered in ``apply_essential``, i.e., the matrix is modified in place,
+keeping the original *NPD* ordering.
