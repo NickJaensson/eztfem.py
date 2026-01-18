@@ -21,7 +21,11 @@ def pos_array(problem, nodes, **kwargs):
         Array of physical quantity numbers. Default is all physical
         quantities.
     order : str, optional
-        The sequence order of the degrees of freedom in the nodes.
+        The requested sequence order of the degrees of freedom in the nodes.
+        'ND' : the most inner loop is over the degrees of freedom.
+        'DN' : the most inner loop is over the nodal points.
+        Default: 'DN'.
+        NOTE: the outside loop is always given by the physical quantities.
 
     Returns
     -------
@@ -32,9 +36,16 @@ def pos_array(problem, nodes, **kwargs):
         List of the number of degrees of freedom in `pos` of each physical
         quantity.
 
+    Note
+    ----
+    In eztfem, the ordering of the full system vector and vectors is always
+    NPD. By using the order argument, pos_array returns the indices in the
+    requested order. Note, that the default is 'DN', since that is the default
+    in build_system.
+
     Examples
     --------
-    >>> pos, ndof = get_dof_indices(problem, nodes, physq=[1, 2], order='ND')
+    >>> pos, ndof = pos_array(problem, nodes, physq=[1, 2], order='ND')
 
     """
 
@@ -114,7 +125,11 @@ def pos_array_vec(problem, nodes, **kwargs):
     vec : array_like, optional
         Array of vector numbers. Default is all vectors.
     order : str, optional
-        The sequence order of the degrees of freedom in the nodes.
+        The requested sequence order of the degrees of freedom in the nodes.
+        'ND' : the most inner loop is over the degrees of freedom.
+        'DN' : the most inner loop is over the nodal points.
+        Default: 'DN'.
+        NOTE: the outside loop is always given by the physical quantities.
 
     Returns
     -------
@@ -124,10 +139,16 @@ def pos_array_vec(problem, nodes, **kwargs):
     ndof : list of int
         List of the number of degrees of freedom in `pos` of each vector.
 
+    Note
+    ----
+    In eztfem, the ordering of the full system vector and vectors is always
+    NPD. By using the order argument, pos_array returns the indices in the
+    requested order. Note, that the default is 'DN', since that is the default
+    in build_system.
+
     Examples
     --------
-    >>> pos, ndof = get_vector_dof_indices(problem, nodes, vec=[1, 2],
-                                           order='ND')
+    >>> pos, ndof = pos_array_vec(problem, nodes, vec=[1, 2], order='ND')
 
     """
 

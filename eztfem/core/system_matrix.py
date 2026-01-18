@@ -47,6 +47,12 @@ def build_system(mesh, problem, element, user, **kwargs):
     f : numpy.ndarray
         The right hand side.
 
+    Note
+    ----
+    In eztfem, the ordering of the full system vector and vectors is always
+    NPD. With the order argument, we can specify the ordering on how the
+    element routine is written.
+
     Examples
     --------
     To change the order:
