@@ -1,10 +1,10 @@
-4. Data structures
+4. Classes
 --------------------------
 
-4.1 ``mesh``
+4.1 ``Mesh``
 ~~~~~~~~~~~~
 
-The ``mesh`` structure contains:
+The ``Mesh`` class contains:
 
 ``elnumnod``
     Number of nodes per element.
@@ -31,7 +31,7 @@ Separate meshes can be merged into a single mesh with ``mesh_merge`` to create
 more complicated geometries. Additional helpers are provided in the
 ``eztfem.addons.meshes`` module.
 
-4.2 ``problem``
+4.2 ``Problem``
 ~~~~~~~~~~~~~~~
 
 The ``Problem`` structure stores data related to the degrees of freedom defined
@@ -58,14 +58,16 @@ list. Some key components include:
 ``numdegfd``
     Total number of system degrees of freedom.
 
-4.3 Vectors
+4.3 ``Vector``
 ~~~~~~~~~~~
-
-eztfem.py distinguishes between *vectors* and *system vectors*. A vector is
-defined by one of the columns in ``elementdof`` (see Section 4.2) and is used
-for data storage, often as the result of ``deriv_vector``. Vectors are stored
-as a small structure with two components (``vec`` and ``u``), where ``vec`` is
-an index identifying the vector and ``u`` contains the actual data.
+``eztfem.py`` distinguishes between *vectors* and *system vectors*. The system
+vector contains all degrees of freedom that are solved for in the linear and
+are of type NumPy array. Vectors are used for data storage and are of type
+``Vector``. The ``Vector`` class is used for data storage, often as the result 
+of ``deriv_vector``. A vector is
+defined by one of the columns in ``elementdof`` (see Section 4.2) and . Vectors 
+are storedas a small structure with two components (``vec`` and ``u``), where 
+``vec`` is an index identifying the vector and ``u`` contains the actual data.
 
 System vectors are defined by ``elnumdegfd`` and make up the degrees of freedom
 that appear in the assembled linear system. They are stored as one-dimensional
@@ -77,65 +79,3 @@ system vectors. For example (assuming ``import numpy as np``)::
    idx = ezt.pos_array(problem, np.arange(3), physq=0, order='ND')
 
 returns indices for the requested entries.
-
-4.4 System matrix and right-hand side
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-eztfem.py imposes Dirichlet conditions following the approach of [2]. Let the
-full system of equations be partitioned into unknown (:math:`u`) and prescribed
-(:math:`p`) degrees of freedom:
-
-.. math::
-
-   \begin{bmatrix} A_{uu} & A_{up} \\ A_{pu} & A_{pp} \end{bmatrix}
-   \begin{bmatrix} \tilde{u}_u \\ \tilde{u}_p \end{bmatrix}
-   =
-   \begin{bmatrix} \tilde{f}_u \\ \tilde{f}_p \end{bmatrix}.
-
-After substituting the Dirichlet data :math:`\tilde{u}_p = \tilde{u}_D` we
-obtain the reduced system
-
-.. math::
-
-   A_{uu} \tilde{u}_u = \tilde{f}_u - A_{up} \tilde{u}_D.
-
-Instead of assembling and solving the reduced system directly, eztfem.py
-modifies the full system as
-
-.. math::
-
-   \begin{bmatrix} A_{uu} & 0 \\ 0 & I \end{bmatrix}
-   \begin{bmatrix} \tilde{u}_u \\ \tilde{u}_p \end{bmatrix}
-   =
-   \begin{bmatrix} \tilde{f}_u - A_{up} \tilde{u}_D \\ \tilde{u}_D \end{bmatrix},
-
-where :math:`I` is the identity matrix corresponding to the prescribed degrees
-of freedom. This is implemented in ``apply_essential``. Although the resulting
-system is slightly larger, it is straightforward to implement. Be aware that
-this approach adds eigenvalues equal to 1 with multiplicity equal to the number
-of prescribed degrees of freedom.
-
-4.4 Working with degrees of freedom
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In `eztfem` the full system vector and vectors are stored in *NPD* ordering, 
-i.e., nodes are in the outer loop, physical quantities in the 
-middle loop and degrees of freedom in the inner loop. For example, if the
-velocity is the first physical quantity (with degrees of freedom :math:`u` and 
-:math:`v` m) and pressure is the second physical quantity (with degree of freedom 
-:math:`p`), the system vector would be stored as
-
-.. math::
-
-   [u_1, v_1, p_1, u_2, v_2, p_2, u_3, v_3, p_3]
-
-When building the system matrix, it has some advantages to use a different 
-ordering on element level. In `eztfem`, the default in `build_system` assumes
-that elements are written in *PDN* ordering, which is given by
-
-.. math::
-
-    [u_1, u_2, u_3, v_1, v_2, v_3, p_1, p_2, p_3]
-
-Note, that this only applies to how the element routines are written, i.e.,
-it does not change the ordering of the full system vector itself 
-(which is always in *NPD* ordering).

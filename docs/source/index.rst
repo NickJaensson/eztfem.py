@@ -24,5 +24,6 @@ Technology.
    2_examples
    3_plotting
    4_data_structures
+   5_ordering
    5_references
    modules
