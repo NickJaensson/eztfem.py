@@ -1,6 +1,4 @@
-'''
-Module to define the User class
-'''
+"""Module to define the User class"""
 import numpy as np
 
 

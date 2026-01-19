@@ -1,6 +1,4 @@
-'''
-Module to build system matrices and apply boundary conditions.
-'''
+"""Module to build system matrices and apply boundary conditions"""
 import numpy as np
 from scipy.sparse import lil_matrix, eye
 from .pos_array import pos_array, pos_array_vec

@@ -1,6 +1,4 @@
-'''
-Module to compute Gauss-Legendre integration points and weights.
-'''
+"""Module to compute Gauss-Legendre integration points and weights"""
 from pathlib import Path
 import numpy as np
 

@@ -1,6 +1,4 @@
-'''
-Module with additional functions for meshes.
-'''
+"""Module with additional functions for meshes"""
 
 import numpy as np
 from .meshgen import Mesh
