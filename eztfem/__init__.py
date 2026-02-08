@@ -21,7 +21,6 @@ from .core.pos_array import pos_array, pos_array_vec
 from .core.problem import Problem, define_essential
 from .core.meshgen import (
     quadrilateral2d,
-    distribute_elements,
     line1d,
     Mesh,
     Geometry,
@@ -84,7 +83,6 @@ __all__ = [
     "Problem",
     "define_essential",
     "quadrilateral2d",
-    "distribute_elements",
     "line1d",
     "Mesh",
     "Geometry",

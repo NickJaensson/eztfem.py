@@ -41,7 +41,7 @@ def main():
     user = ezt.User()
     shape = 'quad'
 
-    user.xr, user.wg = ezt.gauss_legendre(shape, n=3)
+    user.xr, user.wg = ezt.gauss_legendre(shape, num_int_points=3)
     user.phi, user.dphi = ezt.basis_function(shape, 'Q2', user.xr)
 
     # user struct for setting problem coefficients, ...
@@ -58,7 +58,7 @@ def main():
 
     # define Gauss integration and basis functions (for boundary integral)
 
-    [xr, user.wg] = ezt.gauss_legendre('line', n=3)
+    [xr, user.wg] = ezt.gauss_legendre('line', num_int_points=3)
     [user.phi, user.dphi] = ezt.basis_function('line', 'P2', xr)
 
     # add natural boundary condition

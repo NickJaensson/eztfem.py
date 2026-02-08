@@ -1,6 +1,4 @@
-'''
-Module to define the Vector class
-'''
+"""Module to define the Vector class"""
 import numpy as np
 from .pos_array import pos_array, pos_array_vec
 
