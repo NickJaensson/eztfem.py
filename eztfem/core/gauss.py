@@ -1,6 +1,11 @@
 """Module to compute Gauss-Legendre integration points and weights"""
 from pathlib import Path
+import typing
 import numpy as np
+import numpy.typing as npt
+
+
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
 
 
 def gauss_legendre(shape, *, num_int_points = None, integration_order = None,
@@ -68,7 +73,9 @@ def gauss_legendre(shape, *, num_int_points = None, integration_order = None,
     return handler(param_value)
 
 
-def _gauss_legendre_line(num_int_points):
+def _gauss_legendre_line(num_int_points: int | np.integer) -> tuple[
+    FloatArray, FloatArray
+]:
     """
     Compute Gauss-Legendre integration points and weights for a line segment.
     Gauss Legendre in 1D defined on the interval [-1,1]
@@ -86,7 +93,7 @@ def _gauss_legendre_line(num_int_points):
         Weights of the integration points.
 
     """
-    if not isinstance(num_int_points, (int, np.integer)):
+    if not isinstance(num_int_points, (int, np.integer)):  # pyright: ignore[reportUnnecessaryIsInstance]
         raise TypeError(
             f"num_int_points must be an integer, got "
             f"{type(num_int_points).__name__}"
@@ -99,7 +106,9 @@ def _gauss_legendre_line(num_int_points):
     return coords_1d, weights
 
 
-def _gauss_legendre_quad(num_int_points):
+def _gauss_legendre_quad(num_int_points: int | np.integer) -> tuple[
+    FloatArray, FloatArray
+]:
     """
     Compute Gauss-Legendre integration points and weights for a quadrilateral.
     Gauss Legendre in 2D defined on the region [-1,1]x[-1,1]
@@ -131,7 +140,9 @@ def _gauss_legendre_quad(num_int_points):
     return coords_2d, weights_2d
 
 
-def _gauss_legendre_triangle(integration_order):
+def _gauss_legendre_triangle(integration_order: int | np.integer) -> tuple[
+    FloatArray, FloatArray
+]:
     """
     Compute Gauss-Legendre integration points and weights for a triangle.
     Gauss Legendre in 2D defined triangle, left-lower half of [0, 1] x [0, 1]
