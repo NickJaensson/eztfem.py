@@ -160,6 +160,11 @@ def mesh_merge(mesh1: Mesh, mesh2: Mesh, *, points1: ArrayLike | None = None,
 
     # curves
     if crvs:
+        # These are guaranteed to exist because of the check above.
+        assert curves1 is not None
+        assert curves2 is not None
+        assert dir_curves2 is not None
+
         delcurves2[np.abs(curves2)] = 1  # always delete curves in curves2
 
         # nodes on curve2 can be removed == nodes on curve1
