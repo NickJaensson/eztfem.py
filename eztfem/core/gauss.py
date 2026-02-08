@@ -46,20 +46,20 @@ def gauss_legendre(shape, *, num_int_points = None, integration_order = None,
         'triangle': ('integration_order', _gauss_legendre_triangle),
     }
 
-    if shape not in shape_handlers:
-        valid_shapes = list(shape_handlers.keys())
-        raise ValueError(
-            f"Invalid shape: '{shape}'. Must be one of {valid_shapes}"
-        )
+    match shape:
+        case "line" | "quad":
+            param_value = n if num_int_points is None else num_int_points
+
+        case "triangle":
+            param_value = p if integration_order is None else integration_order
+
+        case _:
+            valid_shapes = list(shape_handlers.keys())
+            raise ValueError(
+                f"Invalid shape: '{shape}'. Must be one of {valid_shapes}"
+            )
 
     param_name, handler = shape_handlers[shape]
-
-    # Support both new and old parameter names for backward compatibility
-    if shape in ("line", "quad"):
-        param_value = n if num_int_points is None else num_int_points
-    
-    else:  # triangle
-        param_value = p if integration_order is None else integration_order
 
     if param_value is None:
         msg = f"{param_name} must be specified for the integration rule"
