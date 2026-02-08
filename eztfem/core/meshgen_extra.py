@@ -1,13 +1,24 @@
 """Module with additional functions for meshes"""
 
+import typing
 import numpy as np
+import numpy.typing as npt
 from .meshgen import Mesh
 
 
-def mesh_merge(mesh1, mesh2, *, points1 = None, points2 = None, curves1 = None,
-               curves2 = None, dir_curves2 = None, deletepoints1 = None,
-               deletepoints2 = None, deletecurves1 = None,
-               deletecurves2 = None):
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
+ArrayLike: typing.TypeAlias = typing.Sequence[int] | IntArray
+
+
+def mesh_merge(mesh1: Mesh, mesh2: Mesh, *, points1: ArrayLike | None = None,
+               points2: ArrayLike | None = None,
+               curves1: ArrayLike | None = None,
+               curves2: ArrayLike | None = None,
+               dir_curves2: ArrayLike | None = None,
+               deletepoints1: ArrayLike | None = None,
+               deletepoints2: ArrayLike | None = None,
+               deletecurves1: ArrayLike | None = None,
+               deletecurves2: ArrayLike | None = None):
     """
     Create a new mesh by merging two other meshes.
 
