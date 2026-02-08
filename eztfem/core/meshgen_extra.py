@@ -17,7 +17,7 @@ def mesh_merge(mesh1, mesh2, **kwargs):
 
     Keyword arguments
     -----------------
-    point1, point2 : array_like
+    points1, points2 : array_like
         Vectors of equal size giving the points in both meshes that need
         to be merged into one.
         NOTE: points2[i] corresponds to points1[i].
