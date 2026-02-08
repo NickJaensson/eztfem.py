@@ -6,10 +6,12 @@ import numpy.typing as npt
 
 
 FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+_GaussFunc: typing.TypeAlias = typing.Callable[[int], tuple[FloatArray, FloatArray]]
 
 
-def gauss_legendre(shape, *, num_int_points = None, integration_order = None,
-                   n = None, p = None):
+def gauss_legendre(shape: str, *, num_int_points: int | None= None,
+                   integration_order: int | None = None, n: int | None = None,
+                   p: int | None = None) -> tuple[FloatArray, FloatArray]:
     """
     Determine Gauss-Legendre integration points and weights in elements.
 
@@ -45,7 +47,7 @@ def gauss_legendre(shape, *, num_int_points = None, integration_order = None,
         Weights of the integration scheme.
 
     """
-    shape_handlers = {
+    shape_handlers: dict[str, tuple[str, _GaussFunc]] = {
         'line': ('num_int_points', _gauss_legendre_line),
         'quad': ('num_int_points', _gauss_legendre_quad),
         'triangle': ('integration_order', _gauss_legendre_triangle),
