@@ -50,7 +50,7 @@ def main():
     user = ezt.User()
     shape = 'triangle'
 
-    user.xr, user.wg = ezt.gauss_legendre(shape, p=3)
+    user.xr, user.wg = ezt.gauss_legendre(shape, integration_order=3)
     user.phi, user.dphi = ezt.basis_function(shape, 'P2', user.xr)
 
     # user struct for setting problem coefficients, ...
