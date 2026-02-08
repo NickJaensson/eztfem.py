@@ -3,7 +3,8 @@ from pathlib import Path
 import numpy as np
 
 
-def gauss_legendre(shape, **kwargs):
+def gauss_legendre(shape, *, num_int_points = None, integration_order = None,
+                   n = None, p = None):
     """
     Determine Gauss-Legendre integration points and weights in elements.
 
@@ -54,16 +55,14 @@ def gauss_legendre(shape, **kwargs):
     param_name, handler = shape_handlers[shape]
 
     # Support both new and old parameter names for backward compatibility
-    new_param_name = param_name
-    old_param_map = {'num_int_points': 'n', 'integration_order': 'p'}
-    old_param_name = old_param_map.get(param_name)
+    if shape in ("line", "quad"):
+        param_value = n if num_int_points is None else num_int_points
+    
+    else:  # triangle
+        param_value = p if integration_order is None else integration_order
 
-    param_value = kwargs.get(new_param_name, -1)
-    if param_value < 0 and old_param_name:
-        param_value = kwargs.get(old_param_name, -1)
-
-    if param_value < 0:
-        msg = f"{new_param_name} must be specified for the integration rule"
+    if param_value is None:
+        msg = f"{param_name} must be specified for the integration rule"
         raise ValueError(msg)
 
     return handler(param_value)
