@@ -4,7 +4,10 @@ import numpy as np
 from .meshgen import Mesh
 
 
-def mesh_merge(mesh1, mesh2, **kwargs):
+def mesh_merge(mesh1, mesh2, *, points1 = None, points2 = None, curves1 = None,
+               curves2 = None, dir_curves2 = None, deletepoints1 = None,
+               deletepoints2 = None, deletecurves1 = None,
+               deletecurves2 = None):
     """
     Create a new mesh by merging two other meshes.
 
@@ -64,16 +67,6 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     if mesh1.elshape != mesh2.elshape:
         raise ValueError('elshape different in mesh1 and mesh2')
 
-    points1 = kwargs.get('points1', None)
-    points2 = kwargs.get('points2', None)
-    curves1 = kwargs.get('curves1', None)
-    curves2 = kwargs.get('curves2', None)
-    dir_curves2 = kwargs.get('dir_curves2', None)
-    deletepoints1 = kwargs.get('deletepoints1', None)
-    deletepoints2 = kwargs.get('deletepoints2', None)
-    deletecurves1 = kwargs.get('deletecurves1', None)
-    deletecurves2 = kwargs.get('deletecurves2', None)
-
     # booleans to indicate if the optional argument was present
     pnts1_present = points1 is not None
     pnts2_present = points2 is not None
@@ -84,14 +77,6 @@ def mesh_merge(mesh1, mesh2, **kwargs):
     delpnts2_present = deletepoints2 is not None
     delcrvs1_present = deletecurves1 is not None
     delcrvs2_present = deletecurves2 is not None
-
-    valid_keys = {
-        'points1', 'points2', 'curves1', 'curves2', 'dir_curves2',
-        'deletepoints1', 'deletepoints2', 'deletecurves1', 'deletecurves2'
-    }
-    invalid_keys = set(kwargs.keys()) - valid_keys
-    if invalid_keys:
-        raise ValueError(f'Invalid options: {invalid_keys}')
 
     # Validate points parameters
     if ((pnts1_present and not pnts2_present) or
