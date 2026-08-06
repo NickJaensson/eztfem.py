@@ -6,10 +6,11 @@ import numpy.typing as npt
 
 
 FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
-_GaussFunc: typing.TypeAlias = typing.Callable[[int], tuple[FloatArray, FloatArray]]
+_GaussFunc: typing.TypeAlias = typing.Callable[[int],
+                                               tuple[FloatArray, FloatArray]]
 
 
-def gauss_legendre(shape: str, *, num_int_points: int | None= None,
+def gauss_legendre(shape: str, *, num_int_points: int | None = None,
                    integration_order: int | None = None, n: int | None = None,
                    p: int | None = None) -> tuple[FloatArray, FloatArray]:
     """
@@ -95,7 +96,7 @@ def _gauss_legendre_line(num_int_points: int | np.integer) -> tuple[
         Weights of the integration points.
 
     """
-    if not isinstance(num_int_points, (int, np.integer)):  # pyright: ignore[reportUnnecessaryIsInstance]
+    if not isinstance(num_int_points, (int, np.integer)):
         raise TypeError(
             f"num_int_points must be an integer, got "
             f"{type(num_int_points).__name__}"
