@@ -159,7 +159,8 @@ def plot_mesh_pv(mesh_pv, **kwargs):
     kwargs.pop('color', None)
     kwargs.pop('window_size', None)
 
-    surface = mesh_pv.separate_cells().extract_surface(nonlinear_subdivision=4)
+    surface = mesh_pv.separate_cells().extract_surface(nonlinear_subdivision=4,
+                                                       algorithm='dataset_surface')
     edges = surface.extract_feature_edges()
 
     plotter = pv.Plotter(window_size=window_size)
