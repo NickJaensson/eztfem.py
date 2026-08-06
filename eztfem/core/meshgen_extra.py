@@ -18,7 +18,7 @@ def mesh_merge(mesh1: Mesh, mesh2: Mesh, *, points1: ArrayLike | None = None,
                deletepoints1: ArrayLike | None = None,
                deletepoints2: ArrayLike | None = None,
                deletecurves1: ArrayLike | None = None,
-               deletecurves2: ArrayLike | None = None):
+               deletecurves2: ArrayLike | None = None) -> Mesh:
     """
     Create a new mesh by merging two other meshes.
 
