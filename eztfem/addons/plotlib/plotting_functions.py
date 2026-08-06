@@ -1,17 +1,31 @@
-'''
-Module for plotting functions using PyVista.
-'''
+"""Module for plotting functions using PyVista."""
 import copy
+import typing
+
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import pyvista as pv
 from pyvista import CellType
-from ...core.pos_array import pos_array, pos_array_vec
-from ...core.shapefunc import basis_function
+
 from ...core.gauss import gauss_legendre
+from ...core.meshgen import Mesh
+from ...core.pos_array import pos_array, pos_array_vec
+from ...core.problem import Problem
+from ...core.shapefunc import basis_function
+from ...core.vector import Vector
+
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
 
 
-def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
+def fill_mesh_pv(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    u: FloatArray,
+    physq: int,
+    degfd: int | typing.Sequence[int],
+) -> pv.PolyData:
     """
     Fills the point data of a mesh object with the values from a given solution
     array based on the specified degrees of freedom.
@@ -88,7 +102,12 @@ def fill_mesh_pv(mesh_pv, problem, u, physq, degfd):
     return mesh_pv_plot
 
 
-def fill_mesh_pv_vector(mesh_pv, problem, vector, degfd):
+def fill_mesh_pv_vector(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    vector: Vector,
+    degfd: int,
+) -> pv.PolyData:
     """
     Fills the point data of a mesh object with the values from a given solution
     array based on the specified degrees of freedom.
@@ -130,7 +149,14 @@ def fill_mesh_pv_vector(mesh_pv, problem, vector, degfd):
     return mesh_pv_plot
 
 
-def plot_mesh_pv(mesh_pv, **kwargs):
+def plot_mesh_pv(
+    mesh_pv: pv.PolyData,
+    *,
+    style: str = "wireframe",
+    color: str = "black",
+    window_size: tuple[int, int] = (800, 400),
+    **kwargs: typing.Any,
+) -> None:
     """
     Plot a mesh.
 
@@ -138,9 +164,12 @@ def plot_mesh_pv(mesh_pv, **kwargs):
     ----------
     mesh_pv : pyvista.PolyData
         The mesh to be plotted.
-
-    Keyword arguments
-    -----------------
+    style : str, optional
+        Edge style passed to plotter.add_mesh. Default "wireframe".
+    color : str, optional
+        Edge color passed to plotter.add_mesh. Default "black".
+    window_size : tuple of int, optional
+        Size of the PyVista rendering window. Default (800, 400).
     kwargs : dict, optional
         Additional keyword arguments to pass to the plotter.add_mesh function.
 
@@ -150,17 +179,8 @@ def plot_mesh_pv(mesh_pv, **kwargs):
     https://github.com/pyvista/pyvista/discussions/5777
 
     """
-
-    style = kwargs.get('style', "wireframe")
-    color = kwargs.get('color', "black")
-    window_size = kwargs.get('window_size', (800, 400))
-
-    kwargs.pop('style', None)
-    kwargs.pop('color', None)
-    kwargs.pop('window_size', None)
-
-    surface = mesh_pv.separate_cells().extract_surface(nonlinear_subdivision=4,
-                                                       algorithm='dataset_surface')
+    surface = mesh_pv.separate_cells().extract_surface(
+        nonlinear_subdivision=4, algorithm='dataset_surface')
     edges = surface.extract_feature_edges()
 
     plotter = pv.Plotter(window_size=window_size)
@@ -170,7 +190,16 @@ def plot_mesh_pv(mesh_pv, **kwargs):
     plotter.show()
 
 
-def plot_sol(mesh_pv, problem, u, **kwargs):
+def plot_sol(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    u: FloatArray,
+    *,
+    physq: int = 0,
+    degfd: int = 0,
+    window_size: tuple[int, int] = (800, 400),
+    **kwargs: typing.Any,
+) -> None:
     """
     Plots the solution of a given problem on a mesh using PyVista.
 
@@ -182,23 +211,16 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
         The problem object.
     u : numpy.ndarray
         The solution vector.
-
-    Keyword arguments
-    -----------------
+    physq : int, optional
+        Physical quantity number. Default 0.
+    degfd : int, optional
+        Degree of freedom to plot. Default 0.
+    window_size : tuple of int, optional
+        Size of the PyVista rendering window. Default (800, 400).
     kwargs : dict, optional
         Additional keyword arguments to pass to the plotter.add_mesh function.
 
     """
-
-    # Optional arguments
-    physq = kwargs.get('physq', 0)
-    degfd = kwargs.get('degfd', 0)
-    window_size = kwargs.get('window_size', (800, 400))
-
-    kwargs.pop('physq', None)
-    kwargs.pop('degfd', None)
-    kwargs.pop('window_size', None)
-
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
     plotter = pv.Plotter(window_size=window_size)
@@ -209,7 +231,17 @@ def plot_sol(mesh_pv, problem, u, **kwargs):
     plotter.show()
 
 
-def plot_sol_contour(mesh_pv, problem, u, nlevels=10, **kwargs):
+def plot_sol_contour(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    u: FloatArray,
+    nlevels: int = 10,
+    *,
+    physq: int = 0,
+    degfd: int = 0,
+    window_size: tuple[int, int] = (800, 400),
+    **kwargs: typing.Any,
+) -> None:
     """
     Plots the solution of a given problem on a mesh using PyVista.
 
@@ -223,23 +255,16 @@ def plot_sol_contour(mesh_pv, problem, u, nlevels=10, **kwargs):
         The solution vector.
     nlevels : int
         Number of contour levels to plot (default = 10)
-
-    Keyword arguments
-    -----------------
+    physq : int, optional
+        Physical quantity number. Default 0.
+    degfd : int, optional
+        Degree of freedom to plot. Default 0.
+    window_size : tuple of int, optional
+        Size of the PyVista rendering window. Default (800, 400).
     kwargs : dict, optional
         Additional keyword arguments to pass to the plotter.add_mesh function.
 
     """
-
-    # Optional arguments
-    physq = kwargs.get('physq', 0)
-    degfd = kwargs.get('degfd', 0)
-    window_size = kwargs.get('window_size', (800, 400))
-
-    kwargs.pop('physq', None)
-    kwargs.pop('degfd', None)
-    kwargs.pop('window_size', None)
-
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
     contours = mesh_pv_plot.contour(nlevels, scalars='u')
@@ -253,7 +278,15 @@ def plot_sol_contour(mesh_pv, problem, u, nlevels=10, **kwargs):
     plotter.show()
 
 
-def plot_vector(mesh_pv, problem, vector, degfd=0, **kwargs):
+def plot_vector(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    vector: Vector,
+    degfd: int = 0,
+    *,
+    window_size: tuple[int, int] = (800, 400),
+    **kwargs: typing.Any,
+) -> None:
     """
     Plots the solution of a given problem on a mesh using PyVista.
 
@@ -267,21 +300,12 @@ def plot_vector(mesh_pv, problem, vector, degfd=0, **kwargs):
         The vector object.
     degfd : int
         The degree of freedom to plot (default = 0)
-
-    Keyword arguments
-    -----------------
+    window_size : tuple of int, optional
+        Size of the PyVista rendering window. Default (800, 400).
     kwargs : dict, optional
         Additional keyword arguments to pass to the plotter.add_mesh function.
 
     """
-
-    # Optional arguments
-    degfd = kwargs.get('degfd', 0)
-    window_size = kwargs.get('window_size', (800, 400))
-
-    kwargs.pop('degfd', None)
-    kwargs.pop('window_size', None)
-
     mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
 
     plotter = pv.Plotter(window_size=window_size)
@@ -292,8 +316,16 @@ def plot_vector(mesh_pv, problem, vector, degfd=0, **kwargs):
     plotter.show()
 
 
-def plot_vector_contours(mesh_pv, problem, vector, degfd=0, nlevels=10,
-                         **kwargs):
+def plot_vector_contours(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    vector: Vector,
+    degfd: int = 0,
+    nlevels: int = 10,
+    *,
+    window_size: tuple[int, int] = (800, 400),
+    **kwargs: typing.Any,
+) -> None:
     """
     Plots the contours of a solution of a given problem on a mesh using
     PyVista.
@@ -310,21 +342,12 @@ def plot_vector_contours(mesh_pv, problem, vector, degfd=0, nlevels=10,
         The degree of freedom to plot (default = 0)
     nlevels : int
         Number of contour levels to plot (default = 10)
-
-    Keyword arguments
-    -----------------
+    window_size : tuple of int, optional
+        Size of the PyVista rendering window. Default (800, 400).
     kwargs : dict, optional
         Additional keyword arguments to pass to the plotter.add_mesh function.
 
     """
-
-    # Optional arguments
-    degfd = kwargs.get('degfd', 0)
-    window_size = kwargs.get('window_size', (800, 400))
-
-    kwargs.pop('degfd', None)
-    kwargs.pop('window_size', None)
-
     mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
 
     contours = mesh_pv_plot.contour(nlevels, scalars='u')
@@ -338,25 +361,30 @@ def plot_vector_contours(mesh_pv, problem, vector, degfd=0, nlevels=10,
     plotter.show()
 
 
-def plot_mesh_plt(mesh, **kwargs):
+def plot_mesh_plt(
+    mesh: Mesh,
+    *,
+    nodemarks: bool = False,
+    nodenumbers: bool = False,
+    elementnumbers: bool = False,
+) -> None:
     """
     Plot mesh structure.
 
-    Parameters:
-    mesh: mesh structure
-    Optional arguments:
-    - nodemarks: plot node marks (default: 0)
-    - nodenumbers: plot node numbers (default: 0)
-    - elementnumbers: plot element numbers (default: 0)
+    Parameters
+    ----------
+    mesh : Mesh
+        Mesh structure.
+    nodemarks : bool, optional
+        Plot node marks. Default False.
+    nodenumbers : bool, optional
+        Plot node numbers. Default False.
+    elementnumbers : bool, optional
+        Plot element numbers. Default False.
     """
 
     if mesh.ndim != 2:
         raise ValueError('Only 2D meshes can be plotted')
-
-    # Set default options
-    nodemarks = kwargs.get('nodemarks', 0)
-    nodenumbers = kwargs.get('nodenumbers', 0)
-    elementnumbers = kwargs.get('elementnumbers', 0)
 
     # Determine element type
     if mesh.elshape in [3, 4, 5]:  # all boundary nodes
@@ -402,39 +430,42 @@ def plot_mesh_plt(mesh, **kwargs):
     plt.show()
 
 
-def plot_curves(mesh, **kwargs):
+def plot_curves(
+    mesh: Mesh,
+    *,
+    curves: typing.Sequence[int] | None = None,
+    nodemarks: bool = False,
+    nodenumbers: int = 0,
+    elementnumbers: bool = False,
+    curvenumbers: bool = False,
+    pointnumbers: bool = False,
+) -> None:
     """
     Plot curves (and optionally points) of the mesh.
 
-    Parameters:
-    mesh: mesh structure
-    Optional arguments:
-    - curves: the curves to be plotted (default: all curves)
-    - nodemarks: plot node marks (default: 0)
-    - nodenumbers: plot node numbers (0=off, 1=local, 2=global; default: 0)
-    - elementnumbers: plot element numbers (default: 0)
-    - curvenumbers: plot curve numbers (default: 0)
-    - pointnumbers: plot point numbers (default: 0)
+    Parameters
+    ----------
+    mesh : Mesh
+        Mesh structure.
+    curves : sequence of int, optional
+        The curves to be plotted. Default is all curves.
+    nodemarks : bool, optional
+        Plot node marks. Default False.
+    nodenumbers : int, optional
+        Plot node numbers (0=off, 1=local, 2=global). Default 0.
+    elementnumbers : bool, optional
+        Plot element numbers. Default False.
+    curvenumbers : bool, optional
+        Plot curve numbers. Default False.
+    pointnumbers : bool, optional
+        Plot point numbers. Default False.
     """
 
     if mesh.ndim != 2:
         raise ValueError('Only 2D curves can be plotted')
 
-    # Set default options
-    curves = list(range(mesh.ncurves))
-    nodemarks = 0
-    nodenumbers = 0
-    elementnumbers = 0
-    curvenumbers = 0
-    pointnumbers = 0
-
-    # Update options based on kwargs
-    curves = kwargs.get('curves', curves)
-    nodemarks = kwargs.get('nodemarks', nodemarks)
-    nodenumbers = kwargs.get('nodenumbers', nodenumbers)
-    elementnumbers = kwargs.get('elementnumbers', elementnumbers)
-    curvenumbers = kwargs.get('curvenumbers', curvenumbers)
-    pointnumbers = kwargs.get('pointnumbers', pointnumbers)
+    if curves is None:
+        curves = list(range(mesh.ncurves))
 
     # Set coordinates (all curves must have the same element type)
     elnumnod = mesh.curves[0].elnumnod
@@ -510,7 +541,7 @@ def plot_curves(mesh, **kwargs):
     plt.show()
 
 
-def plot_points_curves(mesh):
+def plot_points_curves(mesh: Mesh) -> None:
     """Plot all points and curves .
 
     Parameters
@@ -519,11 +550,19 @@ def plot_points_curves(mesh):
         Mesh object containing the curves and points to be plotted.
     """
 
-    plot_curves(mesh, pointnumbers=1, curvenumbers=1)
+    plot_curves(mesh, pointnumbers=True, curvenumbers=True)
 
 
-def plot_sol_over_line(mesh_pv, problem, u, points, physq=0, degfd=0,
-                       npoints=200, plot_mesh=False):
+def plot_sol_over_line(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    u: FloatArray,
+    points: typing.Sequence[FloatArray],
+    physq: int = 0,
+    degfd: int = 0,
+    npoints: int = 200,
+    plot_mesh: bool = False,
+) -> pv.PolyData:
     """
     Plots and samples data along a line through a mesh, optionally visualizing
     the mesh and the line.
@@ -570,8 +609,15 @@ def plot_sol_over_line(mesh_pv, problem, u, points, physq=0, degfd=0,
                                          resolution=npoints)
 
 
-def plot_vector_over_line(mesh_pv, problem, vector, points, degfd=0,
-                          npoints=200, plot_mesh=False):
+def plot_vector_over_line(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    vector: Vector,
+    points: typing.Sequence[FloatArray],
+    degfd: int = 0,
+    npoints: int = 200,
+    plot_mesh: bool = False,
+) -> pv.PolyData:
     """
     Plots and samples data along a line through a mesh, optionally visualizing
     the mesh and the line.
@@ -617,7 +663,16 @@ def plot_vector_over_line(mesh_pv, problem, vector, points, degfd=0,
                                          resolution=npoints)
 
 
-def plot_quiver(mesh_pv, problem, u, **kwargs):
+def plot_quiver(
+    mesh_pv: pv.PolyData,
+    problem: Problem,
+    u: FloatArray,
+    *,
+    physq: int = 0,
+    window_size: tuple[int, int] = (800, 400),
+    scale: float = 0.1,
+    **kwargs: typing.Any,
+) -> None:
     """
     Plots the solution of a given problem on a mesh using PyVista.
 
@@ -629,25 +684,16 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
         The problem object.
     u : numpy.ndarray
         The solution vector.
-    scale : float optional
+    physq : int, optional
+        Physical quantity number. Default 0.
+    window_size : tuple of int, optional
+        Size of the PyVista rendering window. Default (800, 400).
+    scale : float, optional
         Scaling factor for the arrows (default = 0.1)
-
-    Keyword arguments
-    -----------------
     kwargs : dict, optional
         Additional keyword arguments to pass to the plotter.add_mesh function.
 
     """
-
-    # Optional arguments
-    physq = kwargs.get('physq', 0)
-    window_size = kwargs.get('window_size', (800, 400))
-    scale = kwargs.get('scale', 0.1)
-
-    kwargs.pop('physq', None)
-    kwargs.pop('degfd', None)
-    kwargs.pop('window_size', None)
-
     ndf = problem.elementdof[0, physq]
 
     assert (problem.elementdof[0, physq] == 2)
@@ -668,8 +714,19 @@ def plot_quiver(mesh_pv, problem, u, **kwargs):
     plotter.show()
 
 
-def plot_basis_function(shape, intpol, degfd, *, n=10, plot3d=True,
-                        edges=True, axisoff=False, show=True, **kwargs):
+def plot_basis_function(
+    shape: typing.Literal['quad', 'triangle'],
+    intpol: str,
+    degfd: int,
+    *,
+    n: int = 10,
+    plot3d: bool = True,
+    edges: bool = True,
+    axisoff: bool = False,
+    show: bool = True,
+    window_size: tuple[int, int] = (800, 400),
+    **kwargs: typing.Any,
+) -> tuple[pv.Plotter, pv.UnstructuredGrid]:
     """Plot a reference-element basis function using PyVista.
 
     Parameters
@@ -751,7 +808,6 @@ def plot_basis_function(shape, intpol, degfd, *, n=10, plot3d=True,
     mesh = pv.UnstructuredGrid(cells, celltypes, points)
     mesh.point_data['phi'] = phi_values
 
-    window_size = kwargs.pop('window_size', (800, 400))
     plotter = pv.Plotter(window_size=window_size)
 
     mesh_kwargs = {
@@ -779,7 +835,9 @@ def plot_basis_function(shape, intpol, degfd, *, n=10, plot3d=True,
     return plotter, mesh
 
 
-def _reference_quad_mesh(n):
+def _reference_quad_mesh(
+    n: int,
+) -> tuple[FloatArray, IntArray, npt.NDArray[np.uint8]]:
     """Create reference coordinates and topology for a subdivided quad."""
 
     nn1 = n + 1
@@ -811,7 +869,9 @@ def _reference_quad_mesh(n):
     return points, cell_array, celltypes
 
 
-def _reference_triangle_mesh(n):
+def _reference_triangle_mesh(
+    n: int,
+) -> tuple[FloatArray, IntArray, npt.NDArray[np.uint8]]:
     """Create reference coordinates and topology for a subdivided triangle."""
 
     delta = 1.0 / n
@@ -856,7 +916,18 @@ def _reference_triangle_mesh(n):
     return points, cell_array, celltypes
 
 
-def plot_gauss_legendre(shape, **kwargs):
+def plot_gauss_legendre(
+    shape: str,
+    *,
+    n: int | None = None,
+    p: int | None = None,
+    ax: plt.Axes | None = None,
+    marker: str = '+',
+    color: str = 'k',
+    markersize: float = 8,
+    show: bool = True,
+    **kwargs: typing.Any,
+) -> plt.Axes:
     """Plot Gauss-Legendre integration points.
 
     Parameters
@@ -895,15 +966,6 @@ def plot_gauss_legendre(shape, **kwargs):
     matplotlib.axes.Axes
         Axes containing the plot of the integration points.
     """
-
-    n = kwargs.pop('n', None)
-    p = kwargs.pop('p', None)
-    ax = kwargs.pop('ax', None)
-    marker = kwargs.pop('marker', '+')
-    color = kwargs.pop('color', 'k')
-    markersize = kwargs.pop('markersize', 8)
-    show = kwargs.pop('show', True)
-
     if not isinstance(shape, str):
         raise ValueError('shape must be a string')
 

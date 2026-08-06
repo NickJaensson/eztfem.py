@@ -1,6 +1,14 @@
 """Module for defining problems and essential degrees of freedom"""
+import typing
+
 import numpy as np
+import numpy.typing as npt
+from numpy.typing import ArrayLike
+
+from .meshgen import Mesh
 from .pos_array import pos_array
+
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
 
 
 class Problem:
@@ -40,7 +48,8 @@ class Problem:
 
     """
 
-    def __init__(self, mesh, elementdof, nphysq=None):
+    def __init__(self, mesh: Mesh, elementdof: IntArray,
+                 nphysq: int | None = None) -> None:
         """
         Initializes the Problem object for a given mesh, elementdof and
         nphys (optional). All other attributes are filled in the initialization
@@ -117,7 +126,7 @@ class Problem:
         self.maxnoddegfd = np.max(self.elnumdegfd)
         self.maxvecnoddegfd = np.max(self.vec_elnumdegfd)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """
         Check equivalence with another Problem instance.
 
@@ -156,7 +165,16 @@ class Problem:
         return all(check)
 
 
-def define_essential(mesh, problem, geometry, numbers, **kwargs):
+def define_essential(
+    mesh: Mesh,
+    problem: Problem,
+    geometry: typing.Literal['nodes', 'points', 'curves'],
+    numbers: int | ArrayLike,
+    *,
+    physq: int = 0,
+    degfd: int = 0,
+    iessp: ArrayLike | int | None = None,
+) -> IntArray:
     """
     Get the indices of the essential degrees of freedom.
 
@@ -173,16 +191,13 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         'curves' : in the curves given by numbers.
     numbers : array_like
         An array of 'geometry' numbers.
-
-    Keyword arguments
-    -----------------
     physq : int, optional
         Physical quantity number. Default is 0.
     degfd : int, optional
         Degree of freedom within the physical quantity. Default is 0.
-    iessp : int, optional
+    iessp : int or array_like, optional
         Index of previously defined essential degrees. Newly defined
-        boundary conditions will be added. Default is 0.
+        boundary conditions will be added. Default is None (nothing added).
 
     Returns
     -------
@@ -190,12 +205,7 @@ def define_essential(mesh, problem, geometry, numbers, **kwargs):
         Index of defined essential degrees.
 
     """
-
-    # Optional arguments
-    physq = kwargs.get('physq', 0)
-    degfd = kwargs.get('degfd', 0)
-    iessp = kwargs.get('iessp', 0)
-    add = 'iessp' in kwargs
+    add = iessp is not None
 
     # Convert numbers to a list if an int is supplied
     if isinstance(numbers, (int, np.integer)):

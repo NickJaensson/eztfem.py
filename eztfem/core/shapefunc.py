@@ -1,10 +1,21 @@
 """
 Module to compute values of basis functions in elements of various shapes.
 """
+import typing
+
 import numpy as np
+import numpy.typing as npt
+
+from .meshgen import Mesh
+
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+
+_ShapeLiteral = typing.Literal['line', 'quad', 'triangle']
+_IntpolLiteral = typing.Literal['P0', 'P1', 'P1+', 'P2', 'P2+',
+                                'Q1', 'Q1+', 'Q2']
 
 
-def refcoor_nodal_points(mesh):
+def refcoor_nodal_points(mesh: Mesh) -> FloatArray:
     """
     Find the reference coordinates of the nodal points.
 
@@ -49,7 +60,11 @@ def refcoor_nodal_points(mesh):
     return x
 
 
-def basis_function(shape, intpol, xr):
+def basis_function(
+    shape: _ShapeLiteral,
+    intpol: _IntpolLiteral,
+    xr: FloatArray,
+) -> tuple[FloatArray, FloatArray]:
     """
     Compute the basis function and its derivative at reference coordinates.
 
@@ -126,7 +141,7 @@ def basis_function(shape, intpol, xr):
     return phi, dphi
 
 
-def basis_triangle_p0(xr):
+def basis_triangle_p0(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P0 triangular element."
     ni = xr.shape[0]
     nn = 1
@@ -139,13 +154,13 @@ def basis_triangle_p0(xr):
     return phi, dphi
 
 
-def basis_triangle_p1(xr):
+def basis_triangle_p1(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P1 triangular element."
     phi, dphi = barycentric(xr)
     return phi, dphi
 
 
-def basis_triangle_p1plus(xr):
+def basis_triangle_p1plus(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P1+ triangular element."
     ni, _ = xr.shape
     nn = 4
@@ -175,7 +190,7 @@ def basis_triangle_p1plus(xr):
     return phi, dphi
 
 
-def basis_triangle_p2(xr):
+def basis_triangle_p2(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P2 triangular element."
     ni, _ = xr.shape
     nn = 6
@@ -205,7 +220,7 @@ def basis_triangle_p2(xr):
     return phi, dphi
 
 
-def basis_triangle_p2plus(xr):
+def basis_triangle_p2plus(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P2+ triangular element."
     ni, _ = xr.shape
     nn = 7
@@ -251,7 +266,7 @@ def basis_triangle_p2plus(xr):
     return phi, dphi
 
 
-def basis_line_p0(xr):
+def basis_line_p0(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P0 line element."
     ni = xr.shape[0]
     nn = 1
@@ -264,7 +279,7 @@ def basis_line_p0(xr):
     return phi, dphi
 
 
-def basis_line_p1(xr):
+def basis_line_p1(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P1 line element."
     ni = xr.shape[0]
     nn = 2
@@ -280,7 +295,7 @@ def basis_line_p1(xr):
     return phi, dphi
 
 
-def basis_line_p2(xr):
+def basis_line_p2(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P2 line element."
     ni = xr.shape[0]
     nn = 3
@@ -298,7 +313,7 @@ def basis_line_p2(xr):
     return phi, dphi
 
 
-def basis_quad_p0(xr):
+def basis_quad_p0(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P0 quadrilateral element."
     ni = xr.shape[0]
     nn = 1
@@ -311,7 +326,7 @@ def basis_quad_p0(xr):
     return phi, dphi
 
 
-def basis_quad_p1(xr):
+def basis_quad_p1(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a P1 quadrilateral element."
     ni = xr.shape[0]
     nn = 3
@@ -331,7 +346,7 @@ def basis_quad_p1(xr):
     return phi, dphi
 
 
-def basis_quad_q1(xr):
+def basis_quad_q1(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a Q1 quadrilateral element."
     ni = xr.shape[0]
     nn = 4
@@ -351,7 +366,7 @@ def basis_quad_q1(xr):
     return phi, dphi
 
 
-def basis_quad_q1plus(xr):
+def basis_quad_q1plus(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a Q1+ quadrilateral element."
     ni = xr.shape[0]
     nn = 5
@@ -380,7 +395,7 @@ def basis_quad_q1plus(xr):
     return phi, dphi
 
 
-def basis_quad_q2(xr):
+def basis_quad_q2(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     "Compute phi and dphi for a Q2 quadrilateral element."
     ni = xr.shape[0]
     nn = 9
@@ -400,7 +415,7 @@ def basis_quad_q2(xr):
     return phi, dphi
 
 
-def barycentric(xr):
+def barycentric(xr: FloatArray) -> tuple[FloatArray, FloatArray]:
     """
     Compute the barycentric coordinates and their derivatives for a triangular
     element at reference coordinates.
@@ -466,7 +481,10 @@ def barycentric(xr):
     return lambda_, dlambda
 
 
-def isoparametric_deformation(x, dphi):
+def isoparametric_deformation(
+    x: FloatArray,
+    dphi: FloatArray,
+) -> tuple[FloatArray, FloatArray, FloatArray]:
     """
     Isoparametric deformation of an element.
 
@@ -532,7 +550,10 @@ def isoparametric_deformation(x, dphi):
     return fmat, fmat_inv, det_fmat
 
 
-def isoparametric_deformation_curve(x, dphi):
+def isoparametric_deformation_curve(
+    x: FloatArray,
+    dphi: FloatArray,
+) -> tuple[FloatArray, FloatArray, FloatArray]:
     """
     Isoparametric deformation of curved line elements.
 

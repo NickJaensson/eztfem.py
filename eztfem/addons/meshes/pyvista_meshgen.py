@@ -1,11 +1,11 @@
-'''
-Module for PyVista mesh generation (used in visualization).
-'''
+"""Module for PyVista mesh generation (used in visualization)."""
 import pyvista as pv
 import numpy as np
 
+from ...core.meshgen import Mesh
 
-def find_elshape_vtk(elshape):
+
+def find_elshape_vtk(elshape: int) -> tuple[int, list[int]]:
     """
     Find the VTK element shape and index mapping for a given element shape.
 
@@ -61,7 +61,7 @@ def find_elshape_vtk(elshape):
     return elshape_vtk, index_vtk
 
 
-def generate_pyvista_mesh(mesh):
+def generate_pyvista_mesh(mesh: Mesh) -> pv.UnstructuredGrid:
     """
     Generate a PyVista mesh from a given mesh object.
 

@@ -1,12 +1,23 @@
-'''
-Element routines for the streamfunction equation.
-'''
+"""Element routines for the streamfunction equation."""
+import typing
+
 import numpy as np
+import numpy.typing as npt
+
 from ...core.shapefunc import isoparametric_deformation, \
     isoparametric_deformation_curve
+from ...core.user import User
+
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
 
 
-def streamfunction_elem(elem, coor, user, pos, posvec):
+def streamfunction_elem(
+    elem: int,
+    coor: FloatArray,
+    user: User,
+    pos: list[list[int]],
+    posvec: list[list[int]],
+) -> tuple[FloatArray, FloatArray]:
     """
     Compute the element matrix and vector for the streamfunction equation:
     - nabla^2 psi = omega, where omega is derived from the velocity vector.
@@ -89,7 +100,13 @@ def streamfunction_elem(elem, coor, user, pos, posvec):
     return elemmat, elemvec
 
 
-def streamfunction_natboun_curve(elem, coor, user, pos, posvec):
+def streamfunction_natboun_curve(
+    elem: int,
+    coor: FloatArray,
+    user: User,
+    pos: list[list[int]],
+    posvec: list[list[int]],
+) -> FloatArray:
     """
     Compute the boundary element for a natural boundary on a curve for the
     streamfunction equation (Poisson equation): dpsidn = -v * nx + u * ny
@@ -110,14 +127,13 @@ def streamfunction_natboun_curve(elem, coor, user, pos, posvec):
 
     Returns
     -------
-    elemmat : ndarray
-        The element matrix.
     elemvec : ndarray
         The element vector.
 
     Notes
     -----
-    This function must be called in `build_system` using `posvectors=1`.
+    This function must be called in `add_boundary_elements` using
+    `posvectors=1` (without an `A` kwarg, so only `elemvec` is expected).
 
     """
 

@@ -1,15 +1,14 @@
 """Module for getting the positions of degrees of freedom in nodes."""
-from typing import Union, List, Tuple
 import numpy as np
 from numpy.typing import ArrayLike
 
 
 def pos_array(
     problem,
-    nodes: Union[int, ArrayLike],
-    physq: Union[int, ArrayLike, None] = None,
+    nodes: int | ArrayLike,
+    physq: int | ArrayLike | None = None,
     order: str = 'DN'
-) -> Tuple[List[List[int]], np.ndarray]:
+) -> tuple[list[list[int]], np.ndarray]:
     """
     Get the index of the system degrees of freedom in the given nodes.
 
@@ -72,7 +71,7 @@ def pos_array(
 
 
 def _normalize_physq(
-    physq: Union[int, ArrayLike, None],
+    physq: int | ArrayLike | None,
     nphysq: int
 ) -> np.ndarray:
     """Normalize physq parameter to numpy array."""
@@ -85,7 +84,7 @@ def _compute_nd_order(
     problem,
     nodes_arr: np.ndarray,
     physq_arr: np.ndarray,
-    pos: List,
+    pos: list,
     ndof: np.ndarray,
     lpos: np.ndarray
 ) -> None:
@@ -113,7 +112,7 @@ def _compute_dn_order(
     problem,
     nodes_arr: np.ndarray,
     physq_arr: np.ndarray,
-    pos: List,
+    pos: list,
     ndof: np.ndarray,
     lpos: np.ndarray
 ) -> None:
@@ -143,10 +142,10 @@ def _compute_dn_order(
 
 def pos_array_vec(
     problem,
-    nodes: Union[int, ArrayLike],
-    vec: Union[int, ArrayLike, None] = None,
+    nodes: int | ArrayLike,
+    vec: int | ArrayLike | None = None,
     order: str = 'DN'
-) -> Tuple[List[List[int]], np.ndarray]:
+) -> tuple[list[list[int]], np.ndarray]:
     """
     Get the index of the degrees of freedom of one or more vectors of special
     structure in the given nodes.
@@ -208,7 +207,7 @@ def pos_array_vec(
 
 
 def _normalize_vec(
-    vec: Union[int, ArrayLike, None],
+    vec: int | ArrayLike | None,
     nvec: int
 ) -> np.ndarray:
     """Normalize vec parameter to numpy array."""
@@ -221,7 +220,7 @@ def _compute_vec_nd_order(
     problem,
     nodes_arr: np.ndarray,
     vec_arr: np.ndarray,
-    pos: List,
+    pos: list,
     ndof: np.ndarray,
     lpos: np.ndarray
 ) -> None:
@@ -241,7 +240,7 @@ def _compute_vec_dn_order(
     problem,
     nodes_arr: np.ndarray,
     vec_arr: np.ndarray,
-    pos: List,
+    pos: list,
     ndof: np.ndarray,
     lpos: np.ndarray
 ) -> None:

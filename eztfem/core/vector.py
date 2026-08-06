@@ -1,6 +1,15 @@
 """Module to define the Vector class"""
+import typing
+
 import numpy as np
+import numpy.typing as npt
+
+from .meshgen import Mesh
 from .pos_array import pos_array, pos_array_vec
+from .problem import Problem
+from .user import ElementRoutine, User
+
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
 
 
 class Vector:
@@ -16,7 +25,7 @@ class Vector:
 
     """
 
-    def __init__(self, vec=0):
+    def __init__(self, vec: int | float = 0) -> None:
         """
         Initializes the Vector object with the given attributes. The stored
         vecor data (u) is initialized as an empty numpy array (np.array([])).
@@ -30,7 +39,7 @@ class Vector:
         self.vec = vec
         self.u = np.array([])
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """
         Checks equivalence of two Vector objects (overloads == sign).
 
@@ -54,7 +63,16 @@ class Vector:
         return all(check)
 
 
-def deriv_vector(mesh, problem, element, user, **kwargs):
+def deriv_vector(
+    mesh: Mesh,
+    problem: Problem,
+    element: ElementRoutine,
+    user: User,
+    *,
+    vec: int | None = None,
+    order: typing.Literal['ND', 'DN'] = 'DN',
+    posvectors: bool = False,
+) -> Vector:
     """
     Derive a vector of special structure.
 
@@ -66,13 +84,10 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
         Problem structure.
     element : callable
         Function handle to the element function routine.
-    user : Any
+    user : User
         User object to pass parameters and data to the element routine.
-
-    Keyword arguments
-    -----------------
     vec : int, optional
-        The vector number. Default is problem['nphysq'].
+        The vector number. Default is problem.nphysq.
     order : str, optional
         The sequence order of the degrees of freedom on element level.
         'ND' : the most inner loop is over the degrees of freedom.
@@ -88,16 +103,9 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
         Vector object containing the derived data.
 
     """
-
-    # Set default optional arguments
     # NOTE: default vec is first vec after nphysq (starting at zero)
-    vec = kwargs.get('vec', problem.nphysq)
-    order = kwargs.get('order', 'DN')
-    posvectors = kwargs.get('posvectors', 0)
-
-    for kwarg in kwargs:
-        if kwarg not in ['vec', 'order', 'posvectors']:
-            raise ValueError(f'Invalid argument: {kwarg}')
+    if vec is None:
+        vec = problem.nphysq
 
     v = Vector(vec=vec)
     n = problem.vec_numdegfd[vec]
@@ -130,7 +138,18 @@ def deriv_vector(mesh, problem, element, user, **kwargs):
     return v
 
 
-def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
+def fill_system_vector(
+    mesh: Mesh,
+    problem: Problem,
+    geometry: typing.Literal['nodes', 'points', 'curves'],
+    numbers: int | npt.ArrayLike,
+    func: typing.Callable[[int, FloatArray], float],
+    *,
+    funcnr: int = 0,
+    physq: int = 0,
+    degfd: int = 0,
+    f: FloatArray | None = None,
+) -> FloatArray | None:
     """
     Fill system vector.
 
@@ -139,9 +158,9 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
 
     Parameters
     ----------
-    mesh : object
+    mesh : Mesh
         Mesh structure.
-    problem : object
+    problem : Problem
         Problem structure.
     geometry : str
         The 'geometry' to fill degrees on:
@@ -152,9 +171,6 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
         An array of 'geometry' numbers.
     func : callable
         Scalar function for filling. Only argument is x, a coordinate vector.
-
-    Keyword arguments
-    -----------------
     funcnr : int, optional
         Function number for func, i.e. func(funcnr, x). Default is 1.
     physq : int, optional
@@ -171,12 +187,6 @@ def fill_system_vector(mesh, problem, geometry, numbers, func, **kwargs):
         function call (if it is present, f is modified in place).
 
     """
-
-    funcnr = kwargs.get('funcnr', 0)
-    physq = kwargs.get('physq', 0)
-    degfd = kwargs.get('degfd', 0)
-    f = kwargs.get('f', None)
-
     f_present = f is not None
 
     if not f_present:
