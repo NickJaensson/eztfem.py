@@ -1,9 +1,17 @@
 """Module to compute Gauss-Legendre integration points and weights"""
 from pathlib import Path
+import typing
 import numpy as np
+import numpy.typing as npt
 
 
-def gauss_legendre(shape, **kwargs):
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+_GaussFunc: typing.TypeAlias = typing.Callable[[int], tuple[FloatArray, FloatArray]]
+
+
+def gauss_legendre(shape: str, *, num_int_points: int | None= None,
+                   integration_order: int | None = None, n: int | None = None,
+                   p: int | None = None) -> tuple[FloatArray, FloatArray]:
     """
     Determine Gauss-Legendre integration points and weights in elements.
 
@@ -39,37 +47,37 @@ def gauss_legendre(shape, **kwargs):
         Weights of the integration scheme.
 
     """
-    shape_handlers = {
+    shape_handlers: dict[str, tuple[str, _GaussFunc]] = {
         'line': ('num_int_points', _gauss_legendre_line),
         'quad': ('num_int_points', _gauss_legendre_quad),
         'triangle': ('integration_order', _gauss_legendre_triangle),
     }
 
-    if shape not in shape_handlers:
-        valid_shapes = list(shape_handlers.keys())
-        raise ValueError(
-            f"Invalid shape: '{shape}'. Must be one of {valid_shapes}"
-        )
+    match shape:
+        case "line" | "quad":
+            param_value = n if num_int_points is None else num_int_points
+
+        case "triangle":
+            param_value = p if integration_order is None else integration_order
+
+        case _:
+            valid_shapes = list(shape_handlers.keys())
+            raise ValueError(
+                f"Invalid shape: '{shape}'. Must be one of {valid_shapes}"
+            )
 
     param_name, handler = shape_handlers[shape]
 
-    # Support both new and old parameter names for backward compatibility
-    new_param_name = param_name
-    old_param_map = {'num_int_points': 'n', 'integration_order': 'p'}
-    old_param_name = old_param_map.get(param_name)
-
-    param_value = kwargs.get(new_param_name, -1)
-    if param_value < 0 and old_param_name:
-        param_value = kwargs.get(old_param_name, -1)
-
-    if param_value < 0:
-        msg = f"{new_param_name} must be specified for the integration rule"
+    if param_value is None:
+        msg = f"{param_name} must be specified for the integration rule"
         raise ValueError(msg)
 
     return handler(param_value)
 
 
-def _gauss_legendre_line(num_int_points):
+def _gauss_legendre_line(num_int_points: int | np.integer) -> tuple[
+    FloatArray, FloatArray
+]:
     """
     Compute Gauss-Legendre integration points and weights for a line segment.
     Gauss Legendre in 1D defined on the interval [-1,1]
@@ -87,7 +95,7 @@ def _gauss_legendre_line(num_int_points):
         Weights of the integration points.
 
     """
-    if not isinstance(num_int_points, (int, np.integer)):
+    if not isinstance(num_int_points, (int, np.integer)):  # pyright: ignore[reportUnnecessaryIsInstance]
         raise TypeError(
             f"num_int_points must be an integer, got "
             f"{type(num_int_points).__name__}"
@@ -100,7 +108,9 @@ def _gauss_legendre_line(num_int_points):
     return coords_1d, weights
 
 
-def _gauss_legendre_quad(num_int_points):
+def _gauss_legendre_quad(num_int_points: int | np.integer) -> tuple[
+    FloatArray, FloatArray
+]:
     """
     Compute Gauss-Legendre integration points and weights for a quadrilateral.
     Gauss Legendre in 2D defined on the region [-1,1]x[-1,1]
@@ -132,7 +142,9 @@ def _gauss_legendre_quad(num_int_points):
     return coords_2d, weights_2d
 
 
-def _gauss_legendre_triangle(integration_order):
+def _gauss_legendre_triangle(integration_order: int | np.integer) -> tuple[
+    FloatArray, FloatArray
+]:
     """
     Compute Gauss-Legendre integration points and weights for a triangle.
     Gauss Legendre in 2D defined triangle, left-lower half of [0, 1] x [0, 1]
