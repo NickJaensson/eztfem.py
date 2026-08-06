@@ -1,11 +1,21 @@
-'''
-Module for compound 2D mesh generation.
-'''
-from ...core.meshgen import quadrilateral2d
+"""Module for compound 2D mesh generation."""
+import typing
+
+from ...core.meshgen import quadrilateral2d, Mesh
 from ...core.meshgen_extra import mesh_merge
 
+_EltypeLiteral = typing.Literal["tria3", "tria4", "tria6", "tria7",
+                                "quad4", "quad9", "quad5"]
 
-def two_blocks2d(ne, eltype, **kwargs):
+
+def two_blocks2d(
+    ne: typing.Sequence[int],
+    eltype: _EltypeLiteral,
+    *,
+    origin: typing.Sequence[float] | None = None,
+    length: typing.Sequence[float] | None = None,
+    factor: typing.Sequence[float] | None = None,
+) -> Mesh:
     """
     Generate mesh for two rectangles side by side.
 
@@ -45,16 +55,17 @@ def two_blocks2d(ne, eltype, **kwargs):
                  n1         n2
 
     """
-
-    # Optional arguments
-    oo = kwargs.get('origin', [0, 0])
-    ll = kwargs.get('length', [1, 1, 1])
-    ff = kwargs.get('factor', [1, 1, 1])
+    if origin is None:
+        origin = (0, 0)
+    if length is None:
+        length = (1, 1, 1)
+    if factor is None:
+        factor = (1, 1, 1)
 
     n1, n2, n3 = ne
-    o1, o2 = oo
-    l1, l2, l3 = ll
-    f1, f2, f3 = ff
+    o1, o2 = origin
+    l1, l2, l3 = length
+    f1, f2, f3 = factor
 
     mesh1 = quadrilateral2d([n1, n3], eltype, origin=[o1-l1, o2],
                             length=[l1, l3], ratio=[3, 3, 1, 1],
@@ -70,7 +81,14 @@ def two_blocks2d(ne, eltype, **kwargs):
     return mesh
 
 
-def l_shape2d(ne, eltype, **kwargs):
+def l_shape2d(
+    ne: typing.Sequence[int],
+    eltype: _EltypeLiteral,
+    *,
+    origin: typing.Sequence[float] | None = None,
+    length: typing.Sequence[float] | None = None,
+    factor: typing.Sequence[float] | None = None,
+) -> Mesh:
     """
     Generate mesh for an L-shape region (three rectangles).
 
@@ -94,16 +112,17 @@ def l_shape2d(ne, eltype, **kwargs):
         Mesh object for the domain.
 
     """
-
-    # optional arguments
-    oo = kwargs.get('origin', [0, 0])
-    ll = kwargs.get('length', [1, 1, 1, 1])
-    ff = kwargs.get('factor', [1, 1, 1, 1])
+    if origin is None:
+        origin = (0, 0)
+    if length is None:
+        length = (1, 1, 1, 1)
+    if factor is None:
+        factor = (1, 1, 1, 1)
 
     n1, n2, n3, n4 = ne
-    o1, o2 = oo
-    l1, l2, l3, l4 = ll
-    f1, f2, f3, f4 = ff
+    o1, o2 = origin
+    l1, l2, l3, l4 = length
+    f1, f2, f3, f4 = factor
 
     mesh1 = quadrilateral2d([n1, n3], eltype, origin=(o1-l1, o2),
                             length=[l1, l3], ratio=[3, 1, 1, 3],
