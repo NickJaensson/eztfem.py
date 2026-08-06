@@ -1,6 +1,4 @@
-'''
-Module for defining problems and essential degrees of freedom.
-'''
+"""Module for defining problems and essential degrees of freedom"""
 import numpy as np
 from .pos_array import pos_array
 

@@ -39,7 +39,7 @@ def main():
     user = ezt.User()
     shape = 'quad'
 
-    user.xr, user.wg = ezt.gauss_legendre(shape, n=2)
+    user.xr, user.wg = ezt.gauss_legendre(shape, num_int_points=2)
     user.phi, user.dphi = ezt.basis_function(shape, 'Q1', user.xr)
 
     # user struct for setting problem coefficients, ...

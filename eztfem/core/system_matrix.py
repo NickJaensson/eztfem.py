@@ -1,6 +1,4 @@
-'''
-Module to build system matrices and apply boundary conditions.
-'''
+"""Module to build system matrices and apply boundary conditions"""
 import numpy as np
 from scipy.sparse import lil_matrix, eye
 from .pos_array import pos_array, pos_array_vec
@@ -46,6 +44,12 @@ def build_system(mesh, problem, element, user, **kwargs):
         The system matrix.
     f : numpy.ndarray
         The right hand side.
+
+    Note
+    ----
+    In eztfem, the ordering of the full system vector and vectors is always
+    NPD. With the order argument, we can specify the ordering on how the
+    element routine is written.
 
     Examples
     --------

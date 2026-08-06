@@ -1,6 +1,6 @@
-'''
+"""
 Module to compute values of basis functions in elements of various shapes.
-'''
+"""
 import numpy as np
 
 

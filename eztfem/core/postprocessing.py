@@ -1,10 +1,19 @@
-'''
-Module for postprocessing routines.
-'''
+"""Module for postprocessing routines"""
+from typing import Any, Callable
+
+from .meshgen import Mesh
+from .problem import Problem
+from .user import User
 from .pos_array import pos_array, pos_array_vec
 
 
-def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
+def integrate_boundary_elements(
+    mesh: Mesh,
+    problem: Problem,
+    element: Callable,
+    user: User,
+    **kwargs: Any,
+) -> float:
     """
     Integrate boundary elements.
 
@@ -14,10 +23,10 @@ def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
         Mesh object.
     problem : Problem
         Problem object.
-    element : function
+    element : Callable
         Function handle to the element function routine.
-    user : any
-        Can be used by the user for transferring data to the element routine.
+    user : User
+        User object.
 
     Keyword arguments
     -----------------
@@ -36,39 +45,41 @@ def integrate_boundary_elements(mesh, problem, element, user, **kwargs):
     resultsum : float
         The sum over all elements of the integral on elements.
 
-    Notes
-    -----
-    Currently, 'curve' is the only possibility for now.
+    Note
+    ----
+    In eztfem, the ordering of the full system vector and vectors is always
+    NPD. With the order argument, we can specify the ordering on how the
+    element routine is written.
 
     Examples
     --------
     >>> resultsum = integrate_boundary_elements(mesh, problem, element, user)
 
     """
-
-    # Optional arguments
-    curve = kwargs.get('curve', 0)
-    order = kwargs.get('order', 'DN')
-    posvectors = kwargs.get('posvectors', False)
+    curve = kwargs.get("curve", 0)
+    order = kwargs.get("order", "DN")
+    posvectors = kwargs.get("posvectors", False)
 
     if curve == 0:
-        raise ValueError('Argument curve is missing.')
+        raise ValueError("Argument 'curve' is required and must be non-zero.")
 
-    # Start summing loop over elements
+    boundary_curve = mesh.curves[curve]
     resultsum = 0
 
-    for elem in range(mesh.curves[curve].nelem):
-
-        nodes = mesh.curves[curve].topology[:, elem, 1].T
+    for elem in range(boundary_curve.nelem):
+        elem_topology = boundary_curve.topology[:, elem, 1]
+        nodes = elem_topology.T
 
         # Positions in global system
         pos, _ = pos_array(problem, nodes, order=order)
-        coor = mesh.coor[mesh.curves[curve].topology[:, elem, 1], :]
+        coor = mesh.coor[elem_topology, :]
 
+        # Call element routine with appropriate arguments
+        element_args = (elem, coor, user, pos)
         if posvectors:
             posvec, _ = pos_array_vec(problem, nodes, order=order)
-            resultsum += element(elem, coor, user, pos, posvec)
+            resultsum += element(*element_args, posvec)
         else:
-            resultsum += element(elem, coor, user, pos)
+            resultsum += element(*element_args)
 
     return resultsum
