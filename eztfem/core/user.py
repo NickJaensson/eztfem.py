@@ -1,5 +1,14 @@
 """Module to define the User class"""
+import typing
+
 import numpy as np
+
+# Element routines (in eztfem.addons.elements and user code) all share the
+# call signature (elem, coor, user, pos[, posvec]), but their return shape
+# varies by call site (build_system expects (elemmat, elemvec),
+# deriv_vector expects elemvec alone, etc.), so this is intentionally
+# left as a loose Callable rather than a single precise Protocol.
+ElementRoutine: typing.TypeAlias = typing.Callable[..., typing.Any]
 
 
 class User:
@@ -22,7 +31,7 @@ class User:
 
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initializes the Problem object with the all attributes empty numpy
         arrays (np.array([])).
@@ -34,7 +43,7 @@ class User:
         self.dphi = np.array([])
         self.psi = np.array([])
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """
         Checks equivalence of two User objects (overloads == sign).
 
