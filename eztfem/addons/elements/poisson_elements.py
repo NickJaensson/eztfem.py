@@ -9,13 +9,14 @@ from ...core.shapefunc import isoparametric_deformation, \
 from ...core.user import User
 
 FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
 
 
 def poisson_elem(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
+    pos: list[IntArray],
 ) -> tuple[FloatArray, FloatArray]:
     """
     Element routine for the Poisson equation: - alpha nabla^2 u = f
@@ -100,7 +101,7 @@ def poisson_deriv(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
+    pos: list[IntArray],
 ) -> FloatArray:
     """
     Compute the gradient of the velocity field for a given element.
@@ -155,7 +156,7 @@ def poisson_natboun_curve(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
+    pos: list[IntArray],
 ) -> FloatArray:
     """
     Boundary element for a natural boundary on a curve for the

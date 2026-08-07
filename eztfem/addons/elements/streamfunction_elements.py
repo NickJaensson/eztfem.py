@@ -9,14 +9,15 @@ from ...core.shapefunc import isoparametric_deformation, \
 from ...core.user import User
 
 FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
 
 
 def streamfunction_elem(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
-    posvec: list[list[int]],
+    pos: list[IntArray],
+    posvec: list[IntArray],
 ) -> tuple[FloatArray, FloatArray]:
     """
     Compute the element matrix and vector for the streamfunction equation:
@@ -104,8 +105,8 @@ def streamfunction_natboun_curve(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
-    posvec: list[list[int]],
+    pos: list[IntArray],
+    posvec: list[IntArray],
 ) -> FloatArray:
     """
     Compute the boundary element for a natural boundary on a curve for the

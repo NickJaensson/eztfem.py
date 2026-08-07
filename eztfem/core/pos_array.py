@@ -2,10 +2,13 @@
 import typing
 
 import numpy as np
+import numpy.typing as npt
 from numpy.typing import ArrayLike
 
 if typing.TYPE_CHECKING:
     from .problem import Problem
+
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
 
 
 def pos_array(
@@ -13,7 +16,7 @@ def pos_array(
     nodes: int | ArrayLike,
     physq: int | ArrayLike | None = None,
     order: str = 'DN'
-) -> tuple[list[list[int]], np.ndarray]:
+) -> tuple[list[IntArray], IntArray]:
     """
     Get the index of the system degrees of freedom in the given nodes.
 
@@ -63,7 +66,9 @@ def pos_array(
     nodes_arr = np.atleast_1d(np.asarray(nodes))
 
     # Preallocate arrays
-    pos = [None] * len(physq_arr)
+    pos: list[IntArray] = [
+        np.empty(0, dtype=int) for _ in range(len(physq_arr))
+    ]
     ndof = np.zeros(len(physq_arr), dtype=int)
     lpos = np.zeros(problem.maxnoddegfd * len(nodes_arr), dtype=int)
 
@@ -89,7 +94,7 @@ def _compute_nd_order(
     problem: "Problem",
     nodes_arr: np.ndarray,
     physq_arr: np.ndarray,
-    pos: list,
+    pos: list[IntArray],
     ndof: np.ndarray,
     lpos: np.ndarray
 ) -> None:
@@ -109,7 +114,7 @@ def _compute_nd_order(
                 base_pos, base_pos + num_dof, dtype=int
             )
             dof += num_dof
-        pos[i] = lpos[:dof].tolist()
+        pos[i] = lpos[:dof].copy()
         ndof[i] = dof
 
 
@@ -117,7 +122,7 @@ def _compute_dn_order(
     problem: "Problem",
     nodes_arr: np.ndarray,
     physq_arr: np.ndarray,
-    pos: list,
+    pos: list[IntArray],
     ndof: np.ndarray,
     lpos: np.ndarray
 ) -> None:
@@ -141,7 +146,7 @@ def _compute_dn_order(
                 if deg < num_dof:
                     lpos[dof] = base_pos + deg
                     dof += 1
-        pos[i] = lpos[:dof].tolist()
+        pos[i] = lpos[:dof].copy()
         ndof[i] = dof
 
 
@@ -150,7 +155,7 @@ def pos_array_vec(
     nodes: int | ArrayLike,
     vec: int | ArrayLike | None = None,
     order: str = 'DN'
-) -> tuple[list[list[int]], np.ndarray]:
+) -> tuple[list[IntArray], IntArray]:
     """
     Get the index of the degrees of freedom of one or more vectors of special
     structure in the given nodes.
@@ -199,7 +204,9 @@ def pos_array_vec(
     nodes_arr = np.atleast_1d(np.asarray(nodes))
 
     # Preallocate arrays
-    pos = [None] * len(vec_arr)
+    pos: list[IntArray] = [
+        np.empty(0, dtype=int) for _ in range(len(vec_arr))
+    ]
     ndof = np.zeros(len(vec_arr), dtype=int)
     lpos = np.zeros(problem.maxvecnoddegfd * len(nodes_arr), dtype=int)
 
@@ -225,7 +232,7 @@ def _compute_vec_nd_order(
     problem: "Problem",
     nodes_arr: np.ndarray,
     vec_arr: np.ndarray,
-    pos: list,
+    pos: list[IntArray],
     ndof: np.ndarray,
     lpos: np.ndarray
 ) -> None:
@@ -237,7 +244,7 @@ def _compute_vec_nd_order(
             num_dof = problem.vec_nodnumdegfd[nodenr + 1, vc] - base_pos
             lpos[dof:dof + num_dof] = np.arange(base_pos, base_pos + num_dof)
             dof += num_dof
-        pos[i] = lpos[:dof].tolist()
+        pos[i] = lpos[:dof].copy()
         ndof[i] = dof
 
 
@@ -245,7 +252,7 @@ def _compute_vec_dn_order(
     problem: "Problem",
     nodes_arr: np.ndarray,
     vec_arr: np.ndarray,
-    pos: list,
+    pos: list[IntArray],
     ndof: np.ndarray,
     lpos: np.ndarray
 ) -> None:
@@ -266,5 +273,5 @@ def _compute_vec_dn_order(
                 if deg < num_dof:
                     lpos[dof] = base_pos + deg
                     dof += 1
-        pos[i] = lpos[:dof].tolist()
+        pos[i] = lpos[:dof].copy()
         ndof[i] = dof

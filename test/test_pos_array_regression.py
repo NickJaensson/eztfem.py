@@ -33,7 +33,7 @@ class TestPosArrayRegression(unittest.TestCase):
         expected_pos = [[0, 4, 8, 1, 5, 9], [2, 6, 10, 3, 7, 11]]
         
         np.testing.assert_array_equal(ndof, expected_ndof)
-        self.assertEqual(pos, expected_pos)
+        self.assertEqual([p.tolist() for p in pos], expected_pos)
 
     def test_pos_array_nd_values(self):
         """Test pos_array ND order produces expected hardcoded values."""
@@ -44,7 +44,7 @@ class TestPosArrayRegression(unittest.TestCase):
         expected_pos = [[0, 1, 4, 5, 8, 9], [2, 3, 6, 7, 10, 11]]
         
         np.testing.assert_array_equal(ndof, expected_ndof)
-        self.assertEqual(pos, expected_pos)
+        self.assertEqual([p.tolist() for p in pos], expected_pos)
 
     def test_pos_array_list_input_values(self):
         """Test pos_array with list input produces expected hardcoded values."""
@@ -55,7 +55,7 @@ class TestPosArrayRegression(unittest.TestCase):
         expected_pos = [[0, 4, 8, 1, 5, 9], [2, 6, 10, 3, 7, 11]]
         
         np.testing.assert_array_equal(ndof, expected_ndof)
-        self.assertEqual(pos, expected_pos)
+        self.assertEqual([p.tolist() for p in pos], expected_pos)
 
     def test_pos_array_single_node_values(self):
         """Test pos_array with single node produces expected hardcoded values."""
@@ -66,7 +66,7 @@ class TestPosArrayRegression(unittest.TestCase):
         expected_pos = [[0, 1], [2, 3]]
         
         np.testing.assert_array_equal(ndof, expected_ndof)
-        self.assertEqual(pos, expected_pos)
+        self.assertEqual([p.tolist() for p in pos], expected_pos)
 
     def test_pos_array_vec_dn_values(self):
         """Test pos_array_vec DN order produces expected hardcoded values."""
@@ -77,7 +77,7 @@ class TestPosArrayRegression(unittest.TestCase):
         expected_pos = [[0, 2, 4, 1, 3, 5], [0, 2, 4, 1, 3, 5]]
         
         np.testing.assert_array_equal(ndof, expected_ndof)
-        self.assertEqual(pos, expected_pos)
+        self.assertEqual([p.tolist() for p in pos], expected_pos)
 
     def test_pos_array_vec_nd_values(self):
         """Test pos_array_vec ND order produces expected hardcoded values."""
@@ -88,7 +88,7 @@ class TestPosArrayRegression(unittest.TestCase):
         expected_pos = [[0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5]]
         
         np.testing.assert_array_equal(ndof, expected_ndof)
-        self.assertEqual(pos, expected_pos)
+        self.assertEqual([p.tolist() for p in pos], expected_pos)
 
     def test_pos_array_vec_single_node_values(self):
         """Test pos_array_vec with single node produces expected hardcoded values."""
@@ -99,7 +99,7 @@ class TestPosArrayRegression(unittest.TestCase):
         expected_pos = [[0, 1], [0, 1]]
         
         np.testing.assert_array_equal(ndof, expected_ndof)
-        self.assertEqual(pos, expected_pos)
+        self.assertEqual([p.tolist() for p in pos], expected_pos)
 
 
 if __name__ == '__main__':

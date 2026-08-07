@@ -58,8 +58,8 @@ class TestPosArrayOrdering(unittest.TestCase):
         # Both orderings produce valid results
         self.assertEqual(len(pos_dn), len(pos_nd))
         for i in range(len(pos_dn)):
-            self.assertIsInstance(pos_dn[i], list)
-            self.assertIsInstance(pos_nd[i], list)
+            self.assertIsInstance(pos_dn[i], np.ndarray)
+            self.assertIsInstance(pos_nd[i], np.ndarray)
 
     def test_pos_array_vec_dn_order(self):
         """Test pos_array_vec with DN ordering."""
@@ -101,8 +101,8 @@ class TestPosArrayOrdering(unittest.TestCase):
         # Both orderings produce valid results
         self.assertEqual(len(pos_dn), len(pos_nd))
         for i in range(len(pos_dn)):
-            self.assertIsInstance(pos_dn[i], list)
-            self.assertIsInstance(pos_nd[i], list)
+            self.assertIsInstance(pos_dn[i], np.ndarray)
+            self.assertIsInstance(pos_nd[i], np.ndarray)
 
     def test_pos_array_single_node(self):
         """Test pos_array with a single node."""

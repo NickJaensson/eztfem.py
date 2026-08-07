@@ -9,13 +9,14 @@ from ...core.shapefunc import isoparametric_deformation, \
 from ...core.user import User
 
 FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
+IntArray: typing.TypeAlias = npt.NDArray[np.integer]
 
 
 def stokes_elem(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
+    pos: list[IntArray],
 ) -> tuple[FloatArray, FloatArray]:
     """
     Element routine for the Stokes equation.
@@ -147,7 +148,7 @@ def stokes_deriv(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
+    pos: list[IntArray],
 ) -> FloatArray:
     """
     Compute the derivative of the velocity field for post-processing.
@@ -245,7 +246,7 @@ def stokes_natboun_curve(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
+    pos: list[IntArray],
 ) -> FloatArray:
     """
     Compute the boundary element for a natural boundary on a curve for the
@@ -316,7 +317,7 @@ def stokes_flowrate_curve(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
+    pos: list[IntArray],
 ) -> float:
     """
     Compute the flowrate through a curve for boundary elements.
@@ -379,7 +380,7 @@ def stokes_pressure(
     elem: int,
     coor: FloatArray,
     user: User,
-    pos: list[list[int]],
+    pos: list[IntArray],
 ) -> FloatArray:
     """
     Compute the pressure for post-processing in Stokes flow.
