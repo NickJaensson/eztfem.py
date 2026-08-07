@@ -28,7 +28,7 @@ class Vector:
     def __init__(self, vec: int | float = 0) -> None:
         """
         Initializes the Vector object with the given attributes. The stored
-        vecor data (u) is initialized as an empty numpy array (np.array([])).
+        vector data (u) is initialized as an empty numpy array (np.array([])).
 
         Parameters for initialization
         -----------------------------

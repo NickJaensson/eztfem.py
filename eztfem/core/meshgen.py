@@ -56,7 +56,7 @@ class Mesh:
                  ncurves: int = 0, topology: IntArray | None = None,
                  coor: FloatArray | None = None,
                  points: IntArray | None = None,
-                 curves: list["Geometry"] | None = None):
+                 curves: list["Geometry"] | None = None) -> None:
         """
         Initializes the Mesh object with the given attributes.
 
@@ -559,8 +559,6 @@ def _line1d_2node(n: int, ratio: int, factor: float) -> Mesh:
 
     '''
 
-    print('_line1d_2node')
-
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=n+1, elshape=1, nelem=n, elnumnod=2, npoints=2,
                 topology=np.zeros((2, n), dtype=int),
@@ -611,8 +609,6 @@ def _line1d_3node(n: int, ratio: int, factor: float) -> Mesh:
        P1 --------------------- P2
 
     '''
-
-    print('_line1d_3node')
 
     # create mesh object
     mesh = Mesh(ndim=1, nnodes=2*n+1, elshape=2, nelem=n, elnumnod=3,
@@ -702,8 +698,6 @@ def _rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[int] | None,
                        ----->
 
     """
-
-    print('_rectangle2d_tria3')
 
     n_x, n_y = num_el
 
@@ -796,7 +790,7 @@ def _rectangle2d_tria3(num_el: typing.Sequence[int], ratio: list[int] | None,
 
 
 def _rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
-                       factor: list[float]):
+                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 4
     nodes.
@@ -849,8 +843,6 @@ def _rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
                        ----->
 
     """
-
-    print('_rectangle2d_tria4')
 
     n_x, n_y = num_el
 
@@ -971,7 +963,7 @@ def _rectangle2d_tria4(num_el: typing.Sequence[int], ratio: list[int] | None,
 
 
 def _rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[int] | None,
-                       factor: list[float]):
+                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 6
     nodes.
@@ -1024,8 +1016,6 @@ def _rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[int] | None,
                        ----->
 
     """
-
-    print('rectangle_tria6')
 
     n_x, n_y = num_el
 
@@ -1134,7 +1124,7 @@ def _rectangle2d_tria6(num_el: typing.Sequence[int], ratio: list[int] | None,
 
 
 def _rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[int] | None,
-                       factor: list[float]):
+                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using triangular elements with 7
     nodes.
@@ -1187,8 +1177,6 @@ def _rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[int] | None,
                        ----->
 
     """
-
-    print('rectangle_tria7')
 
     n_x, n_y = num_el
 
@@ -1349,7 +1337,7 @@ def _rectangle2d_tria7(num_el: typing.Sequence[int], ratio: list[int] | None,
 
 
 def _rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[int] | None,
-                       factor: list[float]):
+                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 4 nodes.
 
@@ -1398,8 +1386,6 @@ def _rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[int] | None,
                        ----->
 
     """
-
-    print('rectangle_quad4')
 
     n_x, n_y = num_el
 
@@ -1490,7 +1476,7 @@ def _rectangle2d_quad4(num_el: typing.Sequence[int], ratio: list[int] | None,
 
 
 def _rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[int] | None,
-                       factor: list[float]):
+                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 5 nodes.
 
@@ -1540,8 +1526,6 @@ def _rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[int] | None,
                        ----->
 
     """
-
-    print('rectangle_quad5')
 
     n_x, n_y = num_el
 
@@ -1651,7 +1635,7 @@ def _rectangle2d_quad5(num_el: typing.Sequence[int], ratio: list[int] | None,
 
 
 def _rectangle2d_quad9(num_el: typing.Sequence[int], ratio: list[int] | None,
-                       factor: list[float]):
+                       factor: list[float]) -> Mesh:
     """
     Generate a mesh on region [0,1]x[0,1] using quad elements with 9 nodes.
 
@@ -1700,8 +1684,6 @@ def _rectangle2d_quad9(num_el: typing.Sequence[int], ratio: list[int] | None,
                     ----->
 
     """
-
-    print('rectangle_quad9')
 
     n_x, n_y = num_el
 

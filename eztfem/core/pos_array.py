@@ -1,10 +1,15 @@
 """Module for getting the positions of degrees of freedom in nodes."""
+import typing
+
 import numpy as np
 from numpy.typing import ArrayLike
 
+if typing.TYPE_CHECKING:
+    from .problem import Problem
+
 
 def pos_array(
-    problem,
+    problem: "Problem",
     nodes: int | ArrayLike,
     physq: int | ArrayLike | None = None,
     order: str = 'DN'
@@ -81,7 +86,7 @@ def _normalize_physq(
 
 
 def _compute_nd_order(
-    problem,
+    problem: "Problem",
     nodes_arr: np.ndarray,
     physq_arr: np.ndarray,
     pos: list,
@@ -109,7 +114,7 @@ def _compute_nd_order(
 
 
 def _compute_dn_order(
-    problem,
+    problem: "Problem",
     nodes_arr: np.ndarray,
     physq_arr: np.ndarray,
     pos: list,
@@ -141,7 +146,7 @@ def _compute_dn_order(
 
 
 def pos_array_vec(
-    problem,
+    problem: "Problem",
     nodes: int | ArrayLike,
     vec: int | ArrayLike | None = None,
     order: str = 'DN'
@@ -217,7 +222,7 @@ def _normalize_vec(
 
 
 def _compute_vec_nd_order(
-    problem,
+    problem: "Problem",
     nodes_arr: np.ndarray,
     vec_arr: np.ndarray,
     pos: list,
@@ -237,7 +242,7 @@ def _compute_vec_nd_order(
 
 
 def _compute_vec_dn_order(
-    problem,
+    problem: "Problem",
     nodes_arr: np.ndarray,
     vec_arr: np.ndarray,
     pos: list,
