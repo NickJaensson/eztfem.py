@@ -214,8 +214,14 @@ def _gmsh_curve_geometry(
     return curve
 
 
+class ModelBuilder(typing.Protocol):
+    """Callable used to define a Gmsh model, e.g. build_unit_square."""
+
+    def __call__(self, *, open_gui: bool) -> None: ...
+
+
 def gmsh_mesh2d(
-    model_builder: typing.Callable[[typing.Any], None],
+    model_builder: ModelBuilder,
     gmsh_options: dict[str, float] | None = None
 ) -> Mesh:
     """

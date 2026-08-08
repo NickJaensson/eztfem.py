@@ -58,6 +58,9 @@ class Vector:
         See NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze.
 
         """
+        if not isinstance(other, Vector):
+            return NotImplemented
+
         check = [self.vec == other.vec,
                  np.allclose(np.squeeze(self.u), other.u, atol=1e-12, rtol=0)]
         return all(check)
@@ -189,22 +192,21 @@ def fill_system_vector(
     """
     f_present = f is not None
 
-    if not f_present:
+    if f is None:
         f = np.zeros(problem.numdegfd)
 
-    # Convert numbers to a list if an int is supplied
-    if isinstance(numbers, (int, np.integer)):
-        numbers = [numbers]
+    # Normalize numbers to a 1-D integer array
+    numbers_arr = np.atleast_1d(np.asarray(numbers, dtype=int))
 
     # Define geometry
     if geometry == 'nodes':
-        nodes = numbers
+        nodes = numbers_arr
     elif geometry == 'points':
-        nodes = mesh.points[numbers]
+        nodes = mesh.points[numbers_arr]
     elif geometry == 'curves':
-        # nnodes = sum([mesh.curves[curve].nnodes for curve in numbers])
+        # nnodes = sum([mesh.curves[curve].nnodes for curve in numbers_arr])
         nodes = np.array([], dtype=int)
-        for curve in numbers:
+        for curve in numbers_arr:
             nodes = np.append(nodes, mesh.curves[curve].nodes)
     else:
         raise ValueError(f"Invalid geometry: {geometry}")

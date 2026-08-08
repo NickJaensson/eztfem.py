@@ -145,6 +145,9 @@ class Problem:
         NOTE: see NOTE_ON_COMPARING_ARRAYS.md for the use of np.squeeze
 
         """
+        if not isinstance(other, Problem):
+            return NotImplemented
+
         check = [
             self.nphysq == other.nphysq,
             self.nvec == other.nvec,
@@ -205,23 +208,20 @@ def define_essential(
         Index of defined essential degrees.
 
     """
-    add = iessp is not None
-
-    # Convert numbers to a list if an int is supplied
-    if isinstance(numbers, (int, np.integer)):
-        numbers = [numbers]
+    # Normalize numbers to a 1-D integer array
+    numbers_arr = np.atleast_1d(np.asarray(numbers, dtype=int))
 
     # Define geometry
     if geometry == 'nodes':
-        nodes = numbers
-        nnodes = len(numbers)
+        nodes = numbers_arr
+        nnodes = len(numbers_arr)
     elif geometry == 'points':
-        nodes = mesh.points[numbers]
-        nnodes = len(numbers)
+        nodes = mesh.points[numbers_arr]
+        nnodes = len(numbers_arr)
     elif geometry == 'curves':
-        nnodes = sum(mesh.curves[curve].nnodes for curve in numbers)
+        nnodes = sum(mesh.curves[curve].nnodes for curve in numbers_arr)
         nodes = np.array([], dtype=int)
-        for curve in numbers:
+        for curve in numbers_arr:
             nodes = np.append(nodes, mesh.curves[curve].nodes)
     else:
         raise ValueError(f"Invalid geometry: {geometry}")
@@ -240,11 +240,9 @@ def define_essential(
         ipos += 1
 
     # Output iess
-    if add:
-        # Convert iessp to a numpy array if an int is supplied
-        if isinstance(iessp, (int, np.integer)):
-            iessp = np.array([iessp])
-        iess = np.unique(np.concatenate((pos[:ipos], iessp)))
+    if iessp is not None:
+        iessp_arr = np.atleast_1d(np.asarray(iessp, dtype=int))
+        iess = np.unique(np.concatenate((pos[:ipos], iessp_arr)))
     else:
         iess = np.unique(pos[:ipos])
 

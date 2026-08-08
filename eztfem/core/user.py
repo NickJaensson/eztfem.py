@@ -2,6 +2,9 @@
 import typing
 
 import numpy as np
+import numpy.typing as npt
+
+FloatArray: typing.TypeAlias = npt.NDArray[np.floating]
 
 # Element routines (in eztfem.addons.elements and user code) all share the
 # call signature (elem, coor, user, pos[, posvec]), but their return shape
@@ -9,6 +12,13 @@ import numpy as np
 # deriv_vector expects elemvec alone, etc.), so this is intentionally
 # left as a loose Callable rather than a single precise Protocol.
 ElementRoutine: typing.TypeAlias = typing.Callable[..., typing.Any]
+
+# User.func is called as func(funcnr, x) by element/derivative routines, but
+# its argument count, and whether it returns a scalar or a vector, varies by
+# problem (see e.g. examples/poisson/func.py vs examples/stokes/traction_func
+# .py), so this is intentionally left as a loose Callable, matching
+# ElementRoutine above.
+UserFunc: typing.TypeAlias = typing.Callable[..., typing.Any]
 
 
 class User:
@@ -28,8 +38,44 @@ class User:
         Values of phi shape function derivatives in Gauss points.
     psi : np.ndarray
         Values of psi shape function in Gauss points.
+    coorsys : int
+        Coordinate system selector used by element routines (set by user
+        code, not by __init__).
+    alpha : float
+        Diffusion coefficient used by the Poisson element routines (set by
+        user code, not by __init__).
+    mu : float
+        Viscosity used by the Stokes element routines (set by user code,
+        not by __init__).
+    funcnr : int
+        Selector passed as the first argument to `func` (set by user code,
+        not by __init__).
+    func : callable
+        Right-hand-side/boundary function, called as func(funcnr, x) (set by
+        user code, not by __init__).
+    comp : int
+        Selects which derived quantity `stokes_deriv` computes (set by user
+        code, not by __init__).
+    u : np.ndarray
+        Solution vector used by the `*_deriv` routines (set by user code,
+        not by __init__).
+    v : np.ndarray
+        Velocity vector used by the streamfunction routines (set by user
+        code, not by __init__).
 
     """
+
+    # The attributes below are set by user code after construction (their
+    # presence/absence is what User.__eq__ compares), so they are declared
+    # here without a value rather than assigned in __init__.
+    coorsys: int
+    alpha: float
+    mu: float
+    funcnr: int
+    func: UserFunc
+    comp: int
+    u: FloatArray
+    v: FloatArray
 
     def __init__(self) -> None:
         """
@@ -63,6 +109,9 @@ class User:
         Only a selection of possible attributes is checked.
 
         """
+        if not isinstance(other, User):
+            return NotImplemented
+
         # Get list of names of attributes
         attributes_self = list(self.__dict__)
         attributes_other = list(other.__dict__)

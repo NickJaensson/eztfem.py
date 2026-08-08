@@ -94,6 +94,8 @@ def mesh_merge(mesh1: Mesh, mesh2: Mesh, *, points1: ArrayLike | None = None,
             (pnts2_present and not pnts1_present)):
         raise ValueError('both points1 and points2 need to be present')
     if pnts1_present and pnts2_present:
+        assert points1 is not None
+        assert points2 is not None
         if len(points1) != len(points2):
             raise ValueError('points1 and points2 need to be of the same '
                              'length')
@@ -106,6 +108,8 @@ def mesh_merge(mesh1: Mesh, mesh2: Mesh, *, points1: ArrayLike | None = None,
             (crvs2_present and not crvs1_present)):
         raise ValueError('both curves1 and curves2 need to be present')
     if crvs1_present and crvs2_present:
+        assert curves1 is not None
+        assert curves2 is not None
         if len(curves1) != len(curves2):
             raise ValueError('curves1 and curves2 need to be of the same '
                              'length')
@@ -122,6 +126,8 @@ def mesh_merge(mesh1: Mesh, mesh2: Mesh, *, points1: ArrayLike | None = None,
     if crvs2_present and not dir_crvs2_present:
         raise ValueError('curves2 and dir_curves2 must be both present')
     if crvs2_present and dir_crvs2_present:
+        assert curves2 is not None
+        assert dir_curves2 is not None
         if len(curves2) != len(dir_curves2):
             raise ValueError('curves2 and dir_curves2 need to be of the same '
                              'length')
