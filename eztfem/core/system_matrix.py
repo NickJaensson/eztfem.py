@@ -74,12 +74,12 @@ def build_system(
     >>> A, f = build_system(mesh, problem, element, user, order='ND')
 
     """
-    if physqrow is None:
-        physqrow = np.arange(problem.nphysq, dtype=int)
-    if physqcol is None:
-        physqcol = np.arange(problem.nphysq, dtype=int)
+    physqrow_arr = (np.arange(problem.nphysq, dtype=int) if physqrow is None
+                    else np.atleast_1d(np.asarray(physqrow, dtype=int)))
+    physqcol_arr = (np.arange(problem.nphysq, dtype=int) if physqcol is None
+                    else np.atleast_1d(np.asarray(physqcol, dtype=int)))
 
-    rowcolequal = np.array_equal(physqrow, physqcol)
+    rowcolequal = np.array_equal(physqrow_arr, physqcol_arr)
 
     n = problem.numdegfd
     system_matrix = lil_matrix((n, n))
@@ -93,12 +93,13 @@ def build_system(
         posrow, _ = pos_array(problem, nodes, order=order)
 
         # indexing a list using another list
-        posr = np.hstack([posrow[i] for i in physqrow])
+        posr = np.hstack([posrow[i] for i in physqrow_arr])
 
         if rowcolequal:
             posc = posr
         else:
-            poscol, _ = pos_array(problem, nodes, physq=physqcol, order=order)
+            poscol, _ = pos_array(problem, nodes, physq=physqcol_arr,
+                                  order=order)
             posc = np.hstack(poscol)
 
         coor = mesh.coor[mesh.topology[:, elem], :]
@@ -170,14 +171,14 @@ def add_boundary_elements(
 
     """
     system_matrix = A
-    if physqrow is None:
-        physqrow = np.arange(problem.nphysq, dtype=int)
-    if physqcol is None:
-        physqcol = np.arange(problem.nphysq, dtype=int)
+    physqrow_arr = (np.arange(problem.nphysq, dtype=int) if physqrow is None
+                    else np.atleast_1d(np.asarray(physqrow, dtype=int)))
+    physqcol_arr = (np.arange(problem.nphysq, dtype=int) if physqcol is None
+                    else np.atleast_1d(np.asarray(physqcol, dtype=int)))
 
     mat_present = system_matrix is not None
 
-    rowcolequal = np.array_equal(physqrow, physqcol)
+    rowcolequal = np.array_equal(physqrow_arr, physqcol_arr)
 
     # Assemble loop over elements
     for elem in range(mesh.curves[curve].nelem):
@@ -187,13 +188,13 @@ def add_boundary_elements(
         posrow, _ = pos_array(problem, nodes, order=order)
 
         # indexing a list using another list
-        posr = np.hstack([posrow[i] for i in physqrow])
+        posr = np.hstack([posrow[i] for i in physqrow_arr])
 
         if mat_present:
             if rowcolequal:
                 posc = posr
             else:
-                poscol, _ = pos_array(problem, nodes, physq=physqcol,
+                poscol, _ = pos_array(problem, nodes, physq=physqcol_arr,
                                       order=order)
                 posc = np.concatenate(poscol)
 
@@ -205,12 +206,14 @@ def add_boundary_elements(
         if posvectors:
             posvec, _ = pos_array_vec(problem, nodes, order=order)
             if mat_present:
+                assert system_matrix is not None
                 elemvec, elemmat = element(elem, coor, user, posrow, posvec)
                 system_matrix[posr[:, None], posc] += elemmat
             else:
                 elemvec = element(elem, coor, user, posrow, posvec)
         else:
             if mat_present:
+                assert system_matrix is not None
                 elemvec, elemmat = element(elem, coor, user, posrow)
                 system_matrix[posr[:, None], posc] += elemmat
             else:
@@ -269,9 +272,14 @@ def apply_essential(
     amat_up = system_matrix[iu, :][:, iess]
 
     # modify A
-    system_matrix[iu[:, None], iess] = lil_matrix((nu, npp))
-    system_matrix[iess[:, None], iu] = lil_matrix((npp, nu))
-    system_matrix[iess[:, None], iess] = eye(npp)
+    # scipy-stubs' __setitem__ overloads don't cover assigning a sparse
+    # matrix into a fancy-indexed 2-D block, though scipy supports it.
+    system_matrix[iu[:, None], iess] = \
+        lil_matrix((nu, npp))  # type: ignore[assignment]
+    system_matrix[iess[:, None], iu] = \
+        lil_matrix((npp, nu))  # type: ignore[assignment]
+    system_matrix[iess[:, None], iess] = \
+        eye(npp)  # type: ignore[assignment]
 
     # modify f
     f[iu] -= amat_up.dot(uess[iess])

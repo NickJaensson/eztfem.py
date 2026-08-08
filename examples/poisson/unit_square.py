@@ -6,12 +6,14 @@ pass this script as the model_builder argument.
 NOTE2: This script can also be run directly with Python to open the Gmsh GUI
 and visualize the geometry.
 '''
+import typing
+
 import gmsh
 
 
 def build_unit_square(
     open_gui: bool = True,
-    element_size: float | None = None,
+    element_size: typing.Sequence[float] | None = None,
 ) -> None:
     """
     Create a unit square geometry in Gmsh and optionally open the GUI.

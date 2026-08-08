@@ -152,7 +152,9 @@ def fill_mesh_pv_vector(
 def plot_mesh_pv(
     mesh_pv: pv.PolyData,
     *,
-    style: str = "wireframe",
+    style: typing.Literal[
+        'surface', 'wireframe', 'points', 'points_gaussian'
+    ] = "wireframe",
     color: str = "black",
     window_size: tuple[int, int] = (800, 400),
     **kwargs: typing.Any,
@@ -164,7 +166,7 @@ def plot_mesh_pv(
     ----------
     mesh_pv : pyvista.PolyData
         The mesh to be plotted.
-    style : str, optional
+    style : {'surface', 'wireframe', 'points', 'points_gaussian'}, optional
         Edge style passed to plotter.add_mesh. Default "wireframe".
     color : str, optional
         Edge color passed to plotter.add_mesh. Default "black".
@@ -183,7 +185,7 @@ def plot_mesh_pv(
         nonlinear_subdivision=4, algorithm='dataset_surface')
     edges = surface.extract_feature_edges()
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=list(window_size))
     plotter.add_mesh(surface)
     plotter.add_mesh(edges, style=style, color=color, **kwargs)
     plotter.camera_position = 'xy'
@@ -223,7 +225,7 @@ def plot_sol(
     """
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=list(window_size))
     plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
@@ -269,7 +271,7 @@ def plot_sol_contour(
 
     contours = mesh_pv_plot.contour(nlevels, scalars='u')
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=list(window_size))
     plotter.add_mesh(mesh_pv_plot, color="lightgrey", **kwargs)
     plotter.add_mesh(contours)  # color="black", line_width=1)
     plotter.camera_position = 'xy'
@@ -308,7 +310,7 @@ def plot_vector(
     """
     mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=list(window_size))
     plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
     plotter.camera_position = 'xy'
     plotter.add_text((f'sol vec = {vector.vec:d}  degfd = {degfd:d}'),
@@ -352,7 +354,7 @@ def plot_vector_contours(
 
     contours = mesh_pv_plot.contour(nlevels, scalars='u')
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=list(window_size))
     plotter.add_mesh(mesh_pv_plot, color="lightgrey", **kwargs)
     plotter.add_mesh(contours)  # color="black", line_width=1)
     plotter.camera_position = 'xy'
@@ -593,9 +595,13 @@ def plot_sol_over_line(
     assert isinstance(physq, int)
     assert isinstance(degfd, int)
 
+    # PyVista's line/sampling helpers expect float64 arrays specifically.
+    point0 = np.asarray(points[0], dtype=np.float64)
+    point1 = np.asarray(points[1], dtype=np.float64)
+
     if plot_mesh:
-        line = pv.Line(points[0], points[1])
-        p = pv.Plotter(window_size=(800, 400))
+        line = pv.Line(point0, point1)
+        p = pv.Plotter(window_size=[800, 400])
         p.add_mesh(mesh_pv, color="w")
         p.add_mesh(line, color="b")
         p.camera_position = 'xy'
@@ -603,9 +609,9 @@ def plot_sol_over_line(
 
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd)
 
-    mesh_pv_plot.plot_over_line(points[0], points[1], resolution=npoints)
+    mesh_pv_plot.plot_over_line(point0, point1, resolution=npoints)
 
-    return mesh_pv_plot.sample_over_line(points[0], points[1],
+    return mesh_pv_plot.sample_over_line(point0, point1,
                                          resolution=npoints)
 
 
@@ -647,9 +653,13 @@ def plot_vector_over_line(
 
     assert isinstance(degfd, int)
 
+    # PyVista's line/sampling helpers expect float64 arrays specifically.
+    point0 = np.asarray(points[0], dtype=np.float64)
+    point1 = np.asarray(points[1], dtype=np.float64)
+
     if plot_mesh:
-        line = pv.Line(points[0], points[1])
-        p = pv.Plotter(window_size=(800, 400))
+        line = pv.Line(point0, point1)
+        p = pv.Plotter(window_size=[800, 400])
         p.add_mesh(mesh_pv, color="w")
         p.add_mesh(line, color="b")
         p.camera_position = 'xy'
@@ -657,9 +667,9 @@ def plot_vector_over_line(
 
     mesh_pv_plot = fill_mesh_pv_vector(mesh_pv, problem, vector, degfd)
 
-    mesh_pv_plot.plot_over_line(points[0], points[1], resolution=npoints)
+    mesh_pv_plot.plot_over_line(point0, point1, resolution=npoints)
 
-    return mesh_pv_plot.sample_over_line(points[0], points[1],
+    return mesh_pv_plot.sample_over_line(point0, point1,
                                          resolution=npoints)
 
 
@@ -703,7 +713,7 @@ def plot_quiver(
 
     glyphs = mesh_pv_plot.glyph(orient="u", scale=True, factor=scale)
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=list(window_size))
     # plotter.add_mesh(glyphs, show_scalar_bar=False, lighting=False,
     #                  cmap='coolwarm')
     plotter.add_mesh(mesh_pv_plot, color="lightgrey")
@@ -716,7 +726,9 @@ def plot_quiver(
 
 def plot_basis_function(
     shape: typing.Literal['quad', 'triangle'],
-    intpol: str,
+    intpol: typing.Literal[
+        'P0', 'P1', 'P1+', 'P2', 'P2+', 'Q1', 'Q1+', 'Q2'
+    ],
     degfd: int,
     *,
     n: int = 10,
@@ -808,7 +820,7 @@ def plot_basis_function(
     mesh = pv.UnstructuredGrid(cells, celltypes, points)
     mesh.point_data['phi'] = phi_values
 
-    plotter = pv.Plotter(window_size=window_size)
+    plotter = pv.Plotter(window_size=list(window_size))
 
     mesh_kwargs = {
         'scalars': 'phi',
@@ -816,18 +828,20 @@ def plot_basis_function(
     }
     mesh_kwargs.update(kwargs)
 
-    plotter.add_mesh(mesh, **mesh_kwargs)
+    # add_mesh has many precisely-typed keyword arguments that a generic
+    # forwarded-kwargs dict can't satisfy statically.
+    plotter.add_mesh(mesh, **mesh_kwargs)  # type: ignore[arg-type]
 
     if not plot3d:
-        plotter.view_xy()
+        plotter.view_xy()  # type: ignore[call-arg]
 
     title = f"phi      node = {degfd_idx + 1}   intpol = {intpol}"
     plotter.add_title(title)
 
     if axisoff:
-        plotter.remove_scalar_bar()
+        plotter.remove_scalar_bar()  # type: ignore[call-arg]
     else:
-        plotter.show_bounds()
+        plotter.show_bounds()  # type: ignore[call-arg]
 
     if show:
         plotter.show()
@@ -888,7 +902,7 @@ def _reference_triangle_mesh(
             node += 1
 
     cells = []
-    celltypes = []
+    celltype_list = []
 
     np_idx = 0
     for j in range(n):
@@ -898,7 +912,7 @@ def _reference_triangle_mesh(
             n1 = np_idx + i + 1
             n2 = np_idx + i + n - j + 1
             cells.extend([3, n0, n1, n2])
-            celltypes.append(CellType.TRIANGLE)
+            celltype_list.append(CellType.TRIANGLE)
 
         second_count = n - j - 1
         for i in range(second_count):
@@ -906,12 +920,12 @@ def _reference_triangle_mesh(
             n1 = np_idx + i + n - j + 2
             n2 = np_idx + i + n - j + 1
             cells.extend([3, n0, n1, n2])
-            celltypes.append(CellType.TRIANGLE)
+            celltype_list.append(CellType.TRIANGLE)
 
         np_idx += n - j + 1
 
     cell_array = np.array(cells, dtype=np.int64)
-    celltypes = np.array(celltypes, dtype=np.uint8)
+    celltypes = np.array(celltype_list, dtype=np.uint8)
 
     return points, cell_array, celltypes
 

@@ -336,9 +336,9 @@ def line1d(ne: int, eltype: typing.Literal["line2", "line3"], *,
 def quadrilateral2d(num_el: typing.Sequence[int],
                     eltype: typing.Literal["tria3", "tria4", "tria6", "tria7",
                                            "quad4", "quad9", "quad5"],
-                    *, origin: FloatArray | None = None,
-                    length: FloatArray | None = None,
-                    vertices: FloatArray | None = None,
+                    *, origin: npt.ArrayLike | None = None,
+                    length: npt.ArrayLike | None = None,
+                    vertices: npt.ArrayLike | None = None,
                     ratio: list[int] | None = None,
                     factor: list[float] | None = None) -> Mesh:
     """
@@ -406,6 +406,11 @@ def quadrilateral2d(num_el: typing.Sequence[int],
     if factor is None:
         factor = [1, 1, 1, 1]
 
+    origin_arr = None if origin is None else np.asarray(origin, dtype=float)
+    length_arr = None if length is None else np.asarray(length, dtype=float)
+    vertices_arr = (None if vertices is None
+                    else np.asarray(vertices, dtype=float))
+
     # mesh
     if eltype == 'tria3':  # 3 node triangle
         mesh = _rectangle2d_tria3(num_el, ratio, factor)
@@ -425,7 +430,7 @@ def quadrilateral2d(num_el: typing.Sequence[int],
         raise ValueError(f"Invalid eltype = {eltype}")
 
     # translate, scale or deform unit region
-    if vertices is not None:
+    if vertices_arr is not None:
         # x = [ x1 * (1-xi) + x2 * xi ] (1 - eta) +
         #     [ x4 * (1-xi) + x3 * xi ] eta
         # with xi = mesh.coor(1), eta = mesh.coor(2) \in [0,1] from rectangle2d
@@ -435,16 +440,16 @@ def quadrilateral2d(num_el: typing.Sequence[int],
         x_weights_2 = x_coor[:, np.newaxis]
         y_weights_1 = (1 - y_coor)[:, np.newaxis]
         y_weights_2 = y_coor[:, np.newaxis]
-        coor_x_1 = x_weights_1 * vertices[0, :] \
-            + x_weights_2 * vertices[1, :]
-        coor_x_2 = x_weights_1 * vertices[3, :] \
-            + x_weights_2 * vertices[2, :]
+        coor_x_1 = x_weights_1 * vertices_arr[0, :] \
+            + x_weights_2 * vertices_arr[1, :]
+        coor_x_2 = x_weights_1 * vertices_arr[3, :] \
+            + x_weights_2 * vertices_arr[2, :]
         mesh.coor = y_weights_1 * coor_x_1 + y_weights_2 * coor_x_2
     else:
-        if length is not None:
-            mesh.coor *= length
-        if origin is not None:
-            mesh.coor += origin
+        if length_arr is not None:
+            mesh.coor *= length_arr
+        if origin_arr is not None:
+            mesh.coor += origin_arr
 
     return mesh
 
@@ -499,6 +504,7 @@ def _distribute_elements(nelem: int, ratio: int, factor: float) -> FloatArray:
     if nelem <= 1:
         raise ValueError("Number of elements must be at least 2")
 
+    g: float
     match ratio:
         case 0:
             g = 1
