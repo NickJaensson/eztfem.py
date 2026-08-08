@@ -28,7 +28,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .
-          pip install pylint flake8
+          pip install pylint flake8 mypy scipy-stubs
 
       - name: Run test suite
         run: |
@@ -48,3 +48,13 @@ jobs:
         run: |
           flake8 examples/**/*.py
           flake8 eztfem/**/*.py
+
+      - name: Type check with mypy
+        run: |
+          mypy eztfem
+          # examples/poisson and examples/stokes each define their own
+          # func.py, so they're checked separately (mypy treats
+          # sibling scripts without __init__.py as top-level modules
+          # and would otherwise report a duplicate module name).
+          mypy examples/poisson
+          mypy examples/stokes
