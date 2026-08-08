@@ -426,8 +426,9 @@ def plot_mesh_plt(
     # Plot element numbers
     if elementnumbers:
         for elem in range(mesh.nelem):
-            plt.text(np.mean(x[:, elem]), np.mean(y[:, elem]), str(elem),
-                     fontsize=8, color='r', ha='center', va='center')
+            plt.text(float(np.mean(x[:, elem])), float(np.mean(y[:, elem])),
+                     str(elem), fontsize=8, color='r', ha='center',
+                     va='center')
 
     plt.show()
 
@@ -520,7 +521,8 @@ def plot_curves(
         for curve in curves:
             for elem in range(mesh.curves[curve].nelem):
                 el += 1
-                plt.text(np.mean(x[:, el-1]), np.mean(y[:, el-1]),
+                plt.text(float(np.mean(x[:, el-1])),
+                         float(np.mean(y[:, el-1])),
                          str(elem + 1), fontsize=8, color='r', ha='center',
                          va='center')
 
