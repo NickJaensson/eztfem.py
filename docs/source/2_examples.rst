@@ -175,9 +175,11 @@ main differences are:
 
      xr, user.wg = ezt.gauss_legendre('line', num_int_points=3)
      user.phi, user.dphi = ezt.basis_function('line', 'P2', xr)
-Note that the points are stored in a local ``xr`` rather than ``user.xr``,
-since ``user.xr`` still holds the quad integration points used for the
-main assembly.
+
+  Note that the points are stored in a local ``xr`` rather than ``user.xr``,
+  since ``user.xr`` still holds the quad integration points used for the
+  main assembly.
+
 * The natural boundary contribution is added with
   ``ezt.add_boundary_elements`` on curve 1 (the second curve in zero-based
   indexing). Note that ``rhs``, the right-hand side assembled by
@@ -366,7 +368,7 @@ Important eztfem.py features highlighted by ``streamfunction1.py``:
 
 * A new ``Problem`` instance (``problem_s``) is created for the scalar
   streamfunction; the second column of its ``elementdof`` is reserved for
-  post-processing (as in Section 2.1) and is unrelated to importing data.
+  post-processing (as in Section 2.1).
 * ``pos_array`` is called on the original Stokes ``problem`` to obtain the
   positions of the velocity components in the Stokes system vector, making
   the velocity field available through the ``user`` structure
