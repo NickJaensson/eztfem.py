@@ -237,9 +237,9 @@ def apply_essential(
 
     Parameters
     ----------
-    Ain : scipy.sparse.lil_matrix
+    system_matrix : scipy.sparse.lil_matrix
         System matrix.
-    fin : numpy.ndarray
+    f : numpy.ndarray
         Right-hand side vector.
     uess : numpy.ndarray
         Vector containing the values for essential boundary conditions.

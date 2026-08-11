@@ -298,7 +298,7 @@ def plot_vector(
         The mesh on which to plot the solution.
     problem : Problem
         The problem object.
-    u : Vector
+    vector : Vector
         The vector object.
     degfd : int
         The degree of freedom to plot (default = 0)
@@ -338,7 +338,7 @@ def plot_vector_contours(
         The mesh on which to plot the solution.
     problem : Problem
         The problem object.
-    u : Vector
+    vector : Vector
         The vector object.
     degfd : int
         The degree of freedom to plot (default = 0)
@@ -576,10 +576,22 @@ def plot_sol_over_line(
     mesh_pv : object
         A PyVista mesh object containing the data to be sampled and visualized.
 
+    problem : Problem
+        The problem object.
+
+    u : numpy.ndarray
+        The solution vector.
+
     points : list or array_like
         A list of two 3D points, each of shape (3,), defining the start and end
         points of the line over which to sample.
 
+    physq : int, optional
+        Physical quantity number. Default is 0.
+
+    degfd : int, optional
+        Degree of freedom to plot. Default is 0.
+        
     npoints : int, optional
         The number of points to sample along the line. Default is 200.
 
@@ -635,10 +647,19 @@ def plot_vector_over_line(
     mesh_pv : object
         A PyVista mesh object containing the data to be sampled and visualized.
 
+    problem : Problem
+        The problem object.
+
+    u : numpy.ndarray
+        The solution vector.
+        
     points : list or array_like
         A list of two 3D points, each of shape (3,), defining the start and end
         points of the line over which to sample.
 
+    degfd : int, optional
+        Degree of freedom to plot. Default is 0.
+        
     npoints : int, optional
         The number of points to sample along the line. Default is 200.
 

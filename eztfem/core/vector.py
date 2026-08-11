@@ -175,11 +175,11 @@ def fill_system_vector(
     func : callable
         Scalar function for filling. Only argument is x, a coordinate vector.
     funcnr : int, optional
-        Function number for func, i.e. func(funcnr, x). Default is 1.
+        Function number for func, i.e. func(funcnr, x). Default is 0.
     physq : int, optional
-        Physical quantity number. Default is 1.
+        Physical quantity number. Default is 0.
     degfd : int, optional
-        Degree of freedom within the physical quantity. Default is 1.
+        Degree of freedom within the physical quantity. Default is 0.
     f : numpy.ndarray, optional
         An existing system vector which will be modified in-place.
 

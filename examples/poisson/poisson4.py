@@ -19,7 +19,7 @@ def main():
     mesh : Mesh
         Finite element mesh.
     problem : Problem
-        Stokes problem definition.
+        Poisson problem definition.
     u : numpy.ndarray
         Nodal values of u (solution vector).
     derivs : dict
