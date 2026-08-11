@@ -43,7 +43,7 @@ line by line after the listing.
    :language: python
    :linenos:
 
-Lines 15
+Lines 30
     The mesh is created using a 20×20 grid of nine-node quadrilaterals. The
     variable ``mesh`` is a structure with several components, including the
     coordinates of the nodes, the topology, the points and the curves. For more
@@ -61,7 +61,7 @@ Lines 15
    certain nodes and element edges respectively. Note the default directions of
    the curves.
 
-Lines 20–22
+Lines 34–36
     The problem is defined. The variable ``problem`` is a structure with
     several components. The argument ``elementdof`` is a matrix where each
     column defines degrees of freedom in the nodes of an element. Note that the
@@ -69,7 +69,7 @@ Lines 20–22
     so that the first column defines the system vector of unknowns. The second
     column of ``elementdof`` is only used for post-processing (see below).
 
-Lines 26–33
+Lines 40-44
     A ``User`` instance is filled with Gauss-Legendre integration points
     (``user.xr``) and weights (``user.wg``), together with the basis functions
     :math:`\phi_k`, :math:`k=1,\ldots,9` and the derivatives
@@ -78,34 +78,35 @@ Lines 26–33
     interpolation. The weights, basis functions and derivatives are stored in
     the ``user`` structure for later use on element level.
 
-Lines 37–40
+Lines 48-51
     The ``user`` structure is filled with additional data needed at element
     level: ``coorsys`` (coordinate system: 0 = Cartesian, 1 = axisymmetric),
     ``alpha`` (diffusion coefficient :math:`\alpha`, which is 1 for the Poisson
     equation), ``funcnr`` (function selector for the right-hand side), and
     ``func`` (callable providing the forcing terms).
 
-Lines 45
+Lines 55-56
     The system matrix :math:`\boldsymbol{A}` and vector :math:`\boldsymbol{f}`
     are assembled using ``eztfem.build_system`` with the Poisson element
     routine.
 
-Lines 50-55
+Lines 60-69
     Dirichlet boundary conditions are defined on all boundary curves and the
     prescribed values are filled into ``uess`` using ``fill_system_vector``.
     ``apply_essential`` modifies :math:`\boldsymbol{A}` and :math:`\boldsymbol{f}`
     to impose the essential boundary conditions.
 
-Lines 61
-    The linear system is solved with SciPy’s ``spsolve``. The maximum
-    difference between the numerical and analytical solution in the nodes is
-    printed.
+Lines 73-80
+    The linear system is solved with SciPy’s ``spsolve``. The result is
+    compared with the analytical solution and the maximum difference between
+    the numerical and analytical solution in the nodes is computed (and
+    printed when the script is run directly).
 
-Lines 80-84
+Lines 84-89
     The gradient :math:`(\partial u/\partial x, \partial u/\partial y)` is
     computed. The basis functions are recomputed in the nodal points and the
     solution ``u`` is supplied to the element routine via the ``user``
-    structure. The gradient is returned in ``gradu``.
+    structure. The gradient is returned in ``derivs["grad_u"]``.
 
 To visualise the results you can use the plotting helpers, for example:
 
@@ -132,7 +133,7 @@ To visualise the results you can use the plotting helpers, for example:
 
 .. code-block:: python
 
-    ezt.plot_vector(mesh, problem, gradu, degfd=0)
+    ezt.plot_vector(mesh, problem, derivs["grad_u"], degfd=0)
 
 
 2.2 A Poisson problem on a rectangle with Dirichlet and Neumann boundary conditions
@@ -172,16 +173,19 @@ main differences are:
 
   .. code-block:: python
 
-     user.xr, user.wg = ezt.gauss_legendre('line', n=3)
-     user.phi, user.dphi = ezt.basis_function('line', 'P2', user.xr)
-
+     xr, user.wg = ezt.gauss_legendre('line', num_int_points=3)
+     user.phi, user.dphi = ezt.basis_function('line', 'P2', xr)
+Note that the points are stored in a local ``xr`` rather than ``user.xr``,
+since ``user.xr`` still holds the quad integration points used for the
+main assembly.
 * The natural boundary contribution is added with
   ``ezt.add_boundary_elements`` on curve 1 (the second curve in zero-based
-  indexing). Note that ``f`` is part of the argument list::
+  indexing). Note that ``rhs``, the right-hand side assembled by
+  ``build_system``, is part of the argument list::
 
      user.funcnr = 8
      ezt.add_boundary_elements(
-         mesh, problem, f, ezt.poisson_natboun_curve, user, curve=1
+         mesh, problem, rhs, ezt.poisson_natboun_curve, user, curve=1
      )
 
 2.3 A Stokes problem on a unit square with Dirichlet boundary conditions: driven cavity
