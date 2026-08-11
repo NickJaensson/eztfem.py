@@ -61,12 +61,11 @@ list. Some key components include:
 4.3 ``Vector``
 ~~~~~~~~~~~
 ``eztfem.py`` distinguishes between *vectors* and *system vectors*. The system
-vector contains all degrees of freedom that are solved for in the linear and
-are of type NumPy array. Vectors are used for data storage and are of type
-``Vector``. The ``Vector`` class is used for data storage, often as the result 
-of ``deriv_vector``. A vector is
-defined by one of the columns in ``elementdof`` (see Section 4.2) and . Vectors 
-are storedas a small structure with two components (``vec`` and ``u``), where 
+vector contains all degrees of freedom that are solved for in the linear
+system and is of type NumPy array. The ``Vector`` class is used for other
+data storage, often as the result of ``deriv_vector``. A vector is
+defined by one of the columns in ``elementdof`` (see Section 4.2). Vectors
+are stored as a small structure with two components (``vec`` and ``u``), where
 ``vec`` is an index identifying the vector and ``u`` contains the actual data.
 
 System vectors are defined by ``elnumdegfd`` and make up the degrees of freedom
