@@ -364,11 +364,13 @@ See ``streamfunction1.py`` for the implementation details and remember that
 
 Important eztfem.py features highlighted by ``streamfunction1.py``:
 
-* A new ``Problem`` instance is created for the scalar streamfunction while a
-  second column in ``elementdof`` is used to import the velocity field from the
-  Stokes solution.
-* ``pos_array`` obtains the positions of the velocity solution in the system
-  vector so that the values can be supplied through the ``user`` structure.
-* ``build_system`` receives the optional keyword argument ``posvectors`` to
-  make vector data available at element level.
+* A new ``Problem`` instance (``problem_s``) is created for the scalar
+  streamfunction; the second column of its ``elementdof`` is reserved for
+  post-processing (as in Section 2.1) and is unrelated to importing data.
+* ``pos_array`` is called on the original Stokes ``problem`` to obtain the
+  positions of the velocity components in the Stokes system vector, making
+  the velocity field available through the ``user`` structure
+  (``user.v = u[pos[0]]``).
+* ``build_system`` receives the optional keyword argument ``posvectors=True``
+  so that this vector data is made available at element level.
 * ``add_boundary_elements`` assembles Neumann contributions on each curve.
