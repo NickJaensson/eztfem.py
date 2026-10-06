@@ -10,6 +10,9 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 autoclass_content = 'both'
 add_module_names = False
+# Don't render type hints in signatures: numpy aliases such as ArrayLike get
+# expanded into very long unions. The docstrings already document the types.
+autodoc_typehints = 'none'
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
