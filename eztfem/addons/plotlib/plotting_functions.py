@@ -3,6 +3,7 @@ import copy
 import typing
 
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
 import numpy as np
 import numpy.typing as npt
 import pyvista as pv
@@ -958,13 +959,13 @@ def plot_gauss_legendre(
     *,
     n: int | None = None,
     p: int | None = None,
-    ax: plt.Axes | None = None,
+    ax: Axes | None = None,
     marker: str = '+',
     color: str = 'k',
     markersize: float = 8,
     show: bool = True,
     **kwargs: typing.Any,
-) -> plt.Axes:
+) -> Axes:
     """Plot Gauss-Legendre integration points.
 
     Parameters
