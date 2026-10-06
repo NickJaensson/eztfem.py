@@ -15,7 +15,8 @@ setup(
         'trame',
         'trame-vtk',
         'trame-vuetify',
-        'gmsh'
+        'gmsh',
+        'matplotlib'
     ],
     author="Nick Jaensson",
     author_email="n.o.jaensson@tue.nl",
