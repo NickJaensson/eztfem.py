@@ -36,6 +36,7 @@ jobs:
 
       - name: Lint with pylint
         run: |
+          shopt -s globstar  # make ** recurse into subdirectories
           pylint --disable=duplicate-code examples/**/*.py
           pylint --max-statements=200 --max-module-lines=2000 \
             --max-branches=60 --max-locals=100 \
@@ -46,6 +47,7 @@ jobs:
 
       - name: Lint with flake8
         run: |
+          shopt -s globstar  # make ** recurse into subdirectories
           flake8 examples/**/*.py
           flake8 eztfem/**/*.py
 
