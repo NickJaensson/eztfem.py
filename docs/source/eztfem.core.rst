@@ -77,6 +77,6 @@ meshgen module
 ----------------------------------
 
 .. automodule:: eztfem.core.meshgen
-   :members: Mesh, quadrilateral2d, line1d, distribute_elements
+   :members: Mesh, quadrilateral2d, line1d
    :undoc-members:
    :show-inheritance:

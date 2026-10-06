@@ -19,7 +19,7 @@ through normal Matplotlib APIs. The available plotting helpers include:
 ``plot_curves``
     Plot curves, optionally restricted to a subset via keyword arguments.
 
-``plot_mesh``
+``plot_mesh_plt``
     Plot the mesh. Optional arguments allow plotting node markers, node
     numbers, and element numbers.
 
@@ -32,7 +32,7 @@ through normal Matplotlib APIs. The available plotting helpers include:
     Create a contour plot of the solution vector. The helper internally
     interpolates nodal data to a regular grid using ``scipy.interpolate``.
 
-``plot_sol_quiver``
+``plot_quiver``
     Plot vector fields using quiver arrows. Supply the appropriate physical
     quantity (e.g. velocity components) to visualise flows.
 

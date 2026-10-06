@@ -1,5 +1,5 @@
 5. Vector and matrix ordering
---------------------------
+-----------------------------
 
 5.1 Working with degrees of freedom
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

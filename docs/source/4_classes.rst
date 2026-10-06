@@ -59,7 +59,7 @@ list. Some key components include:
     Total number of system degrees of freedom.
 
 4.3 ``Vector``
-~~~~~~~~~~~
+~~~~~~~~~~~~~~
 ``eztfem.py`` distinguishes between *vectors* and *system vectors*. The system
 vector contains all degrees of freedom that are solved for in the linear
 system and is of type NumPy array. The ``Vector`` class is used for other
