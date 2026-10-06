@@ -76,8 +76,9 @@ class Problem:
         # Number of physical quantities
         if nphysq is None:
             self.nphysq = self.elementdof.shape[1]
-        elif len(self.elementdof) < nphysq:
-            raise ValueError("Length of elementdof must be at least nphysq.")
+        elif self.elementdof.shape[1] < nphysq:
+            raise ValueError("Number of columns of elementdof must be at "
+                             "least nphysq.")
         else:
             self.nphysq = nphysq
 
@@ -233,7 +234,7 @@ def define_essential(
     for node in nodes:
         posn, ndof = pos_array(problem, node, physq=physq, order='ND')
 
-        if degfd > ndof[0]:
+        if degfd >= ndof[0]:
             continue
 
         pos[ipos] = posn[0][degfd]  # Python 0-based indexing

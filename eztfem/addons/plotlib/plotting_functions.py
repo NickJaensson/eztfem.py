@@ -228,7 +228,7 @@ def plot_sol(
     plotter = pv.Plotter(window_size=list(window_size))
     plotter.add_mesh(mesh_pv_plot, scalars="u", **kwargs)
     plotter.camera_position = 'xy'
-    plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
+    plotter.add_text((f'sol physq = {physq:d}  degfd = {degfd:d}'),
                      font_size=12)
     plotter.show()
 
@@ -275,7 +275,7 @@ def plot_sol_contour(
     plotter.add_mesh(mesh_pv_plot, color="lightgrey", **kwargs)
     plotter.add_mesh(contours)  # color="black", line_width=1)
     plotter.camera_position = 'xy'
-    plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
+    plotter.add_text((f'sol physq = {physq:d}  degfd = {degfd:d}'),
                      font_size=12)
     plotter.show()
 
@@ -591,7 +591,7 @@ def plot_sol_over_line(
 
     degfd : int, optional
         Degree of freedom to plot. Default is 0.
-        
+
     npoints : int, optional
         The number of points to sample along the line. Default is 200.
 
@@ -652,14 +652,14 @@ def plot_vector_over_line(
 
     u : numpy.ndarray
         The solution vector.
-        
+
     points : list or array_like
         A list of two 3D points, each of shape (3,), defining the start and end
         points of the line over which to sample.
 
     degfd : int, optional
         Degree of freedom to plot. Default is 0.
-        
+
     npoints : int, optional
         The number of points to sample along the line. Default is 200.
 
@@ -730,7 +730,7 @@ def plot_quiver(
     ndf = problem.elementdof[0, physq]
 
     assert (problem.elementdof[0, physq] == 2)
-    assert np.all(problem.elementdof[0, physq] == ndf)
+    assert np.all(problem.elementdof[:, physq] == ndf)
 
     mesh_pv_plot = fill_mesh_pv(mesh_pv, problem, u, physq, degfd=[0, 1])
 
@@ -742,7 +742,7 @@ def plot_quiver(
     plotter.add_mesh(mesh_pv_plot, color="lightgrey")
     plotter.add_mesh(glyphs, color="black")
     plotter.camera_position = 'xy'
-    plotter.add_text((f'sol physq = {physq:d}  degfd = {physq:d}'),
+    plotter.add_text((f'sol physq = {physq:d}  degfd = 0, 1'),
                      font_size=12)
     plotter.show()
 

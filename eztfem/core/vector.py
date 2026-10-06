@@ -215,7 +215,7 @@ def fill_system_vector(
     for node in nodes:
         posn, ndof = pos_array(problem, node, physq=physq, order='ND')
 
-        if degfd > ndof[0]:
+        if degfd >= ndof[0]:
             continue
 
         f[posn[0][degfd]] = func(funcnr, mesh.coor[node])

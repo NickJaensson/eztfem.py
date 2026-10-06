@@ -134,12 +134,12 @@ def stokes_elem(
         fg = np.zeros((ninti, ndim))
         for ip in range(ninti):
             fg[ip, :] = user.func(user.funcnr, xg[ip, :])
-        tmp = np.zeros((ninti, ndim))
+        tmp = np.zeros((ndf, ndim))
         for j in range(ndim):
             for idf in range(ndf):
                 tmp[idf, j] = np.sum(fg[:, j] * user.phi[:, idf] * det_fmat
                                      * user.wg)
-        elemvec[0:i2] = tmp.reshape(ndim*ndf)
+        elemvec[0:i2] = tmp.reshape(ndim*ndf, order='F')
 
     return elemmat, elemvec
 

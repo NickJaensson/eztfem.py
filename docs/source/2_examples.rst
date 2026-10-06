@@ -337,9 +337,9 @@ circumferential (:math:`\theta`) direction. We find from the equations that
        \frac{\partial^2 \psi}{\partial z^2}
        + \frac{\partial^2 \psi}{\partial r^2}
      \right)
-   = 2\pi r \left(\frac{\partial v}{\partial z} 
-     - \frac{\partial u}{\partial r}\right)
-   = 2\pi (r\omega + u)
+   = 2\pi r \left(\frac{\partial v}{\partial z}
+     - \frac{\partial u}{\partial r}\right) - 2\pi u
+   = 2\pi (r\omega - u)
 
 with the vorticity :math:`\omega = \partial v/\partial z - \partial u/\partial r`.
 Note that :math:`\nabla^2_{zr}` is the *planar* (:math:`z, r`) Laplace operator

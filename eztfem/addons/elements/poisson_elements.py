@@ -160,7 +160,7 @@ def poisson_natboun_curve(
 ) -> FloatArray:
     """
     Boundary element for a natural boundary on a curve for the
-    Poisson/diffusion equation: alpha * dudn = h
+    Poisson/diffusion equation: - alpha * dudn = h
 
     Parameters
     ----------

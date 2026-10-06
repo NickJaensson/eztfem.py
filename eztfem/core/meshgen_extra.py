@@ -1,5 +1,6 @@
 """Module with additional functions for meshes"""
 
+import copy
 import typing
 import numpy as np
 import numpy.typing as npt
@@ -255,12 +256,12 @@ def mesh_merge(mesh1: Mesh, mesh2: Mesh, *, points1: ArrayLike | None = None,
     # copy curves mesh1
     for curve in range(mesh1.ncurves):
         if delcurves1[curve] != 1:
-            mesh.curves.append(mesh1.curves[curve])
+            mesh.curves.append(copy.deepcopy(mesh1.curves[curve]))
 
     # copy curves mesh2
     for curve in range(mesh2.ncurves):
         if delcurves2[curve] != 1:
-            mesh.curves.append(mesh2.curves[curve])
+            mesh.curves.append(copy.deepcopy(mesh2.curves[curve]))
             mesh.curves[-1].nodes = work[mesh2.curves[curve].nodes]
             # Assuming mesh.curves[-1].topology is a 2D numpy array
             mesh.curves[-1].topology[:, :, 1] = \

@@ -60,9 +60,9 @@ def streamfunction_elem(
     # Position of the integration points
     xg = user.phi @ coor
 
-    if user.coorsys == 1:
-        # Axisymmetric
-        det_fmat = 2 * np.pi * xg[:, 1] * det_fmat
+    # NOTE: also for the axisymmetric case (coorsys == 1) the *planar* (z, r)
+    # Laplace operator is used, so det_fmat must not be multiplied by
+    # 2*pi*r here.
 
     # compute derivative of the basis functions with respect to the real
     # coordinates

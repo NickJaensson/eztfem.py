@@ -31,7 +31,7 @@ def integrate_boundary_elements(
     Keyword arguments
     -----------------
     curve : int
-        Build on given curve number.
+        Integrate over the given curve number (required).
     order : {'ND', 'DN'}, default='DN'
         The sequence order of the degrees of freedom on element level:
         - 'ND' : the most inner loop is over the degrees of freedom.
@@ -53,15 +53,16 @@ def integrate_boundary_elements(
 
     Examples
     --------
-    >>> resultsum = integrate_boundary_elements(mesh, problem, element, user)
+    >>> resultsum = integrate_boundary_elements(mesh, problem, element, user,
+    ...                                         curve=0)
 
     """
-    curve = kwargs.get("curve", 0)
+    curve = kwargs.get("curve")
     order = kwargs.get("order", "DN")
     posvectors = kwargs.get("posvectors", False)
 
-    if curve == 0:
-        raise ValueError("Argument 'curve' is required and must be non-zero.")
+    if curve is None:
+        raise ValueError("Argument 'curve' is required.")
 
     boundary_curve = mesh.curves[curve]
     resultsum = 0
